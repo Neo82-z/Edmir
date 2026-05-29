@@ -13,6 +13,8 @@
 - 为什么暂缓 NCCL baseline。
 - 后续干净窗口中应该如何跑第一版 NCCL baseline。
 
+原始终端输出保存在：[`raw/2026-05-29-precheck.log`](raw/2026-05-29-precheck.log)
+
 ## 原始问题
 
 在 PCIe-only、4x4090、dual-NUMA 机器上，near-GPU pair、cross-NUMA pair 和全 4 GPU 的 NCCL collective baseline 有什么差异？
