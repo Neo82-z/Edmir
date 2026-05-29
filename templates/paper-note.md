@@ -1,41 +1,41 @@
-# Paper: TITLE
+# Paper：TITLE
 
 ## Citation
 
-- Authors:
-- Venue / Year:
-- Link:
+- Authors：
+- Venue / Year：
+- Link：
 
-## One-Sentence Summary
+## 一句话总结
 
-What does this paper claim or build?
+这篇 paper 的核心 claim 或系统是什么？
 
-## Problem
+## 问题
 
-What bottleneck or gap does it target?
+它针对哪个 bottleneck 或 gap？
 
-## Key Idea
+## 关键想法
 
-What is the main mechanism?
+主要机制是什么？
 
 ## System / Algorithm
 
-Important components, data flow, or formulas.
+重要组件、data flow 或公式。
 
 ## Experiments
 
-- Hardware:
-- Workloads:
-- Baselines:
-- Metrics:
+- Hardware：
+- Workloads：
+- Baselines：
+- Metrics：
 
-## Reproduction Plan
+## 复现计划
 
-What can I reproduce with available resources?
+基于当前资源，我可以复现哪一部分？
 
-## Connection To My Main Thread
+## 与我的研究主线的关系
 
-How does this help communication bottleneck diagnosis or optimization for multi-GPU LLM inference?
+它如何帮助 multi-GPU LLM inference 中的 communication bottleneck 诊断或优化？
 
 ## Open Questions
 
