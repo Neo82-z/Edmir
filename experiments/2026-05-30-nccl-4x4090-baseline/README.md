@@ -1,10 +1,10 @@
-# Experiment: NCCL 4x4090 Baseline
+# Experiment：NCCL 4x4090 Baseline
 
-## Question
+## 问题
 
-How do NCCL collective baselines differ between near-GPU pairs, cross-NUMA pairs, and all 4 GPUs on a PCIe-only 4x4090 dual-NUMA machine?
+在 PCIe-only、4x4090、dual-NUMA 机器上，near-GPU pair、cross-NUMA pair 和全 4 GPU 的 NCCL collective baseline 有什么差异？
 
-## Known Topology
+## 已知 Topology
 
 ```text
         GPU0    GPU1    GPU2    GPU3    CPU Affinity    NUMA Affinity
@@ -14,16 +14,16 @@ GPU2    SYS     SYS      X      NODE    28-55,84-111    1
 GPU3    SYS     SYS     NODE     X      28-55,84-111    1
 ```
 
-Interpretation:
+解释：
 
-- GPU0/GPU1 are near each other within NUMA node 0.
-- GPU2/GPU3 are near each other within NUMA node 1.
-- Cross pairs traverse `SYS` and should be slower or less stable.
-- There is no NVLink in this topology.
+- GPU0 / GPU1 在 NUMA node 0 内相对更近。
+- GPU2 / GPU3 在 NUMA node 1 内相对更近。
+- cross pair 需要经过 `SYS`，理论上更慢或更不稳定。
+- 这个 topology 没有 NVLink。
 
 ## Collectives
 
-Run at least:
+至少运行：
 
 - all_reduce
 - all_gather
@@ -33,17 +33,17 @@ Run at least:
 ## Device Cases
 
 ```text
-0,1       near pair on NUMA 0
-2,3       near pair on NUMA 1
+0,1       NUMA 0 内的 near pair
+2,3       NUMA 1 内的 near pair
 0,2       cross-NUMA pair
 1,3       cross-NUMA pair
-0,1,2,3   full 4-GPU run
+0,1,2,3   全 4-GPU run
 ```
 
 ## Commands
 
 ```bash
-# Fill exact commands here.
+# 在这里填写 exact commands。
 ```
 
 ## Results
@@ -59,6 +59,6 @@ Run at least:
 
 ## Next
 
-- Add `NCCL_DEBUG=INFO NCCL_DEBUG_SUBSYS=INIT,GRAPH` for selected runs.
-- Add Nsight Systems trace for one small-message and one large-message case.
-- Compare with `NCCL_P2P_DISABLE=1`.
+- 对关键 runs 增加 `NCCL_DEBUG=INFO NCCL_DEBUG_SUBSYS=INIT,GRAPH`。
+- 为一个 small-message case 和一个 large-message case 增加 Nsight Systems trace。
+- 与 `NCCL_P2P_DISABLE=1` 结果对比。
