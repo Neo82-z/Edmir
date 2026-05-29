@@ -1,45 +1,45 @@
 # Roadmap
 
-## Phase 0: Build The First Research Workbench
+## Phase 0：建立第一版研究工作台
 
-Goal: produce reproducible baseline slices, not final optimizations.
+目标：产出可复现的 baseline slice，而不是一开始就追最终优化。
 
-- Read tinygrad-notes and tensor puzzles.
-- Reproduce primitive composition with small Python code.
-- Run NCCL collectives on 4x4090.
-- Record topology, commands, raw logs, and first plots.
+- 阅读 tinygrad-notes 和 tensor puzzles。
+- 用小规模 Python 代码复现 primitive composition。
+- 在 4x4090 上跑 NCCL collectives。
+- 记录 topology、commands、raw logs 和第一版图表。
 
-Expected output:
+预期产出：
 
-- tinygrad primitive notes.
-- NCCL all-reduce, all-gather, reduce-scatter, all-to-all baseline.
-- One README per experiment slice.
+- tinygrad primitive 笔记。
+- NCCL all-reduce、all-gather、reduce-scatter、all-to-all baseline。
+- 每个 experiment slice 都有一份 README。
 
-## Phase 1: Communication Roofline
+## Phase 1：Communication Roofline
 
-Goal: establish an empirical roofline for the current hardware.
+目标：为当前硬件建立 empirical roofline。
 
-- Compare near pairs and cross-NUMA pairs.
-- Compare 2-GPU and 4-GPU collectives.
-- Identify latency-bound and bandwidth-bound regions.
-- Add Nsight Systems traces for selected sizes.
+- 对比 near pair 和 cross-NUMA pair。
+- 对比 2-GPU 和 4-GPU collectives。
+- 找出 latency-bound 和 bandwidth-bound 区间。
+- 为关键 message size 增加 Nsight Systems trace。
 
-## Phase 2: vLLM Trace Alignment
+## Phase 2：对齐 vLLM Trace
 
-Goal: connect communication primitives to real serving workloads.
+目标：把 communication primitive 和真实 serving workload 连接起来。
 
-- Run TP/PP/EP serving workloads.
-- Identify collectives in prefill and decode.
-- Compare observed collective time with NCCL microbench roofline.
-- Decide whether bottlenecks are communication volume, topology, launch overhead, or scheduling.
+- 跑 TP / PP / EP serving workload。
+- 识别 prefill 和 decode 阶段的 collectives。
+- 将 vLLM 中观测到的 collective time 与 NCCL microbench roofline 对比。
+- 判断 bottleneck 来自 communication volume、topology、launch overhead，还是 scheduling。
 
-## Phase 3: Small Optimization
+## Phase 3：小范围优化
 
-Goal: implement one scoped optimization or decision policy.
+目标：实现一个边界清晰的优化或决策策略。
 
-Possible directions:
+可能方向：
 
-- Topology-aware parallelism selection.
-- Message-size-aware collective diagnosis.
-- MoE all-to-all profiling and backend selection.
-- KV cache transfer and recomputation boundary analysis.
+- topology-aware parallelism selection。
+- message-size-aware collective diagnosis。
+- MoE all-to-all profiling 和 backend selection。
+- KV cache transfer 与 recomputation 的边界分析。
