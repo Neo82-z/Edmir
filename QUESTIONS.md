@@ -8,8 +8,8 @@ multi-GPU LLM inference 中的 communication bottleneck 在哪里？什么时候
 
 - NCCL collective time 什么时候会进入 critical path，而不是被 compute overlap 掉？
 - 在 commodity PCIe 系统上，near-GPU 和 cross-NUMA 的 collective bandwidth 差异有多大？
-- 在 4x4090 上，哪类 collective 最脆弱：all-reduce、all-gather、reduce-scatter，还是 all-to-all？
-- 关闭 P2P 会造成多大影响？这能揭示真实 transfer path 的哪些信息？
+- 在 4x4090 或者 H100，A100上，哪类 collective 最脆弱：all-reduce、all-gather、reduce-scatter，还是 all-to-all？
+- 关闭 P2P（4090没有NVLink） 会造成多大影响？这能揭示真实 transfer path 的哪些信息？
 - empirical NCCL roofline 能否预测 vLLM 中的 collective time？
 
 ## Serving Runtime
