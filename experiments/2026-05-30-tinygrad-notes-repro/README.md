@@ -1,18 +1,18 @@
-# Experiment: tinygrad-notes Primitive Reproduction
+# Experiment：tinygrad-notes Primitive 复现
 
-## Question
+## 问题
 
-Can I explain tinygrad-style high-level tensor operations as compositions of primitive tensor transformations?
+我能否把 tinygrad 风格的 high-level tensor operations 解释为 primitive tensor transformations 的组合？
 
 ## Scope
 
-Implement small NumPy/Python reproductions for:
+用小规模 NumPy / Python 代码复现：
 
 - reshape
 - expand / broadcast
 - permute
 - sum / reduce
-- elementwise add/mul
+- elementwise add / mul
 - GEMM as broadcast multiply + reduce
 - gather as one-hot mask + reduce
 - scatter_add as mask + reduce
@@ -20,11 +20,11 @@ Implement small NumPy/Python reproductions for:
 
 ## Non-Goals
 
-- No autograd.
-- No scheduler.
-- No UOp renderer.
-- No SASS backend.
-- No performance claims.
+- 不做 autograd。
+- 不做 scheduler。
+- 不做 UOp renderer。
+- 不做 SASS backend。
+- 不做 performance claim。
 
 ## Files
 
@@ -42,6 +42,6 @@ results/
 2. 
 3. 
 
-## Connection To Main Thread
+## 与研究主线的关系
 
-This builds the semantic layer for understanding how collective communication and tensor operations can be decomposed into primitives before being lowered to hardware-specific implementations.
+这个实验用于建立 semantic layer：理解 collective communication 和 tensor operations 如何分解为 primitives，然后再 lowering 到 hardware-specific implementations。
