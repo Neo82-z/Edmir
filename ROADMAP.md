@@ -6,7 +6,7 @@
 
 - 阅读 tinygrad-notes 和 tensor puzzles。
 - 用小规模 Python 代码复现 primitive composition。
-- 在 4x4090 上跑 NCCL collectives。
+- 在多机多卡或者单机多卡上跑 NCCL collectives。
 - 记录 topology、commands、raw logs 和第一版图表。
 
 预期产出：
