@@ -1,8 +1,8 @@
 # Experiments
 
-Each experiment should be a self-contained slice.
+每个 experiment 都应该是一个自包含的 slice。
 
-Recommended layout:
+推荐目录结构：
 
 ```text
 experiments/YYYY-MM-DD-short-name/
@@ -11,13 +11,13 @@ experiments/YYYY-MM-DD-short-name/
   env.md
   results.csv
   figures/
-  raw/      # ignored by git unless force-added
+  raw/      # 默认被 git 忽略，除非手动 force add
 ```
 
-Rules:
+规则：
 
-- One slice answers one question.
-- Save exact commands and environment.
-- Keep raw logs locally or in external storage if they are large.
-- Commit processed tables, figures, and the written interpretation.
-- Change one major variable at a time.
+- 一个 slice 只回答一个问题。
+- 保存 exact commands 和 environment。
+- raw logs 如果很大，就保存在本地或外部存储。
+- 处理后的 tables、figures 和 written interpretation 可以提交到 Git。
+- 每次只改变一个主要变量。
