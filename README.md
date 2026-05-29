@@ -6,17 +6,17 @@
 
 **面向 multi-GPU LLM inference 的 communication bottleneck 诊断与优化。**
 
-允许展开的支线：
+研究的支线：
 
-- tinygrad：理解 tensor IR、primitive composition 和 collective 语义。
-- CUDA C++：理解 kernel、memory hierarchy、stream 和 profiling。
-- DeepGEMM / CuTe / CUTLASS：理解计算侧粒度，以及 GEMM / MoE kernel。
-- NCCL / NVSHMEM / RDMA：理解 collective communication、topology 和 transport。
-- vLLM / Megatron / DeepSpeed：回到真实 serving workload 和 parallelism strategy。
+- tinygrad：理解 tensor IR、primitive composition 和 collective 语义。(个人非常喜欢的张量计算引擎)
+- CUDA C++：理解 kernel、memory hierarchy、stream 和 profiling。（底层语义复杂，更推荐triton来理解算子）
+- DeepGEMM / CuTe / CUTLASS：理解计算侧粒度，以及 GEMM / MoE kernel。（MoE是当前阶段的重要模型结构）
+- NCCL / NVSHMEM / RDMA：理解 collective communication、topology 和 transport。（算子库）
+- vLLM / Megatron / DeepSpeed：回到真实 serving workload 和 parallelism strategy。（推理引擎和训练架构）
 
-每条支线最终都要回答一个问题：
+但需最终回归到
 
-> 这件事如何帮助解释或改善 multi-GPU LLM serving 中的 communication？
+> 这件事如何improve multi-GPU LLM serving 中的 communication
 
 ## 仓库结构
 
@@ -27,11 +27,6 @@ ideas/         研究问题、潜在 paper 方向和设计草图。
 templates/     paper note 和 experiment record 的 Markdown 模板。
 ```
 
-## 当前第一阶段
-
-- 通过小规模复现理解 tinygrad-notes 和 tinygrad tensor puzzles。
-- 在 4x RTX 4090 PCIe dual-NUMA topology 上跑通 NCCL baseline。
-- 保存 commands、raw logs、topology 和第一批观察。
 
 ## 工作规则
 
