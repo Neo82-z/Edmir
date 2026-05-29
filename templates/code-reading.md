@@ -1,14 +1,14 @@
-# Code Reading: COMPONENT
+# Code Reading：COMPONENT
 
-## Goal
+## 目标
 
-What do I want to understand from this code?
+我希望通过这段代码理解什么？
 
 ## Entry Points
 
-- File:
-- Function / class:
-- Command or test that exercises it:
+- File：
+- Function / class：
+- 能触发它的 command 或 test：
 
 ## Call Path
 
@@ -18,23 +18,23 @@ API
   -> runtime / kernel / communication
 ```
 
-## Important Abstractions
+## 重要抽象
 
 - 
 
-## What I Verified
+## 我验证了什么
 
-- Built:
-- Ran:
-- Trace / log:
+- Built：
+- Ran：
+- Trace / log：
 
 ## Mental Model
 
-Explain the component in my own words.
+用自己的话解释这个 component。
 
-## Connection To Main Thread
+## 与研究主线的关系
 
-How does this relate to communication bottlenecks in multi-GPU LLM inference?
+它和 multi-GPU LLM inference 的 communication bottleneck 有什么关系？
 
 ## Next Question
 
