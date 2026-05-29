@@ -62,3 +62,22 @@ GPU3    SYS     SYS     NODE     X      28-55,84-111    1
 - 对关键 runs 增加 `NCCL_DEBUG=INFO NCCL_DEBUG_SUBSYS=INIT,GRAPH`。
 - 为一个 small-message case 和一个 large-message case 增加 Nsight Systems trace。
 - 与 `NCCL_P2P_DISABLE=1` 结果对比。
+
+
+利用docker查看容器占用的显卡：
+
+nvidia-smi
+docker inspect be07844ccc06 --format '{{json .HostConfig.DeviceRequests}}'
+docker inspect 3471fe9d72fc --format '{{json .HostConfig.DeviceRequests}}'
+
+查看启动命令：
+
+docker inspect be07844ccc06 --format '{{.Path}} {{range .Args}}{{.}} {{end}}'
+docker inspect 3471fe9d72fc --format '{{.Path}} {{range .Args}}{{.}} {{end}}' ##
+重点看：
+
+
+** CUDA_VISIBLE_DEVICES、--tensor-parallel-size、--gpu-memory-utilization**
+
+
+
