@@ -1,4 +1,43 @@
 # Experiment：NCCL 4x4090 Baseline
+root@ubuntuserver:/ops/nccl-tests/nccl# nvidia-smi
+Fri May 29 18:35:44 2026
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.126.18             Driver Version: 580.126.18     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA GeForce RTX 4090        Off |   00000000:4B:00.0 Off |                  Off |
+| 47%   35C    P8             13W /  450W |   21429MiB /  24564MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA GeForce RTX 4090        Off |   00000000:65:00.0 Off |                  Off |
+| 31%   41C    P8             10W /  450W |    3428MiB /  24564MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+|   2  NVIDIA GeForce RTX 4090        Off |   00000000:B1:00.0 Off |                  Off |
+| 44%   43C    P8             24W /  450W |   23703MiB /  24564MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+|   3  NVIDIA GeForce RTX 4090        Off |   00000000:E3:00.0 Off |                  Off |
+| 31%   46C    P8             19W /  450W |   23703MiB /  24564MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A          297682      C   VLLM::EngineCore                       9756MiB |
+|    0   N/A  N/A         3332855      C   VLLM::EngineCore                       3732MiB |
+|    0   N/A  N/A         3553571      C   VLLM::EngineCore                       7922MiB |
+|    1   N/A  N/A         1328209      C   /usr/bin/python3                       1706MiB |
+|    1   N/A  N/A         3632600      C   /usr/bin/python3                       1706MiB |
+|    2   N/A  N/A         1217466      C   VLLM::Worker_TP0                      23694MiB |
+|    3   N/A  N/A         1217467      C   VLLM::Worker_TP1                      23694MiB |
++-----------------------------------------------------------------------------------------+
 
 ## 问题
 
@@ -78,6 +117,19 @@ docker inspect 3471fe9d72fc --format '{{.Path}} {{range .Args}}{{.}} {{end}}' ##
 
 
 ** CUDA_VISIBLE_DEVICES、--tensor-parallel-size、--gpu-memory-utilization**
+
+后续重启vllm：
+
+root@ubuntuserver:/ops/nccl-tests/nccl# docker inspect be07844ccc06 --format '{{json .HostConfig.DeviceRequests}}'
+[{"Driver":"","Count":0,"DeviceIDs":["2","3"],"Capabilities":[["gpu"]],"Options":{}}]
+root@ubuntuserver:/ops/nccl-tests/nccl# docker inspect 3471fe9d72fc --format '{{json .HostConfig.DeviceRequests}}'
+[{"Driver":"","Count":0,"DeviceIDs":["0"],"Capabilities":[["gpu"]],"Options":{}}]
+<cker inspect be07844ccc06 --format '{{.Path}} {{range .Args}}{{.}} {{end}}'
+vllm serve /data/models/Qwen3-32B-FP8 --served-model-name qwen3-32b-fp8 --max-model-len 8192 --tensor-parallel-size 2 --gpu-memory-utilization 0.85 --enable-auto-tool-choice --tool-call-parser hermes
+<cker inspect 3471fe9d72fc --format '{{.Path}} {{range .Args}}{{.}} {{end}}'
+vllm serve --model /data/models/Qwen3-Embedding-4B --served_model_name Qwen3-Embedding-4B --trust-remote-code --dtype half --max-model-len 2048 --gpu-memory-utilization 0.4 --max-num-batched-tokens 4096
+
+
 
 
 
