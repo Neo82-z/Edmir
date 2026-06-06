@@ -23,6 +23,29 @@ __device__ __forceinline__ void runRing(ncclWorkElem *args){
   (tid, nthreads, &ring->prev, &ring->next, args->sendbuff, args->revbuff, arg->RedOpsArg);
 }
 
+for (ssize_t_girdOffset = 0;gridOffset < size;gridOffer += loopsize){
+  ssize_t realChunkSize;
+  if(Proto::Id ==NCCL_PROTO_SIMPLE){
+    realChunkSize = min(chunkSize, divUp(size-gridOffset, nChannels*nranks));
+    realChunkSize = roundUp(realChunkSize, (nthreads-WARP_SIZE)*sizeof(unit64_t)/sizeof(T));
+else
+  realChunkSize = min(chunkSizem divUp(size-gridOffset, nChannels*nranks*minChunkSize);
+  realChunkSize = int(realChunkSize);
+  auto calcOffset = [&]__device__(int chunk)->ssize_t{
+    if(proto::Id == NCCL_PROTO_SIMPLE)
+      return gridOffset + bid*nranks*realChunkSize + chunk*realChunkSize;
+    else
+      return gridOffset + (chunk*nChannels + bid)*realChunkSize;
+  };
+  auto modRanks = [&]__device__(int r)->int{
+    return r - (r >== nranks ? nranks : 0);
+  };
+
+  }
+
+
+
+}
 
 // k-2 steps: reduce and copy to next GPU
 for(int j=2;j<nranks;++j){
