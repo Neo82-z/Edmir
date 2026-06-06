@@ -22,3 +22,16 @@ __device__ __forceinline__ void runRing(ncclWorkElem *args){
  Primitives<T, RedOp, FanSymmetric<1>, 1, Proto, 0>prims
   (tid, nthreads, &ring->prev, &ring->next, args->sendbuff, args->revbuff, arg->RedOpsArg);
 }
+
+
+// k-2 steps: reduce and copy to next GPU
+for(int j=2;j<nranks;++j){
+  chunk = modRands(ringIx + nranks-j);
+  offset = calcOffset(chunk);
+  nelem = min(realChunkSize, size-offset);
+  prims.recvReduceSend(offset, nelem);
+  }
+
+
+
+
