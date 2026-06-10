@@ -34,4 +34,4 @@ multi-GPU LLM serving 的性能往往不只受 GPU compute 限制，还受到 co
 
 DeepEP V2 的价值不只是更快的 all-to-all，而是把 MoE EP 的 routing、layout、communication、combine reduction 和 compute-overlap 共同放进专用 runtime；NCCL 是底层通信能力，DeepEP 是 MoE-aware communication execution layer。
 
-因此 DeepEP V2 的主结论必须来自 Hopper/SM90 平台。4090 不能支撑 DeepEP V2 的论文式性能结论；A100 更适合作为 legacy 对照。
+因此 DeepEP V2 的主结论必须来自 Hopper/SM90 平台。A100 更适合作为 legacy 对照。
