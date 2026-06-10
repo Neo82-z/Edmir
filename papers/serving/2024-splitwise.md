@@ -37,10 +37,11 @@ Phase splitting：把 inference workload 拆成不同 phase，并针对每个 ph
 
 ## 复现计划
 
-- 在 4x4090 上先做 phase characterization。
+- 在 4x4090 上先做 phase characterization，作为 serving/profiling 流程热身。
 - 分别测 prefill-heavy 和 decode-heavy workload。
 - 记录 GPU utilization、memory bandwidth、collective time。
 - 作为 DistServe 的对照阅读。
+- 如果进入 KV transfer / RDMA / DeepEP-aware MoE 实验，需要切到 H100/Hopper 或多节点 RDMA 环境。
 
 ## 与我的研究主线的关系
 

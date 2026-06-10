@@ -51,4 +51,5 @@ MSCCL++ 很贴近“communication + inference runtime + 底层掌控”。它可
 
 - 哪些 vLLM collective pattern 需要超出固定 NCCL API？
 - MoE all-to-all 是否适合用更可编程的 communication abstraction？
-- 对 4x4090 PCIe topology，MSCCL++ 类方法是否能带来可观收益？
+- 4x4090 PCIe-only 平台只能用于理解 programmable communication 的流程；真正的 MoE EP / DeepEP V2 对照需要 H100/Hopper 平台。
+- DeepEP V2 与 MSCCL++ 都在挑战固定 collective abstraction，二者对 MoE dispatch/combine 的表达边界有什么不同？

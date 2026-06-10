@@ -17,7 +17,7 @@ LLM workload：
 3.GPUDirect RDMA：NIC 可以直接读写 GPU 显存，这对 NCCL 多节点性能非常关键。
 4.RoCE：把 RDMA 跑在 Ethernet 上，通常需要 PFC/ECN/QoS 配好，否则容易抖。同样Nv在这块文档很多但是太过工程导向：https://docs.nvidia.com/networking/display/winofv55054000/rdma+over+converged+ethernet+(roce) 关于RoCE知乎上有人说他完成了不错的工程进展（ “我们最近治理了机房roce网络、升级了框架软件驱动（这放大厂得磨蹭个大半年）， 对齐了deepep通信、 nccl通信、 te通信（8卡rdma带宽390G）， 核心算子mfu，且终于稳定上线了大ep+centric kvcache”）这个思路其实就是我想实践并研究的。
 5.NCCL NET/IB：NCCL 的网络传输路径，名字叫 IB，但很多时候也能覆盖 RoCE，因为底层走 verbs/rdma 这一套。
-6.NVLink/NVSwitch：单节点 GPU-GPU 互联，不是跨节点网络。它解决的是节点内（也就是我们说的卡间通信，NCCL发挥作用时刻，具体有无NVLink看的是能拿到什么样的卡，如果是4090，5090，那我们只能测PCIe，所以NVLink是一个变量），InfiniBand/RoCE 解决的是节点间。
+6.NVLink/NVSwitch：单节点 GPU-GPU 互联，不是跨节点网络。它解决的是节点内（也就是我们说的卡间通信，NCCL发挥作用时刻，具体有无NVLink看的是能拿到什么样的卡）。如果是4090/5090，我们只能测 PCIe-only 路径，因此它们更适合做 NCCL/PyTorch distributed 和 profiling 流程热身；DeepEP V2 的主结论需要放到 H100/H800/H20 这类 Hopper/SM90 平台上。InfiniBand/RoCE 解决的是节点间。
 
 
 InfiniBand貌似就是一个使用交换机 交换机上使用的流控方式。接收方提前告诉发送方自己有多少 buffer 的信用额度，发送方不能发送超出自己被分配的信用额度的数据。好处就是能事先预防，坏处就是贵。 https://zhuanlan.zhihu.com/p/2046220669998851708
@@ -135,7 +135,6 @@ network bandwidth utilization
 但是这些貌似也是blog有所总结，我们还是要选择一些策略和方法，自动算出最优的情况。
 
 总之这块既要保障容量 提升命中率，还要保障latency，避免阻塞计算，听说10k以上输入，用rdma带宽换tc的计算非常划算，因为已经降到秒级了，难搞的是roCE ib网卡 switch的流量qos。 还有deepseek用3fs ssd的存储冷热分级。
-
 
 
 
