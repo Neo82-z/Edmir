@@ -31,9 +31,9 @@
 
 ## 复现计划
 
-基于当前资源，我可以复现哪一部分？
+基于当前资源，可以复现哪一部分？
 
-## 与我的研究主线的关系
+## 与研究主线的关系
 
 它如何帮助 multi-GPU LLM inference 中的 communication bottleneck 诊断或优化？
 
