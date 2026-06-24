@@ -4,6 +4,13 @@
 
 multi-GPU LLM inference 中的 communication bottleneck 在哪里？什么时候可以通过算法、scheduling 或 topology-aware decision 来改善？
 
+更精确的 MLSys 问题：
+
+- 什么时候 communication / KV movement 会暴露到 critical path，并转化成 TTFT / ITL / P99？
+- total communication time、NCCL microbenchmark、GPU FLOPS、KV logical hit rate 哪些情况下会误导我们？
+- 能否用少量 roofline + trace 建立一个可校准的 exposed data movement model？
+- 这个模型能否在 held-out configs 上提前判断 bad TP degree、bad placement、bad KV transfer choice？
+
 ## Communication
 
 - NCCL collective time 什么时候会进入 critical path，而不是被 compute overlap 掉？
@@ -11,6 +18,7 @@ multi-GPU LLM inference 中的 communication bottleneck 在哪里？什么时候
 - 在 H100/Hopper 主实验上，哪类 communication pattern 最脆弱：all-reduce、all-gather、reduce-scatter、all-to-all，还是 MoE dispatch/combine？
 - 4x4090 上关闭 P2P 会造成多大影响？这只能揭示 PCIe-only transfer path，不能外推到 DeepEP V2。
 - empirical NCCL roofline 能否预测 vLLM 中的 collective time？
+- exposed communication ratio 是否比 total NCCL time 更能解释 ITL / P99？
 
 ## DeepEP / MoE EP
 
@@ -28,12 +36,15 @@ multi-GPU LLM inference 中的 communication bottleneck 在哪里？什么时候
 - 在 H100/Hopper 多节点环境中，DeepEP-aware EP 什么时候比通用 NCCL / PyTorch collective 更适合？
 - batch size、context length 和 concurrency 如何改变 communication / computation ratio？
 - 哪些 workload shape 最容易暴露 all-to-all 或 all-gather bottleneck？
+- runtime scheduling、small-op density、dependency fan-in 是否会成为 communication 之外的 tail latency 来源？
 
 ## KV Cache
 
 - remote KV transfer 什么时候比 recomputation 更划算？
 - KV movement 要产生收益，需要怎样的 cache hit rate？
 - 对 tail latency 影响最大的部分是什么：lookup、transfer、decompression，还是 decode blocking？
+- logical hit rate 和 effective hit rate 在什么情况下分离？
+- KV transfer、PD handoff、EP all-to-all、storage backup 是否会在同一张 fabric 上互相干扰？
 
 ## Kernel / Compute Side
 

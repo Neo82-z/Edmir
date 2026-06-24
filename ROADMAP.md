@@ -1,5 +1,20 @@
 # Roadmap
 
+## MLSys 主线：Exposed Data Movement Model
+
+目标：不是做一个更大的 serving engine，而是解释并预测 multi-GPU LLM serving 中 data movement 什么时候会影响用户可见延迟。
+
+核心问题：
+
+> NCCL bandwidth、GPU FLOPS、KV cache hit rate 为什么不能直接预测 TTFT / ITL / P99？缺失变量是不是 exposed communication / exposed KV movement？
+
+短期产出：
+
+- 完成 [`paper/mlsys-2027/model.md`](paper/mlsys-2027/model.md) 的第一版变量定义。
+- 完成 [`paper/mlsys-2027/claims-and-experiments.md`](paper/mlsys-2027/claims-and-experiments.md) 中 C1-C3 的最小实验证据。
+- 将 NCCL roofline 和 vLLM trace 对齐，形成第一版 ECR（Exposed Communication Ratio）。
+- 明确 KV cache 支线是否进入第一篇 paper，还是作为后续扩展。
+
 ## Phase 0：建立第一版研究工作台
 
 目标：产出可复现的 baseline slice，并明确不同硬件平台能回答什么问题。
@@ -56,11 +71,12 @@
 - 跑 TP / PP / EP serving workload。
 - 识别 prefill 和 decode 阶段的 collectives。
 - 将 vLLM 中观测到的 collective time 与 NCCL microbench roofline 对比。
-- 判断 bottleneck 来自 communication volume、topology、launch overhead，还是 scheduling。
+- 判断 bottleneck 来自 communication volume、topology、launch overhead、scheduler、小算子密度、KV movement，还是 exposed critical-path waiting。
+- 输出 trace decomposition：compute、communication、overlap、runtime、KV movement。
 
 ## Phase 5：小范围优化
 
-目标：实现一个边界清晰的优化或决策策略。
+目标：实现一个边界清晰的优化或决策策略。优化不是第一目标；第一目标是让模型能提前拒绝坏配置。
 
 可能方向：
 
@@ -69,3 +85,4 @@
 - MoE all-to-all profiling 和 backend selection。
 - DeepEP-aware routing / layout / overlap policy。
 - KV cache transfer 与 recomputation 的边界分析。
+- runtime / graph small-op overhead 诊断。

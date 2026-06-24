@@ -6,6 +6,10 @@
 
 **面向 multi-GPU LLM inference 的 communication bottleneck 诊断与优化。**
 
+当前更精确的论文方向：
+
+> 多 GPU LLM serving 的性能不是由 FLOPS、NCCL bandwidth 或 KV cache hit rate 单独决定，而是由 data movement 是否暴露在 critical path 上决定。目标是建立一个可校准的解释模型，判断 topology、parallelism、KV movement 和 runtime scheduling 什么时候会影响 TTFT / ITL / P99。
+
 研究的支线：
 
 - tinygrad：理解 tensor IR、primitive composition 和 collective 语义。(个人非常喜欢的张量计算引擎)
@@ -29,11 +33,19 @@
 ## 仓库结构
 
 ```text
+paper/         面向 MLSys 2027 的论文问题、模型、claims 和实验矩阵。
 papers/        论文笔记，按研究方向归类。
 experiments/   可复现实验 slice，包括 raw log、结果表和图。
 ideas/         研究问题、潜在 paper 方向和设计草图。
 templates/     paper note 和 experiment record 的 Markdown 模板。
 ```
+
+## 当前论文工作区
+
+- [`paper/mlsys-2027/README.md`](paper/mlsys-2027/README.md)：MLSys 方向总览。
+- [`paper/mlsys-2027/scope.md`](paper/mlsys-2027/scope.md)：问题边界和研究 taste。
+- [`paper/mlsys-2027/model.md`](paper/mlsys-2027/model.md)：exposed data movement 模型草稿。
+- [`paper/mlsys-2027/claims-and-experiments.md`](paper/mlsys-2027/claims-and-experiments.md)：claim-to-experiment 矩阵。
 
 
 ## 工作规则
