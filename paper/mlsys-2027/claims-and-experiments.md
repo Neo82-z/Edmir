@@ -8,10 +8,11 @@ This matrix keeps the project problem-centered. Each claim should teach somethin
 |---|---|---|---|---|
 | C1 | NCCL microbenchmarks alone do not predict serving latency. | Low-level bandwidth can be hidden by compute or irrelevant to the serving phase. | Compare NCCL roofline with vLLM TTFT / ITL under TP degree and workload-shape changes. | NCCL communication time predicts all latency changes without trace decomposition. |
 | C2 | Exposed communication explains latency better than total communication time. | The critical path, not total work, determines user-visible latency. | Trace compute, communication, overlap, and exposed segments; correlate ECR with ITL/P99. | Total NCCL time and ECR have similar predictive power. |
-| C3 | Topology changes active fabric, not just raw bandwidth. | GPU count alone is misleading; placement and group size activate different links. | Compare near/cross NUMA on 4x4090 and TP group sizes on H100/NVSwitch if available. | Placement differences vanish after controlling for message size and compute. |
-| C4 | Prefill and decode have different communication sensitivity. | Serving decisions should be phase-aware. | Prefill-heavy, decode-heavy, and mixed workloads with same hardware and model. | One phase-independent model predicts all cases equally well. |
-| C5 | Logical KV hit rate can overstate system benefit. | Remote KV or storage hits can hurt tail latency if transfer/materialization is exposed. | Compare recompute vs local hit vs remote hit / simulated transfer; measure useful hit margin. | Logical hit rate alone predicts TTFT/P99 across workloads. |
-| C6 | Runtime/scheduler/small-op overhead can be a first-class bottleneck. | Not every bottleneck is FLOPS or NCCL. | Trace small event density, launch gaps, dependency fan-in, and idle gaps. | Removing/fusing/reordering small events does not change tail or utilization. |
+| C3 | Overlap is conditional rather than universally beneficial. | DBO-like methods change the dependency graph and can add split, stream, metadata, or contention overhead. | Compare no-overlap, naive-overlap, and critical-path-aware overlap under matched workloads. | Enabling overlap always improves latency whenever total communication is large. |
+| C4 | Topology changes active fabric, not just raw bandwidth. | GPU count alone is misleading; placement and group size activate different links. | Compare near/cross NUMA on 4x4090 and TP group sizes on H100/NVSwitch if available. | Placement differences vanish after controlling for message size and compute. |
+| C5 | Prefill and decode have different communication sensitivity. | Serving decisions should be phase-aware. | Prefill-heavy, decode-heavy, and mixed workloads with same hardware and model. | One phase-independent model predicts all cases equally well. |
+| C6 | Logical KV hit rate can overstate system benefit. | Remote KV or storage hits can hurt tail latency if transfer/materialization is exposed. | Compare recompute vs local hit vs remote hit / simulated transfer; measure useful hit margin. | Logical hit rate alone predicts TTFT/P99 across workloads. |
+| C7 | Runtime/scheduler/small-op overhead can be a first-class bottleneck. | Not every bottleneck is FLOPS or NCCL. | Trace small event density, launch gaps, dependency fan-in, and idle gaps. | Removing/fusing/reordering small events does not change tail or utilization. |
 
 ## Experiment 0: Sanity Platform Snapshot
 
@@ -132,7 +133,41 @@ Success criterion:
 
 > The model predicts which configs have communication exposed enough to affect ITL/P99 better than raw NCCL bandwidth or GPU count.
 
-## Experiment 4: KV Usefulness Probe
+## Experiment 4: Overlap / DBO-Like Case Study
+
+Goal:
+
+> Test whether overlap reduces exposed communication or merely introduces new exposed overhead.
+
+Compare:
+
+```text
+no overlap
+naive overlap
+critical-path-aware overlap
+```
+
+For each configuration, measure:
+
+- total collective time before and after overlap;
+- exposed collective time before and after overlap;
+- microbatch split overhead;
+- stream/event synchronization overhead;
+- attention / KV / request metadata overhead;
+- new communication-compute or communication-memory contention;
+- TTFT / ITL / P50 / P90 / P99.
+
+Expected learning:
+
+- Overlap helps when it removes exposed communication from the critical path.
+- Overlap fails when the original communication was already hidden.
+- Overlap can hurt when split / stream / metadata / contention overhead becomes exposed.
+
+Important framing:
+
+> DBO-like systems and open-source attempts are useful engineering context, but the paper evidence must come from controlled traces and ablations in this repo.
+
+## Experiment 5: KV Usefulness Probe
 
 Goal:
 
@@ -162,7 +197,7 @@ Question:
 
 > Does a cache hit actually reduce user-visible latency?
 
-## Experiment 5: Interference Probe
+## Experiment 6: Interference Probe
 
 Goal:
 
@@ -197,8 +232,9 @@ The evaluation should be claim-driven:
 1. show raw communication regimes;
 2. show serving traces where raw communication is insufficient;
 3. show exposed communication improves explanation;
-4. show held-out prediction;
-5. optionally show KV useful-hit and interference cases.
+4. show overlap succeeds/fails according to exposed gain;
+5. show held-out prediction;
+6. optionally show KV useful-hit and interference cases.
 ```
 
 If a result does not support, refine, or falsify a claim, it should probably not be in the main paper.

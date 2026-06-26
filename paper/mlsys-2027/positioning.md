@@ -6,7 +6,7 @@ The paper should feel like an MLSys paper because it explains a recurring system
 
 The intended claim is:
 
-> LLM serving needs a critical-path-aware data movement model because raw bandwidth, FLOPS, total communication time, and logical KV hit rate cannot predict user-visible latency by themselves.
+> LLM serving needs a critical-path-aware data movement model because raw bandwidth, FLOPS, total communication time, logical KV hit rate, and overlap being enabled cannot predict user-visible latency by themselves.
 
 This gives the work its own coordinate system.
 Existing systems can be discussed as design points inside this coordinate system, but they should not become the contribution.
@@ -25,6 +25,17 @@ The paper should ask whether communication, KV movement, or runtime overhead is 
 If it is hidden by compute or scheduler slack, improving it may not improve TTFT, ITL, or P99.
 If it delays a dependent operation, even a small communication event can become user-visible.
 
+Overlap should be treated as a dependency-graph transformation:
+
+```text
+old critical path
+  - removed exposed communication
+  + split / stream / metadata / contention overhead
+  -> new critical path
+```
+
+The paper should explain when this transformation is positive, neutral, or harmful.
+
 ## How To Use Existing Systems Without Stitching Them Together
 
 Recent systems should be treated as examples of trade-offs:
@@ -32,6 +43,7 @@ Recent systems should be treated as examples of trade-offs:
 - **PD disaggregation**: separates prefill and decode interference, but introduces KV migration and communication risk.
 - **Chunked prefill**: keeps KV local, but chunk size trades prefill progress against decode ITL jitter.
 - **Green Context / PD multiplexing**: partitions compute resources while keeping KV locality, but still shares HBM, L2, memory capacity, and runtime paths.
+- **DBO-like overlap**: hides communication by changing microbatch and stream scheduling, but can add metadata, synchronization, and hardware-resource contention.
 - **Remote KV systems**: increase logical cache capacity and reuse, but only help if lookup, transfer, and materialization beat recomputation on the critical path.
 - **MoE / DeepEP-style communication**: makes all-to-all and dispatch/combine traffic central, but should enter the first paper only if it sharpens the exposed-data-movement model.
 
@@ -56,12 +68,14 @@ The paper should not claim:
 - to predict every TTFT / ITL / P99 value exactly;
 - to solve KV cache, RDMA, MoE, and scheduling in one system;
 - to compete with industrial clusters by scale.
+- to use another open-source PR as paper evidence.
 
 The paper can claim:
 
 - to model when raw communication cost becomes user-visible serving latency;
 - to predict whether a topology or TP placement choice is likely to matter;
 - to show when an NCCL improvement transfers to serving latency and when it does not;
+- to show when DBO-like overlap transfers to serving latency and when it does not;
 - to separate logical KV hits from useful KV hits;
 - to provide calibrated decision boundaries rather than universal thresholds.
 
@@ -75,6 +89,7 @@ dense TP
   + NCCL roofline
   + vLLM trace
   + exposed communication ratio
+  + controlled overlap ablation
 ```
 
 KV movement should be the second layer, not the thing that makes the first paper impossible to finish.
@@ -108,7 +123,23 @@ Answer: the model must output decisions:
 
 - whether a TP group should cross a weak fabric;
 - whether a communication optimization is worth doing;
+- whether a DBO-like overlap policy should be enabled;
 - whether to fetch KV or recompute it;
 - whether prefill and decode should co-locate or disaggregate;
 - whether latency is communication-exposed or dominated by another bottleneck.
 
+## How To Use Open-Source Engineering Attempts
+
+Open-source issues and PRs are useful for identifying real engineering pressure and implementation pitfalls.
+They are not paper evidence.
+
+Use them only to motivate that a problem exists or to name practical failure modes:
+
+- microbatch split correctness;
+- attention / KV metadata reconstruction;
+- collective scheduling;
+- stream synchronization;
+- hardware execution resource contention;
+- compatibility across TP / DP / PP / EP combinations.
+
+The actual paper evidence should come from this project's own traces, ablations, and prediction errors.

@@ -2,6 +2,32 @@
 
 This file records the first model skeleton. The goal is not to invent a large new theory. The goal is to combine known ideas from communication models, roofline reasoning, critical paths, and LLM serving phases into a measurable decision model.
 
+## Request Dependency Graph
+
+For a serving phase, think of the trace as a dependency graph:
+
+```text
+G_phase = (events, dependencies)
+```
+
+Events include compute kernels, collective communication, KV lookup / transfer / materialization, runtime scheduling, stream synchronization, metadata construction, and visible idle or contention.
+
+Dependencies include data dependencies, stream ordering, collective barriers, scheduler constraints, and KV readiness constraints.
+
+The observed phase latency is approximately the length of the critical path:
+
+```text
+T_phase ~= critical_path_length(G_phase)
+```
+
+This is the key distinction:
+
+```text
+total work != critical-path work
+```
+
+A communication event can be large in total trace time but irrelevant to latency if it is hidden behind useful compute. A small event can hurt P99 if it gates the next dependent step.
+
 ## Request And Phase Decomposition
 
 For a request:
@@ -64,7 +90,10 @@ T_exposed_comm = max(0, T_comm - T_overlap_window)
 Trace-based definition:
 
 ```text
-T_exposed_comm = duration of communication events that lie on, or extend, the critical path of the serving phase
+T_exposed_comm =
+  duration of communication events that lie on,
+  or extend,
+  the critical path of the serving phase
 ```
 
 Ratio:
@@ -79,6 +108,51 @@ Interpretation:
 - high `ECR`: communication, placement, or overlap changes may affect TTFT / ITL / P99.
 
 The exact boundary should be calibrated per platform and workload. Do not hard-code universal thresholds.
+
+## Overlap Benefit
+
+Overlap is not a switch. It transforms the request dependency graph:
+
+```text
+G_phase --overlap_policy--> G_phase'
+```
+
+Ideal gain:
+
+```text
+Delta_T_phase =
+  critical_path_length(G_phase)
+- critical_path_length(G_phase')
+```
+
+For DBO-like overlap, use the first-order estimate:
+
+```text
+Delta_T_phase ~=
+  Delta_T_exposed_comm
+- T_split
+- T_stream
+- T_metadata
+- T_new_contention
+```
+
+Definitions:
+
+- `Delta_T_exposed_comm`: communication removed from the critical path.
+- `T_split`: microbatch splitting and extra scheduling overhead.
+- `T_stream`: stream/event management and synchronization overhead.
+- `T_metadata`: attention / KV / request metadata rebuild or split overhead.
+- `T_new_contention`: newly exposed contention between communication, compute, memory, or hardware execution resources.
+
+Prediction:
+
+```text
+overlap helps if Delta_T_phase > 0
+overlap fails if Delta_T_phase ~= 0
+overlap hurts if Delta_T_phase < 0
+```
+
+This is why DBO-like optimizations should be evaluated with trace critical paths, not only with total communication time.
 
 ## Topology Penalty
 
@@ -181,6 +255,7 @@ Reject or warn if:
 
 - `ECR` is high for decode;
 - `P_topo` is high for selected GPU group;
+- overlap removes little exposed communication but adds split / stream / metadata overhead;
 - KV logical hit rate is high but `KV_useful_margin <= 0`;
 - KV / EP / PD traffic shares a bottleneck and tail risk is high;
 - runtime overhead dominates because the graph has many small dependent events.
@@ -195,11 +270,13 @@ Minimum evidence per platform:
 4. vLLM trace with prefill-heavy, decode-heavy, and mixed workloads.
 5. TTFT / ITL / throughput / P50 / P90 / P99.
 6. Trace decomposition into compute, communication, overlap, KV movement, runtime overhead.
+7. No-overlap / naive-overlap / critical-path-aware overlap comparison when the serving stack allows it.
 
 ## What Would Falsify The Model?
 
 - Total communication time predicts latency as well as exposed communication.
 - ECR is high but changing communication cost does not affect latency.
 - ECR is low but communication changes strongly affect latency.
+- Overlap gain model predicts a positive direction but controlled traces repeatedly show no improvement.
 - KV useful margin predicts benefit poorly across held-out workloads.
 - Topology penalty does not correlate with observed serving differences when other variables are controlled.

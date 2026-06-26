@@ -8,6 +8,8 @@ Examples of failure modes:
 
 - A collective is slow in isolation but hidden by compute in serving.
 - NCCL bandwidth looks healthy, but decode P99 is bad because small communication events are exposed.
+- Total communication time is high, but overlap does not help because the exposed portion is small.
+- DBO-like overlap hides some communication but adds microbatch, stream, metadata, or contention overhead.
 - KV cache hit rate is high, but remote transfer or materialization makes the hit useless.
 - TP degree increases theoretical compute capacity but increases synchronization and tail latency.
 - A topology is fast for all GPUs together but poor for a partial GPU group.
@@ -33,6 +35,7 @@ Include:
 - collective type and message size;
 - prefill vs decode phase;
 - compute / communication overlap;
+- DBO-like microbatch overlap and its overhead;
 - KV cache transfer vs recomputation;
 - runtime scheduling and small-op overhead when visible in trace;
 - TTFT, ITL / TPOT, throughput, P50/P90/P99.
@@ -50,6 +53,7 @@ Exclude from first scope:
 Industrial systems often report deployment rules, benchmark tables, or large-scale speedups. A research paper can contribute by asking why:
 
 - Why does a communication optimization transfer to serving latency in some regimes but not others?
+- Why does overlap help in some regimes, do nothing in others, and sometimes hurt?
 - Which part of communication is exposed rather than overlapped?
 - Which workload phase is sensitive to which communication primitive?
 - When does a logical cache hit become a useful hit?
@@ -65,7 +69,7 @@ Bad version:
 
 Better version:
 
-> We show that total communication time and raw bandwidth are poor predictors of serving latency. A small set of exposed data-movement metrics explains and predicts when topology, TP degree, and KV transfer choices affect TTFT / ITL / P99.
+> We show that total communication time, raw bandwidth, and whether overlap is enabled are poor predictors of serving latency. A small set of exposed data-movement metrics explains and predicts when topology, TP degree, overlap policy, and KV transfer choices affect TTFT / ITL / P99.
 
 ## Defensive Narrowing
 
@@ -80,6 +84,7 @@ This is not a complete serving planner.
 It is a calibrated explanation layer for one recurring bottleneck class.
 
 The first scope should be dense tensor parallelism, topology, NCCL roofline, and trace-based exposed communication.
+Controlled overlap ablations can be part of the first scope if the serving stack allows it.
 KV movement should be introduced only after this dense-TP case is measurable.
 MoE, DeepEP, RDMA, and remote KV storage are later extensions.
 
@@ -99,6 +104,14 @@ The paper's own coordinate system is:
 compute / memory / communication / state locality / runtime scheduling
   -> critical-path exposure
   -> TTFT / ITL / P99
+```
+
+DBO-like overlap fits this coordinate system as:
+
+```text
+microbatch / stream / collective scheduling
+  -> changed critical path
+  -> removed exposed communication or introduced exposed overhead
 ```
 
 ## Hardware Reality
@@ -132,6 +145,9 @@ The evaluation should map the solution space into regimes:
 
 - hidden communication;
 - exposed communication;
+- overlap-helpful;
+- overlap-neutral;
+- overlap-harmful;
 - topology-sensitive placement;
 - KV-transfer-useful;
 - KV-transfer-dangerous;

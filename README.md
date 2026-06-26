@@ -8,7 +8,20 @@
 
 当前更精确的论文方向：
 
-> 多 GPU LLM serving 的性能不是由 FLOPS、NCCL bandwidth 或 KV cache hit rate 单独决定，而是由 data movement 是否暴露在 critical path 上决定。目标是建立一个可校准的解释模型，判断 topology、parallelism、KV movement 和 runtime scheduling 什么时候会影响 TTFT / ITL / P99。
+> 多 GPU LLM serving 的性能不是由 FLOPS、NCCL bandwidth、KV cache hit rate 或 overlap 开关单独决定，而是由 data movement 是否暴露在 request critical path 上决定。目标是建立一个可校准的解释模型，判断 topology、parallelism、KV movement、runtime scheduling 和 overlap policy 什么时候会影响 TTFT / ITL / P99。
+
+当前更具体的研究问题：
+
+> When does overlap help in multi-GPU LLM serving?
+
+这里的 overlap 包括 DBO-like microbatch overlap、compute-communication overlap、prefill/decode multiplexing 等。核心判断不是“能不能 overlap”，而是：
+
+```text
+overlap removed exposed communication
+  > overlap introduced split / stream / metadata / contention overhead
+```
+
+如果这个不成立，trace 里的通信再大，也可能不是正确优化目标。
 
 研究的支线：
 
