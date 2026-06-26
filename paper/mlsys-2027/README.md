@@ -35,6 +35,28 @@ hardware fabric
 
 Communication matters only when it is on, or delays, the critical path.
 
+## Narrative Stance
+
+This project should not stitch together a collection of recent serving papers.
+
+Systems such as PD disaggregation, chunked prefill, Green Context / PD multiplexing, remote KV cache, and MoE communication should be treated as **samples of a shared trade-off space**, not as components to copy.
+
+The paper's own explanatory axis is:
+
+```text
+LLM serving optimization is critical-path management across
+compute, memory, communication, state locality, and runtime scheduling.
+```
+
+The goal is to build a small explanation system:
+
+```text
+raw bandwidth / FLOPS / logical KV hit rate
+  -> are insufficient
+exposed data movement on the serving critical path
+  -> explains when an optimization affects TTFT / ITL / P99
+```
+
 ## Current Research Position
 
 Industrial practice already knows many of the individual facts:
@@ -81,6 +103,7 @@ Only add MoE / DeepEP / remote KV after the dense TP story is measurable and the
 
 ## Files
 
+- [`positioning.md`](positioning.md): narrative stance, defensive scope, and review-risk framing.
 - [`scope.md`](scope.md): problem formulation, boundary, and paper taste.
 - [`model.md`](model.md): variables, formulas, and measurement procedures.
 - [`claims-and-experiments.md`](claims-and-experiments.md): claims, falsification tests, and experiment matrix.

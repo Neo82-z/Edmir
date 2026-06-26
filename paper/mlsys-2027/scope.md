@@ -67,6 +67,40 @@ Better version:
 
 > We show that total communication time and raw bandwidth are poor predictors of serving latency. A small set of exposed data-movement metrics explains and predicts when topology, TP degree, and KV transfer choices affect TTFT / ITL / P99.
 
+## Defensive Narrowing
+
+The hardest risk is that "LLM serving infra" is too large.
+Kernel quality, runtime scheduling, CUDA Graphs, memory allocation, NCCL, RDMA, KV cache placement, queueing, topology, NUMA, and workload mix can all be valid objections.
+
+The paper should therefore defend a narrow claim:
+
+> Given a topology, parallelism placement, serving phase, and request shape, when does raw communication or KV movement become exposed user-visible latency?
+
+This is not a complete serving planner.
+It is a calibrated explanation layer for one recurring bottleneck class.
+
+The first scope should be dense tensor parallelism, topology, NCCL roofline, and trace-based exposed communication.
+KV movement should be introduced only after this dense-TP case is measurable.
+MoE, DeepEP, RDMA, and remote KV storage are later extensions.
+
+## Own Explanation System
+
+The paper should not be a collage of recent systems.
+Existing systems should be used as design points in a shared trade-off space:
+
+- PD disaggregation trades interference isolation for KV migration and communication cost.
+- Chunked prefill trades KV locality for chunk-size sensitivity and decode jitter.
+- Green Context / PD multiplexing trades migration cost for shared-resource contention.
+- Remote KV systems trade recomputation for lookup, transfer, and materialization latency.
+
+The paper's own coordinate system is:
+
+```text
+compute / memory / communication / state locality / runtime scheduling
+  -> critical-path exposure
+  -> TTFT / ITL / P99
+```
+
 ## Hardware Reality
 
 This project cannot compete with industrial-scale clusters. The hardware story should be honest:
