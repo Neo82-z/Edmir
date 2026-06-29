@@ -1,6 +1,37 @@
-# Exposed Data-Movement Model
+# EDM-IR And Exposed Data-Movement Model
 
-This file records the first model skeleton. The goal is not to invent a large new theory. The goal is to combine known ideas from communication models, roofline reasoning, critical paths, and LLM serving phases into a measurable decision model.
+This file records the model skeleton. The goal is not to invent a large new theory or a new serving engine. The goal is to define an analysis IR and a small set of passes that turn serving traces into reproducible critical-path decisions.
+
+## EDM-IR Layer
+
+EDM-IR sits between raw profiler traces and serving-level metrics:
+
+```text
+Raw profiler trace
+  -> EDM UOps
+  -> EDM Graph
+  -> analysis passes
+  -> ECR / overlap-gain reports
+```
+
+The first version should normalize raw events into serving-level uops:
+
+```text
+compute.*
+comm.*
+metadata.*
+kv.*
+event.*
+runtime.*
+contention.*
+```
+
+Important boundary:
+
+```text
+EDM-IR is not a compiler IR for code generation.
+EDM-IR is a trace-derived analysis IR for serving execution.
+```
 
 ## Request Dependency Graph
 

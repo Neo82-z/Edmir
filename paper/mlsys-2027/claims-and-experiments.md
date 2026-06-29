@@ -6,15 +6,44 @@ This matrix keeps the project problem-centered. Each claim should teach somethin
 
 | ID | Claim | Why It Matters | Evidence Needed | Possible Counterexample |
 |---|---|---|---|---|
+| C0 | EDM-IR can make exposure analysis reproducible. | ECR must be computed from uops and graph edges, not manual timeline interpretation. | Synthetic hidden/exposed/harmful traces produce the expected critical paths and ECR values. | The analyzer cannot reproduce hand-checkable toy examples. |
 | C1 | NCCL microbenchmarks alone do not predict serving latency. | Low-level bandwidth can be hidden by compute or irrelevant to the serving phase. | Compare NCCL roofline with vLLM TTFT / ITL under TP degree and workload-shape changes. | NCCL communication time predicts all latency changes without trace decomposition. |
-| C2 | Exposed communication explains latency better than total communication time. | The critical path, not total work, determines user-visible latency. | Trace compute, communication, overlap, and exposed segments; correlate ECR with ITL/P99. | Total NCCL time and ECR have similar predictive power. |
+| C2 | Exposed communication explains latency better than total communication time. | The critical path, not total work, determines user-visible latency. | Convert serving traces into EDM-IR; correlate EDM-derived ECR with ITL/P99. | Total NCCL time and ECR have similar predictive power. |
 | C3 | Overlap is conditional rather than universally beneficial. | DBO-like methods change the dependency graph and can add split, stream, metadata, or contention overhead. | Compare no-overlap, naive-overlap, and critical-path-aware overlap under matched workloads. | Enabling overlap always improves latency whenever total communication is large. |
 | C4 | Topology changes active fabric, not just raw bandwidth. | GPU count alone is misleading; placement and group size activate different links. | Compare near/cross NUMA on 4x4090 and TP group sizes on H100/NVSwitch if available. | Placement differences vanish after controlling for message size and compute. |
 | C5 | Prefill and decode have different communication sensitivity. | Serving decisions should be phase-aware. | Prefill-heavy, decode-heavy, and mixed workloads with same hardware and model. | One phase-independent model predicts all cases equally well. |
 | C6 | Logical KV hit rate can overstate system benefit. | Remote KV or storage hits can hurt tail latency if transfer/materialization is exposed. | Compare recompute vs local hit vs remote hit / simulated transfer; measure useful hit margin. | Logical hit rate alone predicts TTFT/P99 across workloads. |
 | C7 | Runtime/scheduler/small-op overhead can be a first-class bottleneck. | Not every bottleneck is FLOPS or NCCL. | Trace small event density, launch gaps, dependency fan-in, and idle gaps. | Removing/fusing/reordering small events does not change tail or utilization. |
 
-## Experiment 0: Sanity Platform Snapshot
+## Experiment 0: EDM-IR Synthetic Sanity
+
+Goal:
+
+> Make the representation executable before relying on real profiler traces.
+
+Synthetic cases:
+
+```text
+synthetic_hidden_comm.json
+synthetic_exposed_comm.json
+synthetic_overlap_harmful.json
+```
+
+Expected analyzer output:
+
+- uop dump;
+- dependency graph;
+- selected critical path;
+- total communication time;
+- exposed communication time;
+- ECR;
+- overlap direction.
+
+Success criterion:
+
+> The analyzer classifies hidden, exposed, and harmful-overlap cases correctly from uops and edges.
+
+## Experiment 1: Sanity Platform Snapshot
 
 Goal:
 
@@ -39,7 +68,7 @@ Observation to record:
 - Is there NUMA asymmetry?
 - Is the hardware suitable for the claim being tested?
 
-## Experiment 1: Communication Roofline
+## Experiment 2: Communication Roofline
 
 Goal:
 
@@ -70,7 +99,7 @@ Report:
 - latency-bound / bandwidth-bound regions;
 - topology penalty.
 
-## Experiment 2: vLLM Dense TP Trace
+## Experiment 3: vLLM Dense TP Trace
 
 Goal:
 
@@ -108,7 +137,31 @@ Expected learning:
 - Decode is more sensitive to small exposed events.
 - Some communication is hidden and should not be over-interpreted.
 
-## Experiment 3: Held-Out Prediction
+## Experiment 4: Controlled Overlap Probe
+
+Goal:
+
+> Create helpful / neutral / harmful regimes under controlled conditions.
+
+Vary:
+
+```text
+message size
+compute window
+event placement
+microbatch count
+communication start offset
+```
+
+Report:
+
+- total communication;
+- exposed communication;
+- split / stream / metadata overhead;
+- predicted overlap direction;
+- observed latency delta.
+
+## Experiment 5: Held-Out Prediction
 
 Goal:
 
@@ -133,7 +186,7 @@ Success criterion:
 
 > The model predicts which configs have communication exposed enough to affect ITL/P99 better than raw NCCL bandwidth or GPU count.
 
-## Experiment 4: Overlap / DBO-Like Case Study
+## Experiment 6: Overlap / DBO-Like Case Study
 
 Goal:
 
@@ -167,7 +220,7 @@ Important framing:
 
 > DBO-like systems and open-source attempts are useful engineering context, but the paper evidence must come from controlled traces and ablations in this repo.
 
-## Experiment 5: KV Usefulness Probe
+## Experiment 7: KV Usefulness Probe
 
 Goal:
 
@@ -197,7 +250,7 @@ Question:
 
 > Does a cache hit actually reduce user-visible latency?
 
-## Experiment 6: Interference Probe
+## Experiment 8: Interference Probe
 
 Goal:
 
@@ -229,12 +282,13 @@ Record:
 The evaluation should be claim-driven:
 
 ```text
-1. show raw communication regimes;
-2. show serving traces where raw communication is insufficient;
-3. show exposed communication improves explanation;
-4. show overlap succeeds/fails according to exposed gain;
-5. show held-out prediction;
-6. optionally show KV useful-hit and interference cases.
+1. show EDM-IR works on synthetic traces;
+2. show raw communication regimes;
+3. show serving traces where raw communication is insufficient;
+4. show EDM-derived exposed communication improves explanation;
+5. show overlap succeeds/fails according to exposed gain;
+6. show held-out prediction;
+7. optionally show KV useful-hit and interference cases.
 ```
 
 If a result does not support, refine, or falsify a claim, it should probably not be in the main paper.
