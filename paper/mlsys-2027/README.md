@@ -147,3 +147,4 @@ Only add MoE / DeepEP / remote KV after the dense TP story is measurable and the
 - [`overlap.md`](overlap.md): DBO-like overlap as a critical-path question.
 - [`claims-and-experiments.md`](claims-and-experiments.md): claims, falsification tests, and experiment matrix.
 - [`reviewer-checklist.md`](reviewer-checklist.md): compressed reviewer expectations and artifact plan.
+- [`progress-log.md`](progress-log.md): public-safe milestone notes.
