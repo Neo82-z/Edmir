@@ -1,0 +1,116 @@
+from __future__ import annotations
+
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from ir import EDMBuilder, EDMGraph, MovementDesc
+from ir.ops import (
+    COMM_ALL_GATHER,
+    COMPUTE_ATTN,
+    COMPUTE_MLP,
+    COMPUTE_QKV,
+    DATA_DEPENDENCY,
+    EVENT_DEPENDENCY,
+    KV_TRANSFER,
+    PHASE_BOUNDARY,
+    RUNTIME_LAUNCH_GAP,
+    STREAM_ORDER,
+)
+
+
+def hidden_communication() -> EDMGraph:
+    """Communication is present, but it is hidden behind longer compute."""
+
+    b = EDMBuilder(default_phase="decode")
+    begin = b.phase_begin("decode", 0.0)
+    qkv = b.compute("qkv", 0.0, 30.0, op=COMPUTE_QKV, stream="compute")
+    comm = b.comm(
+        "tp_all_gather",
+        5.0,
+        25.0,
+        op=COMM_ALL_GATHER,
+        stream="comm",
+        movement=MovementDesc(kind="collective", size_bytes=64 << 20, group="tp"),
+    )
+    attn = b.compute("attention", 30.0, 52.0, op=COMPUTE_ATTN, stream="compute")
+    mlp = b.compute("mlp", 52.0, 92.0, op=COMPUTE_MLP, stream="compute")
+    end = b.phase_end("decode", 92.0)
+
+    b.sequence(begin, qkv, attn, mlp, end, kind=STREAM_ORDER)
+    b.bind_phase(begin, end, comm)
+    return b.build()
+
+
+def exposed_communication() -> EDMGraph:
+    """A communication result gates downstream attention work."""
+
+    b = EDMBuilder(default_phase="decode")
+    begin = b.phase_begin("decode", 0.0)
+    qkv = b.compute("qkv", 0.0, 30.0, op=COMPUTE_QKV, stream="compute")
+    comm = b.comm(
+        "tp_all_gather",
+        30.0,
+        55.0,
+        op=COMM_ALL_GATHER,
+        stream="comm",
+        movement=MovementDesc(kind="collective", size_bytes=64 << 20, group="tp"),
+    )
+    attn = b.compute("attention", 55.0, 77.0, op=COMPUTE_ATTN, stream="compute")
+    mlp = b.compute("mlp", 77.0, 117.0, op=COMPUTE_MLP, stream="compute")
+    end = b.phase_end("decode", 117.0)
+
+    b.sequence(begin, qkv, kind=STREAM_ORDER)
+    b.edge(qkv, comm, DATA_DEPENDENCY, data_id="qkv_partial")
+    b.edge(comm, attn, DATA_DEPENDENCY, data_id="qkv_gathered")
+    b.sequence(attn, mlp, end, kind=STREAM_ORDER)
+    return b.build()
+
+
+def harmful_overlap() -> EDMGraph:
+    """Overlap adds event and KV-transfer work that still gates the request."""
+
+    b = EDMBuilder(default_phase="decode")
+    begin = b.phase_begin("decode", 0.0)
+    qkv = b.compute("qkv", 0.0, 30.0, op=COMPUTE_QKV, stream="compute")
+    record = b.record_event("record_comm_ready", 30.0, stream="compute")
+    kv = b.movement("remote_kv_fetch", 30.0, 48.0, op=KV_TRANSFER, stream="kv")
+    wait = b.wait_event("wait_kv_ready", 48.0, stream="compute")
+    gap = b.uop(RUNTIME_LAUNCH_GAP, "handoff_gap", 48.0, 55.0, stream="runtime")
+    attn = b.compute("attention", 55.0, 77.0, op=COMPUTE_ATTN, stream="compute")
+    mlp = b.compute("mlp", 77.0, 117.0, op=COMPUTE_MLP, stream="compute")
+    end = b.phase_end("decode", 117.0)
+
+    b.sequence(begin, qkv, record, kind=STREAM_ORDER)
+    b.edge(record, kv, EVENT_DEPENDENCY, event="comm_ready")
+    b.edge(kv, wait, EVENT_DEPENDENCY, event="kv_ready")
+    b.sequence(wait, gap, attn, mlp, end, kind=STREAM_ORDER)
+    b.edge(begin, kv, PHASE_BOUNDARY)
+    b.edge(kv, end, PHASE_BOUNDARY)
+    return b.build()
+
+
+def summarize(name: str, graph: EDMGraph) -> None:
+    print(f"\n== {name} ==")
+    print(graph.dump_uops())
+    print(graph.dump_critical_path())
+    print(
+        "phase_us={phase:.1f} total_movement_us={total:.1f} "
+        "exposed_movement_us={exposed:.1f} ecr={ecr:.3f}".format(
+            phase=graph.phase_duration_us(),
+            total=graph.total_movement_us(),
+            exposed=graph.exposed_movement_us(),
+            ecr=graph.ecr(),
+        )
+    )
+
+
+def main() -> None:
+    summarize("hidden communication", hidden_communication())
+    summarize("exposed communication", exposed_communication())
+    summarize("harmful overlap", harmful_overlap())
+
+
+if __name__ == "__main__":
+    main()
