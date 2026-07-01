@@ -18,6 +18,7 @@ from ir.ops import (
     RUNTIME_LAUNCH_GAP,
     STREAM_ORDER,
 )
+from ir.printing import format_critical_path, format_summary, format_uops
 
 
 def hidden_communication() -> EDMGraph:
@@ -93,17 +94,10 @@ def harmful_overlap() -> EDMGraph:
 
 def summarize(name: str, graph: EDMGraph) -> None:
     print(f"\n== {name} ==")
-    print(graph.dump_uops())
-    print(graph.dump_critical_path())
-    print(
-        "phase_us={phase:.1f} total_movement_us={total:.1f} "
-        "exposed_movement_us={exposed:.1f} ecr={ecr:.3f}".format(
-            phase=graph.phase_duration_us(),
-            total=graph.total_movement_us(),
-            exposed=graph.exposed_movement_us(),
-            ecr=graph.ecr(),
-        )
-    )
+    critical_path, _ = graph.critical_path()
+    print(format_uops(graph, highlight=critical_path))
+    print(format_critical_path(graph))
+    print(format_summary(graph))
 
 
 def main() -> None:

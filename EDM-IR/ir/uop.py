@@ -5,6 +5,8 @@ from typing import Any
 
 from .ops import OpKind, check_op, namespace
 
+_MISSING = object()
+
 
 @dataclass(frozen=True, slots=True)
 class TensorDesc:
@@ -94,8 +96,14 @@ class UOp:
     def op_class(self) -> str:
         return namespace(self.op)
 
+    def attr(self, key: str, default: Any = None) -> Any:
+        """Read an annotation without forcing every key into the UOp schema."""
+        value = getattr(self, key, _MISSING)
+        if value is not _MISSING and value is not None:
+            return value
+        return self.attrs.get(key, default)
+
     def short(self) -> str:
         stream = f" stream={self.stream}" if self.stream is not None else ""
         phase = f" phase={self.phase}" if self.phase is not None else ""
         return f"%{self.id} {self.op} {self.name} [{self.start_us:.3f},{self.end_us:.3f}]us{phase}{stream}"
-
