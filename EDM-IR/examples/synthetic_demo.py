@@ -5,7 +5,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from ir import EDMBuilder, EDMGraph, MovementDesc
+from ir import EDMBuilder, EDMGraph, MovementDesc, buffer_ref, const_ref, param_ref
 from ir.ops import (
     COMM_ALL_GATHER,
     COMPUTE_ATTN,
@@ -26,7 +26,15 @@ def hidden_communication() -> EDMGraph:
 
     b = EDMBuilder(default_phase="decode")
     begin = b.phase_begin("decode", 0.0)
-    qkv = b.compute("qkv", 0.0, 30.0, op=COMPUTE_QKV, stream="compute")
+    qkv = b.compute(
+        "qkv",
+        0.0,
+        30.0,
+        op=COMPUTE_QKV,
+        stream="compute",
+        reads=(buffer_ref("hidden"), param_ref("qkv_weight"), const_ref("position")),
+        writes=(buffer_ref("qkv_partial", "write"),),
+    )
     comm = b.comm(
         "tp_all_gather",
         5.0,
@@ -34,6 +42,8 @@ def hidden_communication() -> EDMGraph:
         op=COMM_ALL_GATHER,
         stream="comm",
         movement=MovementDesc(kind="collective", size_bytes=64 << 20, group="tp"),
+        reads=(buffer_ref("qkv_partial"),),
+        writes=(buffer_ref("qkv_gathered", "write"),),
     )
     attn = b.compute("attention", 30.0, 52.0, op=COMPUTE_ATTN, stream="compute")
     mlp = b.compute("mlp", 52.0, 92.0, op=COMPUTE_MLP, stream="compute")
@@ -49,7 +59,15 @@ def exposed_communication() -> EDMGraph:
 
     b = EDMBuilder(default_phase="decode")
     begin = b.phase_begin("decode", 0.0)
-    qkv = b.compute("qkv", 0.0, 30.0, op=COMPUTE_QKV, stream="compute")
+    qkv = b.compute(
+        "qkv",
+        0.0,
+        30.0,
+        op=COMPUTE_QKV,
+        stream="compute",
+        reads=(buffer_ref("hidden"), param_ref("qkv_weight"), const_ref("position")),
+        writes=(buffer_ref("qkv_partial", "write"),),
+    )
     comm = b.comm(
         "tp_all_gather",
         30.0,
@@ -57,6 +75,8 @@ def exposed_communication() -> EDMGraph:
         op=COMM_ALL_GATHER,
         stream="comm",
         movement=MovementDesc(kind="collective", size_bytes=64 << 20, group="tp"),
+        reads=(buffer_ref("qkv_partial"),),
+        writes=(buffer_ref("qkv_gathered", "write"),),
     )
     attn = b.compute("attention", 55.0, 77.0, op=COMPUTE_ATTN, stream="compute")
     mlp = b.compute("mlp", 77.0, 117.0, op=COMPUTE_MLP, stream="compute")
@@ -74,9 +94,25 @@ def harmful_overlap() -> EDMGraph:
 
     b = EDMBuilder(default_phase="decode")
     begin = b.phase_begin("decode", 0.0)
-    qkv = b.compute("qkv", 0.0, 30.0, op=COMPUTE_QKV, stream="compute")
+    qkv = b.compute(
+        "qkv",
+        0.0,
+        30.0,
+        op=COMPUTE_QKV,
+        stream="compute",
+        reads=(buffer_ref("hidden"), param_ref("qkv_weight"), const_ref("position")),
+        writes=(buffer_ref("qkv_partial", "write"),),
+    )
     record = b.record_event("record_comm_ready", 30.0, stream="compute")
-    kv = b.movement("remote_kv_fetch", 30.0, 48.0, op=KV_TRANSFER, stream="kv")
+    kv = b.movement(
+        "remote_kv_fetch",
+        30.0,
+        48.0,
+        op=KV_TRANSFER,
+        stream="kv",
+        reads=(buffer_ref("remote_kv"),),
+        writes=(buffer_ref("local_kv", "write"),),
+    )
     wait = b.wait_event("wait_kv_ready", 48.0, stream="compute")
     gap = b.uop(RUNTIME_LAUNCH_GAP, "handoff_gap", 48.0, 55.0, stream="runtime")
     attn = b.compute("attention", 55.0, 77.0, op=COMPUTE_ATTN, stream="compute")

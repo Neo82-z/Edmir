@@ -4,7 +4,7 @@ from collections.abc import Iterable
 
 from .graph import EDMGraph
 from .ops import is_data_movement
-from .uop import UOp
+from .uop import DataRef, UOp
 
 
 def format_uop(uop: UOp, *, highlight: bool = False) -> str:
@@ -68,7 +68,16 @@ def _format_tags(uop: UOp) -> str:
         if movement.group is not None:
             tags.append(f"group={movement.group}")
 
+    if uop.reads:
+        tags.append("reads=" + _format_data_refs(uop.reads))
+    if uop.writes:
+        tags.append("writes=" + _format_data_refs(uop.writes))
+
     return "" if not tags else "  " + " ".join(tags)
+
+
+def _format_data_refs(refs: tuple[DataRef, ...]) -> str:
+    return ",".join(f"{ref.kind}:{ref.data_id}" for ref in refs)
 
 
 __all__ = [

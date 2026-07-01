@@ -5,7 +5,19 @@ from typing import Any
 
 from .ops import OpKind, check_op, namespace
 
+DataKind = str
+
+DATA_BUFFER = "buffer"
+DATA_PARAM = "param"
+DATA_CONST = "const"
+ALL_DATA_KINDS = frozenset({DATA_BUFFER, DATA_PARAM, DATA_CONST})
+
 _MISSING = object()
+
+
+def check_data_kind(kind: str) -> None:
+    if kind not in ALL_DATA_KINDS:
+        raise ValueError(f"unknown EDM data kind: {kind}")
 
 
 @dataclass(frozen=True, slots=True)
@@ -18,10 +30,15 @@ class TensorDesc:
     """
 
     name: str | None = None
+    kind: DataKind | None = None
     shape: tuple[int | str | None, ...] | None = None
     dtype: str | None = None
     role: str | None = None
     size_bytes: int | None = None
+
+    def __post_init__(self) -> None:
+        if self.kind is not None:
+            check_data_kind(self.kind)
 
 
 @dataclass(frozen=True, slots=True)
@@ -43,7 +60,23 @@ class DataRef:
 
     data_id: str
     access: str
+    kind: DataKind = DATA_BUFFER
     location: str | None = None
+
+    def __post_init__(self) -> None:
+        check_data_kind(self.kind)
+
+
+def buffer_ref(data_id: str, access: str = "read", location: str | None = None) -> DataRef:
+    return DataRef(data_id=data_id, access=access, kind=DATA_BUFFER, location=location)
+
+
+def param_ref(data_id: str, access: str = "read", location: str | None = None) -> DataRef:
+    return DataRef(data_id=data_id, access=access, kind=DATA_PARAM, location=location)
+
+
+def const_ref(data_id: str, access: str = "read", location: str | None = None) -> DataRef:
+    return DataRef(data_id=data_id, access=access, kind=DATA_CONST, location=location)
 
 
 @dataclass(frozen=True, slots=True)
