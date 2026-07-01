@@ -1,10 +1,10 @@
-# LLM Serving 研究笔记
+# 研究笔记
 
-这个仓库用于记录 multi-GPU LLM serving 方向的研究过程，重点关注 communication bottleneck 的诊断与优化。
+用于记录 multi-GPU LLM serving 方向的研究过程，重点关注 communication bottleneck 的optimize or trace。
 
 ## 研究主线
 
-**面向 multi-GPU LLM inference 的 communication bottleneck 诊断与优化。**
+**面向 multi-GPU LLM inference 时候 communication bottleneck and overlap trade-off.**
 
 当前更精确的论文方向：
 
