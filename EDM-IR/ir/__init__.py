@@ -1,4 +1,17 @@
 from .builder import EDMBuilder
+from .device import (
+    DEFAULT_REGISTRY,
+    DeviceDesc,
+    DeviceRegistry,
+    DeviceSpec,
+    arch_from_compute_capability,
+    detect_device,
+    get_device_spec,
+    known_device_specs,
+    match_device_spec,
+    register_device_spec,
+    supported_nvidia_specs,
+)
 from .graph import EDMGraph, Edge
 from .uop import (
     DATA_BUFFER,
@@ -17,14 +30,25 @@ __all__ = [
     "DATA_BUFFER",
     "DATA_CONST",
     "DATA_PARAM",
+    "DEFAULT_REGISTRY",
     "DataRef",
+    "DeviceDesc",
+    "DeviceRegistry",
+    "DeviceSpec",
     "EDMBuilder",
     "EDMGraph",
     "Edge",
     "MovementDesc",
     "TensorDesc",
     "UOp",
+    "arch_from_compute_capability",
     "buffer_ref",
     "const_ref",
+    "detect_device",
+    "get_device_spec",
+    "known_device_specs",
+    "match_device_spec",
     "param_ref",
+    "register_device_spec",
+    "supported_nvidia_specs",
 ]
