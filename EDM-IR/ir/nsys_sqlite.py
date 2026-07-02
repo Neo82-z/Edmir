@@ -63,6 +63,29 @@ def string_tables(conn: sqlite3.Connection) -> tuple[str, ...]:
 
 def find_edm_strings(conn: sqlite3.Connection, limit: int = 200) -> list[tuple[str, str]]:
     hits: list[tuple[str, str]] = []
+
+    if "NVTX_EVENTS" in table_names(conn):
+        columns = table_columns(conn, "NVTX_EVENTS")
+        if "text" in columns:
+            rows = conn.execute(
+                'select text from "NVTX_EVENTS" '
+                "where text like ? order by start limit ?",
+                ("edm.%", limit),
+            ).fetchall()
+            hits.extend(("NVTX_EVENTS.text", str(row["text"])) for row in rows)
+
+        if "StringIds" in table_names(conn):
+            for id_column in ("textId", "jsonTextId"):
+                if id_column not in columns:
+                    continue
+                rows = conn.execute(
+                    f'select s.value as text from "NVTX_EVENTS" n '
+                    f'join "StringIds" s on n."{id_column}" = s.id '
+                    "where s.value like ? order by n.start limit ?",
+                    ("edm.%", limit),
+                ).fetchall()
+                hits.extend((f"NVTX_EVENTS.{id_column}", str(row["text"])) for row in rows)
+
     for table in string_tables(conn):
         columns = table_columns(conn, table)
         text_column = _first_existing(columns, ("value", "text", "name"))
@@ -74,7 +97,18 @@ def find_edm_strings(conn: sqlite3.Connection, limit: int = 200) -> list[tuple[s
             ("edm.%", limit),
         ).fetchall()
         hits.extend((table, str(row["text"])) for row in rows)
-    return hits[:limit]
+    return _dedupe_hits(hits)[:limit]
+
+
+def _dedupe_hits(hits: list[tuple[str, str]]) -> list[tuple[str, str]]:
+    seen: set[tuple[str, str]] = set()
+    deduped: list[tuple[str, str]] = []
+    for hit in hits:
+        if hit in seen:
+            continue
+        seen.add(hit)
+        deduped.append(hit)
+    return deduped
 
 
 def likely_event_tables(conn: sqlite3.Connection) -> tuple[TableInfo, ...]:
@@ -122,7 +156,7 @@ def capture_health(conn: sqlite3.Connection) -> list[str]:
         messages.append("missing NVTX event table")
     if not has_edm:
         messages.append("missing edm.* NVTX strings")
-    if messages:
+    if messages and not (has_cuda_kernel and has_cuda_memcpy and has_nvtx):
         messages.append(
             "likely causes: nsys did not wrap the Python process, --trace did not include cuda/nvtx, "
             "the exported report came from the wrong run, or CUDA/NVTX capture failed inside the container"
