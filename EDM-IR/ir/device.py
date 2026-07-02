@@ -26,6 +26,46 @@ def arch_from_compute_capability(cc: tuple[int, int] | None) -> str | None:
     return None
 
 
+def format_device_spec(spec: DeviceSpec | None) -> str:
+    if spec is None:
+        return "device=<none>"
+
+    fields = [
+        f"name={spec.name}",
+        f"vendor={spec.vendor}",
+        f"arch={spec.arch}",
+        f"cuda_arch={spec.cuda_arch}",
+        f"cc={spec.compute_capability}",
+        f"sm_count={spec.sm_count}",
+        f"memory={_format_bytes(spec.memory_bytes)}",
+        f"memory_kind={spec.memory_kind}",
+    ]
+    features = [
+        name
+        for name, enabled in (
+            ("tensor_cores", spec.supports_tensor_cores),
+            ("tma", spec.supports_tma),
+            ("wgmma", spec.supports_wgmma),
+            ("fp8", spec.supports_fp8),
+            ("nvlink", spec.supports_nvlink),
+            ("rdma", spec.supports_rdma),
+        )
+        if enabled
+    ]
+    if features:
+        fields.append("features=" + ",".join(features))
+    if spec.attrs:
+        fields.append("attrs=" + ",".join(f"{key}={value}" for key, value in sorted(spec.attrs.items())))
+    return "DeviceSpec(" + " ".join(fields) + ")"
+
+
+def _format_bytes(value: int | None) -> str:
+    if value is None:
+        return "unknown"
+    gib = value / (1024**3)
+    return f"{gib:.2f}GiB"
+
+
 @dataclass(frozen=True, slots=True)
 class DeviceSpec:
     """Static and measured properties needed by EDM-IR analysis.
@@ -337,6 +377,7 @@ __all__ = [
     "DeviceSpec",
     "arch_from_compute_capability",
     "detect_device",
+    "format_device_spec",
     "get_device_spec",
     "known_device_specs",
     "match_device_spec",

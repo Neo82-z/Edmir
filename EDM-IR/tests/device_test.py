@@ -12,6 +12,7 @@ from ir.device import (  # noqa: E402
     DeviceSpec,
     arch_from_compute_capability,
     detect_device,
+    format_device_spec,
     get_device_spec,
     known_device_specs,
     match_device_spec,
@@ -80,6 +81,8 @@ class DeviceSpecTest(unittest.TestCase):
 
     def test_detect_device_is_optional(self) -> None:
         detected = detect_device()
+        if self._testMethodName and any(arg in {"-v", "--verbose"} for arg in sys.argv):
+            print("\n" + format_device_spec(detected))
         self.assertTrue(detected is None or isinstance(detected, DeviceSpec))
 
 
