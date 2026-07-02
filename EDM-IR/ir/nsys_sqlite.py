@@ -88,6 +88,48 @@ def likely_event_tables(conn: sqlite3.Connection) -> tuple[TableInfo, ...]:
     return tuple(infos)
 
 
+def diagnostic_events(conn: sqlite3.Connection) -> list[sqlite3.Row]:
+    if "DIAGNOSTIC_EVENT" not in table_names(conn):
+        return []
+    return conn.execute(
+        "select timestamp, source, severity, text from DIAGNOSTIC_EVENT order by timestamp"
+    ).fetchall()
+
+
+def target_gpus(conn: sqlite3.Connection) -> list[sqlite3.Row]:
+    if "TARGET_INFO_GPU" not in table_names(conn):
+        return []
+    return conn.execute(
+        "select name, totalMemory, memoryBandwidth, smCount, computeMajor, computeMinor, smMajor, smMinor "
+        "from TARGET_INFO_GPU order by id"
+    ).fetchall()
+
+
+def capture_health(conn: sqlite3.Connection) -> list[str]:
+    tables = set(table_names(conn))
+    messages: list[str] = []
+
+    has_cuda_kernel = any("KERNEL" in table.upper() and not table.upper().startswith("ENUM_") for table in tables)
+    has_cuda_memcpy = any("MEMCPY" in table.upper() and not table.upper().startswith("ENUM_") for table in tables)
+    has_nvtx = any("NVTX" in table.upper() and not table.upper().startswith("ENUM_") for table in tables)
+    has_edm = bool(find_edm_strings(conn, limit=1))
+
+    if not has_cuda_kernel:
+        messages.append("missing CUDA kernel activity table")
+    if not has_cuda_memcpy:
+        messages.append("missing CUDA memcpy activity table")
+    if not has_nvtx:
+        messages.append("missing NVTX event table")
+    if not has_edm:
+        messages.append("missing edm.* NVTX strings")
+    if messages:
+        messages.append(
+            "likely causes: nsys did not wrap the Python process, --trace did not include cuda/nvtx, "
+            "the exported report came from the wrong run, or CUDA/NVTX capture failed inside the container"
+        )
+    return messages
+
+
 def _first_existing(columns: tuple[str, ...], names: tuple[str, ...]) -> str | None:
     lowered = {column.lower(): column for column in columns}
     for name in names:
@@ -98,7 +140,34 @@ def _first_existing(columns: tuple[str, ...], names: tuple[str, ...]) -> str | N
 
 def print_summary(path: str | Path, *, limit: int) -> None:
     with connect(path) as conn:
-        print("== sqlite tables ==")
+        print("== capture health ==")
+        health = capture_health(conn)
+        if not health:
+            print("ok: CUDA/NVTX-looking activity is present")
+        for message in health:
+            print(f"! {message}")
+
+        print("\n== target GPUs ==")
+        gpus = target_gpus(conn)
+        if not gpus:
+            print("<none>")
+        for gpu in gpus:
+            cc = f"{gpu['computeMajor']}.{gpu['computeMinor']}"
+            sm = f"{gpu['smMajor']}.{gpu['smMinor']}"
+            print(
+                f"name={gpu['name']} sm_count={gpu['smCount']} "
+                f"compute_capability={cc} sm={sm} "
+                f"total_memory={gpu['totalMemory']} memory_bandwidth={gpu['memoryBandwidth']}"
+            )
+
+        print("\n== diagnostic events ==")
+        diagnostics = diagnostic_events(conn)
+        if not diagnostics:
+            print("<none>")
+        for event in diagnostics:
+            print(f"{event['timestamp']} source={event['source']} severity={event['severity']} text={event['text']}")
+
+        print("\n== sqlite tables ==")
         for info in inspect_tables(conn):
             columns = ", ".join(info.columns)
             print(f"{info.name:<44} rows={info.rows:<8} columns={columns}")
