@@ -215,14 +215,15 @@ def build_graph(
     phase = f"trace.iter{iteration}"
     builder = EDMBuilder(default_phase=phase)
     t0 = 0.0
-    t1 = copy_us
-    t2 = copy_us + compute_us
+    t_copy_end = copy_us
+    t_wait_end = t_copy_end + wait_us
+    t_compute_end = t_wait_end + compute_us
 
     begin = builder.phase_begin(phase, t0)
     h2d = builder.movement(
         "h2d_activation_copy",
         t0,
-        t1,
+        t_copy_end,
         op=KV_TRANSFER,
         stream="copy",
         device=device,
@@ -233,21 +234,21 @@ def build_graph(
     )
     record = builder.record_event(
         "copy_done",
-        t1,
+        t_copy_end,
         stream="copy",
         device=device,
     )
     wait = builder.wait_event(
         "wait_copy_done",
-        t1,
+        t_wait_end,
         stream="compute",
         device=device,
         attrs={"measured_wait_us": wait_us, "iteration": iteration},
     )
     matmul = builder.compute(
         "qkv_matmul",
-        t1,
-        t2,
+        t_wait_end,
+        t_compute_end,
         op=COMPUTE_QKV,
         stream="compute",
         device=device,
@@ -255,7 +256,7 @@ def build_graph(
         writes=(buffer_ref("qkv_output", "write", location=device),),
         attrs={"matrix": matrix, "dtype": dtype, "iteration": iteration},
     )
-    end = builder.phase_end(phase, t2)
+    end = builder.phase_end(phase, t_compute_end)
 
     builder.sequence(begin, h2d, record, kind=STREAM_ORDER)
     builder.edge(record, wait, EVENT_DEPENDENCY, event="copy_done")

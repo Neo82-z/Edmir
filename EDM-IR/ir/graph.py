@@ -110,20 +110,28 @@ class EDMGraph:
 
     def total_movement_us(self) -> float:
         return sum(uop.dur_us for uop in self.uops.values() if is_data_movement(uop.op))
+    
+    def total_data_movement_us(graph)  -> float:
+        return sum(u.dur_us for u in graph.uops.values() if is_data_movement(u.op))
 
     def exposed_movement_us(self) -> float:
         path, _ = self.critical_path()
         return sum(self.uops[uid].dur_us for uid in path if is_data_movement(self.uops[uid].op))
+    
+    def exposed_data_movement_us(graph) -> float:
+        cp = set(critical_path(graph).path)
+        return sum(u.dur_us for u in graph.uops.values() if is_data_movement(u.op) and u.id in cp)
 
     def ecr(self) -> float:
         phase = self.phase_duration_us()
         return 0.0 if phase == 0 else self.exposed_movement_us() / phase
 
-    def total_comm_us(self) -> float:
-        return self.total_movement_us()
+    def total_comm_us(graph) -> float:
+        return sum(u.dur_us for u in graph.uops.values() if is_comm(u.op))
 
-    def exposed_comm_us(self) -> float:
-        return self.exposed_movement_us()
+    def exposed_comm_us(graph) -> float:
+        cp = set(critical_path(graph).path)
+        return sum(u.dur_us for u in graph.uops.values() if is_comm(u.op) and u.id in cp)
 
     def dump_uops(self) -> str:
         return "\n".join(self.uops[uid].short() for uid in sorted(self.uops))
@@ -132,3 +140,5 @@ class EDMGraph:
         path, duration = self.critical_path()
         rendered = " -> ".join(f"%{uid}:{self.uops[uid].op}" for uid in path)
         return f"{rendered}\ncritical_path_us={duration:.3f}"
+    
+
