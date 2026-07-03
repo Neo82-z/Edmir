@@ -4,7 +4,7 @@ from collections import defaultdict, deque
 from dataclasses import dataclass, field
 from typing import Any
 
-from .ops import EdgeKind, check_edge_kind, is_data_movement
+from .ops import EdgeKind, check_edge_kind
 from .uop import UOp
 
 
@@ -72,66 +72,53 @@ class EDMGraph:
         return order
 
     def critical_path(self) -> tuple[list[int], float]:
-        """Return ids on the longest dependency path and its duration."""
-        order = self.topological_order()
-        pred = self.predecessors()
+        """Compatibility wrapper.  Prefer ir.analysis.analyze_critical_path."""
 
-        best: dict[int, float] = {}
-        parent: dict[int, int | None] = {}
-        for uid in order:
-            uop = self.uops[uid]
-            if not pred.get(uid):
-                best[uid] = uop.dur_us
-                parent[uid] = None
-                continue
+        from .analysis import analyze_critical_path
 
-            prev = max(pred[uid], key=lambda p: best[p])
-            best[uid] = best[prev] + uop.dur_us
-            parent[uid] = prev
-
-        if not best:
-            return [], 0.0
-
-        end = max(best, key=lambda uid: (best[uid], self.uops[uid].end_us, uid))
-        path: list[int] = []
-        cur: int | None = end
-        while cur is not None:
-            path.append(cur)
-            cur = parent[cur]
-        path.reverse()
-        return path, best[end]
+        result = analyze_critical_path(self)
+        return list(result.path), result.duration_us
 
     def phase_duration_us(self) -> float:
-        if not self.uops:
-            return 0.0
-        start = min(uop.start_us for uop in self.uops.values())
-        end = max(uop.end_us for uop in self.uops.values())
-        return end - start
+        from .analysis import phase_duration_us
+
+        return phase_duration_us(self)
 
     def total_movement_us(self) -> float:
-        return sum(uop.dur_us for uop in self.uops.values() if is_data_movement(uop.op))
-    
-    def total_data_movement_us(graph)  -> float:
-        return sum(u.dur_us for u in graph.uops.values() if is_data_movement(u.op))
+        return self.total_data_movement_us()
+
+    def total_data_movement_us(self) -> float:
+        from .analysis import total_data_movement_us
+
+        return total_data_movement_us(self)
 
     def exposed_movement_us(self) -> float:
-        path, _ = self.critical_path()
-        return sum(self.uops[uid].dur_us for uid in path if is_data_movement(self.uops[uid].op))
-    
-    def exposed_data_movement_us(graph) -> float:
-        cp = set(critical_path(graph).path)
-        return sum(u.dur_us for u in graph.uops.values() if is_data_movement(u.op) and u.id in cp)
+        return self.exposed_data_movement_us()
+
+    def exposed_data_movement_us(self) -> float:
+        from .analysis import exposed_data_movement_us
+
+        return exposed_data_movement_us(self)
 
     def ecr(self) -> float:
-        phase = self.phase_duration_us()
-        return 0.0 if phase == 0 else self.exposed_movement_us() / phase
+        from .analysis import analyze_exposure
 
-    def total_comm_us(graph) -> float:
-        return sum(u.dur_us for u in graph.uops.values() if is_comm(u.op))
+        return analyze_exposure(self).ecr
 
-    def exposed_comm_us(graph) -> float:
-        cp = set(critical_path(graph).path)
-        return sum(u.dur_us for u in graph.uops.values() if is_comm(u.op) and u.id in cp)
+    def edmr(self) -> float:
+        from .analysis import analyze_exposure
+
+        return analyze_exposure(self).edmr
+
+    def total_comm_us(self) -> float:
+        from .analysis import total_comm_us
+
+        return total_comm_us(self)
+
+    def exposed_comm_us(self) -> float:
+        from .analysis import exposed_comm_us
+
+        return exposed_comm_us(self)
 
     def dump_uops(self) -> str:
         return "\n".join(self.uops[uid].short() for uid in sorted(self.uops))
@@ -140,5 +127,3 @@ class EDMGraph:
         path, duration = self.critical_path()
         rendered = " -> ".join(f"%{uid}:{self.uops[uid].op}" for uid in path)
         return f"{rendered}\ncritical_path_us={duration:.3f}"
-    
-

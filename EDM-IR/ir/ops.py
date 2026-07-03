@@ -21,6 +21,8 @@ KV_LOOKUP = "kv.lookup"
 KV_TRANSFER = "kv.transfer"
 KV_MATERIALIZE = "kv.materialize"
 
+MOVEMENT_COPY = "movement.copy"
+
 COMPUTE_QKV = "compute.qkv"
 COMPUTE_ATTN = "compute.attn"
 COMPUTE_MLP = "compute.mlp"
@@ -33,6 +35,7 @@ COMM_REDUCE_SCATTER = "comm.reduce_scatter"
 COMM_ALL_TO_ALL = "comm.all_to_all"
 COMM_P2P = "comm.p2p"
 COMM_KV_TRANSFER = "comm.kv_transfer"
+COMM_OTHER = "comm.other"
 
 EVENT_RECORD = "event.record"
 EVENT_WAIT = "event.wait"
@@ -63,6 +66,7 @@ ALL_OPS = frozenset({
     KV_LOOKUP,
     KV_TRANSFER,
     KV_MATERIALIZE,
+    MOVEMENT_COPY,
     COMPUTE_QKV,
     COMPUTE_ATTN,
     COMPUTE_MLP,
@@ -74,6 +78,7 @@ ALL_OPS = frozenset({
     COMM_ALL_TO_ALL,
     COMM_P2P,
     COMM_KV_TRANSFER,
+    COMM_OTHER,
     EVENT_RECORD,
     EVENT_WAIT,
     STREAM_YIELD,
@@ -116,7 +121,7 @@ def is_comm(op: str) -> bool:
 
 
 def is_data_movement(op: str) -> bool:
-    return is_comm(op) or op == KV_TRANSFER
+    return is_comm(op) or op in {KV_TRANSFER, MOVEMENT_COPY}
 
 
 def is_compute(op: str) -> bool:

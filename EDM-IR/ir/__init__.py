@@ -1,3 +1,11 @@
+from .analysis import (
+    CriticalPathResult,
+    ExposureResult,
+    OverlapGainResult,
+    analyze_critical_path,
+    analyze_exposure,
+    analyze_overlap,
+)
 from .builder import EDMBuilder
 from .device import (
     DEFAULT_REGISTRY,
@@ -32,6 +40,7 @@ __all__ = [
     "DATA_CONST",
     "DATA_PARAM",
     "DEFAULT_REGISTRY",
+    "CriticalPathResult",
     "DataRef",
     "DeviceDesc",
     "DeviceRegistry",
@@ -39,9 +48,14 @@ __all__ = [
     "EDMBuilder",
     "EDMGraph",
     "Edge",
+    "ExposureResult",
     "MovementDesc",
+    "OverlapGainResult",
     "TensorDesc",
     "UOp",
+    "analyze_critical_path",
+    "analyze_exposure",
+    "analyze_overlap",
     "arch_from_compute_capability",
     "buffer_ref",
     "const_ref",

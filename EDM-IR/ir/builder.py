@@ -95,8 +95,8 @@ class EDMBuilder:
     def record_event(self, name: str, ts_us: float, **kwargs: Any) -> UOp:
         return self.uop(EVENT_RECORD, name, ts_us, ts_us, **kwargs)
 
-    def wait_event(self, name: str, ts_us: float, **kwargs: Any) -> UOp:
-        return self.uop(EVENT_WAIT, name, ts_us, ts_us, **kwargs)
+    def wait_event(self, name: str, start_us: float, end_us: float | None = None, **kwargs: Any) -> UOp:
+        return self.uop(EVENT_WAIT, name, start_us, start_us if end_us is None else end_us, **kwargs)
 
     def bind_phase(self, begin: UOp, end: UOp, *body: UOp) -> None:
         for uop in body:
