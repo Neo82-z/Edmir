@@ -1,5 +1,7 @@
 # Problem Scope
 
+> **Parked:** 本文描述的是 exposed-data-movement serving 研究线。当前 active v0.1 以根目录 [`SCOPE.md`](../../SCOPE.md) 为准；本文件不会驱动近期实现。
+
 ## The Thing To Explain
 
 Multi-GPU LLM serving is often discussed as if adding GPUs gives more compute, and faster communication gives faster serving. In practice this is frequently false.
