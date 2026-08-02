@@ -1,5 +1,7 @@
 # Research Positioning
 
+> **Parked:** 本文保留原 MLSys serving-analysis 定位。当前 active compiler scope 见根目录 [`SCOPE.md`](../../SCOPE.md)，prior art/claim boundary 见 [`papers/compiler/communication-compute-fusion.md`](../../papers/compiler/communication-compute-fusion.md)。
+
 ## What This Paper Is Trying To Be
 
 The paper should feel like an MLSys paper because it explains a recurring systems trade-off, not because it combines many fashionable systems.

@@ -1,5 +1,7 @@
 # MLSys 2027 Working Draft
 
+> **Status (2026-08): parked research track.** 当前仓库的 active milestone 已收束为根目录 [`SCOPE.md`](../../SCOPE.md) 定义的单节点静态 `All2All → GEMM` 编译原型。本目录保留 exposed-data-movement/serving 分析思路和已有实验设计，但其中任务不进入 v0.1 [`ROADMAP.md`](../../ROADMAP.md)。`EDM-IR/` 当前仍是 trace-analysis IR，不是新的 compiler schedule IR。
+
 ## Working Title
 
 **EDM-IR: Exposed Data-Movement Analysis for Multi-GPU LLM Serving**

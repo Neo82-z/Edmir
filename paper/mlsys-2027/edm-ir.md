@@ -1,5 +1,7 @@
 # EDM-IR: Exposed Data-Movement Intermediate Representation
 
+> **Parked but implemented:** 这是 trace-derived analysis IR，而不是当前计划中的 compiler schedule IR。代码和测试继续保留；active compiler scope 见根目录 [`SCOPE.md`](../../SCOPE.md)。
+
 Status: working design note.
 
 Scope: trace-derived analysis IR for multi-GPU LLM serving.
@@ -270,4 +272,3 @@ remote KV system
 vLLM rewrite
 custom communication kernels
 ```
-

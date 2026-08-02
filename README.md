@@ -1,65 +1,94 @@
-# 研究笔记
+# Edmir
 
-用于记录 multi-GPU LLM serving 方向的研究过程，重点关注 communication bottleneck 的optimize or trace。
+Edmir 是一个面向多 GPU 通信—计算流水的编译研究原型。
 
-## 研究主线
+当前仓库只推进一个可验证问题：
 
-**面向 multi-GPU LLM inference 时候 communication bottleneck and overlap trade-off.**
+> 给定单节点拓扑和一个静态 `All2All → GEMM` 数据流，能否生成正确的顺序执行与 tile-level 流水调度，并解释它们在什么条件下值得使用？
 
-方向：
+`All2All → GEMM` 是 v0.1 的研究载体，不是“首次融合该算子组合”的创新声明。FLUX、TileLink、Triton-distributed、AutoOverlap、DeepEP/NCCL EP 等工作已经覆盖了相邻或部分重叠的设计空间。Edmir 只有在明确区分这些工作的前提下，才继续讨论论文贡献。
 
-> 多 GPU LLM serving 的性能不是由 FLOPS、NCCL bandwidth、KV cache hit rate 或 overlap 开关单独决定，而是由 data movement 是否暴露在 request critical path 上决定。目标是建立一个可校准的解释模型或者说解释路线，可以是一个由多个nodes组成的graph，判断 topology、parallelism、KV movement、runtime scheduling 和 overlap policy 什么时候会影响 TTFT / ITL / P99，后续可以做codegen，持续optimize
+## v0.1 范围
 
-当前更具体的研究问题：
+固定输入：
 
-> When does overlap help or even harmful in multi-GPU LLM serving?
+- 单节点、多 GPU；
+- 静态 shape 和静态 rank 数；
+- 等尺寸、对称布局的 All2All；
+- 一个消费通信结果的 GEMM；
+- 已知的 P2P/NVLink/PCIe 拓扑描述。
 
-overlap 包括 DBO-like microbatch overlap、compute-communication overlap、prefill/decode multiplexing 等。核心判断是：
+固定输出：
+
+1. 顺序基线：host-launched NCCL All2All，随后执行 GEMM（NCCL 2.30+；旧版本以 grouped send/recv 等价实现）；
+2. tile schedule：通信 tile、计算 tile、rank order 和依赖关系；
+3. 合法性检查：producer/consumer、buffer lifetime 和 release/acquire 顺序；
+4. 一个可执行或可检查的 lowering artifact；
+5. 与基线一致的数值结果和可复现实验记录。
+
+完整边界见 [`SCOPE.md`](SCOPE.md)。
+
+## 当前状态
+
+| 组件 | 状态 | 在 v0.1 中的角色 |
+|---|---|---|
+| `EDM-IR/` | 已有可运行原型 | trace-derived 观测与 critical-path 分析；保留为后续测量/校准层，不冒充 compiler IR |
+| compiler schedule IR | 尚未实现 | 当前主线 |
+| sequential lowering | 尚未实现 | 第一条正确性基线 |
+| tiled pipeline lowering | 尚未实现 | v0.1 的主要编译产物 |
+| H100/A100 实验 | 只有前期 smoke-test/计划 | 完成离线正确性后再租卡验证 |
+
+## 明确不做
+
+v0.1 不包含：
+
+- 多节点、RDMA、GIN；
+- 动态 MoE routing、token imbalance、Grouped GEMM；
+- vLLM、DeepEP 或 serving runtime 集成；
+- 同时实现 Triton、TVM、MLIR、CuTe 多套后端；
+- PTX/SASS 或 tinygrad 后端；
+- 自动合成任意 collective；
+- B200/Blackwell 的未来 SM-initiated Copy Engine 路径；
+- 完整 autotuner 或通用 cost model。
+
+这些主题可以作为背景或后续工作，但不得阻塞 v0.1。
+
+## 实现顺序
 
 ```text
-overlap removed exposed communication
-  > overlap introduced split / stream / metadata / contention overhead
+static All2All -> GEMM graph
+  -> schedule IR
+  -> sequential schedule
+  -> tiled producer/consumer schedule
+  -> legality verification
+  -> lowering artifact
+  -> CPU/synthetic validation
+  -> rented H100 validation
 ```
 
-如果这个不成立，trace 里的通信再大，也可能不是正确优化目标。
+第一阶段优先建立语义和正确性；硬件性能只在实现闭环之后验证。
 
-研究的支线：
-
-- tinygrad：理解 tensor IR、primitive composition 和 collective 语义。(个人非常喜欢的张量计算引擎)
-- CUDA C++：理解 kernel、memory hierarchy、stream 和 profiling。（底层语义复杂，更推荐triton来理解算子）
-- DeepGEMM / CuTe / CUTLASS：理解计算侧粒度，以及 GEMM / MoE kernel。（MoE是当前阶段的重要模型结构）
-- NCCL / NVSHMEM / RDMA / DeepEP：理解 collective communication、MoE-aware communication runtime、topology 和 transport。（算子库与专用执行层）
-- vLLM / Megatron / DeepSpeed：回到真实 serving workload 和 parallelism strategy。（推理引擎和训练架构）
-
-但最终的目的
-
-> 如何improve multi-GPU LLM serving 中的 communication？
-
-## 平台边界（not necessary）
-
-当前先把硬件平台分成三层，避免把不同平台上的实验结论混在一起：
-
-- **H100 / H800 / H20 等 Hopper / SM90 平台**：DeepEP V2 主实验平台。重点研究 MoE EP dispatch / combine、NCCL Gin、ElasticBuffer、SM/QP、hybrid/direct path、RDMA/NVLink 域和 compute-communication overlap。
-- **A100 / SM80 平台**：NCCL、PyTorch `all_to_all`、NVSHMEM legacy path 和 DeepEP V1 思路的对照平台。不作为 DeepEP V2 最终性能结论，（ada架构有点太老了）
-- **4x4090 / Ada PCIe-only 平台**：流程热身和本地 profiling 平台。适合做 NCCL/PyTorch distributed、PCIe/NUMA 拓扑、Nsight 流程和小型代码阅读验证；不进入 DeepEP V2 论文式性能结论。（没有nvlink，ib不好做消融）
 ## 仓库结构
 
 ```text
-paper/         面向 MLSys 2027 的论文问题、模型、claims 和实验矩阵。
-papers/        论文笔记，按研究方向归类。
-experiments/   可复现实验 slice，包括 raw log、结果表和图。
-ideas/         研究问题、方向和设计草图。
-templates/     paper note 和 experiment record 的 Markdown 模板。
+EDM-IR/       已有 trace-analysis 原型；后续用于测量和校准。
+paper/        论文问题与历史研究草稿；不是 v0.1 的任务列表。
+papers/       相关论文笔记与 prior-art 矩阵。
+experiments/  可复现实验 slice、命令、环境和结果。
+ideas/        尚未进入 active scope 的设计草图。
+templates/    paper note 与 experiment record 模板。
 ```
 
-## 当前论文工作区
+## 必读材料
 
-- [`paper/mlsys-2027/README.md`](paper/mlsys-2027/README.md)：MLSys 方向总览。
-- [`paper/mlsys-2027/scope.md`](paper/mlsys-2027/scope.md)：问题边界和研究 taste。
-- [`paper/mlsys-2027/model.md`](paper/mlsys-2027/model.md)：exposed data movement 模型草稿。需持续演化。
-- [`paper/mlsys-2027/claims-and-experiments.md`](paper/mlsys-2027/claims-and-experiments.md)：claim-to-experiment 矩阵。
-
+- [`papers/compiler/communication-compute-fusion.md`](papers/compiler/communication-compute-fusion.md)：直接竞争工作、技术栈和 claim boundary。
+- [`papers/baseline-reading-list.md`](papers/baseline-reading-list.md)：按当前主线排序的阅读入口。
+- [`ROADMAP.md`](ROADMAP.md)：只包含 v0.1 的执行顺序和停止条件。
 
 ## 工作规则
 
-一个实验只回答一个问题。raw data、commands、environment 和 observations 要放在一起，避免之后无法复现或解释。
+- 一个 commit 只推进一个可验证 milestone。
+- 一个实验只回答一个问题；raw data、commands、environment 和 observations 放在同一 experiment slice。
+- 文档中的“已支持”必须能指向代码和测试；计划功能必须标为 planned。
+- 新想法先进入 `ideas/`，只有替换当前 scope 时才进入 `ROADMAP.md`。
+- 在读完并比较直接竞争工作之前，不写论文 novelty claim。
