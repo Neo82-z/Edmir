@@ -19,6 +19,8 @@ def arch_from_compute_capability(cc: tuple[int, int] | None) -> str | None:
     if cc is None:
         return None
     major, _minor = cc
+    if major == 8:
+        return "Ampere"
     if major == 9:
         return "Hopper"
     if major in (10, 12):
@@ -195,10 +197,19 @@ class DeviceRegistry:
         return tuple(self._specs.values())
 
     def supported(self) -> tuple[DeviceSpec, ...]:
-        return tuple(spec for spec in self._specs.values() if spec.arch in {"Hopper", "Blackwell"})
+        return tuple(spec for spec in self._specs.values() if spec.arch in {"Ampere", "Hopper", "Blackwell"})
 
 
 def _register_builtin_devices(registry: DeviceRegistry) -> None:
+    ampere = dict(
+        arch="Ampere",
+        compute_capability=(8, 0),
+        supports_tensor_cores=True,
+        supports_tma=False,
+        supports_rdma=True,
+        supports_wgmma=False,
+        supports_fp8=False,
+    )
     hopper = dict(
         arch="Hopper",
         compute_capability=(9, 0),
@@ -217,6 +228,14 @@ def _register_builtin_devices(registry: DeviceRegistry) -> None:
         supports_fp8=True,
     )
 
+    registry.register(
+        DeviceSpec("A100", memory_kind="HBM", supports_nvlink=True, **ampere),
+        aliases=("NVIDIA A100", "A100 PCIe", "A100 SXM", "sm80 a100"),
+    )
+    registry.register(
+        DeviceSpec("A800", memory_kind="HBM", supports_nvlink=True, **ampere),
+        aliases=("NVIDIA A800", "A800 PCIe", "A800 SXM", "sm80 a800"),
+    )
     registry.register(
         DeviceSpec("H100", memory_kind="HBM", **hopper),
         aliases=("NVIDIA H100", "H100 PCIe", "H100 SXM", "H100 NVL", "sm90"),

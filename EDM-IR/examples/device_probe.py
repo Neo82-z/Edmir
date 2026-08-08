@@ -6,9 +6,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from ir import EDMBuilder, MovementDesc, detect_device, format_device_spec, known_device_specs  # noqa: E402
-from ir.ops import COMM_ALL_GATHER, COMPUTE_QKV, DATA_DEPENDENCY, STREAM_ORDER  # noqa: E402
-from ir.printing import format_summary, format_uops  # noqa: E402
+from edmir import EDMBuilder, MovementDesc, detect_device, format_device_spec, known_device_specs  # noqa: E402
+from edmir.ops import COMM_ALL_GATHER, COMPUTE_QKV, DATA_DEPENDENCY, STREAM_ORDER  # noqa: E402
+from edmir.printing import format_summary, format_uops  # noqa: E402
 
 
 def _run(command: list[str]) -> str | None:

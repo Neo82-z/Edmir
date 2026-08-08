@@ -7,7 +7,7 @@
 - Title：Splitwise: Efficient Generative LLM Inference Using Phase Splitting
 - Link：https://arxiv.org/abs/2311.18677
 
-## 一句话总结
+## 总结
 
 Splitwise 将 generative LLM inference 的不同 phase 拆开，让 prefill 和 decode 使用更合适的硬件资源和调度方式。
 

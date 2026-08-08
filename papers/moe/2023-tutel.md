@@ -7,7 +7,7 @@
 - Title：Tutel: Adaptive Mixture-of-Experts at Scale
 - Link：https://arxiv.org/abs/2206.03382
 
-## 一句话总结
+## 总结
 
 Tutel 是一个面向 large-scale MoE 的系统，关注 MoE routing、expert parallelism、all-to-all communication 和 adaptive execution。
 

@@ -7,7 +7,7 @@
 - Title：MegaBlocks: Efficient Sparse Training with Mixture-of-Experts
 - Link：https://arxiv.org/abs/2211.15841
 
-## 一句话总结
+## 总结
 
 MegaBlocks 使用 block-sparse computation 改善 MoE 中由于 token imbalance 和 padding 带来的计算浪费。
 

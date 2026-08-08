@@ -7,7 +7,7 @@
 - Title：Taming Throughput-Latency Tradeoff in LLM Inference with Sarathi-Serve
 - Link：https://arxiv.org/abs/2403.02310
 
-## 一句话总结
+## 总结
 
 Sarathi-Serve 通过 chunked prefill 和 stall-free scheduling 改善 LLM serving 中 throughput 与 latency 的 tradeoff。
 

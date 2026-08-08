@@ -5,8 +5,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from ir import EDMBuilder, EDMGraph, MovementDesc, buffer_ref, const_ref, param_ref
-from ir.ops import (
+from edmir import EDMBuilder, EDMGraph, MovementDesc, buffer_ref, const_ref, param_ref
+from edmir.ops import (
     COMM_ALL_GATHER,
     COMPUTE_ATTN,
     COMPUTE_MLP,
@@ -18,7 +18,7 @@ from ir.ops import (
     RUNTIME_LAUNCH_GAP,
     STREAM_ORDER,
 )
-from ir.printing import format_critical_path, format_summary, format_uops
+from edmir.printing import format_critical_path, format_summary, format_uops
 
 
 def hidden_communication() -> EDMGraph:

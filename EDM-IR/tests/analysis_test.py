@@ -7,9 +7,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from ir import EDMBuilder, MovementDesc  # noqa: E402
-from ir.analysis import analyze_exposure, phase_duration_us  # noqa: E402
-from ir.ops import COMM_ALL_GATHER, COMPUTE_GEMM, MOVEMENT_COPY, STREAM_ORDER  # noqa: E402
+from edmir import EDMBuilder, MovementDesc  # noqa: E402
+from edmir.analysis import analyze_exposure, phase_duration_us  # noqa: E402
+from edmir.ops import COMM_ALL_GATHER, COMPUTE_GEMM, MOVEMENT_COPY, STREAM_ORDER  # noqa: E402
 
 
 class AnalysisTest(unittest.TestCase):
@@ -56,6 +56,22 @@ class AnalysisTest(unittest.TestCase):
         self.assertEqual(exposure.exposed_data_movement_us, 30.0)
         self.assertAlmostEqual(exposure.ecr, 0.1)
         self.assertAlmostEqual(exposure.edmr, 0.3)
+
+    def test_counterfactual_exposure_handles_tied_paths(self) -> None:
+        builder = EDMBuilder(default_phase="decode")
+        begin = builder.phase_begin("decode", 0.0)
+        compute = builder.compute("compute_path", 0.0, 10.0, op=COMPUTE_GEMM)
+        comm = builder.comm("comm_path", 0.0, 10.0, op=COMM_ALL_GATHER)
+        end = builder.phase_end("decode", 10.0)
+        builder.sequence(begin, comm, end, kind=STREAM_ORDER)
+        builder.sequence(begin, compute, end, kind=STREAM_ORDER)
+
+        exposure = analyze_exposure(builder.build())
+
+        self.assertEqual(exposure.path_comm_us, 10.0)
+        self.assertEqual(exposure.exposed_comm_us, 0.0)
+        self.assertEqual(exposure.ecr, 0.0)
+        self.assertEqual(exposure.graph_coverage, 1.0)
 
 
 if __name__ == "__main__":

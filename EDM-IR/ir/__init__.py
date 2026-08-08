@@ -1,70 +1,16 @@
-from .analysis import (
-    CriticalPathResult,
-    ExposureResult,
-    OverlapGainResult,
-    analyze_critical_path,
-    analyze_exposure,
-    analyze_overlap,
-)
-from .builder import EDMBuilder
-from .device import (
-    DEFAULT_REGISTRY,
-    DeviceDesc,
-    DeviceRegistry,
-    DeviceSpec,
-    arch_from_compute_capability,
-    detect_device,
-    format_device_spec,
-    get_device_spec,
-    known_device_specs,
-    match_device_spec,
-    register_device_spec,
-    supported_nvidia_specs,
-)
-from .graph import EDMGraph, Edge
-from .uop import (
-    DATA_BUFFER,
-    DATA_CONST,
-    DATA_PARAM,
-    DataRef,
-    MovementDesc,
-    TensorDesc,
-    UOp,
-    buffer_ref,
-    const_ref,
-    param_ref,
-)
+"""Compatibility entry point for the former ``ir`` package.
 
-__all__ = [
-    "DATA_BUFFER",
-    "DATA_CONST",
-    "DATA_PARAM",
-    "DEFAULT_REGISTRY",
-    "CriticalPathResult",
-    "DataRef",
-    "DeviceDesc",
-    "DeviceRegistry",
-    "DeviceSpec",
-    "EDMBuilder",
-    "EDMGraph",
-    "Edge",
-    "ExposureResult",
-    "MovementDesc",
-    "OverlapGainResult",
-    "TensorDesc",
-    "UOp",
-    "analyze_critical_path",
-    "analyze_exposure",
-    "analyze_overlap",
-    "arch_from_compute_capability",
-    "buffer_ref",
-    "const_ref",
-    "detect_device",
-    "format_device_spec",
-    "get_device_spec",
-    "known_device_specs",
-    "match_device_spec",
-    "param_ref",
-    "register_device_spec",
-    "supported_nvidia_specs",
-]
+New code should import :mod:`edmir`. This shim remains for one transition
+cycle so existing notebooks and experiment scripts keep working.
+"""
+
+import importlib
+import sys
+from warnings import warn
+
+warn("import 'edmir' instead of the deprecated 'ir' package", DeprecationWarning, stacklevel=2)
+
+from edmir import *  # noqa: F401,F403
+
+for _module in ("analysis", "builder", "device", "graph", "ops", "printing", "uop"):
+    sys.modules[f"ir.{_module}"] = importlib.import_module(f"edmir.{_module}")

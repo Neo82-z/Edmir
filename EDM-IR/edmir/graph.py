@@ -72,7 +72,7 @@ class EDMGraph:
         return order
 
     def critical_path(self) -> tuple[list[int], float]:
-        """Compatibility wrapper.  Prefer ir.analysis.analyze_critical_path."""
+        """Compatibility wrapper. Prefer edmir.analysis.analyze_critical_path."""
 
         from .analysis import analyze_critical_path
 

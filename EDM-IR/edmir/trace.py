@@ -9,9 +9,9 @@ from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from ir import EDMBuilder, MovementDesc, buffer_ref, detect_device, format_device_spec, param_ref  # noqa: E402
-from ir.ops import COMPUTE_QKV, DATA_DEPENDENCY, EVENT_DEPENDENCY, MOVEMENT_COPY, STREAM_ORDER  # noqa: E402
-from ir.printing import format_critical_path, format_summary, format_uops  # noqa: E402
+from edmir import EDMBuilder, MovementDesc, buffer_ref, detect_device, format_device_spec, param_ref  # noqa: E402
+from edmir.ops import COMPUTE_QKV, DATA_DEPENDENCY, EVENT_DEPENDENCY, MOVEMENT_COPY, STREAM_ORDER  # noqa: E402
+from edmir.printing import format_critical_path, format_summary, format_uops  # noqa: E402
 
 
 def _load_torch() -> Any | None:

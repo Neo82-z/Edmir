@@ -7,7 +7,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from ir.device import (  # noqa: E402
+from edmir.device import (  # noqa: E402
     DeviceRegistry,
     DeviceSpec,
     arch_from_compute_capability,
@@ -56,10 +56,10 @@ class DeviceSpecTest(unittest.TestCase):
         self.assertIs(registry.get("test gpu"), updated)
 
     def test_arch_from_compute_capability(self) -> None:
+        self.assertEqual(arch_from_compute_capability((8, 0)), "Ampere")
         self.assertEqual(arch_from_compute_capability((9, 0)), "Hopper")
         self.assertEqual(arch_from_compute_capability((10, 0)), "Blackwell")
         self.assertEqual(arch_from_compute_capability((12, 0)), "Blackwell")
-        self.assertIsNone(arch_from_compute_capability((8, 0)))
         self.assertIsNone(arch_from_compute_capability(None))
 
     def test_listing_helpers(self) -> None:
@@ -70,7 +70,11 @@ class DeviceSpecTest(unittest.TestCase):
 
         supported = supported_nvidia_specs()
         self.assertTrue(supported)
-        self.assertTrue(all(spec.arch in {"Hopper", "Blackwell"} for spec in supported))
+        self.assertTrue(all(spec.arch in {"Ampere", "Hopper", "Blackwell"} for spec in supported))
+
+        a800 = get_device_spec("NVIDIA A800 80GB PCIe")
+        self.assertEqual(a800.arch, "Ampere")
+        self.assertEqual(a800.cuda_arch, "sm80")
 
     def test_global_registration_helper(self) -> None:
         registry = DeviceRegistry()

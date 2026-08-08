@@ -36,21 +36,25 @@ def format_critical_path(graph: EDMGraph) -> str:
 
 def format_summary(graph: EDMGraph) -> str:
     exposure = analyze_exposure(graph)
-    exposed_ids = [uid for uid in exposure.critical_path if is_data_movement(graph.uops[uid].op)]
+    path_movement_ids = [uid for uid in exposure.critical_path if is_data_movement(graph.uops[uid].op)]
     lines = [
         f"phase_us={exposure.phase_time_us:.3f}",
         f"critical_path_us={exposure.critical_path_us:.3f}",
+        f"graph_coverage={exposure.graph_coverage:.6f}",
         f"total_comm_us={exposure.total_comm_us:.3f}",
+        f"path_comm_us={exposure.path_comm_us:.3f}",
         f"exposed_comm_us={exposure.exposed_comm_us:.3f}",
         f"ecr={exposure.ecr:.3f}",
         f"total_data_movement_us={exposure.total_data_movement_us:.3f}",
+        f"path_data_movement_us={exposure.path_data_movement_us:.3f}",
         f"exposed_data_movement_us={exposure.exposed_data_movement_us:.3f}",
         f"edmr={exposure.edmr:.3f}",
     ]
-    if exposed_ids:
-        lines.append("exposed_data_movement=" + ", ".join(f"%{uid}:{graph.uops[uid].op}" for uid in exposed_ids))
+    if path_movement_ids:
+        lines.append("path_data_movement=" + ", ".join(f"%{uid}:{graph.uops[uid].op}" for uid in path_movement_ids))
     else:
-        lines.append("exposed_data_movement=<none>")
+        lines.append("path_data_movement=<none>")
+    lines.extend(f"warning={warning}" for warning in exposure.warnings)
     return "\n".join(lines)
 
 
