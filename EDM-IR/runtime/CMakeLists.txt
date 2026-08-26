@@ -57,6 +57,10 @@ if(EDMIR_ENABLE_CUDA)
       edmir_cuda_runtime PRIVATE
       $<$<COMPILE_LANGUAGE:CUDA>:--expt-relaxed-constexpr>
     )
+
+    add_executable(edmir_benchmark_cutlass_gemm tools/benchmark_cutlass_gemm.cpp)
+    target_link_libraries(edmir_benchmark_cutlass_gemm PRIVATE edmir_cuda_runtime)
+    target_compile_features(edmir_benchmark_cutlass_gemm PRIVATE cxx_std_20)
   endif()
 
   add_executable(edmir_benchmark_gemm tools/benchmark_gemm.cpp)

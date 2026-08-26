@@ -174,6 +174,23 @@ class CompilerTest(unittest.TestCase):
         )
         self.assertEqual(result.chosen.program.strategy, "pipelined")
 
+    def test_default_search_covers_divisor_chunks_and_buffer_depths(self) -> None:
+        problem = replace(self.problem, rows_per_peer=96)
+        result = compile_a2a_gemm(problem, synthetic_profile(), full_topology())
+        pipeline = {
+            (candidate.program.chunk_rows, candidate.program.buffer_count)
+            for candidate in result.candidates
+            if candidate.program.strategy == "pipelined"
+        }
+        self.assertEqual(
+            pipeline,
+            {
+                (chunk_rows, buffer_count)
+                for chunk_rows in (16, 32, 48, 96)
+                for buffer_count in (1, 2, 4)
+            },
+        )
+
     def test_profile_selection_margin_controls_default_fallback(self) -> None:
         profile = replace(synthetic_profile(), selection_min_gain_ratio=1.0)
         fallback = compile_a2a_gemm(

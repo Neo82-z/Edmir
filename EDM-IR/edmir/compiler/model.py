@@ -224,6 +224,8 @@ class CalibrationProfile:
     sync_us: float = 0.0
     local_copy_us: float = 0.0
     source: str = "synthetic"
+    gemm_provider: str = "cublas"
+    gemm_kernel: str = "library_default"
     pairwise_comm_curves: tuple[PairwiseCommCurve, ...] = ()
     gemm_samples: tuple[GemmSample, ...] = ()
     local_copy_curve: tuple[CommSample, ...] = ()
@@ -235,6 +237,17 @@ class CalibrationProfile:
             raise ValueError("latencies must be non-negative")
         if self.comm_bandwidth_gbps <= 0 or self.gemm_tflops <= 0:
             raise ValueError("bandwidth and throughput must be positive")
+        if self.gemm_provider not in ("cublas", "cutlass"):
+            raise ValueError("profile GEMM provider must be cublas or cutlass")
+        if self.gemm_provider == "cublas" and self.gemm_kernel != "library_default":
+            raise ValueError("cuBLAS profiles require gemm_kernel=library_default")
+        if self.gemm_provider == "cutlass" and self.gemm_kernel not in (
+            "auto",
+            "sm80_128x128x32",
+            "sm80_64x128x32",
+            "sm80_128x64x32",
+        ):
+            raise ValueError("CUTLASS profiles require auto or an SM80 kernel name")
         pairs: set[tuple[int, int]] = set()
         for curve in self.pairwise_comm_curves:
             curve.validate()
@@ -482,7 +495,7 @@ class Program:
 @dataclass(frozen=True, slots=True)
 class CompilerOptions:
     chunk_rows: tuple[int, ...] = ()
-    buffer_counts: tuple[int, ...] = (2,)
+    buffer_counts: tuple[int, ...] = (1, 2, 4)
     min_gain_ratio: float | None = None
 
 

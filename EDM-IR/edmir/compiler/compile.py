@@ -33,8 +33,8 @@ def _default_chunks(problem: A2AGemmProblem) -> tuple[int, ...]:
     candidates = {problem.rows_per_peer}
     candidates.update(
         value
-        for value in (16, 32, 64, 128)
-        if value <= problem.rows_per_peer and problem.rows_per_peer % value == 0
+        for value in range(16, problem.rows_per_peer, 16)
+        if problem.rows_per_peer % value == 0
     )
     return tuple(sorted(candidates))
 

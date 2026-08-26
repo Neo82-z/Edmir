@@ -6,6 +6,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from dataclasses import replace
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -57,6 +58,9 @@ class BackendTest(unittest.TestCase):
             options=self.options,
         )
 
+    def cutlass_profile(self) -> CalibrationProfile:
+        return replace(profile(), gemm_provider="cutlass", gemm_kernel="auto")
+
     def test_json_backend_emits_selected_program(self) -> None:
         result = self.compile_with(JsonBackend())
         self.assertIn('"schema": "edmir.program.v1"', result.artifact.files["program.json"])
@@ -85,7 +89,7 @@ class BackendTest(unittest.TestCase):
         result = CompilerPipeline().compile(
             self.module,
             target=target,
-            profile=profile(),
+            profile=self.cutlass_profile(),
             backend=CppManifestBackend(),
             options=self.options,
         )
@@ -126,7 +130,9 @@ class BackendTest(unittest.TestCase):
                 result = CompilerPipeline().compile(
                     self.module,
                     target=target,
-                    profile=profile(),
+                    profile=replace(
+                        self.cutlass_profile(), gemm_kernel=kernel
+                    ),
                     backend=CppManifestBackend(),
                     options=self.options,
                 )
@@ -216,6 +222,28 @@ class BackendTest(unittest.TestCase):
                 self.module,
                 target=wrong_target,
                 profile=profile(),
+                backend=JsonBackend(),
+            )
+
+    def test_pipeline_rejects_profile_provider_or_kernel_mismatch(self) -> None:
+        cutlass = Target(
+            "test-cutlass", topology(), arch="sm_80", gemm_provider="cutlass"
+        )
+        with self.assertRaisesRegex(ValueError, "provider does not match"):
+            CompilerPipeline().compile(
+                self.module,
+                target=cutlass,
+                profile=profile(),
+                backend=JsonBackend(),
+            )
+        explicit = replace(cutlass, gemm_kernel="sm80_64x128x32")
+        with self.assertRaisesRegex(ValueError, "kernel does not match"):
+            CompilerPipeline().compile(
+                self.module,
+                target=explicit,
+                profile=replace(
+                    self.cutlass_profile(), gemm_kernel="sm80_128x128x32"
+                ),
                 backend=JsonBackend(),
             )
 

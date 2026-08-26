@@ -140,6 +140,8 @@ def fit_gemm_profile(
     benchmark_log: str | Path,
     *,
     dtype: str = "float16",
+    gemm_provider: str = "cublas",
+    gemm_kernel: str = "library_default",
 ) -> CalibrationProfile:
     """Replace GEMM samples of one dtype with measured shape medians."""
 
@@ -148,6 +150,8 @@ def fit_gemm_profile(
     profile = replace(
         base_profile,
         gemm_samples=tuple(sorted((*keep, *measured), key=lambda s: (s.dtype, s.n, s.k, s.m))),
+        gemm_provider=gemm_provider,
+        gemm_kernel=gemm_kernel,
         source=f"{base_profile.source}; GEMM shapes from {benchmark_log}",
     )
     profile.validate()

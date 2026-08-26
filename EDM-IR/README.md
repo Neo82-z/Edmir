@@ -23,7 +23,9 @@ been compiled, numerically validated, and benchmarked on 4x A100 SXM; the
 retained baselines are under `experiments/2026-08-25-runpod-4xa100-sxm` and the
 controlled provider substitution is under
 `experiments/2026-08-26-a100-cutlass-provider`; measured static kernel selection
-is under `experiments/2026-08-26-a100-cutlass-kernel-family`. The complete layer contract is documented in
+is under `experiments/2026-08-26-a100-cutlass-kernel-family`; provider-specific
+cost-model validation is under
+`experiments/2026-08-26-a100-cutlass-cost-model`. The complete layer contract is documented in
 [`docs/COMPILER_ARCHITECTURE.md`](docs/COMPILER_ARCHITECTURE.md).
 
 ## Minimal compiler model
@@ -113,6 +115,7 @@ the host/runtime residual separately:
 python -m edmir fit-gemm \
   --base-profile /tmp/measured-comm-profile.json \
   --log /path/to/gemm_measurements.jsonl \
+  --gemm-provider cublas --gemm-kernel library_default \
   --out /tmp/device-profile.json
 
 python -m edmir fit-copy \
@@ -129,8 +132,12 @@ python -m edmir fit-runtime \
 
 `fit-runtime` learns non-negative coefficients only from rows labeled `train`.
 Rows labeled `heldout` are used for MAPE, direction-accuracy, and
-schedule-regret reporting without refitting. The complete 4x A100 experiment is
-specified in `experiments/2026-08-cost-model-validation`.
+schedule-regret reporting without refitting. A profile records the GEMM
+provider and kernel policy that produced its samples; the full compiler rejects
+a profile/target mismatch instead of silently comparing unlike runtimes. The
+complete cuBLAS and CUTLASS 4x A100 experiments are retained in
+`experiments/2026-08-26-runpod-4xa100-cost-model` and
+`experiments/2026-08-26-a100-cutlass-cost-model`.
 
 ## Code map
 

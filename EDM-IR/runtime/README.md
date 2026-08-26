@@ -73,8 +73,14 @@ and dependencies:
 git clone --depth 1 --branch v4.7.0 \
   https://github.com/NVIDIA/cutlass.git /opt/cutlass
 
+python -m edmir fit-gemm \
+  --base-profile examples/synthetic_profile.json \
+  --log /path/to/cutlass_gemm_measurements.jsonl \
+  --gemm-provider cutlass --gemm-kernel auto \
+  --out /tmp/cutlass-profile.json
+
 python -m edmir compile-graph /tmp/a2a-gemm.dataflow.json \
-  --profile examples/synthetic_profile.json \
+  --profile /tmp/cutlass-profile.json \
   --topology examples/full_p2p_topology.json \
   --chunk-rows 16,32,64 --buffers 1,2,4 \
   --target a100 --arch sm_80 --gemm-provider cutlass --backend cpp \

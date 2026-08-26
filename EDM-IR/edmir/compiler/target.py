@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, replace
 
-from .model import A2AGemmProblem, TopologySnapshot
+from .model import A2AGemmProblem, CalibrationProfile, TopologySnapshot
 
 
 SCHEMA_TARGET = "edmir.target.v1"
@@ -65,6 +65,27 @@ class Target:
             raise ValueError("CUTLASS v0.1 supports only row_major GEMM")
         if problem.k % 8 != 0 or problem.n % 8 != 0:
             raise ValueError("CUTLASS v0.1 requires K and N to be divisible by 8")
+
+    def validate_profile(self, profile: CalibrationProfile) -> None:
+        self.validate()
+        profile.validate()
+        if profile.gemm_provider != self.gemm_provider:
+            raise ValueError(
+                "calibration GEMM provider does not match target: "
+                f"profile={profile.gemm_provider}, target={self.gemm_provider}"
+            )
+        if self.gemm_kernel != "auto" and profile.gemm_kernel != self.gemm_kernel:
+            raise ValueError(
+                "calibration GEMM kernel does not match explicit target kernel: "
+                f"profile={profile.gemm_kernel}, target={self.gemm_kernel}"
+            )
+        if self.gemm_kernel == "auto" and profile.gemm_kernel not in (
+            "auto",
+            "library_default",
+        ):
+            raise ValueError(
+                "auto target requires an auto-policy or library-default calibration profile"
+            )
 
     def resolve(self, problem: A2AGemmProblem, *, gemm_m: int | None = None) -> "Target":
         """Materialize backend policy so emitted artifacts never contain `auto`."""

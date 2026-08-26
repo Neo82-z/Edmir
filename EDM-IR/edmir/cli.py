@@ -133,7 +133,14 @@ def _fit_nccl(args: argparse.Namespace) -> int:
 
 def _fit_gemm(args: argparse.Namespace) -> int:
     base_profile = CalibrationProfile.from_dict(read_json(args.base_profile))
-    profile = fit_gemm_profile(base_profile, args.log, dtype=args.dtype)
+    profile = fit_gemm_profile(
+        base_profile,
+        args.log,
+        dtype=args.dtype,
+        gemm_provider=args.gemm_provider,
+        gemm_kernel=args.gemm_kernel
+        or ("library_default" if args.gemm_provider == "cublas" else "auto"),
+    )
     write_json(args.out, profile.to_dict())
     print(f"wrote {args.out} gemm_samples={len(profile.gemm_samples)}")
     return 0
@@ -242,7 +249,7 @@ def build_parser() -> argparse.ArgumentParser:
     compile_parser.add_argument("--profile", required=True)
     compile_parser.add_argument("--topology", required=True)
     compile_parser.add_argument("--chunk-rows", default="")
-    compile_parser.add_argument("--buffers", default="2")
+    compile_parser.add_argument("--buffers", default="1,2,4")
     compile_parser.add_argument("--min-gain-ratio", type=float, default=None)
     compile_parser.add_argument("--out", required=True)
     compile_parser.set_defaults(func=_compile)
@@ -278,7 +285,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     compile_graph.add_argument("--backend", choices=("json", "cpp"), default="json")
     compile_graph.add_argument("--chunk-rows", default="")
-    compile_graph.add_argument("--buffers", default="2")
+    compile_graph.add_argument("--buffers", default="1,2,4")
     compile_graph.add_argument("--min-gain-ratio", type=float, default=None)
     compile_graph.add_argument("--out-dir", required=True)
     compile_graph.set_defaults(func=_compile_graph)
@@ -297,6 +304,8 @@ def build_parser() -> argparse.ArgumentParser:
     fit_gemm.add_argument("--base-profile", required=True)
     fit_gemm.add_argument("--log", required=True)
     fit_gemm.add_argument("--dtype", default="float16")
+    fit_gemm.add_argument("--gemm-provider", choices=("cublas", "cutlass"), default="cublas")
+    fit_gemm.add_argument("--gemm-kernel")
     fit_gemm.add_argument("--out", required=True)
     fit_gemm.set_defaults(func=_fit_gemm)
 

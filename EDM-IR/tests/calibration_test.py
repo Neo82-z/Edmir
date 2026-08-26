@@ -116,6 +116,25 @@ class CalibrationTest(unittest.TestCase):
             29.0,
         )
 
+    def test_gemm_fit_records_provider_policy_and_round_trips(self) -> None:
+        log = '{"m":64,"n":4096,"k":2048,"median_us":9.5}\n'
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "cutlass.jsonl"
+            path.write_text(log, encoding="utf-8")
+            profile = fit_gemm_profile(
+                base_profile(),
+                path,
+                gemm_provider="cutlass",
+                gemm_kernel="auto",
+            )
+        self.assertEqual(profile.gemm_provider, "cutlass")
+        self.assertEqual(profile.gemm_kernel, "auto")
+        self.assertEqual(CalibrationProfile.from_dict(profile.to_dict()), profile)
+
+    def test_profile_rejects_incompatible_provider_policy(self) -> None:
+        with self.assertRaisesRegex(ValueError, "cuBLAS profiles"):
+            replace(base_profile(), gemm_kernel="auto").validate()
+
     def test_local_copy_log_aggregates_and_interpolates_size(self) -> None:
         log = "\n".join(
             (

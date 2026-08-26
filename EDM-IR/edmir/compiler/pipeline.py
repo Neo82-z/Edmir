@@ -37,6 +37,7 @@ class CompilerPipeline:
     ) -> PipelineResult:
         target.validate()
         profile.validate()
+        target.validate_profile(profile)
         normalized, pass_trace = self.pass_manager.run(module)
         match = match_a2a_gemm(normalized)
         target.validate_problem(match.problem)

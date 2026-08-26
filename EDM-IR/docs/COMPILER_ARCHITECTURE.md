@@ -165,6 +165,11 @@ Directory: `compiler/backends/`
 
 The generated header uses the shared structs in `runtime/include/edmir/runtime/program.hpp`; it does not define a second private ABI. The host runtime validates that descriptor and its dependency DAG. With `EDMIR_ENABLE_CUDA=ON`, the CUDA runtime allocates rank-local buffers, creates streams/events and dispatches grouped NCCL send/recv. GEMM is then sent to the statically selected cuBLAS or narrow SM80 CUTLASS provider without changing the Program.
 
+Calibration profiles carry the provider and kernel policy that produced their
+GEMM samples. The pipeline validates that identity against the target before
+lowering, preventing cuBLAS timings from silently scoring a CUTLASS artifact or
+an explicit kernel from consuming measurements for another kernel.
+
 ## Why Python above and C++ below
 
 Frontend construction, graph rewriting, finite schedule search and diagnostics change frequently and benefit from Python's small iteration loop. GPU resource ownership, CUDA Graph capture, NCCL communicator lifetime, stream/event execution and CUTLASS kernel launch belong in C++.
@@ -218,14 +223,15 @@ IR or schedule. `auto` is resolved before artifact emission, so target JSON and
 the C++ ABI contain a reproducible concrete kernel. Both paths are covered by
 host compilation tests and 4x A100 numerical/latency experiments.
 
+Provider-specific GEMM and runtime calibration now preserves the measured
+oracle on all five A100 validation problems, including both held-out groups.
 The next milestone is not another IR layer. It is:
 
-1. calibrate provider-specific GEMM samples and preserve held-out selection;
-2. add Nsight Systems trace comparison against compiler dependency order;
-3. model generated kernel identity in experiment provenance and diagnostics;
-4. only then introduce a distinct fused communication/compute lowering with
+1. add Nsight Systems trace comparison against compiler dependency order;
+2. model generated kernel identity in experiment provenance and diagnostics;
+3. only then introduce a distinct fused communication/compute lowering with
    explicit legality and synchronization semantics;
-5. evaluate CuTe/NCCL Device API at that boundary rather than hiding it behind
+4. evaluate CuTe/NCCL Device API at that boundary rather than hiding it behind
    the existing `gemm` operation.
 
 See `runtime/README.md` for the server build and smoke runner.
