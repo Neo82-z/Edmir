@@ -125,3 +125,10 @@ replay fixed, increased estimated CTAs per op from one to eight, and changed the
 result from 82.3% slower to 11.8% faster than the host baseline. Fused schedule
 selection stays disabled until remote bytes, replay, and CTA concurrency are
 calibrated across train and held-out shapes.
+
+A fixed-`M64 N64` K sweep subsequently isolated the concurrency boundary from
+N-tile replay. Direct fusion won for K=256, 512, and 1024; split-K=8 won for
+K=2048 and 4096. At K=2048, direct reached host parity while split-K remained
+24.1% below host. This is evidence for distinct kernel candidates, not a global
+K threshold: the default selector stays closed until held-out M/N shapes
+preserve the choice direction.

@@ -33,7 +33,9 @@ Device API reference kernel and its numerical evidence are under
 `experiments/2026-08-26-a100-nccl-device-fused-reference`. The executable
 CUTLASS fusion boundary, including the negative direct-access sweep and the
 split-K concurrency result, is under
-`experiments/2026-08-26-a100-nccl-device-cutlass-fusion`. The
+`experiments/2026-08-26-a100-nccl-device-cutlass-fusion`. Its fixed-replay
+K/remote-byte follow-up is under
+`experiments/2026-08-26-a100-fused-k-boundary`. The
 complete layer contract is documented in
 [`docs/COMPILER_ARCHITECTURE.md`](docs/COMPILER_ARCHITECTURE.md).
 

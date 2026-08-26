@@ -33,3 +33,4 @@ experiments/YYYY-MM-DD-short-name/
 - `2026-08-26-a100-runtime-capabilities`：记录系统 NCCL 2.25.1 不具备 Device API 的负向门槛。
 - `2026-08-26-a100-nccl-device-fused-reference`：隔离构建 NCCL 2.28.9，运行官方 Device API AllReduce，并验证 Edmir LSA 融合参考核的数值正确性。该 slice 不宣称性能收益。
 - `2026-08-26-a100-nccl-device-cutlass-fusion`：将 LSA 指针注入 CUTLASS device kernel，验证单 kernel tensor-core 路径，并用 N-sweep 定位 direct-remote fusion 的收益边界与远端 A 重读问题。
+- `2026-08-26-a100-fused-k-boundary`：固定 N-tile replay，扫描 K/远端字节规模，定位 direct 与 split-K=8 的实测调度边界。
