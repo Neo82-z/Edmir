@@ -35,7 +35,9 @@ CUTLASS fusion boundary, including the negative direct-access sweep and the
 split-K concurrency result, is under
 `experiments/2026-08-26-a100-nccl-device-cutlass-fusion`. Its fixed-replay
 K/remote-byte follow-up is under
-`experiments/2026-08-26-a100-fused-k-boundary`. The
+`experiments/2026-08-26-a100-fused-k-boundary`; its complete held-out M/N grid
+and guarded evaluation are under
+`experiments/2026-08-26-a100-fused-heldout`. The
 complete layer contract is documented in
 [`docs/COMPILER_ARCHITECTURE.md`](docs/COMPILER_ARCHITECTURE.md).
 
@@ -174,12 +176,28 @@ complete cuBLAS and CUTLASS 4x A100 experiments are retained in
 `experiments/2026-08-26-runpod-4xa100-cost-model` and
 `experiments/2026-08-26-a100-cutlass-cost-model`.
 
+Fused kernel-family evidence is evaluated separately so it cannot silently
+enter the host-NCCL simulator:
+
+```bash
+python -m edmir evaluate-fused \
+  --train /path/to/train/results.csv \
+  --heldout /path/to/heldout/*/results.csv \
+  --out /tmp/fused-boundary-evaluation.json
+```
+
+The report fits the observed direct/split-K boundary and computes held-out
+direction accuracy and selection regret. Its schema explicitly leaves default
+compiler admission disabled; an environment-fingerprinted profile is still
+required before automatic fused selection.
+
 ## Code map
 
 ```text
 compiler/model.py       Buffer, Op, Program, problem/profile/topology schemas
 compiler/calibration.py NCCL and exact-shape GEMM parsers/calibration
 compiler/evaluation.py train/heldout runtime fit and selection metrics
+compiler/fused_evaluation.py guarded fused-family boundary and held-out metrics
 compiler/dataflow.py    typed SSA-like tensor Dataflow IR
 compiler/frontend.py    small graph builder and A2AGemm frontend
 compiler/passes.py      canonicalization, verification, pass trace

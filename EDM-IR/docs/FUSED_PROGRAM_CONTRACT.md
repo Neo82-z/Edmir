@@ -132,3 +132,10 @@ K=2048 and 4096. At K=2048, direct reached host parity while split-K remained
 24.1% below host. This is evidence for distinct kernel candidates, not a global
 K threshold: the default selector stays closed until held-out M/N shapes
 preserve the choice direction.
+
+The follow-up completed the full `M={32,64,128}` by `N={64,128,256}` grid.
+Training on M64/N64 and holding out the other eight M/N pairs produced 100%
+direction accuracy and zero selection regret over 40 held-out problems. This
+admits the boundary as a measured A100/NV12 profile candidate, but not as a
+portable compiler default: the evaluation artifact explicitly keeps default
+admission disabled and requires a future environment-fingerprinted profile.

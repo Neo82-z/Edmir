@@ -16,12 +16,14 @@ from .compiler import (
     compile_a2a_gemm,
     evaluate_cost_model,
     fit_execution_overhead,
+    fit_and_evaluate_fused_boundary,
     fit_gemm_profile,
     fit_local_copy_profile,
     fit_pairwise_nccl_profile,
     lower_fused_a2a_gemm,
     match_a2a_gemm,
     read_runtime_measurements,
+    read_fused_measurements,
     create_backend,
     simulate_program,
     verify_program,
@@ -249,6 +251,30 @@ def _fit_runtime(args: argparse.Namespace) -> int:
     return 0
 
 
+def _evaluate_fused(args: argparse.Namespace) -> int:
+    train = read_fused_measurements(args.train)
+    heldout = read_fused_measurements(args.heldout)
+    report = fit_and_evaluate_fused_boundary(train, heldout)
+    write_json(args.out, report)
+    rule = report["rule"]
+    print(
+        f"rule=direct_if_k_le_{rule['max_direct_k']} "
+        f"split_if_k_ge_{rule['min_split_k']} "
+        "default_compiler_admission=false"
+    )
+    for split in ("train", "heldout"):
+        metrics = report[split]
+        print(
+            f"{split}_problems={metrics['problems']} "
+            f"{split}_direction_accuracy={metrics['direction_accuracy']:.6f} "
+            f"{split}_mean_selection_regret={metrics['mean_selection_regret']:.6f} "
+            f"{split}_max_selection_regret={metrics['max_selection_regret']:.6f} "
+            f"{split}_host_wins={metrics['host_wins']}"
+        )
+    print(f"wrote {args.out}")
+    return 0
+
+
 def _verify(args: argparse.Namespace) -> int:
     program = _load_program(args.program)
     report = verify_program(program.problem, program)
@@ -469,6 +495,15 @@ def build_parser() -> argparse.ArgumentParser:
     fit_runtime.add_argument("--out-profile", required=True)
     fit_runtime.add_argument("--out-report", required=True)
     fit_runtime.set_defaults(func=_fit_runtime)
+
+    evaluate_fused = subparsers.add_parser(
+        "evaluate-fused",
+        help="fit a guarded direct/split-K rule and report held-out direction/regret",
+    )
+    evaluate_fused.add_argument("--train", nargs="+", required=True)
+    evaluate_fused.add_argument("--heldout", nargs="+", required=True)
+    evaluate_fused.add_argument("--out", required=True)
+    evaluate_fused.set_defaults(func=_evaluate_fused)
 
     verify = subparsers.add_parser("verify", help="verify an edmir.program.v1 program")
     verify.add_argument("program")

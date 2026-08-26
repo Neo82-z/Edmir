@@ -1,0 +1,20 @@
+$ cmake -S /root/llm-serving/EDM-IR/runtime -B /root/edmir-fused-heldout-m64-n128/work/build -DEDMIR_ENABLE_CUDA=ON -DEDMIR_ENABLE_CUTLASS=ON -DEDMIR_ENABLE_NCCL_DEVICE=ON -DEDMIR_GENERATED_DIR=/root/edmir-fused-heldout-m64-n128/work/generated -DEDMIR_CUTLASS_DIR=/root/cutlass -DNCCL_INCLUDE_DIR=/root/edmir-deps/nccl-2.28.9/build/include -DNCCL_LIBRARY=/root/edmir-deps/nccl-2.28.9/build/lib/libnccl.so -DCMAKE_CUDA_ARCHITECTURES=80
+-- The CXX compiler identification is GNU 13.3.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Found CUDAToolkit: /usr/local/cuda-12.8/targets/x86_64-linux/include (found version "12.8.93")
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- The CUDA compiler identification is NVIDIA 12.8.93
+-- Detecting CUDA compiler ABI info
+-- Detecting CUDA compiler ABI info - done
+-- Check for working CUDA compiler: /usr/local/cuda-12.8/bin/nvcc - skipped
+-- Detecting CUDA compile features
+-- Detecting CUDA compile features - done
+-- Configuring done (4.4s)
+-- Generating done (0.0s)
+-- Build files have been written to: /root/edmir-fused-heldout-m64-n128/work/build

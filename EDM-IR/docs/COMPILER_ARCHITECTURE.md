@@ -143,6 +143,14 @@ and a CUTLASS tensor-core research kernel, but remains excluded from selection
 until the measured workload-region gate is complete. Dataflow nodes never
 contain these choices.
 
+Fused-family evaluation is a separate offline layer. It may fit and validate a
+direct-versus-split-K boundary from measured CSVs, but it cannot mutate
+`CalibrationProfile` or enter normal candidate selection. The emitted report
+records train/held-out direction accuracy, regret, host wins, and
+`default_compiler_admission=false`. This keeps a reproducible path from
+measurement to future admission without treating one A100 profile as an
+architecture law.
+
 ### 6. Dependency and legality lowering
 
 Files: `compiler/dependence.py`, `compiler/verify.py`, `compiler/simulate.py`

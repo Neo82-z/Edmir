@@ -22,6 +22,14 @@ from .evaluation import (
     fit_execution_overhead,
     read_runtime_measurements,
 )
+from .fused_evaluation import (
+    FUSED_FAMILIES,
+    FusedMeasurement,
+    evaluate_fused_k_boundary,
+    fit_and_evaluate_fused_boundary,
+    fit_fused_k_boundary,
+    read_fused_measurements,
+)
 from .frontend import GraphBuilder, build_a2a_gemm_module
 from .lowering import A2AGemmMatch, lower_fused_a2a_gemm, match_a2a_gemm
 from .model import (
@@ -88,6 +96,8 @@ __all__ = [
     "ExecutionFeatures",
     "ExecutionOverhead",
     "FusedTrafficEstimate",
+    "FUSED_FAMILIES",
+    "FusedMeasurement",
     "DependenceResult",
     "Dependency",
     "GraphBuilder",
@@ -122,8 +132,11 @@ __all__ = [
     "create_backend",
     "derive_dependencies",
     "evaluate_cost_model",
+    "evaluate_fused_k_boundary",
     "extract_execution_features",
     "fit_execution_overhead",
+    "fit_and_evaluate_fused_boundary",
+    "fit_fused_k_boundary",
     "fit_gemm_profile",
     "fit_local_copy_profile",
     "fit_pairwise_nccl_profile",
@@ -133,6 +146,7 @@ __all__ = [
     "parse_gemm_benchmark_log",
     "parse_local_copy_benchmark_log",
     "read_runtime_measurements",
+    "read_fused_measurements",
     "simulate_program",
     "simulate_schedule",
     "verify_program",

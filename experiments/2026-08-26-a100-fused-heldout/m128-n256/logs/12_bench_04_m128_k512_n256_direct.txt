@@ -1,0 +1,2 @@
+$ /root/edmir-fused-heldout-m128-n256/work/build/edmir_benchmark_generated --warmup 30 --iterations 300
+bench target=a100-direct arch=sm_80 gemm_provider=cutlass gemm_kernel=sm80_64x128x32 strategy=fused ranks=4 rows_per_peer=128 k=512 n=256 chunk_rows=128 buffer_count=1 ops=16 op_dispatch=16 event_record=28 event_wait=62 buffer_reuse=0 remote_input_bytes=1572864 remote_a_replay=2 estimated_remote_a_load_bytes=3145728 split_k_slices=1 estimated_ctas_per_op=4 warmup=30 iterations=300 min_ms=0.3097 median_ms=0.3142 p95_ms=0.3255 max_ms=0.3786 mean_ms=0.3166
