@@ -67,7 +67,7 @@ from .simulate import (
     extract_execution_features,
 )
 from .verify import VerificationReport, verify_program, verify_schedule
-from .target import Target
+from .target import FusedTrafficEstimate, Target
 
 __all__ = [
     "A2AGemmProblem",
@@ -87,6 +87,7 @@ __all__ = [
     "DataflowVerificationReport",
     "ExecutionFeatures",
     "ExecutionOverhead",
+    "FusedTrafficEstimate",
     "DependenceResult",
     "Dependency",
     "GraphBuilder",

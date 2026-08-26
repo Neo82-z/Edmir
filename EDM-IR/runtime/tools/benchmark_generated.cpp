@@ -48,6 +48,16 @@ std::size_t op_device_count(const edmir::runtime::OpDesc& op) {
              : 1;
 }
 
+std::size_t dtype_bytes(edmir::runtime::DType dtype) {
+  switch (dtype) {
+    case edmir::runtime::DType::kFloat16:
+      return 2;
+    case edmir::runtime::DType::kFloat32:
+      return 4;
+  }
+  throw std::invalid_argument("unknown generated dtype");
+}
+
 }  // namespace
 
 int main(int argc, char** argv) {
@@ -98,6 +108,42 @@ int main(int argc, char** argv) {
     for (std::size_t op = 0; op < program.ops.size(); ++op) {
       event_waits += predecessors[op].size() * op_device_count(program.ops[op]);
     }
+    std::size_t remote_input_bytes = 0;
+    for (const auto& op : program.ops) {
+      if ((op.kind == edmir::runtime::OpKind::kTransfer ||
+           op.kind == edmir::runtime::OpKind::kFusedTransferGemm) &&
+          op.peer_rank != op.rank) {
+        remote_input_bytes += static_cast<std::size_t>(op.rows) *
+                              static_cast<std::size_t>(program.problem.k) *
+                              dtype_bytes(program.problem.dtype);
+      }
+    }
+    std::size_t remote_a_replay = 1;
+    std::size_t split_k_slices = 1;
+    std::size_t estimated_ctas_per_op = 0;
+    if (program.strategy == "fused") {
+      if (program.gemm_provider == edmir::runtime::GemmProvider::kCUTLASS) {
+        const auto tile_n = edmir::runtime::gemm_kernel_threadblock_n(program.gemm_kernel);
+        const auto tile_m = edmir::runtime::gemm_kernel_threadblock_m(program.gemm_kernel);
+        if (tile_n <= 0 || tile_m <= 0) {
+          throw std::invalid_argument("fused CUTLASS kernel has no CTA tile");
+        }
+        remote_a_replay = static_cast<std::size_t>(
+            (program.problem.n + tile_n - 1) / tile_n);
+        split_k_slices = static_cast<std::size_t>(
+            edmir::runtime::gemm_kernel_split_k_slices(program.gemm_kernel));
+        estimated_ctas_per_op = static_cast<std::size_t>(
+            (program.chunk_rows + tile_m - 1) / tile_m) * remote_a_replay *
+            split_k_slices;
+      } else if (program.gemm_provider ==
+                 edmir::runtime::GemmProvider::kCudaReference) {
+        remote_a_replay = static_cast<std::size_t>(program.problem.n);
+        estimated_ctas_per_op = static_cast<std::size_t>(
+            (program.chunk_rows + 15) / 16) *
+            static_cast<std::size_t>((program.problem.n + 15) / 16);
+      }
+    }
+    const auto estimated_remote_a_load_bytes = remote_input_bytes * remote_a_replay;
 
     std::cout << std::fixed << std::setprecision(4)
               << "bench target=" << program.target << " arch=" << program.arch
@@ -110,7 +156,13 @@ int main(int argc, char** argv) {
               << " buffer_count=" << program.buffer_count
               << " ops=" << program.ops.size() << " op_dispatch=" << program.ops.size()
               << " event_record=" << event_records << " event_wait=" << event_waits
-              << " buffer_reuse=" << buffer_reuses << " warmup=" << warmup_iterations
+              << " buffer_reuse=" << buffer_reuses
+              << " remote_input_bytes=" << remote_input_bytes
+              << " remote_a_replay=" << remote_a_replay
+              << " estimated_remote_a_load_bytes=" << estimated_remote_a_load_bytes
+              << " split_k_slices=" << split_k_slices
+              << " estimated_ctas_per_op=" << estimated_ctas_per_op
+              << " warmup=" << warmup_iterations
               << " iterations=" << measured_iterations << " min_ms=" << milliseconds.front()
               << " median_ms=" << percentile(milliseconds, 0.50)
               << " p95_ms=" << percentile(milliseconds, 0.95)

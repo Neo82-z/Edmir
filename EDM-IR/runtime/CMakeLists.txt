@@ -73,6 +73,13 @@ if(EDMIR_ENABLE_CUDA)
       $<$<COMPILE_LANGUAGE:CUDA>:--expt-relaxed-constexpr>
     )
 
+    if(EDMIR_ENABLE_NCCL_DEVICE)
+      target_sources(edmir_cuda_runtime PRIVATE src/nccl_device_fused_cutlass.cu)
+      target_compile_definitions(
+        edmir_cuda_runtime PRIVATE EDMIR_HAS_NCCL_DEVICE_CUTLASS=1
+      )
+    endif()
+
     add_executable(edmir_benchmark_cutlass_gemm tools/benchmark_cutlass_gemm.cpp)
     target_link_libraries(edmir_benchmark_cutlass_gemm PRIVATE edmir_cuda_runtime)
     target_compile_features(edmir_benchmark_cutlass_gemm PRIVATE cxx_std_20)

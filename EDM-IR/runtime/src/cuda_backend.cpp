@@ -133,9 +133,11 @@ class CudaBackend::Impl {
     }
 #endif
 #if !defined(EDMIR_HAS_NCCL_DEVICE)
-    if (program_.gemm_provider == GemmProvider::kCudaReference) {
+    if (std::any_of(
+            program_.ops.begin(), program_.ops.end(),
+            [](const OpDesc& op) { return op.kind == OpKind::kFusedTransferGemm; })) {
       throw std::invalid_argument(
-          "generated Program requests the CUDA fused reference kernel, but the runtime was "
+          "generated Program requests a fused kernel, but the runtime was "
           "built without EDMIR_ENABLE_NCCL_DEVICE=ON");
     }
 #endif
@@ -187,6 +189,9 @@ class CudaBackend::Impl {
 
 #if defined(EDMIR_HAS_NCCL_DEVICE)
       if (has_fused) prepare_fused_windows();
+#if defined(EDMIR_HAS_NCCL_DEVICE_CUTLASS)
+      if (has_fused) prepare_fused_cutlass_workspaces();
+#endif
 #endif
 
       events_.assign(program_.ops.size(), std::vector<cudaEvent_t>(world_size, nullptr));
@@ -455,6 +460,32 @@ class CudaBackend::Impl {
     }
     fused_windows_.clear();
   }
+
+#if defined(EDMIR_HAS_NCCL_DEVICE_CUTLASS)
+  void prepare_fused_cutlass_workspaces() {
+    fused_cutlass_workspaces_.assign(program_.ops.size(), nullptr);
+    if (program_.gemm_provider != GemmProvider::kCUTLASS) return;
+    for (std::size_t index = 0; index < program_.ops.size(); ++index) {
+      const auto& op = program_.ops[index];
+      if (op.kind != OpKind::kFusedTransferGemm) continue;
+      const auto bytes = lsa_cutlass_workspace_size(
+          program_.gemm_kernel, op.rows, program_.problem.n);
+      if (bytes == 0) continue;
+      EDMIR_CUDA(cudaSetDevice(device_id(op.rank)));
+      EDMIR_CUDA(cudaMalloc(&fused_cutlass_workspaces_[index], bytes));
+      EDMIR_CUDA(cudaMemset(fused_cutlass_workspaces_[index], 0, bytes));
+    }
+  }
+
+  void release_fused_cutlass_workspaces() noexcept {
+    for (std::size_t index = 0; index < fused_cutlass_workspaces_.size(); ++index) {
+      if (fused_cutlass_workspaces_[index] == nullptr) continue;
+      cudaSetDevice(device_id(program_.ops[index].rank));
+      cudaFree(fused_cutlass_workspaces_[index]);
+    }
+    fused_cutlass_workspaces_.clear();
+  }
+#endif
 #endif
 
   void launch_transfer(std::size_t op_index) {
@@ -540,10 +571,23 @@ class CudaBackend::Impl {
       throw std::logic_error("fused op is missing its symmetric input window");
     }
     EDMIR_CUDA(cudaSetDevice(device_id(op.rank)));
-    EDMIR_CUDA(launch_lsa_naive_gemm_f16(
-        fused_windows_[op_index].windows[op.rank], op.peer_rank, op.rows,
-        program_.problem.n, program_.problem.k, buffers_[weight], buffers_[output],
+    if (program_.gemm_provider == GemmProvider::kCudaReference) {
+      EDMIR_CUDA(launch_lsa_naive_gemm_f16(
+          fused_windows_[op_index].windows[op.rank], op.peer_rank, op.rows,
+          program_.problem.n, program_.problem.k, buffers_[weight], buffers_[output],
+          ranks_[op.rank].compute));
+      return;
+    }
+#if defined(EDMIR_HAS_NCCL_DEVICE_CUTLASS)
+    EDMIR_CUDA(launch_lsa_cutlass_gemm_f16_sm80(
+        program_.gemm_kernel, fused_windows_[op_index].windows[op.rank],
+        op.peer_rank, op.rows, program_.problem.n, program_.problem.k,
+        buffers_[weight], buffers_[output], fused_cutlass_workspaces_[op_index],
         ranks_[op.rank].compute));
+#else
+    throw std::logic_error(
+        "fused CUTLASS op requires EDMIR_ENABLE_CUTLASS=ON together with the Device API");
+#endif
 #else
     static_cast<void>(op_index);
     throw std::logic_error("fused op reached an unavailable NCCL Device API runtime path");
@@ -588,6 +632,9 @@ class CudaBackend::Impl {
 #if defined(EDMIR_HAS_NCCL_DEVICE)
     release_fused_windows();
 #endif
+#if defined(EDMIR_HAS_NCCL_DEVICE_CUTLASS)
+    release_fused_cutlass_workspaces();
+#endif
     for (std::size_t index = 0; index < buffers_.size(); ++index) {
       if (buffers_[index] != nullptr) {
         cudaSetDevice(device_id(program_.buffers[index].rank));
@@ -617,6 +664,9 @@ class CudaBackend::Impl {
   std::vector<bool> nccl_allocated_;
 #if defined(EDMIR_HAS_NCCL_DEVICE)
   std::vector<FusedWindowState> fused_windows_;
+#endif
+#if defined(EDMIR_HAS_NCCL_DEVICE_CUTLASS)
+  std::vector<void*> fused_cutlass_workspaces_;
 #endif
   std::vector<std::vector<cudaEvent_t>> events_;
   std::vector<std::size_t> order_;

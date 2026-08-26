@@ -8,6 +8,13 @@
 using namespace edmir::runtime;
 
 int main() {
+  static_assert(gemm_kernel_threadblock_n(GemmKernel::kSm80_64x128x32) == 128);
+  static_assert(gemm_kernel_threadblock_n(GemmKernel::kSm80_128x64x32) == 64);
+  static_assert(gemm_kernel_threadblock_m(GemmKernel::kSm80_64x128x32) == 64);
+  static_assert(gemm_kernel_threadblock_n(GemmKernel::kLsaNaiveF16) == 0);
+  static_assert(gemm_kernel_split_k_slices(GemmKernel::kSm80_64x128x32) == 1);
+  static_assert(
+      gemm_kernel_split_k_slices(GemmKernel::kSm80_64x128x32SplitK8) == 8);
   constexpr ProblemDesc problem{2, 16, 64, 64, DType::kFloat16};
   constexpr std::array buffers{
       BufferDesc{"input", 0, BufferRole::kInput, 2048},

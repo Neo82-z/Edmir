@@ -30,7 +30,10 @@ validation is under `experiments/2026-08-26-a100-nsys-trace-validation`. The
 fused-runtime software/hardware gate is captured under
 `experiments/2026-08-26-a100-runtime-capabilities`. The first executable NCCL
 Device API reference kernel and its numerical evidence are under
-`experiments/2026-08-26-a100-nccl-device-fused-reference`. The
+`experiments/2026-08-26-a100-nccl-device-fused-reference`. The executable
+CUTLASS fusion boundary, including the negative direct-access sweep and the
+split-K concurrency result, is under
+`experiments/2026-08-26-a100-nccl-device-cutlass-fusion`. The
 complete layer contract is documented in
 [`docs/COMPILER_ARCHITECTURE.md`](docs/COMPILER_ARCHITECTURE.md).
 
@@ -56,8 +59,9 @@ The Program IR has four op kinds:
 - `barrier`: create a readiness token for the sequential baseline.
 - `fused_transfer_gemm`: directly read a source tile and destination weight,
   write the destination output, and occupy both communication endpoints plus
-  destination compute. It has no staging buffer. A guarded SM80 FP16 NCCL
-  Device API implementation provides the executable correctness reference.
+  destination compute. It has no staging buffer. Guarded SM80 FP16 NCCL
+  Device API implementations provide a scalar correctness reference and a
+  CUTLASS tensor-core research path.
 
 `ProgramBuilder` constructs those ops directly. `derive_dependencies()` then
 applies five rules:
@@ -107,16 +111,16 @@ Generate the guarded fused reference artifact:
 python -m edmir lower-fused /tmp/a2a-gemm.dataflow.json \
   --topology examples/full_p2p_topology.json \
   --chunk-rows 16 --arch sm_80 \
-  --gemm-provider cuda_reference --backend cpp \
+  --gemm-provider cutlass --backend cpp \
   --out-dir /tmp/edmir-fused-reference
 ```
 
 This command emits a verified `fused` Program and a
-`communication_api=nccl_device` target. A runtime built with NCCL 2.28+ and
-`EDMIR_ENABLE_NCCL_DEVICE=ON` executes its narrow `lsa_naive_f16` correctness
-kernel. The calibrated simulator still rejects the fused op because no fused
-cost has been admitted; ordinary cost-based compilation therefore remains on
-the measured host-NCCL path. See
+`communication_api=nccl_device` target. A runtime built with NCCL 2.28+,
+`EDMIR_ENABLE_NCCL_DEVICE=ON`, and optionally `EDMIR_ENABLE_CUTLASS=ON`
+executes the selected fused kernel. The calibrated simulator still rejects the
+fused op because no fused cost has been admitted; ordinary cost-based
+compilation therefore remains on the measured host-NCCL path. See
 [`docs/FUSED_PROGRAM_CONTRACT.md`](docs/FUSED_PROGRAM_CONTRACT.md).
 
 The output schema is `edmir.program.v1`. Compiler-generated `edmir.plan.v1`

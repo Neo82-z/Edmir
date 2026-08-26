@@ -174,10 +174,22 @@ def _lower_fused(args: argparse.Namespace) -> int:
     if artifact.backend == "json":
         print("warning=fused JSON is a legality-checked semantic prototype")
     else:
+        build_requirements = "EDMIR_ENABLE_NCCL_DEVICE=ON"
+        if target.gemm_provider == "cutlass":
+            build_requirements += " and EDMIR_ENABLE_CUTLASS=ON"
         print(
-            "warning=fused C++ requires EDMIR_ENABLE_NCCL_DEVICE=ON and remains "
+            f"warning=fused C++ requires {build_requirements} and remains "
             "excluded from cost-based selection"
         )
+    print(
+        f"traffic remote_ops={artifact.metadata['remote_ops']} "
+        f"remote_input_bytes={artifact.metadata['remote_input_bytes']} "
+        f"remote_a_replay={artifact.metadata['remote_a_replay']} "
+        "estimated_remote_a_load_bytes="
+        f"{artifact.metadata['estimated_remote_a_load_bytes']} "
+        f"split_k_slices={artifact.metadata['split_k_slices']} "
+        f"estimated_ctas_per_op={artifact.metadata['estimated_ctas_per_op']}"
+    )
     for path in written:
         print(f"wrote {path}")
     return 0
@@ -392,7 +404,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     lower_fused = subparsers.add_parser(
         "lower-fused",
-        help="emit a legality-checked fused All2All->GEMM JSON prototype",
+        help="emit a legality-checked fused All2All->GEMM artifact",
     )
     lower_fused.add_argument("graph")
     lower_fused.add_argument("--topology", required=True)
@@ -411,6 +423,7 @@ def build_parser() -> argparse.ArgumentParser:
             "library_default",
             "sm80_128x128x32",
             "sm80_64x128x32",
+            "sm80_64x128x32_splitk8",
             "sm80_128x64x32",
             "lsa_naive_f16",
         ),

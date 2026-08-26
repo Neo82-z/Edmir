@@ -38,14 +38,14 @@ fallback.
 | `host_nccl` + C++ runtime | yes | rejected |
 | `nccl_device` + JSON | yes | semantic artifact |
 | `nccl_device` + C++ / `cuda_reference` | rejected | guarded SM80 FP16 reference |
-| `nccl_device` + C++ / `cutlass` | rejected | not implemented |
+| `nccl_device` + C++ / `cutlass` | rejected | experimental SM80 tensor-core path |
 
 The fused target additionally requires full peer-to-peer connectivity and the
 `cuda_reference` or CUTLASS provider. cuBLAS is an independent library launch
 and cannot satisfy the one-kernel semantic contract. `cuda_reference` resolves
-to `lsa_naive_f16` and is the only executable fused provider today. CUTLASS is
-accepted as a semantic JSON target but is rejected by the C++ backend until a
-real fused implementation exists.
+to `lsa_naive_f16`. The CUTLASS path resolves the remote A pointer inside a
+custom device wrapper, substitutes it into `GemmKernel::Params`, and invokes
+the ordinary predicated tensor-core mainloop and epilogue in the same launch.
 
 ## Why the cost model rejects it
 
@@ -104,3 +104,24 @@ and weights are populated by synchronous host copies before `execute()`, remain
 immutable during execution, and the registered windows outlive all launches.
 A future producer-generated or mutable tile must add explicit release/acquire
 publication; this reference must not be generalized by assumption.
+
+## Measured traffic boundary
+
+The first CUTLASS implementation assigns one CTA to each `(M tile, N tile)`.
+Every N tile therefore reloads the same remote A tile. For a kernel with
+threadblock width `T_N`, the compiler-visible replay factor is
+
+```text
+remote_a_replay = ceil(N / T_N)
+estimated_remote_a_load_bytes = remote_input_bytes * remote_a_replay
+```
+
+This estimate counts only non-local source/destination pairs. It is not a
+latency model, because SM-initiated LSA reads and copy-engine transfers have
+different fixed and bandwidth costs. On 4x A100, direct fusion won for the tiny
+`M8 K64 N64` validation shape but lost for every `M64 K4096` N-sweep point,
+including replay one. Adding serial split-K=8 at `M64 K4096 N64` kept bytes and
+replay fixed, increased estimated CTAs per op from one to eight, and changed the
+result from 82.3% slower to 11.8% faster than the host baseline. Fused schedule
+selection stays disabled until remote bytes, replay, and CTA concurrency are
+calibrated across train and held-out shapes.

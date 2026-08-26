@@ -13,9 +13,43 @@ GEMM_KERNELS = (
     "library_default",
     "sm80_128x128x32",
     "sm80_64x128x32",
+    "sm80_64x128x32_splitk8",
     "sm80_128x64x32",
     "lsa_naive_f16",
 )
+GEMM_KERNEL_THREADBLOCK_N = {
+    "sm80_128x128x32": 128,
+    "sm80_64x128x32": 128,
+    "sm80_64x128x32_splitk8": 128,
+    "sm80_128x64x32": 64,
+}
+GEMM_KERNEL_THREADBLOCK_M = {
+    "sm80_128x128x32": 128,
+    "sm80_64x128x32": 64,
+    "sm80_64x128x32_splitk8": 64,
+    "sm80_128x64x32": 128,
+}
+GEMM_KERNEL_SPLIT_K = {"sm80_64x128x32_splitk8": 8}
+
+
+@dataclass(frozen=True, slots=True)
+class FusedTrafficEstimate:
+    remote_ops: int
+    remote_input_bytes: int
+    remote_a_replay: int
+    estimated_remote_a_load_bytes: int
+    split_k_slices: int
+    estimated_ctas_per_op: int
+
+    def to_dict(self) -> dict[str, int]:
+        return {
+            "remote_ops": self.remote_ops,
+            "remote_input_bytes": self.remote_input_bytes,
+            "remote_a_replay": self.remote_a_replay,
+            "estimated_remote_a_load_bytes": self.estimated_remote_a_load_bytes,
+            "split_k_slices": self.split_k_slices,
+            "estimated_ctas_per_op": self.estimated_ctas_per_op,
+        }
 
 
 @dataclass(frozen=True, slots=True)
@@ -58,9 +92,15 @@ class Target:
             "auto",
             "sm80_128x128x32",
             "sm80_64x128x32",
+            "sm80_64x128x32_splitk8",
             "sm80_128x64x32",
         ):
             raise ValueError("CUTLASS targets require gemm_kernel=auto or an SM80 kernel name")
+        if (
+            self.gemm_kernel == "sm80_64x128x32_splitk8"
+            and self.communication_api != "nccl_device"
+        ):
+            raise ValueError("CUTLASS split-K=8 is a fused NCCL Device API kernel")
         if self.gemm_provider == "cuda_reference" and self.gemm_kernel not in (
             "auto",
             "lsa_naive_f16",
@@ -93,6 +133,8 @@ class Target:
             raise ValueError("CUTLASS v0.1 supports only row_major GEMM")
         if problem.k % 8 != 0 or problem.n % 8 != 0:
             raise ValueError("CUTLASS v0.1 requires K and N to be divisible by 8")
+        if self.gemm_kernel == "sm80_64x128x32_splitk8" and problem.k % 256 != 0:
+            raise ValueError("CUTLASS split-K=8 kernel requires K divisible by 256")
 
     def validate_profile(self, profile: CalibrationProfile) -> None:
         self.validate()
@@ -142,6 +184,48 @@ class Target:
             )
         if has_fused and not self.topology.has_full_p2p():
             raise ValueError("fused_transfer_gemm requires full peer-to-peer connectivity")
+
+    def estimate_fused_traffic(self, program: Program) -> FusedTrafficEstimate:
+        """Expose static remote-A traffic features without pretending to predict latency."""
+
+        self.validate_program(program)
+        fused_ops = tuple(op for op in program.ops if op.kind == "fused_transfer_gemm")
+        if not fused_ops or len(fused_ops) != len(program.ops):
+            raise ValueError("fused traffic estimation requires an all-fused Program")
+        resolved = self.resolve(program.problem, gemm_m=program.chunk_rows)
+        remote_ops = tuple(op for op in fused_ops if op.peer_rank != op.rank)
+        remote_input_bytes = sum(
+            op.rows * program.problem.bytes_per_row for op in remote_ops
+        )
+        if resolved.gemm_provider == "cuda_reference":
+            replay = program.problem.n
+            split_k_slices = 1
+            ctas_per_op = (
+                (program.chunk_rows + 15) // 16
+                * ((program.problem.n + 15) // 16)
+            )
+        else:
+            tile_n = GEMM_KERNEL_THREADBLOCK_N.get(resolved.gemm_kernel)
+            tile_m = GEMM_KERNEL_THREADBLOCK_M.get(resolved.gemm_kernel)
+            if tile_n is None or tile_m is None:
+                raise ValueError(
+                    f"CUTLASS kernel {resolved.gemm_kernel!r} has no traffic tile contract"
+                )
+            replay = (program.problem.n + tile_n - 1) // tile_n
+            split_k_slices = GEMM_KERNEL_SPLIT_K.get(resolved.gemm_kernel, 1)
+            ctas_per_op = (
+                (program.chunk_rows + tile_m - 1) // tile_m
+                * replay
+                * split_k_slices
+            )
+        return FusedTrafficEstimate(
+            remote_ops=len(remote_ops),
+            remote_input_bytes=remote_input_bytes,
+            remote_a_replay=replay,
+            estimated_remote_a_load_bytes=remote_input_bytes * replay,
+            split_k_slices=split_k_slices,
+            estimated_ctas_per_op=ctas_per_op,
+        )
 
     def resolve(self, problem: A2AGemmProblem, *, gemm_m: int | None = None) -> "Target":
         """Materialize backend policy so emitted artifacts never contain `auto`."""
@@ -194,7 +278,11 @@ class Target:
 
 __all__ = [
     "COMMUNICATION_APIS",
+    "FusedTrafficEstimate",
     "GEMM_KERNELS",
+    "GEMM_KERNEL_SPLIT_K",
+    "GEMM_KERNEL_THREADBLOCK_M",
+    "GEMM_KERNEL_THREADBLOCK_N",
     "GEMM_PROVIDERS",
     "SCHEMA_TARGET",
     "Target",

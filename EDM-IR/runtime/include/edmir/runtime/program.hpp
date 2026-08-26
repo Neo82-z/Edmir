@@ -23,6 +23,7 @@ enum class GemmKernel : std::uint8_t {
   kLibraryDefault,
   kSm80_128x128x32,
   kSm80_64x128x32,
+  kSm80_64x128x32SplitK8,
   kSm80_128x64x32,
   kLsaNaiveF16,
 };
@@ -40,12 +41,48 @@ constexpr std::string_view gemm_kernel_name(GemmKernel kernel) {
       return "sm80_128x128x32";
     case GemmKernel::kSm80_64x128x32:
       return "sm80_64x128x32";
+    case GemmKernel::kSm80_64x128x32SplitK8:
+      return "sm80_64x128x32_splitk8";
     case GemmKernel::kSm80_128x64x32:
       return "sm80_128x64x32";
     case GemmKernel::kLsaNaiveF16:
       return "lsa_naive_f16";
   }
   return "unknown";
+}
+
+constexpr std::int32_t gemm_kernel_threadblock_n(GemmKernel kernel) {
+  switch (kernel) {
+    case GemmKernel::kSm80_128x128x32:
+    case GemmKernel::kSm80_64x128x32:
+    case GemmKernel::kSm80_64x128x32SplitK8:
+      return 128;
+    case GemmKernel::kSm80_128x64x32:
+      return 64;
+    case GemmKernel::kLibraryDefault:
+    case GemmKernel::kLsaNaiveF16:
+      return 0;
+  }
+  return 0;
+}
+
+constexpr std::int32_t gemm_kernel_threadblock_m(GemmKernel kernel) {
+  switch (kernel) {
+    case GemmKernel::kSm80_128x128x32:
+    case GemmKernel::kSm80_128x64x32:
+      return 128;
+    case GemmKernel::kSm80_64x128x32:
+    case GemmKernel::kSm80_64x128x32SplitK8:
+      return 64;
+    case GemmKernel::kLibraryDefault:
+    case GemmKernel::kLsaNaiveF16:
+      return 0;
+  }
+  return 0;
+}
+
+constexpr std::int32_t gemm_kernel_split_k_slices(GemmKernel kernel) {
+  return kernel == GemmKernel::kSm80_64x128x32SplitK8 ? 8 : 1;
 }
 
 constexpr std::string_view gemm_provider_name(GemmProvider provider) {

@@ -1,0 +1,11 @@
+# Captured benchmark output, 2026-08-26, 4x A100-SXM4-80GB.
+# Each M64/K4096 row used warmup=30 and iterations=300.
+# M8/K64/N64 used warmup=50 and iterations=1000.
+case rows_per_peer=8 k=64 n=64 kernel=sm80_64x128x32 remote_a_replay=1 estimated_ctas_per_op=1 host_median_ms=0.5176 fused_cutlass_median_ms=0.2972 fused_scalar_median_ms=0.2844
+case rows_per_peer=64 k=4096 n=64 kernel=sm80_64x128x32 remote_a_replay=1 estimated_ctas_per_op=1 host_median_ms=0.5597 fused_cutlass_median_ms=1.0203
+case rows_per_peer=64 k=4096 n=128 kernel=sm80_64x128x32 remote_a_replay=1 estimated_ctas_per_op=1 host_median_ms=0.5665 fused_cutlass_median_ms=1.0257
+case rows_per_peer=64 k=4096 n=256 kernel=sm80_64x128x32 remote_a_replay=2 estimated_ctas_per_op=2 host_median_ms=0.5655 fused_cutlass_median_ms=1.0426
+case rows_per_peer=64 k=4096 n=512 kernel=sm80_64x128x32 remote_a_replay=4 estimated_ctas_per_op=4 host_median_ms=0.5645 fused_cutlass_median_ms=1.0389
+case rows_per_peer=64 k=4096 n=1024 kernel=sm80_64x128x32 remote_a_replay=8 estimated_ctas_per_op=8 host_median_ms=0.5659 fused_cutlass_median_ms=1.0514
+case rows_per_peer=64 k=4096 n=2048 kernel=sm80_64x128x32 remote_a_replay=16 estimated_ctas_per_op=16 host_median_ms=0.5650 fused_cutlass_median_ms=1.0725
+case rows_per_peer=64 k=4096 n=4096 kernel=sm80_64x128x32 remote_a_replay=32 estimated_ctas_per_op=32 host_median_ms=0.5891 fused_cutlass_median_ms=1.3770

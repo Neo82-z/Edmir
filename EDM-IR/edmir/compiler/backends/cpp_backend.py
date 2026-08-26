@@ -51,6 +51,7 @@ GEMM_KERNEL_ENUM = {
     "library_default": "GemmKernel::kLibraryDefault",
     "sm80_128x128x32": "GemmKernel::kSm80_128x128x32",
     "sm80_64x128x32": "GemmKernel::kSm80_64x128x32",
+    "sm80_64x128x32_splitk8": "GemmKernel::kSm80_64x128x32SplitK8",
     "sm80_128x64x32": "GemmKernel::kSm80_128x64x32",
     "lsa_naive_f16": "GemmKernel::kLsaNaiveF16",
 }
@@ -73,11 +74,8 @@ class CppManifestBackend:
     def emit(self, program: Program, target: Target) -> BackendArtifact:
         target.validate_program(program)
         has_fused = any(op.kind == "fused_transfer_gemm" for op in program.ops)
-        if has_fused and target.gemm_provider != "cuda_reference":
-            raise ValueError(
-                "C++ fused runtime currently requires gemm_provider=cuda_reference; "
-                "CUTLASS device fusion is not implemented"
-            )
+        if has_fused and target.gemm_provider not in {"cuda_reference", "cutlass"}:
+            raise ValueError("C++ fused runtime requires cuda_reference or CUTLASS")
         if not has_fused and target.communication_api != "host_nccl":
             raise ValueError("C++ runtime v0.1 implements only communication_api=host_nccl")
         target = target.resolve(program.problem, gemm_m=program.chunk_rows)
@@ -200,21 +198,19 @@ class CppManifestBackend:
             ]
         )
 
-        files = dict(JsonBackend().emit(program, target).files)
+        json_artifact = JsonBackend().emit(program, target)
+        files = dict(json_artifact.files)
         files["edmir_program.hpp"] = "\n".join(lines)
+        metadata = {
+            **json_artifact.metadata,
+            "buffers": len(program.buffers),
+            "ops": len(program.ops),
+            "dependencies": len(dependencies),
+        }
         return BackendArtifact(
             backend=self.name,
             files=files,
-            metadata={
-                "target": target.name,
-                "arch": target.arch,
-                "gemm_provider": target.gemm_provider,
-                "gemm_kernel": target.gemm_kernel,
-                "communication_api": target.communication_api,
-                "buffers": len(program.buffers),
-                "ops": len(program.ops),
-                "dependencies": len(dependencies),
-            },
+            metadata=metadata,
         )
 
 

@@ -96,10 +96,18 @@ CUDA_VISIBLE_DEVICES=0,1,2,3 \
 The runtime uses `ncclMemAlloc` for every source input, registers a symmetric
 window for each fused tile, and launches one destination kernel that obtains
 the remote pointer through `ncclGetLsaPointer`. `lsa_naive_f16` is a numerical
-and lifecycle reference only: it uses scalar CUDA arithmetic, has no admitted
-cost-model entry, and cannot be selected by the ordinary compiler. Its short
-benchmark is useful only as a runtime sanity check, not as an unfused/fused
-performance comparison.
+and lifecycle reference only. With `EDMIR_ENABLE_CUTLASS=ON`, the same pointer
+is substituted into CUTLASS `GemmKernel::Params` inside a custom device wrapper;
+CUTLASS still owns its predicated tensor-core mainloop and epilogue.
+
+The CUTLASS path is an executable research kernel, not yet an admitted compiler
+candidate. A standard `(M tile, N tile)` grid reloads remote A for every N tile,
+so `edmir_benchmark_generated` reports `remote_input_bytes`,
+`remote_a_replay`, and `estimated_remote_a_load_bytes`. These are static traffic
+features, not latency predictions. The explicit
+`sm80_64x128x32_splitk8` identity adds CUTLASS serial split-K semaphore
+workspace and reports `split_k_slices` plus `estimated_ctas_per_op`; it requires
+K divisible by 256 and is available only for fused Device API Programs.
 
 ## Optional CUTLASS provider
 
@@ -237,7 +245,7 @@ runtime.synchronize();
 - no CUDA Graph capture, memory pool, online CUTLASS autotuning, GIN,
   multi-node bootstrap, or dynamic MoE routing.
 
-The next backend step is a CuTe/CUTLASS fused kernel followed by identical-shape
-unfused/fused calibration and trace comparison. The scalar reference remains a
-separate provider so an optimized implementation cannot silently inherit its
-identity or measurements.
+The next backend step is a persistent/grouped-N CuTe schedule that can reuse
+remote A while retaining enough CTAs for occupancy, followed by M/K boundary
+calibration. The scalar reference remains a separate provider so an optimized
+implementation cannot silently inherit its identity or measurements.

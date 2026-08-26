@@ -93,7 +93,7 @@ class BackendTest(unittest.TestCase):
         self.assertEqual(target_json["communication_api"], "nccl_device")
         self.assertEqual(program_json["strategy"], "fused")
 
-    def test_cpp_backend_emits_reference_fused_runtime_and_rejects_cutlass_fusion(self) -> None:
+    def test_cpp_backend_emits_reference_and_cutlass_fused_runtimes(self) -> None:
         program = build_fused_program(self.problem, chunk_rows=16)
         device_target = Target(
             "device-prototype",
@@ -102,8 +102,19 @@ class BackendTest(unittest.TestCase):
             gemm_provider="cutlass",
             communication_api="nccl_device",
         )
-        with self.assertRaisesRegex(ValueError, "requires gemm_provider=cuda_reference"):
-            CppManifestBackend().emit(program, device_target)
+        cutlass_artifact = CppManifestBackend().emit(program, device_target)
+        cutlass_header = cutlass_artifact.files["edmir_program.hpp"]
+        self.assertIn("GemmProvider::kCUTLASS", cutlass_header)
+        self.assertIn("GemmKernel::kSm80_64x128x32", cutlass_header)
+        self.assertIn("CommunicationApi::kNCCLDevice", cutlass_header)
+        self.assertEqual(cutlass_artifact.metadata["remote_ops"], 24)
+        self.assertEqual(cutlass_artifact.metadata["remote_input_bytes"], 98_304)
+        self.assertEqual(cutlass_artifact.metadata["remote_a_replay"], 2)
+        self.assertEqual(cutlass_artifact.metadata["split_k_slices"], 1)
+        self.assertEqual(cutlass_artifact.metadata["estimated_ctas_per_op"], 2)
+        self.assertEqual(
+            cutlass_artifact.metadata["estimated_remote_a_load_bytes"], 196_608
+        )
         reference_target = replace(device_target, gemm_provider="cuda_reference")
         artifact = CppManifestBackend().emit(program, reference_target)
         header = artifact.files["edmir_program.hpp"]
@@ -111,6 +122,21 @@ class BackendTest(unittest.TestCase):
         self.assertIn("GemmProvider::kCudaReference", header)
         self.assertIn("GemmKernel::kLsaNaiveF16", header)
         self.assertIn("CommunicationApi::kNCCLDevice", header)
+        self.assertEqual(artifact.metadata["remote_a_replay"], 256)
+        self.assertEqual(artifact.metadata["estimated_ctas_per_op"], 16)
+
+        split_problem = replace(self.problem, k=256)
+        split_program = build_fused_program(split_problem, chunk_rows=16)
+        split_target = replace(
+            device_target, gemm_kernel="sm80_64x128x32_splitk8"
+        )
+        split_artifact = CppManifestBackend().emit(split_program, split_target)
+        self.assertIn(
+            "GemmKernel::kSm80_64x128x32SplitK8",
+            split_artifact.files["edmir_program.hpp"],
+        )
+        self.assertEqual(split_artifact.metadata["split_k_slices"], 8)
+        self.assertEqual(split_artifact.metadata["estimated_ctas_per_op"], 16)
 
     def test_cpp_backend_contains_buffers_ops_accesses_and_dependencies(self) -> None:
         result = self.compile_with(CppManifestBackend())
@@ -211,6 +237,23 @@ class BackendTest(unittest.TestCase):
                 arch="sm_80",
                 gemm_provider="cutlass",
                 gemm_kernel="library_default",
+            ).validate_problem(self.problem)
+        with self.assertRaisesRegex(ValueError, "fused NCCL Device API"):
+            Target(
+                "bad-split-k-communication",
+                topology(),
+                arch="sm_80",
+                gemm_provider="cutlass",
+                gemm_kernel="sm80_64x128x32_splitk8",
+            ).validate_problem(replace(self.problem, k=256))
+        with self.assertRaisesRegex(ValueError, "K divisible by 256"):
+            Target(
+                "bad-split-k-alignment",
+                topology(),
+                arch="sm_80",
+                gemm_provider="cutlass",
+                gemm_kernel="sm80_64x128x32_splitk8",
+                communication_api="nccl_device",
             ).validate_problem(self.problem)
 
     @unittest.skipUnless(shutil.which("c++"), "C++ compiler is unavailable")

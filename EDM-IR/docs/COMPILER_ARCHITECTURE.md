@@ -138,9 +138,10 @@ Files: `compiler/model.py`, `compiler/schedule.py`, `compiler/compile.py`
 
 The candidate generator varies strategy, chunk rows and staging buffer count.
 The calibrated simulator ranks legal baseline candidates. The fused strategy
-has formal lowering, verification, and a guarded executable correctness
-reference, but remains excluded from selection until an optimized kernel and
-its measurements exist. Dataflow nodes never contain these choices.
+has formal lowering, verification, a guarded executable correctness reference,
+and a CUTLASS tensor-core research kernel, but remains excluded from selection
+until the measured workload-region gate is complete. Dataflow nodes never
+contain these choices.
 
 ### 6. Dependency and legality lowering
 
@@ -174,7 +175,7 @@ Directory: `compiler/backends/`
 - `JsonBackend`: emits an `edmir.program.v1` for inspection and reproducibility.
 - `CppManifestBackend`: emits the same JSON plus a C++20 header containing static buffer, op, access and fully derived dependency descriptors.
 
-The generated header uses the shared structs in `runtime/include/edmir/runtime/program.hpp`; it does not define a second private ABI. The host runtime validates that descriptor and its dependency DAG. With `EDMIR_ENABLE_CUDA=ON`, the CUDA runtime allocates rank-local buffers, creates streams/events and dispatches grouped NCCL send/recv. GEMM is then sent to the statically selected cuBLAS or narrow SM80 CUTLASS provider without changing the Program. With the additional `EDMIR_ENABLE_NCCL_DEVICE=ON` gate, an SM80 FP16 fused op registers symmetric NCCL windows and launches the `lsa_naive_f16` device reference kernel.
+The generated header uses the shared structs in `runtime/include/edmir/runtime/program.hpp`; it does not define a second private ABI. The host runtime validates that descriptor and its dependency DAG. With `EDMIR_ENABLE_CUDA=ON`, the CUDA runtime allocates rank-local buffers, creates streams/events and dispatches grouped NCCL send/recv. GEMM is then sent to the statically selected cuBLAS or narrow SM80 CUTLASS provider without changing the Program. With the additional `EDMIR_ENABLE_NCCL_DEVICE=ON` gate, an SM80 FP16 fused op registers symmetric NCCL windows and launches either the `lsa_naive_f16` device reference or an LSA-wrapped CUTLASS kernel.
 
 Calibration profiles carry the provider and kernel policy that produced their
 GEMM samples. The pipeline validates that identity against the target before
@@ -241,13 +242,23 @@ Optional NVTX3 op ranges and the Nsight trace validator additionally cover all
 held-out Programs without a violation. Kernel identity is preserved in target
 JSON, C++ descriptors, runtime output, experiment archives, and CLI diagnostics.
 
-The fused communication/compute milestone now includes an executable reference:
+The fused communication/compute milestone now includes executable kernels:
 NCCL 2.28.9 was built in an isolated prefix, the official four-rank Device API
 AllReduce passed, and Edmir's LSA remote-read plus naive FP16 GEMM matched its
-CPU interpreter on 4x A100. This proves the Program/ABI/runtime boundary, not a
-speedup. The next gate is an optimized CuTe/CUTLASS implementation plus
-identical-shape unfused/fused measurements; only then may fused candidates enter
-cost-based selection.
+CPU interpreter on 4x A100. A custom device wrapper now substitutes the LSA A
+pointer into CUTLASS `GemmKernel::Params`, then reuses CUTLASS's predicated
+tensor-core mainloop and epilogue inside the same kernel.
+
+The first identical-shape measurements establish a workload boundary rather
+than a universal speedup. Tiny `M8 K64 N64` lowered latency by 42.6% versus the
+host-NCCL/CUTLASS Program, while `M64 K4096` was slower for every measured N.
+For the standard 128-column tile, direct remote A reads are replayed
+`ceil(N/128)` times; even replay one loses once A is 512 KiB. An admitted fused
+model must therefore include remote A bytes and N-tile replay, and a future
+persistent kernel must explicitly trade A reuse against CTA occupancy. A first
+serial split-K=8 kernel already demonstrates the missing concurrency axis: at
+`M64 K4096 N64` it turns the direct fused path from 82.3% slower into 11.8%
+faster than the host baseline without changing remote bytes or replay.
 The contract and experiment gate are in
 [`FUSED_PROGRAM_CONTRACT.md`](FUSED_PROGRAM_CONTRACT.md).
 
