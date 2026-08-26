@@ -1,0 +1,38 @@
+# nccl-tests version 2.19.7 nccl-headers=22501 nccl-library=22501
+# Collective test starting: sendrecv_perf
+# nThread 1 nGpus 2 minBytes 1024 maxBytes 536870912 step: 2(factor) warmup iters: 5 iters: 20 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid  12777 on 4d3a670eae70 device  0 [0000:0f:00] NVIDIA A100-SXM4-80GB
+#  Rank  1 Group  0 Pid  12777 on 4d3a670eae70 device  1 [0000:47:00] NVIDIA A100-SXM4-80GB
+NCCL version 2.25.1+cuda12.8
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+        1024           256     float     sum      -1    13.47    0.08    0.08       0    13.39    0.08    0.08    N/A
+        2048           512     float     sum      -1    13.22    0.15    0.15       0    13.43    0.15    0.15    N/A
+        4096          1024     float     sum      -1    13.48    0.30    0.30       0    13.33    0.31    0.31    N/A
+        8192          2048     float     sum      -1    15.57    0.53    0.53       0    13.88    0.59    0.59    N/A
+       16384          4096     float     sum      -1    15.82    1.04    1.04       0    15.81    1.04    1.04    N/A
+       32768          8192     float     sum      -1    16.20    2.02    2.02       0    15.62    2.10    2.10    N/A
+       65536         16384     float     sum      -1    15.26    4.29    4.29       0    15.54    4.22    4.22    N/A
+      131072         32768     float     sum      -1    16.20    8.09    8.09       0    15.89    8.25    8.25    N/A
+      262144         65536     float     sum      -1    17.30   15.15   15.15       0    17.01   15.41   15.41    N/A
+      524288        131072     float     sum      -1    22.21   23.61   23.61       0    21.28   24.64   24.64    N/A
+     1048576        262144     float     sum      -1    29.59   35.43   35.43       0    28.93   36.24   36.24    N/A
+     2097152        524288     float     sum      -1    39.11   53.62   53.62       0    37.61   55.76   55.76    N/A
+     4194304       1048576     float     sum      -1    57.66   72.75   72.75       0    57.76   72.61   72.61    N/A
+     8388608       2097152     float     sum      -1    84.07   99.79   99.79       0    82.39  101.82  101.82    N/A
+    16777216       4194304     float     sum      -1   129.78  129.28  129.28       0   129.93  129.12  129.12    N/A
+    33554432       8388608     float     sum      -1   226.67  148.03  148.03       0   228.46  146.87  146.87    N/A
+    67108864      16777216     float     sum      -1   407.05  164.87  164.87       0   410.35  163.54  163.54    N/A
+   134217728      33554432     float     sum      -1   790.05  169.89  169.89       0   782.24  171.58  171.58    N/A
+   268435456      67108864     float     sum      -1  1481.90  181.14  181.14       0  1457.81  184.14  184.14    N/A
+   536870912     134217728     float     sum      -1  2606.42  205.98  205.98       0  2613.38  205.43  205.43    N/A
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 65.9982 
+#
+# Collective test concluded: sendrecv_perf
+#
+

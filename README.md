@@ -42,12 +42,15 @@ Edmir 是一个面向多 GPU 通信—计算流水的编译研究原型。
 |---|---|---|
 | trace analysis IR | 已实现并有测试 | 测量、诊断和校准层 |
 | `Buffer + Op + Program` IR | 已实现并有测试 | 唯一 compiler IR |
+| typed Dataflow IR / frontend / passes | 已实现并有测试 | tensor semantics 与 pattern lowering |
 | sequential / pipelined Program 构造 | 已实现并有测试 | 正确性基线和主要候选 |
 | dependency derivation / verifier / simulator | 已实现并有测试 | 共享语义与 CPU reference model |
-| CUDA、CuTe、Triton 或 NCCL Device API backend | 尚未实现 | 下一阶段只选择一条最小路径 |
+| measured pairwise NCCL curves | 已实现解析与 simulator 接入 | 逐 `(src,dst,size)` 通信成本 |
+| JSON / C++20 descriptor backend | 已实现并有编译测试 | runtime ABI 与可审计 artifact |
+| C++ CUDA/NCCL/cuBLAS execution runtime | 已实现；host ABI 已测试，GPU 路径待上机验证 | 最小可执行 backend |
 | A800/H100 实验 | 只有前期 smoke test 和预注册方案 | backend 闭环后再运行 |
 
-当前实现输出并模拟可检查的 Program；**尚未**宣称具备 GPU codegen，也没有填写 GPU 性能结论。
+当前实现输出并模拟可检查的 Program，并提供解释该 Program 的最小 C++ GPU runtime；**尚未**把未上机验证的 CUDA 路径或性能数据写成实验结论。
 
 ## 编译路径
 
@@ -58,7 +61,8 @@ static All2All -> GEMM problem
   -> legality verification
   -> calibrated simulation and candidate selection
   -> EventGraph / counterfactual exposure analysis
-  -> future minimal GPU backend
+  -> C++ ProgramView ABI
+  -> CUDA streams/events + NCCL send/recv + cuBLAS GEMM
 ```
 
 Program 不序列化第二份 edge list。verifier 和 simulator 调用同一个依赖推导器，避免 schedule、验证器和执行模型分别维护相互漂移的语义。
@@ -95,7 +99,7 @@ python -m edmir simulate /tmp/edmir-program.json \
   --profile examples/synthetic_profile.json
 ```
 
-示例 profile 和 topology 仅用于 CPU 测试，不是 A800 实测数据。任何性能结论都必须绑定实际 topology snapshot、校准数据、原始日志和代码版本。
+示例 profile 和 topology 仅用于 CPU 测试，不是 A800 实测数据。任何性能结论都必须绑定实际 topology snapshot、校准数据、原始日志和代码版本。4x A100 SXM 的已归档冒烟实验位于 [`experiments/2026-08-25-runpod-4xa100-sxm`](experiments/2026-08-25-runpod-4xa100-sxm)，冻结的训练/留出方案位于 [`experiments/2026-08-cost-model-validation`](experiments/2026-08-cost-model-validation)，完成后的 50-candidate 原始数据和派生摘要位于 [`experiments/2026-08-26-runpod-4xa100-cost-model`](experiments/2026-08-26-runpod-4xa100-cost-model)。
 
 ## 仓库结构
 
@@ -116,13 +120,13 @@ templates/    paper note 与 experiment record 模板
 - [`papers/baseline-reading-list.md`](papers/baseline-reading-list.md)：按当前主线排序的阅读入口；
 - [`ROADMAP.md`](ROADMAP.md)：v0.1 的执行顺序和停止条件；
 - [`experiments/2026-08-a800-a2a-gemm/README.md`](experiments/2026-08-a800-a2a-gemm/README.md)：预注册实验矩阵。
+- [`experiments/2026-08-4x4090-nccl-baseline/README.md`](experiments/2026-08-4x4090-nccl-baseline/README.md)：空闲 4x4090 的 NCCL 排布和 compiler calibration。
 
 ## 下一阶段
 
-- 用 4xA800 记录真实 P2P/NVLink/PCIe 拓扑，不根据 GPU 型号猜测互联能力；
-- 分别校准 All2All/P2P 与 GEMM 成本，先验证预测排序；
-- 只实现一个最小 GPU backend，闭合 Program 到可执行 artifact 的路径；
-- 比较顺序基线、固定流水、Edmir 选择和有限搜索 oracle；
+- 已在 4x A100 SXM 上完成 6-pair NCCL、精确 cuBLAS/local-copy 曲线和冻结的 27-row train / 23-row heldout cost-model sweep；
+- 当前 heldout MAPE 为 7.97%，policy direction accuracy 为 95.24%，selection regret 为 0；
+- 保留 NCCL+cuBLAS 作为 reference backend，下一步加入一个受控的 CuTe/CUTLASS lowering，而不是扩大 IR；
 - 只在预注册表格填入可复现数据，无法匹配的机制或 baseline 明确记为不适用。
 
 ## 工作规则

@@ -1,0 +1,134 @@
+from __future__ import annotations
+
+import shutil
+import subprocess
+import sys
+import tempfile
+import unittest
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from edmir.compiler import (  # noqa: E402
+    A2AGemmProblem,
+    CalibrationProfile,
+    CompilerOptions,
+    CompilerPipeline,
+    CppManifestBackend,
+    JsonBackend,
+    Target,
+    TopologySnapshot,
+    build_a2a_gemm_module,
+)
+
+
+def topology(world_size: int = 4) -> TopologySnapshot:
+    return TopologySnapshot(
+        world_size=world_size,
+        devices=tuple("test-gpu" for _ in range(world_size)),
+        p2p=tuple(tuple(True for _ in range(world_size)) for _ in range(world_size)),
+    )
+
+
+def profile() -> CalibrationProfile:
+    return CalibrationProfile(
+        comm_latency_us=1.0,
+        comm_bandwidth_gbps=50.0,
+        gemm_launch_us=0.5,
+        gemm_tflops=100.0,
+        source="backend-test",
+    )
+
+
+class BackendTest(unittest.TestCase):
+    def setUp(self) -> None:
+        self.problem = A2AGemmProblem(world_size=4, rows_per_peer=32, k=128, n=256)
+        self.module = build_a2a_gemm_module(self.problem)
+        self.target = Target("test-cuda", topology(), arch="sm_89")
+        self.options = CompilerOptions(chunk_rows=(16, 32), buffer_counts=(1, 2))
+
+    def compile_with(self, backend):
+        return CompilerPipeline().compile(
+            self.module,
+            target=self.target,
+            profile=profile(),
+            backend=backend,
+            options=self.options,
+        )
+
+    def test_json_backend_emits_selected_program(self) -> None:
+        result = self.compile_with(JsonBackend())
+        self.assertIn('"schema": "edmir.program.v1"', result.artifact.files["program.json"])
+        self.assertIn('"schema": "edmir.target.v1"', result.artifact.files["target.json"])
+        self.assertEqual(result.match.problem, self.problem)
+        self.assertTrue(result.compile_result.candidates)
+
+    def test_target_json_round_trip(self) -> None:
+        self.assertEqual(Target.from_dict(self.target.to_dict()), self.target)
+
+    def test_cpp_backend_contains_buffers_ops_accesses_and_dependencies(self) -> None:
+        result = self.compile_with(CppManifestBackend())
+        header = result.artifact.files["edmir_program.hpp"]
+        self.assertIn("kBuffers", header)
+        self.assertIn("kOps", header)
+        self.assertIn("kAccesses", header)
+        self.assertIn("kDependencies", header)
+        self.assertIn('kArch = "sm_89"', header)
+
+    @unittest.skipUnless(shutil.which("c++"), "C++ compiler is unavailable")
+    def test_generated_cpp_header_links_to_and_passes_runtime_validation(self) -> None:
+        result = self.compile_with(CppManifestBackend())
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            result.artifact.write_to(root)
+            smoke = root / "smoke.cpp"
+            executable = root / "smoke"
+            smoke.write_text(
+                '#include "edmir_program.hpp"\n'
+                '#include "edmir/runtime/validate.hpp"\n'
+                "int main() {\n"
+                "  return edmir::runtime::validate_program(edmir_generated::program()).valid() "
+                "? 0 : 1;\n"
+                "}\n",
+                encoding="utf-8",
+            )
+            runtime_root = Path(__file__).resolve().parents[1] / "runtime"
+            completed = subprocess.run(
+                [
+                    "c++",
+                    "-std=c++20",
+                    "-I",
+                    str(runtime_root / "include"),
+                    str(smoke),
+                    str(runtime_root / "src" / "validate.cpp"),
+                    "-o",
+                    str(executable),
+                ],
+                cwd=root,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertEqual(completed.returncode, 0, completed.stderr)
+            executed = subprocess.run(
+                [str(executable)],
+                cwd=root,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+        self.assertEqual(executed.returncode, 0, executed.stderr)
+
+    def test_pipeline_rejects_target_world_size_mismatch(self) -> None:
+        wrong_target = Target("wrong", topology(2), arch="sm_89")
+        with self.assertRaisesRegex(ValueError, "world size"):
+            CompilerPipeline().compile(
+                self.module,
+                target=wrong_target,
+                profile=profile(),
+                backend=JsonBackend(),
+            )
+
+
+if __name__ == "__main__":
+    unittest.main()

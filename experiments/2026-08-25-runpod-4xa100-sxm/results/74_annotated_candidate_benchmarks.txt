@@ -1,0 +1,10 @@
+bench target=cuda arch=sm_80 strategy=sequential ranks=4 chunk_rows=64 buffer_count=4 ops=36 warmup=5 iterations=30 min_ms=0.6212 median_ms=0.6322 p95_ms=0.6423 max_ms=0.6460 mean_ms=0.6328
+bench target=cuda arch=sm_80 strategy=pipelined ranks=4 chunk_rows=16 buffer_count=1 ops=128 warmup=5 iterations=30 min_ms=2.8801 median_ms=2.9010 p95_ms=2.9100 max_ms=2.9361 mean_ms=2.9014
+bench target=cuda arch=sm_80 strategy=pipelined ranks=4 chunk_rows=16 buffer_count=2 ops=128 warmup=5 iterations=30 min_ms=2.9551 median_ms=2.9737 p95_ms=2.9908 max_ms=3.1546 mean_ms=2.9798
+bench target=cuda arch=sm_80 strategy=pipelined ranks=4 chunk_rows=16 buffer_count=4 ops=128 warmup=5 iterations=30 min_ms=2.9677 median_ms=2.9872 p95_ms=3.0089 max_ms=3.0660 mean_ms=2.9904
+bench target=cuda arch=sm_80 strategy=pipelined ranks=4 chunk_rows=32 buffer_count=1 ops=64 warmup=5 iterations=30 min_ms=1.3295 median_ms=1.3430 p95_ms=1.3559 max_ms=1.5264 mean_ms=1.3491
+bench target=cuda arch=sm_80 strategy=pipelined ranks=4 chunk_rows=32 buffer_count=2 ops=64 warmup=5 iterations=30 min_ms=1.3543 median_ms=1.3645 p95_ms=1.3746 max_ms=1.5461 mean_ms=1.3707
+bench target=cuda arch=sm_80 strategy=pipelined ranks=4 chunk_rows=32 buffer_count=4 ops=64 warmup=5 iterations=30 min_ms=1.3036 median_ms=1.3129 p95_ms=1.3207 max_ms=1.3259 mean_ms=1.3139
+bench target=cuda arch=sm_80 strategy=pipelined ranks=4 chunk_rows=64 buffer_count=1 ops=32 warmup=5 iterations=30 min_ms=0.6566 median_ms=0.6644 p95_ms=0.6689 max_ms=0.6710 mean_ms=0.6643
+bench target=cuda arch=sm_80 strategy=pipelined ranks=4 chunk_rows=64 buffer_count=2 ops=32 warmup=5 iterations=30 min_ms=0.6363 median_ms=0.6422 p95_ms=0.6479 max_ms=0.6505 mean_ms=0.6426
+bench target=cuda arch=sm_80 strategy=pipelined ranks=4 chunk_rows=64 buffer_count=4 ops=32 warmup=5 iterations=30 min_ms=0.5744 median_ms=0.5812 p95_ms=0.5872 max_ms=0.5917 mean_ms=0.5813

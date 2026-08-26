@@ -10,8 +10,11 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from edmir.compiler import (  # noqa: E402
     A2AGemmProblem,
     CalibrationProfile,
+    CommSample,
     CompilerOptions,
+    ExecutionOverhead,
     Program,
+    PairwiseCommCurve,
     TopologySnapshot,
     build_pipelined_program,
     build_sequential_program,
@@ -51,6 +54,43 @@ class CompilerTest(unittest.TestCase):
         self.assertTrue(verify_program(self.problem, pipeline).valid)
         self.assertGreater(simulate_program(sequential, synthetic_profile()).makespan_us, 0.0)
         self.assertGreater(simulate_program(pipeline, synthetic_profile()).makespan_us, 0.0)
+
+    def test_runtime_overhead_uses_exact_plan_feature_counts(self) -> None:
+        problem = A2AGemmProblem(world_size=2, rows_per_peer=16, k=64, n=64)
+        program = build_pipelined_program(problem, chunk_rows=8, buffer_count=1)
+        profile = replace(
+            synthetic_profile(),
+            execution_overhead=ExecutionOverhead(
+                iteration_us=1.0,
+                op_dispatch_us=2.0,
+                event_record_us=3.0,
+                event_wait_us=4.0,
+                buffer_reuse_us=5.0,
+            ),
+        )
+        result = simulate_program(program, profile)
+        self.assertEqual(result.features.op_dispatch_count, 16)
+        self.assertEqual(result.features.event_record_count, 20)
+        self.assertEqual(result.features.event_wait_count, 42)
+        self.assertEqual(result.features.buffer_reuse_count, 6)
+        self.assertEqual(result.overhead_us, 1 + 16 * 2 + 20 * 3 + 42 * 4 + 6 * 5)
+        self.assertAlmostEqual(result.makespan_us, result.device_makespan_us + result.overhead_us)
+
+    def test_simulator_uses_rank_pair_communication_curve(self) -> None:
+        problem = A2AGemmProblem(world_size=2, rows_per_peer=16, k=64, n=64)
+        program = build_pipelined_program(problem, chunk_rows=16, buffer_count=2)
+        analytic = synthetic_profile()
+        measured = replace(
+            analytic,
+            pairwise_comm_curves=(
+                PairwiseCommCurve(0, 1, (CommSample(1024, 100.0),)),
+                PairwiseCommCurve(1, 0, (CommSample(1024, 100.0),)),
+            ),
+        )
+        self.assertGreater(
+            simulate_program(program, measured).makespan_us,
+            simulate_program(program, analytic).makespan_us,
+        )
 
     def test_program_serializes_ops_and_buffers_but_not_edges(self) -> None:
         value = build_pipelined_program(self.problem, chunk_rows=16, buffer_count=2).to_dict()
@@ -133,6 +173,38 @@ class CompilerTest(unittest.TestCase):
             CompilerOptions(chunk_rows=(16, 32), buffer_counts=(2,)),
         )
         self.assertEqual(result.chosen.program.strategy, "pipelined")
+
+    def test_profile_selection_margin_controls_default_fallback(self) -> None:
+        profile = replace(synthetic_profile(), selection_min_gain_ratio=1.0)
+        fallback = compile_a2a_gemm(
+            self.problem,
+            profile,
+            full_topology(),
+            CompilerOptions(chunk_rows=(64,), buffer_counts=(4,)),
+        )
+        override = compile_a2a_gemm(
+            self.problem,
+            profile,
+            full_topology(),
+            CompilerOptions(chunk_rows=(64,), buffer_counts=(4,), min_gain_ratio=0.0),
+        )
+        self.assertEqual(fallback.chosen.program.strategy, "sequential")
+        self.assertEqual(override.chosen.program.strategy, "pipelined")
+
+    def test_equal_prediction_prefers_fewer_ops_then_more_buffers(self) -> None:
+        result = compile_a2a_gemm(
+            self.problem,
+            synthetic_profile(),
+            full_topology(),
+            CompilerOptions(chunk_rows=(64,), buffer_counts=(2, 4)),
+        )
+        pipeline = [
+            candidate for candidate in result.candidates
+            if candidate.program.strategy == "pipelined"
+        ]
+        self.assertEqual(pipeline[0].makespan_us, pipeline[1].makespan_us)
+        self.assertEqual(result.chosen.program.strategy, "pipelined")
+        self.assertEqual(result.chosen.program.buffer_count, 4)
         self.assertIsNone(result.fallback_reason)
 
     def test_compiler_falls_back_without_full_p2p(self) -> None:

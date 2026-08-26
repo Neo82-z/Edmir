@@ -1,0 +1,66 @@
+#include <array>
+#include <cassert>
+#include <stdexcept>
+
+#include "edmir/runtime/program.hpp"
+#include "edmir/runtime/validate.hpp"
+
+using namespace edmir::runtime;
+
+int main() {
+  constexpr ProblemDesc problem{2, 16, 64, 64, DType::kFloat16};
+  constexpr std::array buffers{
+      BufferDesc{"input", 0, BufferRole::kInput, 2048},
+      BufferDesc{"stage", 1, BufferRole::kStaging, 2048},
+      BufferDesc{"weight", 1, BufferRole::kWeight, 8192},
+      BufferDesc{"output", 1, BufferRole::kOutput, 2048},
+  };
+  constexpr std::array ops{
+      OpDesc{"transfer", OpKind::kTransfer, 1, 0, QueueKind::kComm, "s0.d1.c0", 16},
+      OpDesc{"gemm", OpKind::kGemm, 1, 0, QueueKind::kCompute, "s0.d1.c0", 16},
+  };
+  constexpr std::array accesses{
+      AccessDesc{0, 0, false}, AccessDesc{0, 1, true},
+      AccessDesc{1, 1, false}, AccessDesc{1, 2, false}, AccessDesc{1, 3, true},
+  };
+  constexpr std::array dependencies{
+      DependencyDesc{0, 1, DependencyKind::kReadAfterWrite, 1},
+  };
+  const ProgramView program{
+      "test", "host", "pipelined", problem, 16, 1,
+      buffers, ops, accesses, dependencies,
+  };
+  assert(validate_program(program).valid());
+  const auto order = topological_order(program);
+  assert((order == std::vector<std::size_t>{0, 1}));
+
+  constexpr std::array invalid_buffers{
+      BufferDesc{"input", 0, BufferRole::kInput, 2048},
+      BufferDesc{"stage", 0, BufferRole::kStaging, 2048},
+      BufferDesc{"weight", 1, BufferRole::kWeight, 8192},
+      BufferDesc{"output", 1, BufferRole::kOutput, 2048},
+  };
+  const ProgramView invalid_transfer{
+      "test", "host", "pipelined", problem, 16, 1,
+      invalid_buffers, ops, accesses, dependencies,
+  };
+  assert(!validate_program(invalid_transfer).valid());
+
+  constexpr std::array cyclic_dependencies{
+      DependencyDesc{0, 1, DependencyKind::kQueue, -1},
+      DependencyDesc{1, 0, DependencyKind::kQueue, -1},
+  };
+  const ProgramView cyclic{
+      "test", "host", "pipelined", problem, 16, 1,
+      buffers, ops, accesses, cyclic_dependencies,
+  };
+  assert(!validate_program(cyclic).valid());
+  bool rejected = false;
+  try {
+    static_cast<void>(topological_order(cyclic));
+  } catch (const std::invalid_argument&) {
+    rejected = true;
+  }
+  assert(rejected);
+  return 0;
+}

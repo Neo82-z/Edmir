@@ -1,0 +1,38 @@
+# nccl-tests version 2.19.7 nccl-headers=22501 nccl-library=22501
+# Collective test starting: all_gather_perf
+# nThread 1 nGpus 2 minBytes 1024 maxBytes 536870912 step: 2(factor) warmup iters: 5 iters: 20 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid   9702 on 4d3a670eae70 device  0 [0000:0f:00] NVIDIA A100-SXM4-80GB
+#  Rank  1 Group  0 Pid   9702 on 4d3a670eae70 device  1 [0000:b7:00] NVIDIA A100-SXM4-80GB
+NCCL version 2.25.1+cuda12.8
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+        1024           128     float    none      -1    13.51    0.08    0.04       0    13.18    0.08    0.04       0
+        2048           256     float    none      -1    13.10    0.16    0.08       0    13.28    0.15    0.08       0
+        4096           512     float    none      -1    13.15    0.31    0.16       0    13.15    0.31    0.16       0
+        8192          1024     float    none      -1    13.32    0.61    0.31       0    13.23    0.62    0.31       0
+       16384          2048     float    none      -1    13.91    1.18    0.59       0    13.42    1.22    0.61       0
+       32768          4096     float    none      -1    14.93    2.19    1.10       0    13.57    2.41    1.21       0
+       65536          8192     float    none      -1    15.65    4.19    2.09       0    14.17    4.62    2.31       0
+      131072         16384     float    none      -1    15.84    8.28    4.14       0    14.07    9.32    4.66       0
+      262144         32768     float    none      -1    14.70   17.83    8.92       0    14.47   18.12    9.06       0
+      524288         65536     float    none      -1    17.24   30.42   15.21       0    15.47   33.89   16.94       0
+     1048576        131072     float    none      -1    20.91   50.16   25.08       0    18.94   55.36   27.68       0
+     2097152        262144     float    none      -1    39.35   53.30   26.65       0    39.13   53.60   26.80       0
+     4194304        524288     float    none      -1    46.33   90.54   45.27       0    46.08   91.02   45.51       0
+     8388608       1048576     float    none      -1    66.79  125.60   62.80       0    58.77  142.73   71.36       0
+    16777216       2097152     float    none      -1    98.95  169.55   84.77       0    85.82  195.49   97.74       0
+    33554432       4194304     float    none      -1   158.03  212.33  106.17       0   138.24  242.72  121.36       0
+    67108864       8388608     float    none      -1   271.96  246.76  123.38       0   242.70  276.51  138.25       0
+   134217728      16777216     float    none      -1   502.76  266.96  133.48       0   446.16  300.83  150.41       0
+   268435456      33554432     float    none      -1   947.20  283.40  141.70       0   831.14  322.97  161.49       0
+   536870912      67108864     float    none      -1  1791.04  299.75  149.88       0  1550.96  346.15  173.08       0
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 49.5215 
+#
+# Collective test concluded: all_gather_perf
+#
+

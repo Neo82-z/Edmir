@@ -13,51 +13,65 @@
 
 ## Milestone 1：Schedule IR
 
-- [ ] 表达 rank、tensor shard、tile 和 placement。
-- [ ] 表达 `all_to_all`、`gemm` 和 producer/consumer dependency。
-- [ ] 表达 buffer lifetime、signal/barrier 和 memory-order requirement。
-- [ ] 提供稳定、可读的 textual dump。
-- [ ] 为合法与非法 schedule 添加 unit tests。
+- [x] 用 typed Dataflow IR 表达 rank-local tensor shape、distribution、`all_to_all` 和 `gemm`。
+- [x] 用唯一低层 `Program(Buffer, Op)` 表达 rank、tile、queue 和 placement。
+- [x] 从 buffer access 自动派生 producer/consumer、lifetime、barrier 和 acquire/release dependency。
+- [x] 提供稳定 JSON schema 与 `edmir inspect --dependencies` dump。
+- [x] 为合法与非法 Dataflow/Program 添加 unit tests。
 
 停止条件：一个 2-rank、2-tile toy example 可以完全手算并与 dump 对齐。
 
 ## Milestone 2：两种 schedule
 
-- [ ] 生成 sequential `All2All → GEMM` schedule。
-- [ ] 生成一个固定 tile-size 的 pipelined schedule。
-- [ ] 显式记录 rank order 和 tile order。
-- [ ] 不做 autotuning；参数由 example 固定。
+- [x] 生成 sequential `All2All → GEMM` Program。
+- [x] 生成有限 chunk/buffer grid 的 pipelined Program。
+- [x] 显式记录 cyclic rank order、tile order 和 staging slot。
+- [x] 用可替换 calibration profile 做有限候选选择；不做在线 autotuning。
 
 停止条件：两个 schedule 对同一逻辑图保持相同数据语义。
 
 ## Milestone 3：Legality verifier
 
-- [ ] 检查 dependency cycle。
-- [ ] 检查 consumer early read。
-- [ ] 检查 producer buffer early reuse。
-- [ ] 检查 signal/barrier 配对。
-- [ ] 检查 acquire/release 或等价可见性约束。
+- [x] 检查 dependency cycle。
+- [x] 检查 consumer early read。
+- [x] 检查 producer buffer early reuse。
+- [x] 检查 sequential readiness barrier 覆盖。
+- [x] 以统一 RAW/WAR/WAW dependency 表达 acquire/release 可见性约束。
 
 停止条件：verifier 能拒绝 deliberately broken schedules，而不依赖 GPU 才发现错误。
 
 ## Milestone 4：Lowering artifact
 
-- [ ] 顺序基线 lowering：NCCL All2All + GEMM（NCCL 2.30+；旧版本使用 grouped send/recv 兼容路径）。
-- [ ] pipeline lowering：CUDA/C++ + NCCL Device API LSA，或在 API 不稳定时生成可检查的 code skeleton。
+- [x] 顺序基线 lowering：共享 ProgramView ABI、grouped NCCL send/recv 与 cuBLAS GEMM。
+- [x] pipeline lowering：先以 host-launched CUDA/C++ + NCCL send/recv + cuBLAS 建立可测 baseline；不把它表述为 Device API fusion。
+- [x] 建立 Frontend → Dataflow passes → Program → Backend 的完整 pipeline。
+- [x] 生成含 Buffer/Op/Access/Dependency 的 C++20 静态 descriptor，并通过真实编译检查。
+- [x] 实现 host validator、rank-device mapping、CUDA stream/event lowering 和 generated-program smoke runner。
 - [ ] CuTe DSL 仅在不扩大 scope 的情况下用于 GEMM 部分。
-- [ ] 记录编译器、CUDA、NCCL 和目标架构版本。
+- [x] 在实验归档中记录编译器、CUDA、NCCL 和目标架构版本。
 
 停止条件：生成物能通过编译或明确的静态检查；不以伪代码冒充后端完成。
 
 ## Milestone 5：验证
 
-- [ ] CPU/synthetic reference 验证数据重排和 GEMM 数值。
-- [ ] 在无 GPU 环境运行 IR、verifier 和 codegen tests。
-- [ ] 租用单节点 H100 后先记录 topology/P2P，再运行 baseline。
-- [ ] 只在 baseline 正确后运行 pipeline variant。
-- [ ] 报告 latency、有效带宽、GEMM 时间、等待时间和数值误差。
+- [x] CPU reference 与 GPU runtime 做确定性非零数值对照，并保留 zero-input smoke。
+- [x] 在无 GPU 环境运行 frontend、IR、pass、verifier、simulator 和 C++ codegen tests。
+- [x] 在单节点 4x A100 SXM 上先记录 topology/P2P，再运行 baseline。
+- [x] 只在 baseline 正确后运行 pipeline variant。
+- [x] 报告 latency、P2P/NCCL 带宽、GEMM probe 和数值误差；等待时间尚待下一轮模型实验分解。
 
 停止条件：结果可复现，并能判断 pipeline 是 helpful、neutral 还是 harmful。
+
+## Milestone 6：有界 cost model
+
+- [x] pairwise NCCL 曲线进入 profile，而不是只保留日志。
+- [x] 添加与 runtime 完全一致的 dtype/shape-specific cuBLAS GEMM benchmark。
+- [x] 从 Program 派生 dispatch、event record/wait 和 buffer-reuse 特征。
+- [x] 实现非负 runtime residual fit、train/heldout MAPE、方向准确率和 selection regret。
+- [x] 冻结 27-row train / 23-row heldout 实验及断点续跑 runner。
+- [x] 在新的 4x A100 SXM 实例执行冻结实验并通过 heldout 决策门槛：23 个 held-out 候选的 MAPE 为 7.97%，policy direction accuracy 为 95.24%，selection regret 为 0。
+
+停止条件：heldout MAPE ≤ 15%，方向准确率 ≥ 85%，平均 selection regret ≤ 5%；否则不增加新 backend。
 
 ## Parked work
 
@@ -67,8 +81,8 @@
 - vLLM trace、DBO、KV movement；
 - DeepEP V2、动态 MoE routing、Grouped GEMM；
 - 多节点、GIN/RDMA、ElasticBuffer；
-- collective synthesis、完整 cost model 和 autotuner；
+- collective synthesis、跨算子/跨拓扑的通用 cost model 和在线 autotuner；
 - MLIR/TVM/Triton/CuTe 多后端；
 - B200/Blackwell SM-initiated Copy Engine。
 
-现有 `EDM-IR/` 作为 parked-but-working trace-analysis component 保留。它可以在后续为 cost model 提供观测数据，但不是当前 compiler IR。
+现有 `EDM-IR/` 同时包含 parked trace-analysis component 和 active compiler。两者只在低层 EventGraph/反事实分析处复用语义；typed Dataflow 与 `Program(Buffer, Op)` 才是当前 compiler IR。

@@ -121,6 +121,99 @@ class TopologySnapshot:
 
 
 @dataclass(frozen=True, slots=True)
+class CommSample:
+    size_bytes: int
+    latency_us: float
+
+
+def _curve_latency_us(
+    samples: tuple[CommSample, ...],
+    size_bytes: int,
+    *,
+    fallback_bandwidth_gbps: float,
+) -> float:
+    if size_bytes <= samples[0].size_bytes:
+        return samples[0].latency_us
+    for left, right in zip(samples, samples[1:]):
+        if size_bytes <= right.size_bytes:
+            fraction = (size_bytes - left.size_bytes) / (right.size_bytes - left.size_bytes)
+            return left.latency_us + fraction * (right.latency_us - left.latency_us)
+    last = samples[-1]
+    return last.latency_us + (size_bytes - last.size_bytes) / (
+        fallback_bandwidth_gbps * 1_000.0
+    )
+
+
+@dataclass(frozen=True, slots=True)
+class GemmSample:
+    """Median device latency for one GEMM shape and data type."""
+
+    dtype: str
+    m: int
+    n: int
+    k: int
+    latency_us: float
+
+    def validate(self) -> None:
+        if self.dtype not in DTYPE_BYTES:
+            raise ValueError(f"unsupported GEMM sample dtype: {self.dtype}")
+        if min(self.m, self.n, self.k) <= 0:
+            raise ValueError("GEMM sample dimensions must be positive")
+        if self.latency_us < 0:
+            raise ValueError("GEMM sample latency must be non-negative")
+
+
+@dataclass(frozen=True, slots=True)
+class ExecutionOverhead:
+    """Host/runtime residual expressed only through observable plan features.
+
+    These terms are deliberately separate from communication and GEMM device
+    latency.  They describe the current host-launched runtime rather than an
+    intrinsic property of the GPU kernels.
+    """
+
+    iteration_us: float = 0.0
+    op_dispatch_us: float = 0.0
+    event_record_us: float = 0.0
+    event_wait_us: float = 0.0
+    buffer_reuse_us: float = 0.0
+
+    def validate(self) -> None:
+        values = asdict(self)
+        if any(value < 0 for value in values.values()):
+            raise ValueError("execution overhead terms must be non-negative")
+
+
+@dataclass(frozen=True, slots=True)
+class PairwiseCommCurve:
+    """Measured point-to-point latency curve for one directed GPU pair."""
+
+    src_rank: int
+    dst_rank: int
+    samples: tuple[CommSample, ...]
+
+    def validate(self) -> None:
+        if self.src_rank < 0 or self.dst_rank < 0 or self.src_rank == self.dst_rank:
+            raise ValueError("pairwise communication curve requires two distinct non-negative ranks")
+        if not self.samples:
+            raise ValueError("pairwise communication curve must contain samples")
+        sizes = tuple(sample.size_bytes for sample in self.samples)
+        if any(size <= 0 for size in sizes) or tuple(sorted(set(sizes))) != sizes:
+            raise ValueError("communication sample sizes must be positive, unique, and increasing")
+        if any(sample.latency_us < 0 for sample in self.samples):
+            raise ValueError("communication sample latencies must be non-negative")
+
+    def latency_us(self, size_bytes: int, *, fallback_bandwidth_gbps: float) -> float:
+        if size_bytes < 0:
+            raise ValueError("communication size must be non-negative")
+        return _curve_latency_us(
+            self.samples,
+            size_bytes,
+            fallback_bandwidth_gbps=fallback_bandwidth_gbps,
+        )
+
+
+@dataclass(frozen=True, slots=True)
 class CalibrationProfile:
     """Replaceable analytic cost interface populated by measurements."""
 
@@ -131,19 +224,97 @@ class CalibrationProfile:
     sync_us: float = 0.0
     local_copy_us: float = 0.0
     source: str = "synthetic"
+    pairwise_comm_curves: tuple[PairwiseCommCurve, ...] = ()
+    gemm_samples: tuple[GemmSample, ...] = ()
+    local_copy_curve: tuple[CommSample, ...] = ()
+    execution_overhead: ExecutionOverhead = field(default_factory=ExecutionOverhead)
+    selection_min_gain_ratio: float = 0.0
 
     def validate(self) -> None:
         if self.comm_latency_us < 0 or self.gemm_launch_us < 0 or self.sync_us < 0:
             raise ValueError("latencies must be non-negative")
         if self.comm_bandwidth_gbps <= 0 or self.gemm_tflops <= 0:
             raise ValueError("bandwidth and throughput must be positive")
+        pairs: set[tuple[int, int]] = set()
+        for curve in self.pairwise_comm_curves:
+            curve.validate()
+            pair = (curve.src_rank, curve.dst_rank)
+            if pair in pairs:
+                raise ValueError(f"duplicate pairwise communication curve for {pair}")
+            pairs.add(pair)
+        shapes: set[tuple[str, int, int, int]] = set()
+        for sample in self.gemm_samples:
+            sample.validate()
+            shape = (sample.dtype, sample.m, sample.n, sample.k)
+            if shape in shapes:
+                raise ValueError(f"duplicate GEMM sample for {shape}")
+            shapes.add(shape)
+        copy_sizes = tuple(sample.size_bytes for sample in self.local_copy_curve)
+        if copy_sizes and (
+            any(size <= 0 for size in copy_sizes)
+            or tuple(sorted(set(copy_sizes))) != copy_sizes
+            or any(sample.latency_us < 0 for sample in self.local_copy_curve)
+        ):
+            raise ValueError("local copy samples must be non-negative with increasing positive sizes")
+        self.execution_overhead.validate()
+        if self.selection_min_gain_ratio < 0:
+            raise ValueError("selection minimum gain ratio must be non-negative")
 
-    def comm_us(self, size_bytes: int, *, local: bool = False) -> float:
+    def comm_us(
+        self,
+        size_bytes: int,
+        *,
+        src_rank: int | None = None,
+        dst_rank: int | None = None,
+        local: bool = False,
+    ) -> float:
+        if size_bytes < 0:
+            raise ValueError("communication size must be non-negative")
         if local:
+            if self.local_copy_curve:
+                return _curve_latency_us(
+                    self.local_copy_curve,
+                    size_bytes,
+                    fallback_bandwidth_gbps=self.comm_bandwidth_gbps,
+                )
             return self.local_copy_us
+        if src_rank is not None and dst_rank is not None:
+            curve = next(
+                (
+                    curve
+                    for curve in self.pairwise_comm_curves
+                    if curve.src_rank == src_rank and curve.dst_rank == dst_rank
+                ),
+                None,
+            )
+            if curve is not None:
+                return curve.latency_us(
+                    size_bytes,
+                    fallback_bandwidth_gbps=self.comm_bandwidth_gbps,
+                )
         return self.comm_latency_us + size_bytes / (self.comm_bandwidth_gbps * 1_000.0)
 
-    def gemm_us(self, m: int, n: int, k: int) -> float:
+    def gemm_us(self, m: int, n: int, k: int, *, dtype: str = "float16") -> float:
+        if min(m, n, k) <= 0:
+            raise ValueError("GEMM dimensions must be positive")
+        curve = sorted(
+            (
+                sample
+                for sample in self.gemm_samples
+                if sample.dtype == dtype and sample.n == n and sample.k == k
+            ),
+            key=lambda sample: sample.m,
+        )
+        if curve:
+            if m <= curve[0].m:
+                return curve[0].latency_us
+            for left, right in zip(curve, curve[1:]):
+                if m <= right.m:
+                    fraction = (m - left.m) / (right.m - left.m)
+                    return left.latency_us + fraction * (right.latency_us - left.latency_us)
+            last = curve[-1]
+            extra_flops = 2.0 * (m - last.m) * n * k
+            return last.latency_us + extra_flops / (self.gemm_tflops * 1_000_000.0)
         return self.gemm_launch_us + (2.0 * m * n * k) / (self.gemm_tflops * 1_000_000.0)
 
     def to_dict(self) -> dict[str, Any]:
@@ -152,7 +323,48 @@ class CalibrationProfile:
     @classmethod
     def from_dict(cls, value: dict[str, Any]) -> "CalibrationProfile":
         _check_schema(value, SCHEMA_PROFILE)
-        profile = cls(**{key: item for key, item in value.items() if key != "schema"})
+        fields = {key: item for key, item in value.items() if key != "schema"}
+        fields["pairwise_comm_curves"] = tuple(
+            PairwiseCommCurve(
+                src_rank=int(curve["src_rank"]),
+                dst_rank=int(curve["dst_rank"]),
+                samples=tuple(
+                    CommSample(
+                        size_bytes=int(sample["size_bytes"]),
+                        latency_us=float(sample["latency_us"]),
+                    )
+                    for sample in curve["samples"]
+                ),
+            )
+            for curve in fields.get("pairwise_comm_curves", ())
+        )
+        fields["gemm_samples"] = tuple(
+            GemmSample(
+                dtype=str(sample.get("dtype", "float16")),
+                m=int(sample["m"]),
+                n=int(sample["n"]),
+                k=int(sample["k"]),
+                latency_us=float(sample["latency_us"]),
+            )
+            for sample in fields.get("gemm_samples", ())
+        )
+        fields["local_copy_curve"] = tuple(
+            CommSample(
+                size_bytes=int(sample["size_bytes"]),
+                latency_us=float(sample["latency_us"]),
+            )
+            for sample in fields.get("local_copy_curve", ())
+        )
+        overhead = fields.get("execution_overhead", {})
+        if not isinstance(overhead, ExecutionOverhead):
+            fields["execution_overhead"] = ExecutionOverhead(
+                iteration_us=float(overhead.get("iteration_us", 0.0)),
+                op_dispatch_us=float(overhead.get("op_dispatch_us", 0.0)),
+                event_record_us=float(overhead.get("event_record_us", 0.0)),
+                event_wait_us=float(overhead.get("event_wait_us", 0.0)),
+                buffer_reuse_us=float(overhead.get("buffer_reuse_us", 0.0)),
+            )
+        profile = cls(**fields)
         profile.validate()
         return profile
 
@@ -271,7 +483,7 @@ class Program:
 class CompilerOptions:
     chunk_rows: tuple[int, ...] = ()
     buffer_counts: tuple[int, ...] = (2,)
-    min_gain_ratio: float = 0.0
+    min_gain_ratio: float | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -280,6 +492,8 @@ class CandidateResult:
     makespan_us: float
     ecr: float
     edmr: float
+    device_makespan_us: float = 0.0
+    overhead_us: float = 0.0
 
     @property
     def plan(self) -> Program:
@@ -303,10 +517,14 @@ __all__ = [
     "A2AGemmProblem",
     "Buffer",
     "CalibrationProfile",
+    "CommSample",
     "CandidateResult",
     "CompileResult",
     "CompilerOptions",
+    "ExecutionOverhead",
+    "GemmSample",
     "Op",
+    "PairwiseCommCurve",
     "Program",
     "SchedulePlan",
     "TopologySnapshot",

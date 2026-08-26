@@ -24,6 +24,8 @@ def _candidate_result(program: Program, profile: CalibrationProfile) -> Candidat
         makespan_us=simulation.makespan_us,
         ecr=simulation.exposure.ecr,
         edmr=simulation.exposure.edmr,
+        device_makespan_us=simulation.device_makespan_us,
+        overhead_us=simulation.overhead_us,
     )
 
 
@@ -35,6 +37,18 @@ def _default_chunks(problem: A2AGemmProblem) -> tuple[int, ...]:
         if value <= problem.rows_per_peer and problem.rows_per_peer % value == 0
     )
     return tuple(sorted(candidates))
+
+
+def _selection_key(item: CandidateResult) -> tuple[float, int, int, str, int]:
+    # Cost ties are resolved deterministically in favor of a smaller launch
+    # surface and then more user-bounded staging buffers.
+    return (
+        item.makespan_us,
+        len(item.program.ops),
+        -item.program.buffer_count,
+        item.program.strategy,
+        -item.program.chunk_rows,
+    )
 
 
 def compile_a2a_gemm(
@@ -49,7 +63,12 @@ def compile_a2a_gemm(
     if topology.world_size != problem.world_size:
         raise ValueError("topology world_size does not match problem")
     options = options or CompilerOptions()
-    if options.min_gain_ratio < 0:
+    min_gain_ratio = (
+        profile.selection_min_gain_ratio
+        if options.min_gain_ratio is None
+        else options.min_gain_ratio
+    )
+    if min_gain_ratio < 0:
         raise ValueError("min_gain_ratio must be non-negative")
     if any(value <= 0 for value in options.buffer_counts):
         raise ValueError("buffer counts must be positive")
@@ -73,17 +92,14 @@ def compile_a2a_gemm(
                 )
                 candidates.append(_candidate_result(program, profile))
 
-    best = min(
-        candidates,
-        key=lambda item: (item.makespan_us, item.program.strategy, item.program.chunk_rows),
-    )
+    best = min(candidates, key=_selection_key)
     if best.program.strategy != "sequential":
         gain_ratio = (sequential.makespan_us - best.makespan_us) / sequential.makespan_us
-        if gain_ratio <= options.min_gain_ratio:
+        if gain_ratio <= min_gain_ratio:
             best = sequential
             fallback_reason = (
                 f"pipeline fallback: predicted gain {gain_ratio:.6f} does not exceed "
-                f"minimum {options.min_gain_ratio:.6f}"
+                f"minimum {min_gain_ratio:.6f}"
             )
     elif fallback_reason is None:
         fallback_reason = "pipeline fallback: sequential schedule has the lowest predicted makespan"
@@ -97,6 +113,9 @@ def compile_a2a_gemm(
                 "predicted_makespan_us": best.makespan_us,
                 "predicted_ecr": best.ecr,
                 "predicted_edmr": best.edmr,
+                "predicted_device_makespan_us": best.device_makespan_us,
+                "predicted_runtime_overhead_us": best.overhead_us,
+                "selection_min_gain_ratio": min_gain_ratio,
                 "fallback_reason": fallback_reason,
             },
         ),
