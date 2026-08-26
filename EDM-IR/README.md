@@ -27,6 +27,8 @@ is under `experiments/2026-08-26-a100-cutlass-kernel-family`; provider-specific
 cost-model validation is under
 `experiments/2026-08-26-a100-cutlass-cost-model`; measured dependency-order
 validation is under `experiments/2026-08-26-a100-nsys-trace-validation`. The
+fused-runtime software/hardware gate is captured under
+`experiments/2026-08-26-a100-runtime-capabilities`. The
 complete layer contract is documented in
 [`docs/COMPILER_ARCHITECTURE.md`](docs/COMPILER_ARCHITECTURE.md).
 
@@ -118,9 +120,10 @@ files from the first prototype remain readable and are rebuilt as Programs;
 their serialized edge lists are intentionally discarded.
 
 The bundled profile and topology are synthetic fixtures, not experimental
-results. Use `python -m edmir probe --out topology.json` on the target machine
-and attach measured pairwise NCCL curves before drawing any performance
-conclusion:
+results. Use `python -m edmir probe --out topology.json` and
+`python -m edmir probe-runtime --out runtime-capabilities.json` on the target
+machine, then attach measured pairwise NCCL curves before drawing any
+performance conclusion:
 
 ```bash
 python -m edmir fit-nccl \

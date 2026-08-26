@@ -28,6 +28,7 @@ from .compiler import (
     verify_program,
 )
 from .printing import format_critical_path, format_summary, format_uops
+from .runtime_capabilities import probe_runtime_capabilities
 from .serialization import graph_from_dict, read_json, write_json
 from .topology import probe_topology
 from .trace_validation import read_observed_gpu_events, validate_trace
@@ -54,6 +55,24 @@ def _probe(args: argparse.Namespace) -> int:
     write_json(args.out, topology.to_dict())
     print(f"wrote {args.out}")
     return 0
+
+
+def _probe_runtime(args: argparse.Namespace) -> int:
+    report = probe_runtime_capabilities()
+    write_json(args.out, report)
+    ready = bool(report["features"]["fused_a2a_gemm_runtime_ready"])
+    print(f"wrote {args.out}")
+    print(
+        f"gpus={len(report['gpus'])} "
+        f"nccl={report['nccl']['version']} "
+        f"nccl_device_api={str(report['nccl']['device_api_ready']).lower()} "
+        f"fused_a2a_gemm_runtime={str(ready).lower()}"
+    )
+    for blocker in report["features"]["fused_a2a_gemm_blockers"]:
+        print(f"blocker={blocker}")
+    for error in report["probe_errors"]:
+        print(f"probe_error={error}")
+    return 2 if args.require_fused and not ready else 0
 
 
 def _compile(args: argparse.Namespace) -> int:
@@ -310,6 +329,13 @@ def build_parser() -> argparse.ArgumentParser:
     probe = subparsers.add_parser("probe", help="capture the local NVIDIA P2P topology")
     probe.add_argument("--out", required=True)
     probe.set_defaults(func=_probe)
+
+    probe_runtime = subparsers.add_parser(
+        "probe-runtime", help="capture CUDA/NCCL capabilities and fused-runtime blockers"
+    )
+    probe_runtime.add_argument("--out", required=True)
+    probe_runtime.add_argument("--require-fused", action="store_true")
+    probe_runtime.set_defaults(func=_probe_runtime)
 
     compile_parser = subparsers.add_parser("compile", help="compile a static All2All to GEMM problem")
     compile_parser.add_argument("problem")

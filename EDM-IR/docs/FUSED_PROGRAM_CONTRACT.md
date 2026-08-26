@@ -75,3 +75,14 @@ failures, an explicit runtime capability check, reproducible kernel identity,
 held-out direction accuracy, and lower measured runtime for at least one
 declared workload region. Until then, the compiler continues to emit the
 measured host-NCCL plus GEMM-provider schedule.
+
+Run the admission probe with:
+
+```bash
+python -m edmir probe-runtime \
+  --out runtime-capabilities.json --require-fused
+```
+
+The command records GPUs, topology, CUDA compiler, NCCL version/header set,
+required Device API symbols, and a CUDA header compilation check. Exit status 2
+means the fused gate is closed while still leaving the complete JSON report.

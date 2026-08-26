@@ -25,5 +25,5 @@ experiments/YYYY-MM-DD-short-name/
 ## 平台分层
 
 - 4x4090 / Ada / PCIe-only：只作为 NCCL/PyTorch distributed、PCIe/NUMA topology 和 profiling 流程热身。
-- A100 / SM80：作为 NCCL、PyTorch `all_to_all`、NVSHMEM legacy 对照平台。
+- A100 / SM80：作为 NCCL、PyTorch `all_to_all`、NVSHMEM legacy 对照平台；进入 NCCL Device API 实验前必须先通过 `probe-runtime`，当前接口要求 NCCL 2.28+。
 - H100 / H800 / H20 / SM90：作为 DeepEP V2、MoE EP dispatch/combine 和 overlap 的主实验平台。
