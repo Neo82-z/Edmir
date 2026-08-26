@@ -225,13 +225,15 @@ host compilation tests and 4x A100 numerical/latency experiments.
 
 Provider-specific GEMM and runtime calibration now preserves the measured
 oracle on all five A100 validation problems, including both held-out groups.
+Optional NVTX3 op ranges and the Nsight trace validator additionally cover all
+32 non-barrier ops and validate all 52 dependency-device constraints on both
+held-out Programs without a violation.
 The next milestone is not another IR layer. It is:
 
-1. add Nsight Systems trace comparison against compiler dependency order;
-2. model generated kernel identity in experiment provenance and diagnostics;
-3. only then introduce a distinct fused communication/compute lowering with
+1. model generated kernel identity in experiment provenance and diagnostics;
+2. introduce a distinct fused communication/compute lowering with
    explicit legality and synchronization semantics;
-4. evaluate CuTe/NCCL Device API at that boundary rather than hiding it behind
+3. evaluate CuTe/NCCL Device API at that boundary rather than hiding it behind
    the existing `gemm` operation.
 
 See `runtime/README.md` for the server build and smoke runner.

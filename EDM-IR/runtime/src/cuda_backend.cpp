@@ -6,6 +6,7 @@
 #include <numeric>
 #include <stdexcept>
 #include <string>
+#include <string_view>
 #include <unordered_set>
 #include <utility>
 #include <vector>
@@ -13,6 +14,7 @@
 #include <cublas_v2.h>
 #include <cuda_runtime.h>
 #include <nccl.h>
+#include <nvtx3/nvToolsExt.h>
 
 #include "edmir/runtime/validate.hpp"
 #if defined(EDMIR_HAS_CUTLASS)
@@ -75,6 +77,28 @@ std::vector<std::int32_t> op_devices(const OpDesc& op) {
   }
   return {op.rank};
 }
+
+class NvtxRange {
+ public:
+  NvtxRange(
+      bool enabled, std::string_view prefix, std::string_view name, std::size_t iteration)
+      : enabled_(enabled) {
+    if (!enabled_) return;
+    std::string text;
+    text.reserve(prefix.size() + name.size() + 24);
+    text.append(prefix).append(name).append(".iter").append(std::to_string(iteration));
+    nvtxRangePushA(text.c_str());
+  }
+  ~NvtxRange() {
+    if (enabled_) nvtxRangePop();
+  }
+
+  NvtxRange(const NvtxRange&) = delete;
+  NvtxRange& operator=(const NvtxRange&) = delete;
+
+ private:
+  bool enabled_;
+};
 
 }  // namespace
 
@@ -162,9 +186,14 @@ class CudaBackend::Impl {
 
   void execute() {
     require_prepared();
+    const auto iteration = execution_count_++;
+    const NvtxRange execution_range(
+        options_.enable_nvtx, "edm.phase:", "runtime.execute", iteration);
     for (const auto op_index : order_) {
-      wait_for_dependencies(op_index);
       const auto& op = program_.ops[op_index];
+      const NvtxRange op_range(
+          options_.enable_nvtx, "edm.op:", op.id, iteration);
+      wait_for_dependencies(op_index);
       switch (op.kind) {
         case OpKind::kTransfer:
           launch_transfer(op_index);
@@ -446,6 +475,7 @@ class CudaBackend::Impl {
   std::vector<std::vector<cudaEvent_t>> events_;
   std::vector<std::size_t> order_;
   std::vector<std::vector<std::size_t>> incoming_;
+  std::size_t execution_count_ = 0;
 };
 
 CudaBackend::CudaBackend(ProgramView program, CudaBackendOptions options)

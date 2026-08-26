@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <cstddef>
 #include <exception>
 #include <iostream>
@@ -14,12 +15,17 @@ bool is_external(edmir::runtime::BufferRole role) {
          role == edmir::runtime::BufferRole::kWeight;
 }
 
+bool has_flag(int argc, char** argv, std::string_view name) {
+  return std::any_of(argv + 1, argv + argc, [&](const char* value) { return value == name; });
+}
+
 }  // namespace
 
-int main() {
+int main(int argc, char** argv) {
   try {
     const auto program = edmir_generated::program();
-    edmir::runtime::CudaBackend backend(program);
+    edmir::runtime::CudaBackend backend(
+        program, {.devices = {}, .enable_nvtx = has_flag(argc, argv, "--nvtx")});
     backend.prepare();
 
     for (std::size_t index = 0; index < program.buffers.size(); ++index) {

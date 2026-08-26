@@ -36,6 +36,10 @@ int positive_argument(int argc, char** argv, const std::string& name, int fallba
   return fallback;
 }
 
+bool has_flag(int argc, char** argv, const std::string& name) {
+  return std::any_of(argv + 1, argv + argc, [&](const char* value) { return value == name; });
+}
+
 std::size_t op_device_count(const edmir::runtime::OpDesc& op) {
   return op.kind == edmir::runtime::OpKind::kTransfer && op.peer_rank != op.rank ? 2 : 1;
 }
@@ -47,7 +51,8 @@ int main(int argc, char** argv) {
     const int warmup_iterations = positive_argument(argc, argv, "--warmup", 5);
     const int measured_iterations = positive_argument(argc, argv, "--iterations", 30);
     const auto program = edmir_generated::program();
-    edmir::runtime::CudaBackend backend(program);
+    edmir::runtime::CudaBackend backend(
+        program, {.devices = {}, .enable_nvtx = has_flag(argc, argv, "--nvtx")});
     backend.prepare();
 
     for (std::size_t index = 0; index < program.buffers.size(); ++index) {

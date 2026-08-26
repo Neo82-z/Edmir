@@ -13,6 +13,9 @@ struct CudaBackendOptions {
   // Maps logical Program ranks to CUDA device ordinals. An empty vector uses
   // {0, ..., world_size - 1}, which composes naturally with CUDA_VISIBLE_DEVICES.
   std::vector<int> devices;
+  // Emit stable edm.phase/runtime and edm.op NVTX ranges. Disabled by default
+  // so benchmark calibration does not include annotation overhead.
+  bool enable_nvtx = false;
 };
 
 class CudaBackend {

@@ -132,6 +132,32 @@ mean host-observed latency plus the compiler-visible dispatch/event/reuse
 feature counts. `--warmup` and `--iterations` override the defaults. It also
 exercises event and buffer reuse across repeated Program launches.
 
+## Nsight dependency validation
+
+Pass `--nvtx` to `edmir_run_generated` or `edmir_benchmark_generated` to emit
+NVTX3 ranges for each execute iteration and stable Program op ID. Annotation is
+disabled by default and does not change the Program ABI or calibrated benchmark
+path.
+
+```bash
+nsys profile --trace=cuda,nvtx --sample=none --cpuctxsw=none \
+  --force-overwrite=true --output=edmir-trace \
+  ./build/runtime-cuda/edmir_benchmark_generated \
+  --warmup 3 --iterations 1 --nvtx
+nsys export --type sqlite --force-overwrite=true \
+  --output=edmir-trace.sqlite edmir-trace.nsys-rep
+python -m edmir.nsys_export edmir-trace.sqlite --out edmir-trace-export
+python -m edmir validate-trace /path/to/program.json \
+  edmir-trace-export/edm_cuda_events.csv \
+  --out edmir-trace-validation.json
+```
+
+The validator chooses the last mapped iteration by default so NCCL first-use
+initialization cannot masquerade as steady Program work. It checks per-device
+op coverage, event kinds, and every derived dependency on the GPU devices
+shared by predecessor and successor. Nsight tracing perturbs host dispatch, so
+absolute trace span and overlap must not replace unprofiled latency baselines.
+
 `edmir_benchmark_gemm` measures the exact FP16 `cublasGemmEx` call used by the
 runtime and emits one JSON object per device and shape. For example:
 

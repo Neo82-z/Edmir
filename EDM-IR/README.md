@@ -25,7 +25,9 @@ controlled provider substitution is under
 `experiments/2026-08-26-a100-cutlass-provider`; measured static kernel selection
 is under `experiments/2026-08-26-a100-cutlass-kernel-family`; provider-specific
 cost-model validation is under
-`experiments/2026-08-26-a100-cutlass-cost-model`. The complete layer contract is documented in
+`experiments/2026-08-26-a100-cutlass-cost-model`; measured dependency-order
+validation is under `experiments/2026-08-26-a100-nsys-trace-validation`. The
+complete layer contract is documented in
 [`docs/COMPILER_ARCHITECTURE.md`](docs/COMPILER_ARCHITECTURE.md).
 
 ## Minimal compiler model

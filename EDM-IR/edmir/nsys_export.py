@@ -46,6 +46,7 @@ class GpuEvent:
     end_ns: int
     kind: str
     name: str
+    device_id: int | None
     stream_id: int | None
     correlation_id: int
     bytes: int | None = None
@@ -156,6 +157,7 @@ def read_gpu_events(conn: sqlite3.Connection, strings: dict[int, str]) -> list[G
                     end_ns=int(row["end"]),
                     kind="kernel",
                     name=name,
+                    device_id=_optional_int(row["deviceId"]),
                     stream_id=_optional_int(row["streamId"]),
                     correlation_id=int(row["correlationId"]),
                 )
@@ -173,6 +175,7 @@ def read_gpu_events(conn: sqlite3.Connection, strings: dict[int, str]) -> list[G
                     end_ns=int(row["end"]),
                     kind="memcpy",
                     name="cuda_memcpy",
+                    device_id=_optional_int(row["deviceId"]),
                     stream_id=_optional_int(row["streamId"]),
                     correlation_id=int(row["correlationId"]),
                     bytes=_optional_int(row["bytes"]),
@@ -265,6 +268,7 @@ def export_nsys(sqlite_path: str | Path, out_dir: str | Path) -> None:
                 "edm_text": nvtx_range.text if nvtx_range else "",
                 "kind": event.kind,
                 "name": event.name,
+                "device_id": event.device_id,
                 "stream_id": event.stream_id,
                 "correlation_id": event.correlation_id,
                 "bytes": event.bytes,
@@ -281,6 +285,7 @@ def export_nsys(sqlite_path: str | Path, out_dir: str | Path) -> None:
         "edm_text",
         "kind",
         "name",
+        "device_id",
         "stream_id",
         "correlation_id",
         "bytes",

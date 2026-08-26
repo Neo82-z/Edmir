@@ -26,6 +26,7 @@ from .compiler import (
 from .printing import format_critical_path, format_summary, format_uops
 from .serialization import graph_from_dict, read_json, write_json
 from .topology import probe_topology
+from .trace_validation import read_observed_gpu_events, validate_trace
 
 
 def _parse_csv_ints(value: str) -> tuple[int, ...]:
@@ -232,6 +233,31 @@ def _simulate(args: argparse.Namespace) -> int:
     return 0
 
 
+def _validate_trace(args: argparse.Namespace) -> int:
+    program = _load_program(args.program)
+    events = read_observed_gpu_events(args.events)
+    report = validate_trace(
+        program,
+        events,
+        iteration=args.iteration,
+        tolerance_us=args.tolerance_us,
+    )
+    if args.out:
+        write_json(args.out, report.to_dict())
+        print(f"wrote {args.out}")
+    print(
+        f"valid={str(report.valid).lower()} iteration={report.iteration} "
+        f"covered_ops={report.covered_ops}/{report.expected_ops} "
+        f"gpu_events={report.gpu_events} "
+        f"dependency_device_checks={report.dependency_device_checks} "
+        f"gpu_span_us={report.gpu_span_us:.3f} "
+        f"comm_compute_overlap_us={report.comm_compute_overlap_us:.3f}"
+    )
+    for violation in report.violations:
+        print(f"violation={violation.kind}: {violation.message}")
+    return 0 if report.valid else 1
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="edmir", description="EDM-IR analysis and schedule compiler")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -343,6 +369,16 @@ def build_parser() -> argparse.ArgumentParser:
     simulate.add_argument("--profile", required=True)
     simulate.add_argument("--timings", action="store_true")
     simulate.set_defaults(func=_simulate)
+
+    validate_trace_parser = subparsers.add_parser(
+        "validate-trace", help="compare mapped Nsight GPU events with Program dependencies"
+    )
+    validate_trace_parser.add_argument("program")
+    validate_trace_parser.add_argument("events", help="edm_cuda_events.csv from nsys_export")
+    validate_trace_parser.add_argument("--iteration", type=int)
+    validate_trace_parser.add_argument("--tolerance-us", type=float, default=0.5)
+    validate_trace_parser.add_argument("--out")
+    validate_trace_parser.set_defaults(func=_validate_trace)
     return parser
 
 
