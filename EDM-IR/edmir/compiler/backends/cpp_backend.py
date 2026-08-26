@@ -29,6 +29,7 @@ OP_KIND_ENUM = {
     "transfer": "OpKind::kTransfer",
     "gemm": "OpKind::kGemm",
     "barrier": "OpKind::kBarrier",
+    "fused_transfer_gemm": "OpKind::kFusedTransferGemm",
 }
 QUEUE_KIND_ENUM = {
     "comm": "QueueKind::kComm",
@@ -44,12 +45,18 @@ DEPENDENCY_KIND_ENUM = {
 GEMM_PROVIDER_ENUM = {
     "cublas": "GemmProvider::kCuBLAS",
     "cutlass": "GemmProvider::kCUTLASS",
+    "cuda_reference": "GemmProvider::kCudaReference",
 }
 GEMM_KERNEL_ENUM = {
     "library_default": "GemmKernel::kLibraryDefault",
     "sm80_128x128x32": "GemmKernel::kSm80_128x128x32",
     "sm80_64x128x32": "GemmKernel::kSm80_64x128x32",
     "sm80_128x64x32": "GemmKernel::kSm80_128x64x32",
+    "lsa_naive_f16": "GemmKernel::kLsaNaiveF16",
+}
+COMMUNICATION_API_ENUM = {
+    "host_nccl": "CommunicationApi::kHostNCCL",
+    "nccl_device": "CommunicationApi::kNCCLDevice",
 }
 
 
@@ -65,12 +72,13 @@ class CppManifestBackend:
 
     def emit(self, program: Program, target: Target) -> BackendArtifact:
         target.validate_program(program)
-        if any(op.kind == "fused_transfer_gemm" for op in program.ops):
+        has_fused = any(op.kind == "fused_transfer_gemm" for op in program.ops)
+        if has_fused and target.gemm_provider != "cuda_reference":
             raise ValueError(
-                "C++ runtime does not implement fused_transfer_gemm; "
-                "emit JSON semantics or use the unfused host NCCL backend"
+                "C++ fused runtime currently requires gemm_provider=cuda_reference; "
+                "CUTLASS device fusion is not implemented"
             )
-        if target.communication_api != "host_nccl":
+        if not has_fused and target.communication_api != "host_nccl":
             raise ValueError("C++ runtime v0.1 implements only communication_api=host_nccl")
         target = target.resolve(program.problem, gemm_m=program.chunk_rows)
         if target.world_size != program.problem.world_size:
@@ -114,6 +122,8 @@ class CppManifestBackend:
             f"{GEMM_PROVIDER_ENUM[target.gemm_provider]};",
             "inline constexpr GemmKernel kGemmKernel = "
             f"{GEMM_KERNEL_ENUM[target.gemm_kernel]};",
+            "inline constexpr CommunicationApi kCommunicationApi = "
+            f"{COMMUNICATION_API_ENUM[target.communication_api]};",
             f"inline constexpr std::string_view kStrategy = {_cpp_string(program.strategy)};",
             "inline constexpr ProblemDesc kProblem{"
             f"{program.problem.world_size}, {program.problem.rows_per_peer}, "
@@ -175,7 +185,8 @@ class CppManifestBackend:
                 "",
                 "inline constexpr ProgramView program() {",
                 "  return {",
-                "      kTarget, kArch, kGemmProvider, kGemmKernel, kStrategy, kProblem, "
+                "      kTarget, kArch, kGemmProvider, kGemmKernel, kCommunicationApi, "
+                "kStrategy, kProblem, "
                 "kChunkRows, kBufferCount,",
                 "      std::span<const BufferDesc>{kBuffers},",
                 "      std::span<const OpDesc>{kOps},",

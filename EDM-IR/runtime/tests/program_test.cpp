@@ -28,7 +28,7 @@ int main() {
   };
   const ProgramView program{
       "test", "host", GemmProvider::kCuBLAS, GemmKernel::kLibraryDefault,
-      "pipelined", problem, 16, 1,
+      CommunicationApi::kHostNCCL, "pipelined", problem, 16, 1,
       buffers, ops, accesses, dependencies,
   };
   assert(validate_program(program).valid());
@@ -43,7 +43,7 @@ int main() {
   };
   const ProgramView invalid_transfer{
       "test", "host", GemmProvider::kCuBLAS, GemmKernel::kLibraryDefault,
-      "pipelined", problem, 16, 1,
+      CommunicationApi::kHostNCCL, "pipelined", problem, 16, 1,
       invalid_buffers, ops, accesses, dependencies,
   };
   assert(!validate_program(invalid_transfer).valid());
@@ -54,7 +54,7 @@ int main() {
   };
   const ProgramView cyclic{
       "test", "host", GemmProvider::kCuBLAS, GemmKernel::kLibraryDefault,
-      "pipelined", problem, 16, 1,
+      CommunicationApi::kHostNCCL, "pipelined", problem, 16, 1,
       buffers, ops, accesses, cyclic_dependencies,
   };
   assert(!validate_program(cyclic).valid());
@@ -65,5 +65,32 @@ int main() {
     rejected = true;
   }
   assert(rejected);
+
+  constexpr std::array fused_buffers{
+      BufferDesc{"fused_input", 0, BufferRole::kInput, 2048},
+      BufferDesc{"fused_weight", 1, BufferRole::kWeight, 8192},
+      BufferDesc{"fused_output", 1, BufferRole::kOutput, 2048},
+  };
+  constexpr std::array fused_ops{
+      OpDesc{
+          "fused", OpKind::kFusedTransferGemm, 1, 0, QueueKind::kCompute,
+          "s0.d1.c0", 16},
+  };
+  constexpr std::array fused_accesses{
+      AccessDesc{0, 0, false}, AccessDesc{0, 1, false}, AccessDesc{0, 2, true},
+  };
+  constexpr std::array<DependencyDesc, 0> no_dependencies{};
+  const ProgramView fused{
+      "test", "sm_80", GemmProvider::kCudaReference, GemmKernel::kLsaNaiveF16,
+      CommunicationApi::kNCCLDevice, "fused", problem, 16, 1,
+      fused_buffers, fused_ops, fused_accesses, no_dependencies,
+  };
+  assert(validate_program(fused).valid());
+  const ProgramView fused_without_device_api{
+      "test", "sm_80", GemmProvider::kCudaReference, GemmKernel::kLsaNaiveF16,
+      CommunicationApi::kHostNCCL, "fused", problem, 16, 1,
+      fused_buffers, fused_ops, fused_accesses, no_dependencies,
+  };
+  assert(!validate_program(fused_without_device_api).valid());
   return 0;
 }

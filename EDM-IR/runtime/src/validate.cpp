@@ -15,7 +15,8 @@ bool valid_rank(std::int32_t rank, std::int32_t world_size) {
 }
 
 std::vector<std::int32_t> op_devices(const OpDesc& op) {
-  if (op.kind == OpKind::kTransfer && op.peer_rank != op.rank) {
+  if ((op.kind == OpKind::kTransfer || op.kind == OpKind::kFusedTransferGemm) &&
+      op.peer_rank != op.rank) {
     return {op.peer_rank, op.rank};
   }
   return {op.rank};
@@ -58,6 +59,16 @@ ValidationReport validate_program(ProgramView program) {
     }
     if (program.gemm_kernel == GemmKernel::kLibraryDefault) {
       report.errors.emplace_back("CUTLASS requires an explicit generated kernel");
+    }
+  } else if (program.gemm_provider == GemmProvider::kCudaReference) {
+    if (program.arch != "sm_80" || program.problem.dtype != DType::kFloat16) {
+      report.errors.emplace_back("CUDA reference fused runtime requires SM80 float16");
+    }
+    if (program.gemm_kernel != GemmKernel::kLsaNaiveF16) {
+      report.errors.emplace_back("CUDA reference fused runtime requires lsa_naive_f16");
+    }
+    if (program.communication_api != CommunicationApi::kNCCLDevice) {
+      report.errors.emplace_back("CUDA reference fused runtime requires NCCL Device API");
     }
   } else if (program.gemm_kernel != GemmKernel::kLibraryDefault) {
     report.errors.emplace_back("cuBLAS requires the library_default GEMM kernel");
@@ -110,6 +121,17 @@ ValidationReport validate_program(ProgramView program) {
       case OpKind::kBarrier:
         if (op.queue != QueueKind::kControl) {
           report.errors.emplace_back("barrier requires control queue");
+        }
+        break;
+      case OpKind::kFusedTransferGemm:
+        if (!valid_rank(op.peer_rank, world_size)) {
+          report.errors.emplace_back("fused op peer rank is outside the target world");
+        }
+        if (op.queue != QueueKind::kCompute || op.rows <= 0) {
+          report.errors.emplace_back("fused op requires compute queue and positive rows");
+        }
+        if (program.communication_api != CommunicationApi::kNCCLDevice) {
+          report.errors.emplace_back("fused op requires NCCL Device API");
         }
         break;
     }
@@ -200,6 +222,55 @@ ValidationReport validate_program(ProgramView program) {
       if (weight != read_buffers[index].end() &&
           program.buffers[*weight].size_bytes < weight_bytes) {
         report.errors.emplace_back("GEMM weight buffer is smaller than its matrix");
+      }
+    }
+    if (kind == OpKind::kFusedTransferGemm &&
+        (reads[index] != 2 || writes[index] != 1)) {
+      report.errors.emplace_back("fused op requires exactly two reads and one write access");
+    }
+    if (kind == OpKind::kFusedTransferGemm && reads[index] == 2 && writes[index] == 1) {
+      if (count_role(program, read_buffers[index], BufferRole::kInput) != 1 ||
+          count_role(program, read_buffers[index], BufferRole::kWeight) != 1 ||
+          program.buffers[write_buffers[index][0]].role != BufferRole::kOutput) {
+        report.errors.emplace_back("fused op requires input + weight -> output buffer roles");
+      }
+      const auto input = std::find_if(
+          read_buffers[index].begin(), read_buffers[index].end(), [&](std::size_t buffer) {
+            return program.buffers[buffer].role == BufferRole::kInput;
+          });
+      const auto weight = std::find_if(
+          read_buffers[index].begin(), read_buffers[index].end(), [&](std::size_t buffer) {
+            return program.buffers[buffer].role == BufferRole::kWeight;
+          });
+      const auto& output = program.buffers[write_buffers[index][0]];
+      if (input != read_buffers[index].end() &&
+          program.buffers[*input].rank != op.peer_rank) {
+        report.errors.emplace_back("fused input rank does not match peer rank");
+      }
+      if (weight != read_buffers[index].end() &&
+          program.buffers[*weight].rank != op.rank) {
+        report.errors.emplace_back("fused weight is not local to the destination rank");
+      }
+      if (output.rank != op.rank) {
+        report.errors.emplace_back("fused output is not local to the destination rank");
+      }
+      const auto element_size = dtype_size(program.problem.dtype);
+      const auto input_bytes = static_cast<std::size_t>(op.rows) *
+                               static_cast<std::size_t>(program.problem.k) * element_size;
+      const auto weight_bytes = static_cast<std::size_t>(program.problem.k) *
+                                static_cast<std::size_t>(program.problem.n) * element_size;
+      const auto output_bytes = static_cast<std::size_t>(op.rows) *
+                                static_cast<std::size_t>(program.problem.n) * element_size;
+      if (input != read_buffers[index].end() &&
+          program.buffers[*input].size_bytes < input_bytes) {
+        report.errors.emplace_back("fused input buffer is smaller than its tensor tile");
+      }
+      if (weight != read_buffers[index].end() &&
+          program.buffers[*weight].size_bytes < weight_bytes) {
+        report.errors.emplace_back("fused weight buffer is smaller than its matrix");
+      }
+      if (output.size_bytes < output_bytes) {
+        report.errors.emplace_back("fused output buffer is smaller than its tensor tile");
       }
     }
     if (kind == OpKind::kBarrier) {

@@ -8,6 +8,7 @@ import re
 import shutil
 import socket
 import subprocess
+import tempfile
 from pathlib import Path
 from typing import Any
 
@@ -24,7 +25,12 @@ NCCL_DEVICE_API_SYMBOLS = (
 )
 
 
-def _run(command: list[str], *, input_text: str | None = None) -> tuple[int, str]:
+def _run(
+    command: list[str],
+    *,
+    input_text: str | None = None,
+    env: dict[str, str] | None = None,
+) -> tuple[int, str]:
     try:
         completed = subprocess.run(
             command,
@@ -33,6 +39,7 @@ def _run(command: list[str], *, input_text: str | None = None) -> tuple[int, str
             text=True,
             check=False,
             timeout=20.0,
+            env=env,
         )
     except (OSError, subprocess.TimeoutExpired) as exc:
         return 127, str(exc)
@@ -78,7 +85,7 @@ def _evaluate_device_api(
     if missing:
         blockers.append("missing Device API symbols: " + ", ".join(missing))
     if device_header and not compile_ok:
-        blockers.append("nvcc could not compile the NCCL Device API headers")
+        blockers.append("the NCCL Device API compile-link-runtime probe failed")
     return not blockers, tuple(blockers)
 
 
@@ -90,10 +97,14 @@ def _find_nvcc() -> str | None:
 
 
 def _find_nccl_header() -> Path | None:
-    candidates = [
+    candidates: list[Path] = []
+    nccl_home = os.environ.get("NCCL_HOME")
+    if nccl_home:
+        candidates.append(Path(nccl_home) / "include" / "nccl.h")
+    candidates.extend([
         Path("/usr/include/nccl.h"),
         Path("/usr/local/include/nccl.h"),
-    ]
+    ])
     cuda_home = os.environ.get("CUDA_HOME")
     if cuda_home:
         candidates.append(Path(cuda_home) / "include" / "nccl.h")
@@ -121,29 +132,59 @@ def _read_nccl_headers(root_header: Path) -> tuple[tuple[str, ...], str]:
     return tuple(readable), "\n".join(chunks)
 
 
-def _probe_device_header_compile(nvcc: str | None, include_root: Path) -> tuple[bool, str]:
+def _nccl_library_directories(include_root: Path) -> tuple[Path, ...]:
+    prefix = include_root.parent
+    return tuple(
+        path for path in (prefix / "lib", prefix / "lib64")
+        if path.is_dir() and any(path.glob("libnccl.so*"))
+    )
+
+
+def _probe_device_header_compile(
+    nvcc: str | None,
+    include_root: Path,
+) -> tuple[bool, str]:
     if nvcc is None or not (include_root / "nccl_device.h").is_file():
         return False, "compile probe skipped: nvcc or nccl_device.h is unavailable"
     source = (
         "#include <nccl.h>\n"
         "#include <nccl_device.h>\n"
         "auto* edmir_probe_nccl_dev_comm = &ncclDevCommCreate;\n"
+        "int main() {\n"
+        "  int version = 0;\n"
+        "  if (ncclGetVersion(&version) != ncclSuccess) return 2;\n"
+        f"  return version >= {NCCL_DEVICE_API_MIN_VERSION} ? 0 : 3;\n"
+        "}\n"
     )
-    returncode, output = _run(
-        [
-            nvcc,
-            "-std=c++17",
-            f"-I{include_root}",
-            "-x",
-            "cu",
-            "-c",
-            "-o",
-            "/dev/null",
-            "-",
-        ],
-        input_text=source,
-    )
-    return returncode == 0, output
+    library_directories = _nccl_library_directories(include_root)
+    link_flags = [f"-L{path}" for path in library_directories]
+    with tempfile.TemporaryDirectory(prefix="edmir-nccl-probe-") as directory:
+        executable = Path(directory) / "probe"
+        returncode, compile_output = _run(
+            [
+                nvcc,
+                "-std=c++17",
+                f"-I{include_root}",
+                "-x",
+                "cu",
+                "-",
+                *link_flags,
+                "-lnccl",
+                "-o",
+                str(executable),
+            ],
+            input_text=source,
+        )
+        if returncode:
+            return False, compile_output
+        runtime_env = dict(os.environ)
+        if library_directories:
+            prefix = os.pathsep.join(str(path) for path in library_directories)
+            previous = runtime_env.get("LD_LIBRARY_PATH")
+            runtime_env["LD_LIBRARY_PATH"] = prefix if not previous else prefix + os.pathsep + previous
+        run_returncode, run_output = _run([str(executable)], env=runtime_env)
+        output = "\n".join(part for part in (compile_output, run_output) if part)
+        return run_returncode == 0, output
 
 
 def _probe_gpus() -> tuple[list[dict[str, str]], str | None]:
@@ -229,6 +270,9 @@ def probe_runtime_capabilities() -> dict[str, Any]:
         "nccl": {
             **nccl_version,
             "headers": list(header_paths),
+            "library_directories": [
+                str(path) for path in (() if root_header is None else _nccl_library_directories(root_header.parent))
+            ],
             "symbols": symbols,
             "device_header": device_header,
             "device_api_ready": device_api_ready,

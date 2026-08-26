@@ -124,7 +124,9 @@ void interpret_on_cpu(ProgramView program, std::vector<std::vector<float>>& buff
       continue;
     }
 
-    const auto activation = by_role(program, reads, BufferRole::kStaging);
+    const auto activation = by_role(
+        program, reads,
+        op.kind == OpKind::kFusedTransferGemm ? BufferRole::kInput : BufferRole::kStaging);
     const auto weight = by_role(program, reads, BufferRole::kWeight);
     const auto output = by_role(program, writes, BufferRole::kOutput);
     const auto m = static_cast<std::size_t>(op.rows);

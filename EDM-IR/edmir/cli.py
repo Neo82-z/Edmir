@@ -8,7 +8,6 @@ from .compiler import (
     CompilerPipeline,
     CompilerOptions,
     DataflowModule,
-    JsonBackend,
     PassManager,
     Program,
     TopologySnapshot,
@@ -164,18 +163,21 @@ def _lower_fused(args: argparse.Namespace) -> int:
     )
     program = lower_fused_a2a_gemm(match, chunk_rows=args.chunk_rows)
     verify_program(program.problem, program).require_valid()
-    artifact = JsonBackend().emit(program, target)
+    artifact = create_backend(args.backend).emit(program, target)
     written = artifact.write_to(args.out_dir)
     for trace in pass_trace:
         print(f"pass={trace.name} changed={str(trace.changed).lower()}")
     print(
         f"lowered={match.all_to_all.id}->{match.gemm.id} strategy=fused "
-        f"communication_api=nccl_device executable=false"
+        f"communication_api=nccl_device backend={artifact.backend}"
     )
-    print(
-        "warning=fused JSON is a legality-checked prototype; "
-        "the C++ runtime and cost model intentionally reject it"
-    )
+    if artifact.backend == "json":
+        print("warning=fused JSON is a legality-checked semantic prototype")
+    else:
+        print(
+            "warning=fused C++ requires EDMIR_ENABLE_NCCL_DEVICE=ON and remains "
+            "excluded from cost-based selection"
+        )
     for path in written:
         print(f"wrote {path}")
     return 0
@@ -398,7 +400,9 @@ def build_parser() -> argparse.ArgumentParser:
     lower_fused.add_argument("--target", default="cuda-device-prototype")
     lower_fused.add_argument("--arch", default="sm_80")
     lower_fused.add_argument(
-        "--gemm-provider", choices=("cutlass",), default="cutlass"
+        "--gemm-provider",
+        choices=("cuda_reference", "cutlass"),
+        default="cuda_reference",
     )
     lower_fused.add_argument(
         "--gemm-kernel",
@@ -408,10 +412,12 @@ def build_parser() -> argparse.ArgumentParser:
             "sm80_128x128x32",
             "sm80_64x128x32",
             "sm80_128x64x32",
+            "lsa_naive_f16",
         ),
         default="auto",
     )
     lower_fused.add_argument("--out-dir", required=True)
+    lower_fused.add_argument("--backend", choices=("json", "cpp"), default="json")
     lower_fused.set_defaults(func=_lower_fused)
 
     fit_nccl = subparsers.add_parser(

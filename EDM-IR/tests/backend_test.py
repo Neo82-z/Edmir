@@ -76,7 +76,7 @@ class BackendTest(unittest.TestCase):
         program = build_fused_program(self.problem, chunk_rows=16)
         with self.assertRaisesRegex(ValueError, "communication_api=nccl_device"):
             JsonBackend().emit(program, self.target)
-        with self.assertRaisesRegex(ValueError, "gemm_provider=cutlass"):
+        with self.assertRaisesRegex(ValueError, "gemm_provider=cutlass or cuda_reference"):
             JsonBackend().emit(
                 program, replace(self.target, communication_api="nccl_device")
             )
@@ -93,7 +93,7 @@ class BackendTest(unittest.TestCase):
         self.assertEqual(target_json["communication_api"], "nccl_device")
         self.assertEqual(program_json["strategy"], "fused")
 
-    def test_cpp_backend_explicitly_rejects_unimplemented_fused_runtime(self) -> None:
+    def test_cpp_backend_emits_reference_fused_runtime_and_rejects_cutlass_fusion(self) -> None:
         program = build_fused_program(self.problem, chunk_rows=16)
         device_target = Target(
             "device-prototype",
@@ -102,8 +102,15 @@ class BackendTest(unittest.TestCase):
             gemm_provider="cutlass",
             communication_api="nccl_device",
         )
-        with self.assertRaisesRegex(ValueError, "does not implement fused_transfer_gemm"):
+        with self.assertRaisesRegex(ValueError, "requires gemm_provider=cuda_reference"):
             CppManifestBackend().emit(program, device_target)
+        reference_target = replace(device_target, gemm_provider="cuda_reference")
+        artifact = CppManifestBackend().emit(program, reference_target)
+        header = artifact.files["edmir_program.hpp"]
+        self.assertIn("OpKind::kFusedTransferGemm", header)
+        self.assertIn("GemmProvider::kCudaReference", header)
+        self.assertIn("GemmKernel::kLsaNaiveF16", header)
+        self.assertIn("CommunicationApi::kNCCLDevice", header)
 
     def test_cpp_backend_contains_buffers_ops_accesses_and_dependencies(self) -> None:
         result = self.compile_with(CppManifestBackend())
@@ -115,6 +122,7 @@ class BackendTest(unittest.TestCase):
         self.assertIn('kArch = "sm_89"', header)
         self.assertIn("kGemmProvider = GemmProvider::kCuBLAS", header)
         self.assertIn("kGemmKernel = GemmKernel::kLibraryDefault", header)
+        self.assertIn("kCommunicationApi = CommunicationApi::kHostNCCL", header)
 
     def test_cutlass_target_accepts_sm80_fp16_aligned_problem(self) -> None:
         target = Target(

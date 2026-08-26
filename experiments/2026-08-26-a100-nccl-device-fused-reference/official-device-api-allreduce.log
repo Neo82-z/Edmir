@@ -1,0 +1,31 @@
+Creating 4 threads for 4 devices
+NCCL Example: One Device per Thread
+===================================
+Starting Device API AllReduce initialization
+  Rank 2 using GPU device 2
+  Rank 3 using GPU device 3
+  Rank 0 using GPU device 0
+NCCL version 2.28.9+cuda12.8
+  Rank 1 using GPU device 1
+  Rank 0 initialized NCCL communicator for 4 total ranks
+  Rank 2 initialized NCCL communicator for 4 total ranks
+  Rank 3 initialized NCCL communicator for 4 total ranks
+  Rank 1 initialized NCCL communicator for 4 total ranks
+  Rank 1 initialized data with value 1
+  Rank 2 initialized data with value 2
+  Rank 0 initialized data with value 0
+  Rank 3 initialized data with value 3
+  Rank 2 created device communicator with 16 LSA barriers
+  Rank 1 created device communicator with 16 LSA barriers
+  Rank 0 created device communicator with 16 LSA barriers
+Starting AllReduce with 1048576 elements (4 MB) using Device API
+Expected result: sum of ranks 0 to 3 = 6 per element
+  Rank 3 created device communicator with 16 LSA barriers
+  Rank 1 completed AllReduce kernel execution
+  Rank 3 completed AllReduce kernel execution
+  Rank 2 completed AllReduce kernel execution
+  Rank 0 completed AllReduce kernel execution
+AllReduce completed. Result verification: PASSED
+All elements correctly sum to 6 (ranks 0-3)
+
+All NCCL communicators finalized successfully!

@@ -36,15 +36,16 @@ fallback.
 |---|---:|---:|
 | `host_nccl` + JSON | yes | rejected |
 | `host_nccl` + C++ runtime | yes | rejected |
-| `nccl_device` + JSON | yes | semantic prototype only |
-| `nccl_device` + C++ runtime v0.1 | rejected | rejected |
+| `nccl_device` + JSON | yes | semantic artifact |
+| `nccl_device` + C++ / `cuda_reference` | rejected | guarded SM80 FP16 reference |
+| `nccl_device` + C++ / `cutlass` | rejected | not implemented |
 
 The fused target additionally requires full peer-to-peer connectivity and the
-CUTLASS provider. cuBLAS is an independent library launch and cannot satisfy
-the one-kernel semantic contract. The
-current C++ ABI and runtime intentionally do not contain a placeholder fused
-opcode. Adding an enum that throws at launch time would be weaker than the
-current compile-time capability error.
+`cuda_reference` or CUTLASS provider. cuBLAS is an independent library launch
+and cannot satisfy the one-kernel semantic contract. `cuda_reference` resolves
+to `lsa_naive_f16` and is the only executable fused provider today. CUTLASS is
+accepted as a semantic JSON target but is rejected by the C++ backend until a
+real fused implementation exists.
 
 ## Why the cost model rejects it
 
@@ -57,7 +58,8 @@ identity and launch path.
 
 ## Runtime experiment gate
 
-Before extending the C++ ABI, capture the following on one fixed machine:
+The ABI/reference-runtime gate is complete. Before admitting fusion to schedule
+selection, capture the following on one fixed machine:
 
 1. environment provenance: GPU UUIDs, topology, driver, CUDA, NCCL, clocks,
    persistence state, and Device API symbols available in the installed headers;
@@ -84,5 +86,21 @@ python -m edmir probe-runtime \
 ```
 
 The command records GPUs, topology, CUDA compiler, NCCL version/header set,
-required Device API symbols, and a CUDA header compilation check. Exit status 2
-means the fused gate is closed while still leaving the complete JSON report.
+required Device API symbols, and a compile-link-runtime check against the
+selected NCCL prefix. Set `NCCL_HOME=/path/to/nccl/build` for an isolated build.
+Exit status 2 means the fused gate is closed while still leaving the complete
+JSON report.
+
+## Reference-kernel synchronization contract
+
+The first implementation registers one symmetric NCCL window per fused tile.
+The destination kernel resolves the source allocation with
+`ncclGetLsaPointer`, reads FP16 input directly, multiplies by its local FP16
+weight, accumulates in FP32, and writes FP16 output. It intentionally uses a
+naive CUDA loop rather than tensor cores.
+
+No device barrier is needed under this narrow runner contract: external inputs
+and weights are populated by synchronous host copies before `execute()`, remain
+immutable during execution, and the registered windows outlive all launches.
+A future producer-generated or mutable tile must add explicit release/acquire
+publication; this reference must not be generalized by assumption.

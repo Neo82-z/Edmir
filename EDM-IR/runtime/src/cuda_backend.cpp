@@ -20,6 +20,9 @@
 #if defined(EDMIR_HAS_CUTLASS)
 #include "edmir/runtime/cutlass_gemm.hpp"
 #endif
+#if defined(EDMIR_HAS_NCCL_DEVICE)
+#include "edmir/runtime/nccl_device_fused.hpp"
+#endif
 
 namespace edmir::runtime {
 namespace {
@@ -72,7 +75,8 @@ ncclDataType_t nccl_dtype(DType dtype) {
 }
 
 std::vector<std::int32_t> op_devices(const OpDesc& op) {
-  if (op.kind == OpKind::kTransfer && op.peer_rank != op.rank) {
+  if ((op.kind == OpKind::kTransfer || op.kind == OpKind::kFusedTransferGemm) &&
+      op.peer_rank != op.rank) {
     return {op.peer_rank, op.rank};
   }
   return {op.rank};
@@ -128,6 +132,13 @@ class CudaBackend::Impl {
           "EDMIR_ENABLE_CUTLASS=ON");
     }
 #endif
+#if !defined(EDMIR_HAS_NCCL_DEVICE)
+    if (program_.gemm_provider == GemmProvider::kCudaReference) {
+      throw std::invalid_argument(
+          "generated Program requests the CUDA fused reference kernel, but the runtime was "
+          "built without EDMIR_ENABLE_NCCL_DEVICE=ON");
+    }
+#endif
 
     const auto world_size = static_cast<std::size_t>(program_.problem.world_size);
     configure_devices(world_size);
@@ -152,14 +163,31 @@ class CudaBackend::Impl {
       }
 
       buffers_.resize(program_.buffers.size(), nullptr);
+      nccl_allocated_.assign(program_.buffers.size(), false);
+      const auto has_fused = std::any_of(
+          program_.ops.begin(), program_.ops.end(),
+          [](const OpDesc& op) { return op.kind == OpKind::kFusedTransferGemm; });
       for (std::size_t index = 0; index < program_.buffers.size(); ++index) {
         const auto& buffer = program_.buffers[index];
         if (buffer.size_bytes == 0) {
           continue;
         }
         EDMIR_CUDA(cudaSetDevice(device_id(buffer.rank)));
-        EDMIR_CUDA(cudaMalloc(&buffers_[index], buffer.size_bytes));
+        if (has_fused && buffer.role == BufferRole::kInput) {
+#if defined(EDMIR_HAS_NCCL_DEVICE)
+          EDMIR_NCCL(ncclMemAlloc(&buffers_[index], buffer.size_bytes));
+          nccl_allocated_[index] = true;
+#else
+          throw std::logic_error("fused input allocation reached an unavailable runtime path");
+#endif
+        } else {
+          EDMIR_CUDA(cudaMalloc(&buffers_[index], buffer.size_bytes));
+        }
       }
+
+#if defined(EDMIR_HAS_NCCL_DEVICE)
+      if (has_fused) prepare_fused_windows();
+#endif
 
       events_.assign(program_.ops.size(), std::vector<cudaEvent_t>(world_size, nullptr));
       for (std::size_t op = 0; op < program_.ops.size(); ++op) {
@@ -202,6 +230,9 @@ class CudaBackend::Impl {
           launch_gemm(op_index);
           break;
         case OpKind::kBarrier:
+          break;
+        case OpKind::kFusedTransferGemm:
+          launch_fused_transfer_gemm(op_index);
           break;
       }
       record_completion(op_index);
@@ -260,6 +291,15 @@ class CudaBackend::Impl {
     ncclComm_t communicator = nullptr;
   };
 
+#if defined(EDMIR_HAS_NCCL_DEVICE)
+  struct FusedWindowState {
+    std::vector<void*> participants;
+    std::vector<bool> owns_participant;
+    std::vector<ncclWindow_t> windows;
+    bool registered = false;
+  };
+#endif
+
   void configure_devices(std::size_t world_size) {
     if (options_.devices.empty()) {
       options_.devices.resize(world_size);
@@ -308,6 +348,9 @@ class CudaBackend::Impl {
 
   cudaStream_t stream_for(const OpDesc& op, std::int32_t device) {
     auto& rank = ranks_.at(static_cast<std::size_t>(device));
+    if (op.kind == OpKind::kFusedTransferGemm && device != op.rank) {
+      return rank.comm;
+    }
     switch (op.queue) {
       case QueueKind::kComm:
         return rank.comm;
@@ -355,6 +398,64 @@ class CudaBackend::Impl {
     }
     return *found;
   }
+
+#if defined(EDMIR_HAS_NCCL_DEVICE)
+  void prepare_fused_windows() {
+    const auto world_size = static_cast<std::size_t>(program_.problem.world_size);
+    fused_windows_.resize(program_.ops.size());
+    for (std::size_t op_index = 0; op_index < program_.ops.size(); ++op_index) {
+      const auto& op = program_.ops[op_index];
+      if (op.kind != OpKind::kFusedTransferGemm) continue;
+      const auto reads = accesses(op_index, false);
+      const auto input = find_access_by_role(reads, BufferRole::kInput);
+      const auto size_bytes = program_.buffers[input].size_bytes;
+      auto& state = fused_windows_[op_index];
+      state.participants.assign(world_size, nullptr);
+      state.owns_participant.assign(world_size, false);
+      state.windows.assign(world_size, nullptr);
+      for (std::size_t rank = 0; rank < world_size; ++rank) {
+        EDMIR_CUDA(cudaSetDevice(device_id(rank)));
+        if (static_cast<std::int32_t>(rank) == op.peer_rank) {
+          state.participants[rank] = buffers_[input];
+        } else {
+          EDMIR_NCCL(ncclMemAlloc(&state.participants[rank], size_bytes));
+          state.owns_participant[rank] = true;
+        }
+      }
+      EDMIR_NCCL(ncclGroupStart());
+      for (std::size_t rank = 0; rank < world_size; ++rank) {
+        EDMIR_CUDA(cudaSetDevice(device_id(rank)));
+        EDMIR_NCCL(ncclCommWindowRegister(
+            ranks_[rank].communicator, state.participants[rank], size_bytes,
+            &state.windows[rank], NCCL_WIN_COLL_SYMMETRIC));
+      }
+      EDMIR_NCCL(ncclGroupEnd());
+      state.registered = true;
+    }
+  }
+
+  void release_fused_windows() noexcept {
+    for (auto& state : fused_windows_) {
+      if (state.registered) {
+        ncclGroupStart();
+        for (std::size_t rank = 0; rank < state.windows.size(); ++rank) {
+          if (state.windows[rank] == nullptr || rank >= ranks_.size()) continue;
+          cudaSetDevice(device_id(rank));
+          ncclCommWindowDeregister(ranks_[rank].communicator, state.windows[rank]);
+        }
+        ncclGroupEnd();
+        state.registered = false;
+      }
+      for (std::size_t rank = 0; rank < state.participants.size(); ++rank) {
+        if (!state.owns_participant[rank] || state.participants[rank] == nullptr) continue;
+        cudaSetDevice(device_id(rank));
+        ncclMemFree(state.participants[rank]);
+        state.participants[rank] = nullptr;
+      }
+    }
+    fused_windows_.clear();
+  }
+#endif
 
   void launch_transfer(std::size_t op_index) {
     const auto& op = program_.ops[op_index];
@@ -427,8 +528,42 @@ class CudaBackend::Impl {
 #endif
   }
 
+  void launch_fused_transfer_gemm(std::size_t op_index) {
+#if defined(EDMIR_HAS_NCCL_DEVICE)
+    const auto& op = program_.ops[op_index];
+    const auto reads = accesses(op_index, false);
+    const auto writes = accesses(op_index, true);
+    const auto weight = find_access_by_role(reads, BufferRole::kWeight);
+    const auto output = find_access_by_role(writes, BufferRole::kOutput);
+    if (op_index >= fused_windows_.size() ||
+        fused_windows_[op_index].windows.size() <= static_cast<std::size_t>(op.rank)) {
+      throw std::logic_error("fused op is missing its symmetric input window");
+    }
+    EDMIR_CUDA(cudaSetDevice(device_id(op.rank)));
+    EDMIR_CUDA(launch_lsa_naive_gemm_f16(
+        fused_windows_[op_index].windows[op.rank], op.peer_rank, op.rows,
+        program_.problem.n, program_.problem.k, buffers_[weight], buffers_[output],
+        ranks_[op.rank].compute));
+#else
+    static_cast<void>(op_index);
+    throw std::logic_error("fused op reached an unavailable NCCL Device API runtime path");
+#endif
+  }
+
   void record_completion(std::size_t op_index) {
     const auto& op = program_.ops[op_index];
+    if (op.kind == OpKind::kFusedTransferGemm) {
+      EDMIR_CUDA(cudaSetDevice(device_id(op.rank)));
+      EDMIR_CUDA(cudaEventRecord(events_[op_index][op.rank], ranks_[op.rank].compute));
+      if (op.peer_rank != op.rank) {
+        EDMIR_CUDA(cudaSetDevice(device_id(op.peer_rank)));
+        EDMIR_CUDA(cudaStreamWaitEvent(
+            ranks_[op.peer_rank].comm, events_[op_index][op.rank], 0));
+        EDMIR_CUDA(cudaEventRecord(
+            events_[op_index][op.peer_rank], ranks_[op.peer_rank].comm));
+      }
+      return;
+    }
     for (const auto rank : op_devices(op)) {
       EDMIR_CUDA(cudaSetDevice(device_id(rank)));
       EDMIR_CUDA(cudaEventRecord(events_[op_index][rank], stream_for(op, rank)));
@@ -450,10 +585,17 @@ class CudaBackend::Impl {
         }
       }
     }
+#if defined(EDMIR_HAS_NCCL_DEVICE)
+    release_fused_windows();
+#endif
     for (std::size_t index = 0; index < buffers_.size(); ++index) {
       if (buffers_[index] != nullptr) {
         cudaSetDevice(device_id(program_.buffers[index].rank));
-        cudaFree(buffers_[index]);
+        if (index < nccl_allocated_.size() && nccl_allocated_[index]) {
+          ncclMemFree(buffers_[index]);
+        } else {
+          cudaFree(buffers_[index]);
+        }
       }
     }
     for (std::size_t rank = 0; rank < ranks_.size(); ++rank) {
@@ -472,6 +614,10 @@ class CudaBackend::Impl {
   bool prepared_ = false;
   std::vector<RankState> ranks_;
   std::vector<void*> buffers_;
+  std::vector<bool> nccl_allocated_;
+#if defined(EDMIR_HAS_NCCL_DEVICE)
+  std::vector<FusedWindowState> fused_windows_;
+#endif
   std::vector<std::vector<cudaEvent_t>> events_;
   std::vector<std::size_t> order_;
   std::vector<std::vector<std::size_t>> incoming_;

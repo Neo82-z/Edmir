@@ -47,7 +47,7 @@ A2AGemmProblem / GraphBuilder
                ▼
 ┌──────────────────────────────┐
 │ Program IR                   │  Buffer, Op
-│ baseline ops + fused proto   │
+│ baseline + fused reference   │
 └──────────────┬───────────────┘
                ▼
 ┌──────────────────────────────┐
@@ -62,7 +62,7 @@ A2AGemmProblem / GraphBuilder
                ▼
 ┌──────────────────────────────┐
 │ C++ runtime                  │  validate / allocate / execute
-│ CUDA + NCCL                  │  selected cuBLAS / CUTLASS GEMM
+│ CUDA + NCCL                  │  host baseline or Device API reference
 └──────────────────────────────┘
 ```
 
@@ -138,9 +138,9 @@ Files: `compiler/model.py`, `compiler/schedule.py`, `compiler/compile.py`
 
 The candidate generator varies strategy, chunk rows and staging buffer count.
 The calibrated simulator ranks legal baseline candidates. The fused strategy
-has a formal lowering and verifier but is deliberately excluded from selection
-until its runtime and measurements exist. Dataflow nodes never contain these
-choices.
+has formal lowering, verification, and a guarded executable correctness
+reference, but remains excluded from selection until an optimized kernel and
+its measurements exist. Dataflow nodes never contain these choices.
 
 ### 6. Dependency and legality lowering
 
@@ -161,8 +161,8 @@ Files: `compiler/target.py`, `compiler/calibration.py`
 
 `Target` owns CUDA target identity, architecture label, communication API,
 GEMM provider, resolved kernel policy and the measured topology snapshot.
-`host_nccl` is the executable baseline; `nccl_device` is required by the fused
-prototype. `CalibrationProfile` owns replaceable timing information, including
+`host_nccl` selects the executable transfer/GEMM baseline; `nccl_device` is
+required by the fused reference. `CalibrationProfile` owns replaceable timing information, including
 optional per-`(src,dst,size)` NCCL curves.
 
 Topology describes what is legal; the profile estimates cost. Neither is embedded into the frontend graph.
@@ -171,11 +171,10 @@ Topology describes what is legal; the profile estimates cost. Neither is embedde
 
 Directory: `compiler/backends/`
 
-- `JsonBackend`: emits an `edmir.program.v1` for inspection and reproducibility;
-  fused JSON is semantic output, not an executable claim.
+- `JsonBackend`: emits an `edmir.program.v1` for inspection and reproducibility.
 - `CppManifestBackend`: emits the same JSON plus a C++20 header containing static buffer, op, access and fully derived dependency descriptors.
 
-The generated header uses the shared structs in `runtime/include/edmir/runtime/program.hpp`; it does not define a second private ABI. The host runtime validates that descriptor and its dependency DAG. With `EDMIR_ENABLE_CUDA=ON`, the CUDA runtime allocates rank-local buffers, creates streams/events and dispatches grouped NCCL send/recv. GEMM is then sent to the statically selected cuBLAS or narrow SM80 CUTLASS provider without changing the Program.
+The generated header uses the shared structs in `runtime/include/edmir/runtime/program.hpp`; it does not define a second private ABI. The host runtime validates that descriptor and its dependency DAG. With `EDMIR_ENABLE_CUDA=ON`, the CUDA runtime allocates rank-local buffers, creates streams/events and dispatches grouped NCCL send/recv. GEMM is then sent to the statically selected cuBLAS or narrow SM80 CUTLASS provider without changing the Program. With the additional `EDMIR_ENABLE_NCCL_DEVICE=ON` gate, an SM80 FP16 fused op registers symmetric NCCL windows and launches the `lsa_naive_f16` device reference kernel.
 
 Calibration profiles carry the provider and kernel policy that produced their
 GEMM samples. The pipeline validates that identity against the target before
@@ -190,7 +189,7 @@ The split is therefore:
 
 ```text
 Python: semantic IR -> legal selected Program -> static descriptor
-C++:    ProgramView -> validation -> resource binding -> NCCL + GEMM-provider execution
+C++:    ProgramView -> validation -> resource binding -> host or Device NCCL execution
 ```
 
 Moving the optimizer to C++ now would add build friction without improving the research claim. Writing generated CUDA source strings now would hide runtime errors behind code generation. The static descriptor keeps the boundary testable.
@@ -242,10 +241,13 @@ Optional NVTX3 op ranges and the Nsight trace validator additionally cover all
 held-out Programs without a violation. Kernel identity is preserved in target
 JSON, C++ descriptors, runtime output, experiment archives, and CLI diagnostics.
 
-The fused communication/compute semantic milestone is now present without
-pretending that NCCL 2.25 can execute it. The next gate is an environment with
-NCCL Device API headers and a minimal measured implementation at this exact
-Program boundary; only then should fused candidates enter cost-based selection.
+The fused communication/compute milestone now includes an executable reference:
+NCCL 2.28.9 was built in an isolated prefix, the official four-rank Device API
+AllReduce passed, and Edmir's LSA remote-read plus naive FP16 GEMM matched its
+CPU interpreter on 4x A100. This proves the Program/ABI/runtime boundary, not a
+speedup. The next gate is an optimized CuTe/CUTLASS implementation plus
+identical-shape unfused/fused measurements; only then may fused candidates enter
+cost-based selection.
 The contract and experiment gate are in
 [`FUSED_PROGRAM_CONTRACT.md`](FUSED_PROGRAM_CONTRACT.md).
 

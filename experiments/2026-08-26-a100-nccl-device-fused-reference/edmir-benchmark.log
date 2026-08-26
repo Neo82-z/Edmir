@@ -1,0 +1,2 @@
+NCCL version 2.28.9+cuda12.8
+bench target=cuda-device-prototype arch=sm_80 gemm_provider=cuda_reference gemm_kernel=lsa_naive_f16 strategy=fused ranks=4 rows_per_peer=8 k=64 n=64 chunk_rows=8 buffer_count=1 ops=16 op_dispatch=16 event_record=28 event_wait=62 buffer_reuse=0 warmup=5 iterations=30 min_ms=0.2822 median_ms=0.2844 p95_ms=0.3112 max_ms=0.4834 mean_ms=0.2942

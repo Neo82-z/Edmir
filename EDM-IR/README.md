@@ -28,7 +28,9 @@ cost-model validation is under
 `experiments/2026-08-26-a100-cutlass-cost-model`; measured dependency-order
 validation is under `experiments/2026-08-26-a100-nsys-trace-validation`. The
 fused-runtime software/hardware gate is captured under
-`experiments/2026-08-26-a100-runtime-capabilities`. The
+`experiments/2026-08-26-a100-runtime-capabilities`. The first executable NCCL
+Device API reference kernel and its numerical evidence are under
+`experiments/2026-08-26-a100-nccl-device-fused-reference`. The
 complete layer contract is documented in
 [`docs/COMPILER_ARCHITECTURE.md`](docs/COMPILER_ARCHITECTURE.md).
 
@@ -46,8 +48,7 @@ Program(problem, strategy, chunk_rows, buffer_count, buffers, ops)
 complete two-rank program directly and prints every automatically derived
 dependency.
 
-The executable baseline has three op kinds, plus one non-executable fused
-prototype:
+The Program IR has four op kinds:
 
 - `transfer`: move one All2All tile from `peer_rank` to `rank` on both ranks'
   communication resources;
@@ -55,8 +56,8 @@ prototype:
 - `barrier`: create a readiness token for the sequential baseline.
 - `fused_transfer_gemm`: directly read a source tile and destination weight,
   write the destination output, and occupy both communication endpoints plus
-  destination compute. It has no staging buffer and currently lowers only to
-  inspectable JSON.
+  destination compute. It has no staging buffer. A guarded SM80 FP16 NCCL
+  Device API implementation provides the executable correctness reference.
 
 `ProgramBuilder` constructs those ops directly. `derive_dependencies()` then
 applies five rules:
@@ -100,19 +101,22 @@ python -m edmir compile-graph /tmp/a2a-gemm.dataflow.json \
   --out-dir /tmp/edmir-artifact
 ```
 
-Inspect the next fused lowering without claiming executable support:
+Generate the guarded fused reference artifact:
 
 ```bash
 python -m edmir lower-fused /tmp/a2a-gemm.dataflow.json \
   --topology examples/full_p2p_topology.json \
   --chunk-rows 16 --arch sm_80 \
-  --out-dir /tmp/edmir-fused-prototype
+  --gemm-provider cuda_reference --backend cpp \
+  --out-dir /tmp/edmir-fused-reference
 ```
 
 This command emits a verified `fused` Program and a
-`communication_api=nccl_device` target. The simulator and C++ runtime reject
-it until a measured fused cost model and NCCL Device API implementation exist;
-the ordinary compiler therefore remains on the unfused host-NCCL path. See
+`communication_api=nccl_device` target. A runtime built with NCCL 2.28+ and
+`EDMIR_ENABLE_NCCL_DEVICE=ON` executes its narrow `lsa_naive_f16` correctness
+kernel. The calibrated simulator still rejects the fused op because no fused
+cost has been admitted; ordinary cost-based compilation therefore remains on
+the measured host-NCCL path. See
 [`docs/FUSED_PROGRAM_CONTRACT.md`](docs/FUSED_PROGRAM_CONTRACT.md).
 
 The output schema is `edmir.program.v1`. Compiler-generated `edmir.plan.v1`
@@ -173,7 +177,7 @@ compiler/evaluation.py train/heldout runtime fit and selection metrics
 compiler/dataflow.py    typed SSA-like tensor Dataflow IR
 compiler/frontend.py    small graph builder and A2AGemm frontend
 compiler/passes.py      canonicalization, verification, pass trace
-compiler/lowering.py    strict All2All->GEMM match and fused-prototype lowering
+compiler/lowering.py    strict All2All->GEMM match and fused-reference lowering
 compiler/schedule.py    direct ProgramBuilder and finite candidate construction
 compiler/dependence.py  the only queue and buffer dependency implementation
 compiler/verify.py      All2All->GEMM semantic checks
@@ -182,7 +186,7 @@ compiler/compile.py     candidate enumeration, selection, and fallback
 compiler/pipeline.py    end-to-end compiler orchestration
 compiler/target.py      CUDA topology, communication API, and GEMM contract
 compiler/backends/      JSON and compileable C++20 manifest backends
-runtime/                ProgramView validator and CUDA/NCCL/cuBLAS/CUTLASS executor
+runtime/                ProgramView validator and host-/device-NCCL CUDA executor
 analysis.py             critical path and counterfactual exposure on EventGraph
 ```
 

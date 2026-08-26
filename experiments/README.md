@@ -27,3 +27,8 @@ experiments/YYYY-MM-DD-short-name/
 - 4x4090 / Ada / PCIe-only：只作为 NCCL/PyTorch distributed、PCIe/NUMA topology 和 profiling 流程热身。
 - A100 / SM80：作为 NCCL、PyTorch `all_to_all`、NVSHMEM legacy 对照平台；进入 NCCL Device API 实验前必须先通过 `probe-runtime`，当前接口要求 NCCL 2.28+。
 - H100 / H800 / H20 / SM90：作为 DeepEP V2、MoE EP dispatch/combine 和 overlap 的主实验平台。
+
+## 已完成的 A100 闭环
+
+- `2026-08-26-a100-runtime-capabilities`：记录系统 NCCL 2.25.1 不具备 Device API 的负向门槛。
+- `2026-08-26-a100-nccl-device-fused-reference`：隔离构建 NCCL 2.28.9，运行官方 Device API AllReduce，并验证 Edmir LSA 融合参考核的数值正确性。该 slice 不宣称性能收益。

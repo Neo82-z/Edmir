@@ -9,8 +9,8 @@ generated ProgramView
   -> logical-rank device map
   -> per-rank comm / compute / control streams
   -> dependency CUDA events
-  -> NCCL send/recv or local D2D copy
-  -> selected row-major GEMM provider (cuBLAS or CUTLASS)
+  -> host path: NCCL send/recv or local D2D copy, then cuBLAS/CUTLASS
+  -> fused path: NCCL symmetric window, LSA remote read, CUDA GEMM reference
 ```
 
 The host-only library contains the stable ABI and validator. The optional CUDA
@@ -61,6 +61,45 @@ CUDA_VISIBLE_DEVICES=0,1,2,3 \
 
 If NCCL is outside the default search path, pass
 `-DNCCL_INCLUDE_DIR=/path/to/include -DNCCL_LIBRARY=/path/to/libnccl.so`.
+
+## NCCL Device API fused reference
+
+This path requires NCCL 2.28 or newer, `nccl_device.h`, full single-node P2P,
+SM80, FP16, and row-major input. Probe the exact NCCL prefix first:
+
+```bash
+NCCL_HOME=/opt/nccl-2.28.9/build \
+python -m edmir probe-runtime \
+  --out /tmp/runtime-capabilities.json --require-fused
+
+python -m edmir frontend examples/fused_runtime_validation_problem.json \
+  --out /tmp/fused.dataflow.json
+python -m edmir lower-fused /tmp/fused.dataflow.json \
+  --topology examples/full_p2p_topology.json \
+  --chunk-rows 8 --arch sm_80 \
+  --gemm-provider cuda_reference --backend cpp \
+  --out-dir /tmp/fused-artifact
+
+cmake -S runtime -B build/runtime-fused \
+  -DEDMIR_ENABLE_CUDA=ON \
+  -DEDMIR_ENABLE_NCCL_DEVICE=ON \
+  -DEDMIR_GENERATED_DIR=/tmp/fused-artifact \
+  -DNCCL_INCLUDE_DIR=/opt/nccl-2.28.9/build/include \
+  -DNCCL_LIBRARY=/opt/nccl-2.28.9/build/lib/libnccl.so
+cmake --build build/runtime-fused -j
+
+LD_LIBRARY_PATH=/opt/nccl-2.28.9/build/lib \
+CUDA_VISIBLE_DEVICES=0,1,2,3 \
+  ./build/runtime-fused/edmir_validate_generated
+```
+
+The runtime uses `ncclMemAlloc` for every source input, registers a symmetric
+window for each fused tile, and launches one destination kernel that obtains
+the remote pointer through `ncclGetLsaPointer`. `lsa_naive_f16` is a numerical
+and lifecycle reference only: it uses scalar CUDA arithmetic, has no admitted
+cost-model entry, and cannot be selected by the ordinary compiler. Its short
+benchmark is useful only as a runtime sanity check, not as an unfused/fused
+performance comparison.
 
 ## Optional CUTLASS provider
 
@@ -193,9 +232,12 @@ runtime.synchronize();
 - one NCCL communicator and three streams per logical rank;
 - each Program buffer owns a separate allocation;
 - GEMM provider/kernel selection is static and materialized in `ProgramView`;
-- no CUDA Graph capture, memory pool, online CUTLASS autotuning, Device
-  API, GIN, multi-node bootstrap, or dynamic MoE routing.
+- Device API support is limited to single-node LSA remote reads and immutable
+  host-populated source tiles;
+- no CUDA Graph capture, memory pool, online CUTLASS autotuning, GIN,
+  multi-node bootstrap, or dynamic MoE routing.
 
-The next backend step is provider-specific calibration followed by trace
-comparison. CuTe device communication remains a later lowering boundary and is
-not hidden inside this provider substitution.
+The next backend step is a CuTe/CUTLASS fused kernel followed by identical-shape
+unfused/fused calibration and trace comparison. The scalar reference remains a
+separate provider so an optimized implementation cannot silently inherit its
+identity or measurements.

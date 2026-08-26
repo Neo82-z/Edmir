@@ -3,6 +3,7 @@ project(edmir_runtime LANGUAGES CXX)
 
 option(EDMIR_ENABLE_CUDA "Build the CUDA/NCCL/cuBLAS executor" OFF)
 option(EDMIR_ENABLE_CUTLASS "Build the optional CUTLASS FP16 SM80 GEMM provider" OFF)
+option(EDMIR_ENABLE_NCCL_DEVICE "Build the NCCL Device API fused reference kernel" OFF)
 option(EDMIR_BUILD_TESTS "Build host runtime tests" ON)
 set(EDMIR_CUTLASS_DIR "" CACHE PATH "Path to a CUTLASS source checkout")
 set(
@@ -12,6 +13,9 @@ set(
 
 if(EDMIR_ENABLE_CUTLASS AND NOT EDMIR_ENABLE_CUDA)
   message(FATAL_ERROR "EDMIR_ENABLE_CUTLASS requires EDMIR_ENABLE_CUDA=ON")
+endif()
+if(EDMIR_ENABLE_NCCL_DEVICE AND NOT EDMIR_ENABLE_CUDA)
+  message(FATAL_ERROR "EDMIR_ENABLE_NCCL_DEVICE requires EDMIR_ENABLE_CUDA=ON")
 endif()
 
 add_library(edmir_runtime STATIC src/validate.cpp)
@@ -40,6 +44,20 @@ if(EDMIR_ENABLE_CUDA)
   )
   target_compile_features(edmir_cuda_runtime PUBLIC cxx_std_20)
 
+  if(EDMIR_ENABLE_CUTLASS OR EDMIR_ENABLE_NCCL_DEVICE)
+    enable_language(CUDA)
+    set_property(TARGET edmir_cuda_runtime PROPERTY CUDA_ARCHITECTURES 80)
+    set_property(TARGET edmir_cuda_runtime PROPERTY CUDA_STANDARD 20)
+  endif()
+
+  if(EDMIR_ENABLE_NCCL_DEVICE)
+    if(NOT EXISTS "${NCCL_INCLUDE_DIR}/nccl_device.h")
+      message(FATAL_ERROR "EDMIR_ENABLE_NCCL_DEVICE requires NCCL 2.28+ nccl_device.h")
+    endif()
+    target_sources(edmir_cuda_runtime PRIVATE src/nccl_device_fused.cu)
+    target_compile_definitions(edmir_cuda_runtime PRIVATE EDMIR_HAS_NCCL_DEVICE=1)
+  endif()
+
   if(EDMIR_ENABLE_CUTLASS)
     if(NOT EDMIR_CUTLASS_DIR)
       message(FATAL_ERROR "EDMIR_ENABLE_CUTLASS requires EDMIR_CUTLASS_DIR")
@@ -47,12 +65,9 @@ if(EDMIR_ENABLE_CUDA)
     if(NOT EXISTS "${EDMIR_CUTLASS_DIR}/include/cutlass/cutlass.h")
       message(FATAL_ERROR "EDMIR_CUTLASS_DIR is not a CUTLASS source checkout")
     endif()
-    enable_language(CUDA)
     target_sources(edmir_cuda_runtime PRIVATE src/cutlass_gemm.cu)
     target_include_directories(edmir_cuda_runtime PRIVATE "${EDMIR_CUTLASS_DIR}/include")
     target_compile_definitions(edmir_cuda_runtime PRIVATE EDMIR_HAS_CUTLASS=1)
-    set_property(TARGET edmir_cuda_runtime PROPERTY CUDA_ARCHITECTURES 80)
-    set_property(TARGET edmir_cuda_runtime PROPERTY CUDA_STANDARD 20)
     target_compile_options(
       edmir_cuda_runtime PRIVATE
       $<$<COMPILE_LANGUAGE:CUDA>:--expt-relaxed-constexpr>

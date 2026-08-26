@@ -16,6 +16,7 @@ enum class DType : std::uint8_t {
 enum class GemmProvider : std::uint8_t {
   kCuBLAS,
   kCUTLASS,
+  kCudaReference,
 };
 
 enum class GemmKernel : std::uint8_t {
@@ -23,6 +24,12 @@ enum class GemmKernel : std::uint8_t {
   kSm80_128x128x32,
   kSm80_64x128x32,
   kSm80_128x64x32,
+  kLsaNaiveF16,
+};
+
+enum class CommunicationApi : std::uint8_t {
+  kHostNCCL,
+  kNCCLDevice,
 };
 
 constexpr std::string_view gemm_kernel_name(GemmKernel kernel) {
@@ -35,6 +42,8 @@ constexpr std::string_view gemm_kernel_name(GemmKernel kernel) {
       return "sm80_64x128x32";
     case GemmKernel::kSm80_128x64x32:
       return "sm80_128x64x32";
+    case GemmKernel::kLsaNaiveF16:
+      return "lsa_naive_f16";
   }
   return "unknown";
 }
@@ -45,6 +54,8 @@ constexpr std::string_view gemm_provider_name(GemmProvider provider) {
       return "cublas";
     case GemmProvider::kCUTLASS:
       return "cutlass";
+    case GemmProvider::kCudaReference:
+      return "cuda_reference";
   }
   return "unknown";
 }
@@ -61,6 +72,7 @@ enum class OpKind : std::uint8_t {
   kTransfer,
   kGemm,
   kBarrier,
+  kFusedTransferGemm,
 };
 
 enum class QueueKind : std::uint8_t {
@@ -119,6 +131,7 @@ struct ProgramView {
   std::string_view arch;
   GemmProvider gemm_provider;
   GemmKernel gemm_kernel;
+  CommunicationApi communication_api;
   std::string_view strategy;
   ProblemDesc problem;
   std::int32_t chunk_rows;

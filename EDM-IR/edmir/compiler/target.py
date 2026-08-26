@@ -6,7 +6,7 @@ from .model import A2AGemmProblem, CalibrationProfile, Program, TopologySnapshot
 
 
 SCHEMA_TARGET = "edmir.target.v1"
-GEMM_PROVIDERS = ("cublas", "cutlass")
+GEMM_PROVIDERS = ("cublas", "cutlass", "cuda_reference")
 COMMUNICATION_APIS = ("host_nccl", "nccl_device")
 GEMM_KERNELS = (
     "auto",
@@ -14,6 +14,7 @@ GEMM_KERNELS = (
     "sm80_128x128x32",
     "sm80_64x128x32",
     "sm80_128x64x32",
+    "lsa_naive_f16",
 )
 
 
@@ -53,8 +54,20 @@ class Target:
             "library_default",
         ):
             raise ValueError("cuBLAS targets require gemm_kernel=auto or library_default")
-        if self.gemm_provider == "cutlass" and self.gemm_kernel == "library_default":
+        if self.gemm_provider == "cutlass" and self.gemm_kernel not in (
+            "auto",
+            "sm80_128x128x32",
+            "sm80_64x128x32",
+            "sm80_128x64x32",
+        ):
             raise ValueError("CUTLASS targets require gemm_kernel=auto or an SM80 kernel name")
+        if self.gemm_provider == "cuda_reference" and self.gemm_kernel not in (
+            "auto",
+            "lsa_naive_f16",
+        ):
+            raise ValueError(
+                "CUDA reference targets require gemm_kernel=auto or lsa_naive_f16"
+            )
         self.topology.validate()
 
     def validate_problem(self, problem: A2AGemmProblem) -> None:
@@ -62,7 +75,15 @@ class Target:
 
         self.validate()
         problem.validate()
-        if self.gemm_provider != "cutlass":
+        if self.gemm_provider == "cublas":
+            return
+        if self.gemm_provider == "cuda_reference":
+            if self.arch != "sm_80":
+                raise ValueError("CUDA reference fused runtime v0.1 supports only arch=sm_80")
+            if problem.dtype != "float16":
+                raise ValueError("CUDA reference fused runtime v0.1 supports only float16")
+            if problem.layout != "row_major":
+                raise ValueError("CUDA reference fused runtime v0.1 supports only row_major")
             return
         if self.arch != "sm_80":
             raise ValueError("CUTLASS v0.1 supports only arch=sm_80")
@@ -98,7 +119,7 @@ class Target:
     def supports_fused_a2a_gemm(self) -> bool:
         return (
             self.communication_api == "nccl_device"
-            and self.gemm_provider == "cutlass"
+            and self.gemm_provider in {"cutlass", "cuda_reference"}
             and self.topology.has_full_p2p()
         )
 
@@ -114,9 +135,9 @@ class Target:
                 "fused_transfer_gemm requires communication_api=nccl_device; "
                 "use the unfused host NCCL schedule on this target"
             )
-        if has_fused and self.gemm_provider != "cutlass":
+        if has_fused and self.gemm_provider not in {"cutlass", "cuda_reference"}:
             raise ValueError(
-                "fused_transfer_gemm requires gemm_provider=cutlass; "
+                "fused_transfer_gemm requires gemm_provider=cutlass or cuda_reference; "
                 "cuBLAS is an external library launch, not an in-kernel GEMM"
             )
         if has_fused and not self.topology.has_full_p2p():
@@ -130,6 +151,8 @@ class Target:
             return self
         if self.gemm_provider == "cublas":
             return replace(self, gemm_kernel="library_default")
+        if self.gemm_provider == "cuda_reference":
+            return replace(self, gemm_kernel="lsa_naive_f16")
         effective_m = problem.rows_per_peer if gemm_m is None else gemm_m
         if effective_m <= 96:
             return replace(self, gemm_kernel="sm80_64x128x32")

@@ -41,7 +41,11 @@ bool has_flag(int argc, char** argv, const std::string& name) {
 }
 
 std::size_t op_device_count(const edmir::runtime::OpDesc& op) {
-  return op.kind == edmir::runtime::OpKind::kTransfer && op.peer_rank != op.rank ? 2 : 1;
+  return (op.kind == edmir::runtime::OpKind::kTransfer ||
+          op.kind == edmir::runtime::OpKind::kFusedTransferGemm) &&
+                 op.peer_rank != op.rank
+             ? 2
+             : 1;
 }
 
 }  // namespace

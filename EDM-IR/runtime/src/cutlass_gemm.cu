@@ -77,6 +77,7 @@ void launch_cutlass_gemm_f16_sm80(
       return launch<Sm80Gemm<128, 64, 64, 32>>(
           m, n, k, activation, weight, output, stream);
     case GemmKernel::kLibraryDefault:
+    case GemmKernel::kLsaNaiveF16:
       break;
   }
   throw std::invalid_argument("CUTLASS provider received an incompatible GEMM kernel");
