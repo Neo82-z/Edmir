@@ -2,11 +2,12 @@ from __future__ import annotations
 
 from dataclasses import dataclass, replace
 
-from .model import A2AGemmProblem, CalibrationProfile, TopologySnapshot
+from .model import A2AGemmProblem, CalibrationProfile, Program, TopologySnapshot
 
 
 SCHEMA_TARGET = "edmir.target.v1"
 GEMM_PROVIDERS = ("cublas", "cutlass")
+COMMUNICATION_APIS = ("host_nccl", "nccl_device")
 GEMM_KERNELS = (
     "auto",
     "library_default",
@@ -26,6 +27,7 @@ class Target:
     arch: str = "unknown"
     gemm_provider: str = "cublas"
     gemm_kernel: str = "auto"
+    communication_api: str = "host_nccl"
 
     def validate(self) -> None:
         if not self.name:
@@ -36,6 +38,11 @@ class Target:
             raise ValueError(
                 f"unsupported GEMM provider {self.gemm_provider!r}; "
                 f"expected one of {GEMM_PROVIDERS}"
+            )
+        if self.communication_api not in COMMUNICATION_APIS:
+            raise ValueError(
+                f"unsupported communication API {self.communication_api!r}; "
+                f"expected one of {COMMUNICATION_APIS}"
             )
         if self.gemm_kernel not in GEMM_KERNELS:
             raise ValueError(
@@ -87,6 +94,34 @@ class Target:
                 "auto target requires an auto-policy or library-default calibration profile"
             )
 
+    @property
+    def supports_fused_a2a_gemm(self) -> bool:
+        return (
+            self.communication_api == "nccl_device"
+            and self.gemm_provider == "cutlass"
+            and self.topology.has_full_p2p()
+        )
+
+    def validate_program(self, program: Program) -> None:
+        """Check target capabilities required by an already-lowered Program."""
+
+        self.validate_problem(program.problem)
+        if self.world_size != program.problem.world_size:
+            raise ValueError("target world size does not match Program")
+        has_fused = any(op.kind == "fused_transfer_gemm" for op in program.ops)
+        if has_fused and self.communication_api != "nccl_device":
+            raise ValueError(
+                "fused_transfer_gemm requires communication_api=nccl_device; "
+                "use the unfused host NCCL schedule on this target"
+            )
+        if has_fused and self.gemm_provider != "cutlass":
+            raise ValueError(
+                "fused_transfer_gemm requires gemm_provider=cutlass; "
+                "cuBLAS is an external library launch, not an in-kernel GEMM"
+            )
+        if has_fused and not self.topology.has_full_p2p():
+            raise ValueError("fused_transfer_gemm requires full peer-to-peer connectivity")
+
     def resolve(self, problem: A2AGemmProblem, *, gemm_m: int | None = None) -> "Target":
         """Materialize backend policy so emitted artifacts never contain `auto`."""
 
@@ -112,6 +147,7 @@ class Target:
             "arch": self.arch,
             "gemm_provider": self.gemm_provider,
             "gemm_kernel": self.gemm_kernel,
+            "communication_api": self.communication_api,
             "topology": self.topology.to_dict(),
         }
 
@@ -126,10 +162,17 @@ class Target:
             arch=str(value.get("arch", "unknown")),
             gemm_provider=str(value.get("gemm_provider", "cublas")),
             gemm_kernel=str(value.get("gemm_kernel", "auto")),
+            communication_api=str(value.get("communication_api", "host_nccl")),
             topology=TopologySnapshot.from_dict(value["topology"]),
         )
         target.validate()
         return target
 
 
-__all__ = ["GEMM_KERNELS", "GEMM_PROVIDERS", "SCHEMA_TARGET", "Target"]
+__all__ = [
+    "COMMUNICATION_APIS",
+    "GEMM_KERNELS",
+    "GEMM_PROVIDERS",
+    "SCHEMA_TARGET",
+    "Target",
+]

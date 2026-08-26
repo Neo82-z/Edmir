@@ -23,7 +23,7 @@ from .evaluation import (
     read_runtime_measurements,
 )
 from .frontend import GraphBuilder, build_a2a_gemm_module
-from .lowering import A2AGemmMatch, match_a2a_gemm
+from .lowering import A2AGemmMatch, lower_fused_a2a_gemm, match_a2a_gemm
 from .model import (
     A2AGemmProblem,
     Buffer,
@@ -42,6 +42,7 @@ from .model import (
 )
 from .schedule import (
     ProgramBuilder,
+    build_fused_program,
     build_pipelined_program,
     build_pipelined_schedule,
     build_sequential_program,
@@ -111,6 +112,7 @@ __all__ = [
     "VerifyDataflowPass",
     "Value",
     "build_a2a_gemm_module",
+    "build_fused_program",
     "build_pipelined_program",
     "build_pipelined_schedule",
     "build_sequential_program",
@@ -124,6 +126,7 @@ __all__ = [
     "fit_gemm_profile",
     "fit_local_copy_profile",
     "fit_pairwise_nccl_profile",
+    "lower_fused_a2a_gemm",
     "match_a2a_gemm",
     "parse_nccl_tests_log",
     "parse_gemm_benchmark_log",

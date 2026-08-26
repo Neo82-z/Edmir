@@ -8,6 +8,8 @@ from .compiler import (
     CompilerPipeline,
     CompilerOptions,
     DataflowModule,
+    JsonBackend,
+    PassManager,
     Program,
     TopologySnapshot,
     Target,
@@ -18,6 +20,8 @@ from .compiler import (
     fit_gemm_profile,
     fit_local_copy_profile,
     fit_pairwise_nccl_profile,
+    lower_fused_a2a_gemm,
+    match_a2a_gemm,
     read_runtime_measurements,
     create_backend,
     simulate_program,
@@ -94,6 +98,7 @@ def _compile_graph(args: argparse.Namespace) -> int:
         arch=args.arch,
         gemm_provider=args.gemm_provider,
         gemm_kernel=args.gemm_kernel,
+        communication_api=args.communication_api,
         topology=topology,
     )
     options = CompilerOptions(
@@ -114,7 +119,43 @@ def _compile_graph(args: argparse.Namespace) -> int:
     print(
         f"lowered={result.match.all_to_all.id}->{result.match.gemm.id} "
         f"strategy={result.compile_result.chosen.program.strategy} "
-        f"backend={result.artifact.backend}"
+        f"backend={result.artifact.backend} "
+        f"provider={result.artifact.metadata['gemm_provider']} "
+        f"kernel={result.artifact.metadata['gemm_kernel']} "
+        f"communication_api={result.artifact.metadata['communication_api']}"
+    )
+    for path in written:
+        print(f"wrote {path}")
+    return 0
+
+
+def _lower_fused(args: argparse.Namespace) -> int:
+    module = DataflowModule.from_dict(read_json(args.graph))
+    topology = TopologySnapshot.from_dict(read_json(args.topology))
+    normalized, pass_trace = PassManager().run(module)
+    match = match_a2a_gemm(normalized)
+    target = Target(
+        name=args.target,
+        kind="cuda",
+        arch=args.arch,
+        gemm_provider=args.gemm_provider,
+        gemm_kernel=args.gemm_kernel,
+        communication_api="nccl_device",
+        topology=topology,
+    )
+    program = lower_fused_a2a_gemm(match, chunk_rows=args.chunk_rows)
+    verify_program(program.problem, program).require_valid()
+    artifact = JsonBackend().emit(program, target)
+    written = artifact.write_to(args.out_dir)
+    for trace in pass_trace:
+        print(f"pass={trace.name} changed={str(trace.changed).lower()}")
+    print(
+        f"lowered={match.all_to_all.id}->{match.gemm.id} strategy=fused "
+        f"communication_api=nccl_device executable=false"
+    )
+    print(
+        "warning=fused JSON is a legality-checked prototype; "
+        "the C++ runtime and cost model intentionally reject it"
     )
     for path in written:
         print(f"wrote {path}")
@@ -309,12 +350,43 @@ def build_parser() -> argparse.ArgumentParser:
         ),
         default="auto",
     )
+    compile_graph.add_argument(
+        "--communication-api",
+        choices=("host_nccl", "nccl_device"),
+        default="host_nccl",
+    )
     compile_graph.add_argument("--backend", choices=("json", "cpp"), default="json")
     compile_graph.add_argument("--chunk-rows", default="")
     compile_graph.add_argument("--buffers", default="1,2,4")
     compile_graph.add_argument("--min-gain-ratio", type=float, default=None)
     compile_graph.add_argument("--out-dir", required=True)
     compile_graph.set_defaults(func=_compile_graph)
+
+    lower_fused = subparsers.add_parser(
+        "lower-fused",
+        help="emit a legality-checked fused All2All->GEMM JSON prototype",
+    )
+    lower_fused.add_argument("graph")
+    lower_fused.add_argument("--topology", required=True)
+    lower_fused.add_argument("--chunk-rows", required=True, type=int)
+    lower_fused.add_argument("--target", default="cuda-device-prototype")
+    lower_fused.add_argument("--arch", default="sm_80")
+    lower_fused.add_argument(
+        "--gemm-provider", choices=("cutlass",), default="cutlass"
+    )
+    lower_fused.add_argument(
+        "--gemm-kernel",
+        choices=(
+            "auto",
+            "library_default",
+            "sm80_128x128x32",
+            "sm80_64x128x32",
+            "sm80_128x64x32",
+        ),
+        default="auto",
+    )
+    lower_fused.add_argument("--out-dir", required=True)
+    lower_fused.set_defaults(func=_lower_fused)
 
     fit_nccl = subparsers.add_parser(
         "fit-nccl", help="attach pairwise nccl-tests sendrecv curves to a profile"

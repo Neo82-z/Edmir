@@ -64,6 +64,11 @@ def _op_device_count(op: Op) -> int:
 
 
 def extract_execution_features(program: Program) -> ExecutionFeatures:
+    if any(op.kind == "fused_transfer_gemm" for op in program.ops):
+        raise ValueError(
+            "fused_transfer_gemm requires measured fused-runtime features; "
+            "the unfused execution-overhead model is not applicable"
+        )
     report = verify_program(program.problem, program)
     report.require_valid()
     predecessors = report.dependence.predecessors()
@@ -101,6 +106,11 @@ def _duration_us(op: Op, program: Program, profile: CalibrationProfile) -> float
 
 
 def simulate_program(program: Program, profile: CalibrationProfile) -> SimulationResult:
+    if any(op.kind == "fused_transfer_gemm" for op in program.ops):
+        raise ValueError(
+            "fused_transfer_gemm requires a measured fused-kernel cost model; "
+            "use the unfused compiler path until one is calibrated"
+        )
     report = verify_program(program.problem, program)
     report.require_valid()
     profile.validate()

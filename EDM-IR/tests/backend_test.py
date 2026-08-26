@@ -21,6 +21,7 @@ from edmir.compiler import (  # noqa: E402
     Target,
     TopologySnapshot,
     build_a2a_gemm_module,
+    build_fused_program,
 )
 
 
@@ -70,6 +71,39 @@ class BackendTest(unittest.TestCase):
 
     def test_target_json_round_trip(self) -> None:
         self.assertEqual(Target.from_dict(self.target.to_dict()), self.target)
+
+    def test_fused_program_requires_device_api_and_json_can_preserve_semantics(self) -> None:
+        program = build_fused_program(self.problem, chunk_rows=16)
+        with self.assertRaisesRegex(ValueError, "communication_api=nccl_device"):
+            JsonBackend().emit(program, self.target)
+        with self.assertRaisesRegex(ValueError, "gemm_provider=cutlass"):
+            JsonBackend().emit(
+                program, replace(self.target, communication_api="nccl_device")
+            )
+        device_target = Target(
+            "device-prototype",
+            topology(),
+            arch="sm_80",
+            gemm_provider="cutlass",
+            communication_api="nccl_device",
+        )
+        artifact = JsonBackend().emit(program, device_target)
+        target_json = json.loads(artifact.files["target.json"])
+        program_json = json.loads(artifact.files["program.json"])
+        self.assertEqual(target_json["communication_api"], "nccl_device")
+        self.assertEqual(program_json["strategy"], "fused")
+
+    def test_cpp_backend_explicitly_rejects_unimplemented_fused_runtime(self) -> None:
+        program = build_fused_program(self.problem, chunk_rows=16)
+        device_target = Target(
+            "device-prototype",
+            topology(),
+            arch="sm_80",
+            gemm_provider="cutlass",
+            communication_api="nccl_device",
+        )
+        with self.assertRaisesRegex(ValueError, "does not implement fused_transfer_gemm"):
+            CppManifestBackend().emit(program, device_target)
 
     def test_cpp_backend_contains_buffers_ops_accesses_and_dependencies(self) -> None:
         result = self.compile_with(CppManifestBackend())

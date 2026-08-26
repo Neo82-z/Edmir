@@ -16,6 +16,7 @@ from edmir.compiler import (  # noqa: E402
     Program,
     PairwiseCommCurve,
     TopologySnapshot,
+    build_fused_program,
     build_pipelined_program,
     build_sequential_program,
     compile_a2a_gemm,
@@ -54,6 +55,46 @@ class CompilerTest(unittest.TestCase):
         self.assertTrue(verify_program(self.problem, pipeline).valid)
         self.assertGreater(simulate_program(sequential, synthetic_profile()).makespan_us, 0.0)
         self.assertGreater(simulate_program(pipeline, synthetic_profile()).makespan_us, 0.0)
+
+    def test_fused_program_has_direct_dataflow_and_combined_resources(self) -> None:
+        program = build_fused_program(self.problem, chunk_rows=16)
+        report = verify_program(self.problem, program)
+        self.assertTrue(report.valid, report.errors)
+        self.assertEqual(program.strategy, "fused")
+        self.assertFalse(any(buffer.role == "staging" for buffer in program.buffers))
+        self.assertEqual(len(program.ops), 4 * 4 * 4)
+        remote = next(
+            op for op in program.ops
+            if op.peer_rank is not None and op.peer_rank != op.rank
+        )
+        self.assertEqual(
+            set(remote.resources()),
+            {
+                f"rank{remote.peer_rank}.comm",
+                f"rank{remote.rank}.comm",
+                f"rank{remote.rank}.compute",
+            },
+        )
+
+    def test_fused_program_rejects_fake_unfused_cost_model(self) -> None:
+        program = build_fused_program(self.problem, chunk_rows=16)
+        with self.assertRaisesRegex(ValueError, "measured fused-kernel cost model"):
+            simulate_program(program, synthetic_profile())
+
+    def test_fused_verifier_rejects_missing_remote_input(self) -> None:
+        program = build_fused_program(self.problem, chunk_rows=16)
+        op = next(item for item in program.ops if item.peer_rank != item.rank)
+        op_index = program.ops.index(op)
+        weight = next(
+            name for name in op.reads if program.buffer_map()[name].role == "weight"
+        )
+        broken = replace(
+            program,
+            ops=program.ops[:op_index] + (replace(op, reads=(weight,)),) + program.ops[op_index + 1 :],
+        )
+        report = verify_program(self.problem, broken)
+        self.assertFalse(report.valid)
+        self.assertTrue(any("source buffer" in error for error in report.errors))
 
     def test_runtime_overhead_uses_exact_plan_feature_counts(self) -> None:
         problem = A2AGemmProblem(world_size=2, rows_per_peer=16, k=64, n=64)

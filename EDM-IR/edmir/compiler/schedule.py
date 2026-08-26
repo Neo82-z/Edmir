@@ -92,6 +92,53 @@ class ProgramBuilder:
         self._ops.append(op)
         return op
 
+    def fused_transfer_gemm(
+        self,
+        *,
+        tile: str,
+        src: int,
+        dst: int,
+        rows: int,
+    ) -> Op:
+        """Declare one device-initiated transfer plus destination-local GEMM.
+
+        The fused op reads the remote input tile and the destination weight
+        directly. It intentionally has no staging buffer: this is the Program
+        semantic boundary that a future NCCL Device API backend must implement.
+        """
+
+        source = self.buffer(
+            f"input.{tile}",
+            rank=src,
+            role="input",
+            size_bytes=rows * self.problem.bytes_per_row,
+        )
+        weight = self.buffer(
+            f"weight.r{dst}",
+            rank=dst,
+            role="weight",
+            size_bytes=self.problem.k * self.problem.n * DTYPE_BYTES[self.problem.dtype],
+        )
+        output = self.buffer(
+            f"output.{tile}",
+            rank=dst,
+            role="output",
+            size_bytes=rows * self.problem.n * DTYPE_BYTES[self.problem.dtype],
+        )
+        op = Op(
+            id=f"fused_transfer_gemm.{tile}",
+            kind="fused_transfer_gemm",
+            rank=dst,
+            peer_rank=src,
+            queue="compute",
+            reads=(source, weight),
+            writes=(output,),
+            tile=tile,
+            rows=rows,
+        )
+        self._ops.append(op)
+        return op
+
     def barrier(self, *, rank: int, waits_for: tuple[str, ...]) -> str:
         token = self.buffer(f"ready.r{rank}", rank=rank, role="token")
         self._ops.append(
@@ -204,6 +251,36 @@ def build_pipelined_program(
     return builder.build(metadata={"peer_order": "cyclic", "dependencies": "derived"})
 
 
+def build_fused_program(
+    problem: A2AGemmProblem,
+    *,
+    chunk_rows: int,
+) -> Program:
+    """Lower All2All->GEMM tiles to an explicit fused Program prototype.
+
+    This function defines semantics and legality only. It does not enter the
+    cost-model candidate set until a measured fused kernel and executable
+    backend are available.
+    """
+
+    builder = ProgramBuilder(
+        problem,
+        strategy="fused",
+        chunk_rows=chunk_rows,
+        buffer_count=1,
+    )
+    for _step, _chunk, dst, src, tile in _rounds(problem, chunk_rows):
+        builder.fused_transfer_gemm(tile=tile, src=src, dst=dst, rows=chunk_rows)
+    return builder.build(
+        metadata={
+            "peer_order": "cyclic",
+            "dependencies": "derived",
+            "fusion": "device_initiated_transfer_plus_gemm",
+            "requires_communication_api": "nccl_device",
+        }
+    )
+
+
 # Compatibility function names retained for callers of the first prototype.
 build_sequential_schedule = build_sequential_program
 build_pipelined_schedule = build_pipelined_program
@@ -211,6 +288,7 @@ build_pipelined_schedule = build_pipelined_program
 
 __all__ = [
     "ProgramBuilder",
+    "build_fused_program",
     "build_pipelined_program",
     "build_pipelined_schedule",
     "build_sequential_program",

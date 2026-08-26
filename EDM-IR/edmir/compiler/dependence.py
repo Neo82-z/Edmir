@@ -108,6 +108,11 @@ def derive_dependencies(program: Program) -> DependenceResult:
                 errors.append(f"transfer {op.id} has invalid peer rank")
         elif op.kind == "gemm" and op.queue != "compute":
             errors.append(f"GEMM {op.id} must use the compute queue")
+        elif op.kind == "fused_transfer_gemm":
+            if op.queue != "compute":
+                errors.append(f"fused op {op.id} must use the compute queue")
+            if op.peer_rank is None or not 0 <= op.peer_rank < program.problem.world_size:
+                errors.append(f"fused op {op.id} has invalid peer rank")
         elif op.kind == "barrier" and op.queue != "control":
             errors.append(f"barrier {op.id} must use the control queue")
 

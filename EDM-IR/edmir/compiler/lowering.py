@@ -3,8 +3,9 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from .dataflow import DataflowModule, Node
-from .model import A2AGemmProblem
+from .model import A2AGemmProblem, Program
 from .passes import verify_dataflow
+from .schedule import build_fused_program
 
 
 @dataclass(frozen=True, slots=True)
@@ -63,4 +64,10 @@ def match_a2a_gemm(module: DataflowModule) -> A2AGemmMatch:
     )
 
 
-__all__ = ["A2AGemmMatch", "match_a2a_gemm"]
+def lower_fused_a2a_gemm(match: A2AGemmMatch, *, chunk_rows: int) -> Program:
+    """Lower a matched Dataflow pattern to the non-executable fused prototype."""
+
+    return build_fused_program(match.problem, chunk_rows=chunk_rows)
+
+
+__all__ = ["A2AGemmMatch", "lower_fused_a2a_gemm", "match_a2a_gemm"]

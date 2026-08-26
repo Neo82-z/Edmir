@@ -15,6 +15,7 @@ from edmir.compiler import (  # noqa: E402
     PassManager,
     TensorType,
     build_a2a_gemm_module,
+    lower_fused_a2a_gemm,
     match_a2a_gemm,
     verify_dataflow,
 )
@@ -33,6 +34,13 @@ class DataflowTest(unittest.TestCase):
     def test_dataflow_json_round_trip(self) -> None:
         module = build_a2a_gemm_module(self.problem)
         self.assertEqual(DataflowModule.from_dict(module.to_dict()), module)
+
+    def test_pattern_has_explicit_fused_program_lowering(self) -> None:
+        match = match_a2a_gemm(build_a2a_gemm_module(self.problem))
+        program = lower_fused_a2a_gemm(match, chunk_rows=16)
+        self.assertEqual(program.problem, self.problem)
+        self.assertEqual(program.strategy, "fused")
+        self.assertTrue(all(op.kind == "fused_transfer_gemm" for op in program.ops))
 
     def test_pass_manager_canonicalizes_backend_relevant_attributes(self) -> None:
         module = build_a2a_gemm_module(self.problem)

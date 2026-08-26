@@ -64,6 +64,14 @@ class CppManifestBackend:
     name = "cpp"
 
     def emit(self, program: Program, target: Target) -> BackendArtifact:
+        target.validate_program(program)
+        if any(op.kind == "fused_transfer_gemm" for op in program.ops):
+            raise ValueError(
+                "C++ runtime does not implement fused_transfer_gemm; "
+                "emit JSON semantics or use the unfused host NCCL backend"
+            )
+        if target.communication_api != "host_nccl":
+            raise ValueError("C++ runtime v0.1 implements only communication_api=host_nccl")
         target = target.resolve(program.problem, gemm_m=program.chunk_rows)
         if target.world_size != program.problem.world_size:
             raise ValueError("target world size does not match Program")
@@ -191,6 +199,7 @@ class CppManifestBackend:
                 "arch": target.arch,
                 "gemm_provider": target.gemm_provider,
                 "gemm_kernel": target.gemm_kernel,
+                "communication_api": target.communication_api,
                 "buffers": len(program.buffers),
                 "ops": len(program.ops),
                 "dependencies": len(dependencies),

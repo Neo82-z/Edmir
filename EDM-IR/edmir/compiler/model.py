@@ -17,7 +17,7 @@ DTYPE_BYTES = {
 }
 
 BUFFER_ROLES = frozenset({"input", "weight", "staging", "output", "token"})
-OP_KINDS = frozenset({"transfer", "gemm", "barrier"})
+OP_KINDS = frozenset({"transfer", "gemm", "barrier", "fused_transfer_gemm"})
 QUEUE_KINDS = frozenset({"comm", "compute", "control"})
 
 
@@ -407,9 +407,12 @@ class Op:
     peer_rank: int | None = None
 
     def resources(self) -> tuple[str, ...]:
-        if self.kind == "transfer" and self.peer_rank is not None:
+        if self.kind in {"transfer", "fused_transfer_gemm"} and self.peer_rank is not None:
             ranks = tuple(dict.fromkeys((self.peer_rank, self.rank)))
-            return tuple(f"rank{rank}.comm" for rank in ranks)
+            resources = tuple(f"rank{rank}.comm" for rank in ranks)
+            if self.kind == "fused_transfer_gemm":
+                return (*resources, f"rank{self.rank}.compute")
+            return resources
         return (f"rank{self.rank}.{self.queue}",)
 
 

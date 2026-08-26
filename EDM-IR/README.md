@@ -44,12 +44,17 @@ Program(problem, strategy, chunk_rows, buffer_count, buffers, ops)
 complete two-rank program directly and prints every automatically derived
 dependency.
 
-The first version has only three executable op kinds:
+The executable baseline has three op kinds, plus one non-executable fused
+prototype:
 
 - `transfer`: move one All2All tile from `peer_rank` to `rank` on both ranks'
   communication resources;
 - `gemm`: consume a received staging tile on the destination compute queue;
 - `barrier`: create a readiness token for the sequential baseline.
+- `fused_transfer_gemm`: directly read a source tile and destination weight,
+  write the destination output, and occupy both communication endpoints plus
+  destination compute. It has no staging buffer and currently lowers only to
+  inspectable JSON.
 
 `ProgramBuilder` constructs those ops directly. `derive_dependencies()` then
 applies five rules:
@@ -92,6 +97,21 @@ python -m edmir compile-graph /tmp/a2a-gemm.dataflow.json \
   --target cuda --arch sm_89 --gemm-provider cublas --backend cpp \
   --out-dir /tmp/edmir-artifact
 ```
+
+Inspect the next fused lowering without claiming executable support:
+
+```bash
+python -m edmir lower-fused /tmp/a2a-gemm.dataflow.json \
+  --topology examples/full_p2p_topology.json \
+  --chunk-rows 16 --arch sm_80 \
+  --out-dir /tmp/edmir-fused-prototype
+```
+
+This command emits a verified `fused` Program and a
+`communication_api=nccl_device` target. The simulator and C++ runtime reject
+it until a measured fused cost model and NCCL Device API implementation exist;
+the ordinary compiler therefore remains on the unfused host-NCCL path. See
+[`docs/FUSED_PROGRAM_CONTRACT.md`](docs/FUSED_PROGRAM_CONTRACT.md).
 
 The output schema is `edmir.program.v1`. Compiler-generated `edmir.plan.v1`
 files from the first prototype remain readable and are rebuilt as Programs;
@@ -150,14 +170,14 @@ compiler/evaluation.py train/heldout runtime fit and selection metrics
 compiler/dataflow.py    typed SSA-like tensor Dataflow IR
 compiler/frontend.py    small graph builder and A2AGemm frontend
 compiler/passes.py      canonicalization, verification, pass trace
-compiler/lowering.py    strict All2All->GEMM pattern lowering
+compiler/lowering.py    strict All2All->GEMM match and fused-prototype lowering
 compiler/schedule.py    direct ProgramBuilder and finite candidate construction
 compiler/dependence.py  the only queue and buffer dependency implementation
 compiler/verify.py      All2All->GEMM semantic checks
 compiler/simulate.py    ready-time/resource interpreter and EventGraph emission
 compiler/compile.py     candidate enumeration, selection, and fallback
 compiler/pipeline.py    end-to-end compiler orchestration
-compiler/target.py      CUDA topology, architecture, and GEMM-provider contract
+compiler/target.py      CUDA topology, communication API, and GEMM contract
 compiler/backends/      JSON and compileable C++20 manifest backends
 runtime/                ProgramView validator and CUDA/NCCL/cuBLAS/CUTLASS executor
 analysis.py             critical path and counterfactual exposure on EventGraph
