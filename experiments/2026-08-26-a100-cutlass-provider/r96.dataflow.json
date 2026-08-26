@@ -1,0 +1,96 @@
+{
+  "inputs": [
+    "activations",
+    "weight"
+  ],
+  "metadata": {
+    "frontend": "a2a_gemm",
+    "layout": "row_major"
+  },
+  "name": "heldout_r96_k4096_n4096",
+  "nodes": [
+    {
+      "attrs": {
+        "rows_per_peer": 96
+      },
+      "id": "exchanged.all_to_all",
+      "inputs": [
+        "activations"
+      ],
+      "op": "all_to_all",
+      "outputs": [
+        "exchanged"
+      ]
+    },
+    {
+      "attrs": {
+        "transpose_a": false,
+        "transpose_b": false
+      },
+      "id": "output.gemm",
+      "inputs": [
+        "exchanged",
+        "weight"
+      ],
+      "op": "gemm",
+      "outputs": [
+        "output"
+      ]
+    }
+  ],
+  "outputs": [
+    "output"
+  ],
+  "schema": "edmir.dataflow.v1",
+  "values": [
+    {
+      "id": "activations",
+      "type": {
+        "distribution": "uniform_shard",
+        "dtype": "float16",
+        "layout": "row_major",
+        "shape": [
+          384,
+          4096
+        ]
+      }
+    },
+    {
+      "id": "weight",
+      "type": {
+        "distribution": "replicated",
+        "dtype": "float16",
+        "layout": "row_major",
+        "shape": [
+          4096,
+          4096
+        ]
+      }
+    },
+    {
+      "id": "exchanged",
+      "type": {
+        "distribution": "uniform_shard",
+        "dtype": "float16",
+        "layout": "row_major",
+        "shape": [
+          384,
+          4096
+        ]
+      }
+    },
+    {
+      "id": "output",
+      "type": {
+        "distribution": "uniform_shard",
+        "dtype": "float16",
+        "layout": "row_major",
+        "shape": [
+          384,
+          4096
+        ]
+      }
+    }
+  ],
+  "world_size": 4
+}

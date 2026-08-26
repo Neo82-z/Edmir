@@ -1,0 +1,50 @@
+{
+  "protocol": {
+    "measured_iterations": 50,
+    "process_order": "alternating",
+    "processes_per_provider": 5,
+    "warmup_iterations": 10
+  },
+  "shapes": {
+    "r64_k2048_n4096": {
+      "cublas_process_median_ms": 0.5635,
+      "cutlass_latency_reduction_percent": 4.933451641526184,
+      "cutlass_process_median_ms": 0.5357
+    },
+    "r96_k4096_n4096": {
+      "cublas_process_median_ms": 0.6213,
+      "cutlass_latency_reduction_percent": 1.4807661355222899,
+      "cutlass_process_median_ms": 0.6121
+    }
+  },
+  "validation": [
+    {
+      "case": "16_numerical_validation_cublas",
+      "checked_elements": 8192,
+      "max_abs_error": 0.0,
+      "max_rel_error": 0.0,
+      "provider": "cublas"
+    },
+    {
+      "case": "16_numerical_validation_cutlass",
+      "checked_elements": 8192,
+      "max_abs_error": 0.0,
+      "max_rel_error": 0.0,
+      "provider": "cutlass"
+    },
+    {
+      "case": "64_numerical_validation256_cublas",
+      "checked_elements": 65536,
+      "max_abs_error": 0.0,
+      "max_rel_error": 0.0,
+      "provider": "cublas"
+    },
+    {
+      "case": "64_numerical_validation256_cutlass",
+      "checked_elements": 65536,
+      "max_abs_error": 0.0,
+      "max_rel_error": 0.0,
+      "provider": "cutlass"
+    }
+  ]
+}

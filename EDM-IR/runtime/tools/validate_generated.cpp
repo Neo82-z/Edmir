@@ -1,12 +1,15 @@
 #include <algorithm>
 #include <cmath>
 #include <cstddef>
+#include <cstring>
 #include <exception>
 #include <iostream>
 #include <limits>
 #include <stdexcept>
 #include <string>
 #include <vector>
+
+#include <cuda_fp16.h>
 
 #include "edmir/runtime/cuda_backend.hpp"
 #include "edmir/runtime/validate.hpp"
@@ -17,6 +20,42 @@ namespace {
 using edmir::runtime::BufferRole;
 using edmir::runtime::OpKind;
 using edmir::runtime::ProgramView;
+
+std::vector<unsigned char> encode(
+    edmir::runtime::DType dtype, const std::vector<float>& values) {
+  std::vector<unsigned char> bytes(values.size() * edmir::runtime::dtype_size(dtype));
+  if (dtype == edmir::runtime::DType::kFloat32) {
+    std::memcpy(bytes.data(), values.data(), bytes.size());
+    return bytes;
+  }
+  if (dtype == edmir::runtime::DType::kFloat16) {
+    for (std::size_t index = 0; index < values.size(); ++index) {
+      const __half value = __float2half(values[index]);
+      std::memcpy(bytes.data() + index * sizeof(value), &value, sizeof(value));
+    }
+    return bytes;
+  }
+  throw std::invalid_argument("numerical validation does not yet support bfloat16");
+}
+
+std::vector<float> decode(
+    edmir::runtime::DType dtype, const std::vector<unsigned char>& bytes) {
+  const auto elements = bytes.size() / edmir::runtime::dtype_size(dtype);
+  std::vector<float> values(elements);
+  if (dtype == edmir::runtime::DType::kFloat32) {
+    std::memcpy(values.data(), bytes.data(), bytes.size());
+    return values;
+  }
+  if (dtype == edmir::runtime::DType::kFloat16) {
+    for (std::size_t index = 0; index < elements; ++index) {
+      __half value;
+      std::memcpy(&value, bytes.data() + index * sizeof(value), sizeof(value));
+      values[index] = __half2float(value);
+    }
+    return values;
+  }
+  throw std::invalid_argument("numerical validation does not yet support bfloat16");
+}
 
 std::vector<std::size_t> accesses(
     ProgramView program, std::size_t op, bool write) {
@@ -109,14 +148,16 @@ void interpret_on_cpu(ProgramView program, std::vector<std::vector<float>>& buff
 int main() {
   try {
     const auto program = edmir_generated::program();
-    if (program.problem.dtype != edmir::runtime::DType::kFloat32) {
+    if (program.problem.dtype != edmir::runtime::DType::kFloat32 &&
+        program.problem.dtype != edmir::runtime::DType::kFloat16) {
       throw std::invalid_argument(
-          "numerical validation currently requires a generated float32 Program");
+          "numerical validation currently supports generated float32 or float16 Programs");
     }
 
     std::vector<std::vector<float>> reference(program.buffers.size());
     for (std::size_t index = 0; index < program.buffers.size(); ++index) {
-      const auto size = program.buffers[index].size_bytes / sizeof(float);
+      const auto size = program.buffers[index].size_bytes /
+                        edmir::runtime::dtype_size(program.problem.dtype);
       reference[index].assign(size, 0.0f);
     }
     initialize_external(program, reference);
@@ -127,8 +168,8 @@ int main() {
       if (!is_external(program.buffers[index].role)) {
         continue;
       }
-      backend.copy_from_host(
-          index, reference[index].data(), reference[index].size() * sizeof(float));
+      const auto encoded = encode(program.problem.dtype, reference[index]);
+      backend.copy_from_host(index, encoded.data(), encoded.size());
     }
 
     interpret_on_cpu(program, reference);
@@ -143,8 +184,9 @@ int main() {
       if (program.buffers[index].role != BufferRole::kOutput) {
         continue;
       }
-      std::vector<float> actual(reference[index].size());
-      backend.copy_to_host(index, actual.data(), actual.size() * sizeof(float));
+      std::vector<unsigned char> bytes(program.buffers[index].size_bytes);
+      backend.copy_to_host(index, bytes.data(), bytes.size());
+      const auto actual = decode(program.problem.dtype, bytes);
       for (std::size_t element = 0; element < actual.size(); ++element) {
         const auto absolute = std::abs(
             static_cast<double>(actual[element]) - static_cast<double>(reference[index][element]));
@@ -159,16 +201,19 @@ int main() {
       }
     }
 
-    constexpr double kAbsoluteTolerance = 1.0e-4;
-    constexpr double kRelativeTolerance = 1.0e-4;
+    const double absolute_tolerance =
+        program.problem.dtype == edmir::runtime::DType::kFloat16 ? 2.0e-2 : 1.0e-4;
+    const double relative_tolerance =
+        program.problem.dtype == edmir::runtime::DType::kFloat16 ? 2.0e-2 : 1.0e-4;
     std::cout << "validated target=" << program.target << " arch=" << program.arch
+              << " gemm_provider=" << edmir::runtime::gemm_provider_name(program.gemm_provider)
               << " strategy=" << program.strategy << " ranks=" << program.problem.world_size
               << " ops=" << program.ops.size() << " checked_elements=" << checked_elements
               << " max_abs_error=" << max_absolute_error
               << " max_rel_error=" << max_relative_error
               << " worst_buffer=" << worst_buffer << '\n';
-    if (max_absolute_error > kAbsoluteTolerance &&
-        max_relative_error > kRelativeTolerance) {
+    if (max_absolute_error > absolute_tolerance &&
+        max_relative_error > relative_tolerance) {
       return 2;
     }
     return 0;

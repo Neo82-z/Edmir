@@ -46,6 +46,17 @@ ValidationReport validate_program(ProgramView program) {
   if (dtype_size(program.problem.dtype) == 0) {
     report.errors.emplace_back("problem dtype is invalid");
   }
+  if (program.gemm_provider == GemmProvider::kCUTLASS) {
+    if (program.arch != "sm_80") {
+      report.errors.emplace_back("CUTLASS v0.1 requires arch=sm_80");
+    }
+    if (program.problem.dtype != DType::kFloat16) {
+      report.errors.emplace_back("CUTLASS v0.1 requires float16 GEMM");
+    }
+    if (program.problem.k % 8 != 0 || program.problem.n % 8 != 0) {
+      report.errors.emplace_back("CUTLASS v0.1 requires K and N divisible by 8");
+    }
+  }
   if (program.chunk_rows <= 0 ||
       (program.problem.rows_per_peer > 0 &&
        program.problem.rows_per_peer % program.chunk_rows != 0)) {

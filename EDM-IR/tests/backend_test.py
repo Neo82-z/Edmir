@@ -74,6 +74,39 @@ class BackendTest(unittest.TestCase):
         self.assertIn("kAccesses", header)
         self.assertIn("kDependencies", header)
         self.assertIn('kArch = "sm_89"', header)
+        self.assertIn("kGemmProvider = GemmProvider::kCuBLAS", header)
+
+    def test_cutlass_target_accepts_sm80_fp16_aligned_problem(self) -> None:
+        target = Target(
+            "test-cutlass", topology(), arch="sm_80", gemm_provider="cutlass"
+        )
+        result = CompilerPipeline().compile(
+            self.module,
+            target=target,
+            profile=profile(),
+            backend=CppManifestBackend(),
+            options=self.options,
+        )
+        self.assertIn(
+            "kGemmProvider = GemmProvider::kCUTLASS",
+            result.artifact.files["edmir_program.hpp"],
+        )
+
+    def test_cutlass_target_rejects_unsupported_arch_dtype_and_alignment(self) -> None:
+        with self.assertRaisesRegex(ValueError, "arch=sm_80"):
+            Target(
+                "bad-arch", topology(), arch="sm_89", gemm_provider="cutlass"
+            ).validate_problem(self.problem)
+        with self.assertRaisesRegex(ValueError, "float16"):
+            Target(
+                "bad-dtype", topology(), arch="sm_80", gemm_provider="cutlass"
+            ).validate_problem(
+                A2AGemmProblem(4, 32, 128, 256, dtype="float32")
+            )
+        with self.assertRaisesRegex(ValueError, "divisible by 8"):
+            Target(
+                "bad-alignment", topology(), arch="sm_80", gemm_provider="cutlass"
+            ).validate_problem(A2AGemmProblem(4, 32, 130, 256))
 
     @unittest.skipUnless(shutil.which("c++"), "C++ compiler is unavailable")
     def test_generated_cpp_header_links_to_and_passes_runtime_validation(self) -> None:

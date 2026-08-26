@@ -62,7 +62,7 @@ A2AGemmProblem / GraphBuilder
                ▼
 ┌──────────────────────────────┐
 │ C++ runtime                  │  validate / allocate / execute
-│ CUDA + NCCL + cuBLAS         │  CUTLASS provider is future work
+│ CUDA + NCCL                  │  selected cuBLAS / CUTLASS GEMM
 └──────────────────────────────┘
 ```
 
@@ -152,7 +152,7 @@ The verifier, simulator and C++ backend all call the same implementation. This i
 
 Files: `compiler/target.py`, `compiler/calibration.py`
 
-`Target` owns CUDA target identity, architecture label and the measured topology snapshot. `CalibrationProfile` owns replaceable timing information, including optional per-`(src,dst,size)` NCCL curves.
+`Target` owns CUDA target identity, architecture label, GEMM provider and the measured topology snapshot. `CalibrationProfile` owns replaceable timing information, including optional per-`(src,dst,size)` NCCL curves.
 
 Topology describes what is legal; the profile estimates cost. Neither is embedded into the frontend graph.
 
@@ -163,7 +163,7 @@ Directory: `compiler/backends/`
 - `JsonBackend`: emits the selected `edmir.program.v1` for inspection, simulation and reproducibility.
 - `CppManifestBackend`: emits the same JSON plus a C++20 header containing static buffer, op, access and fully derived dependency descriptors.
 
-The generated header uses the shared structs in `runtime/include/edmir/runtime/program.hpp`; it does not define a second private ABI. The host runtime validates that descriptor and its dependency DAG. With `EDMIR_ENABLE_CUDA=ON`, the CUDA runtime allocates rank-local buffers, creates streams/events, dispatches grouped NCCL send/recv and executes row-major GEMM through cuBLAS.
+The generated header uses the shared structs in `runtime/include/edmir/runtime/program.hpp`; it does not define a second private ABI. The host runtime validates that descriptor and its dependency DAG. With `EDMIR_ENABLE_CUDA=ON`, the CUDA runtime allocates rank-local buffers, creates streams/events and dispatches grouped NCCL send/recv. GEMM is then sent to the statically selected cuBLAS or narrow SM80 CUTLASS provider without changing the Program.
 
 ## Why Python above and C++ below
 
@@ -173,7 +173,7 @@ The split is therefore:
 
 ```text
 Python: semantic IR -> legal selected Program -> static descriptor
-C++:    ProgramView -> validation -> resource binding -> NCCL/cuBLAS execution
+C++:    ProgramView -> validation -> resource binding -> NCCL + GEMM-provider execution
 ```
 
 Moving the optimizer to C++ now would add build friction without improving the research claim. Writing generated CUDA source strings now would hide runtime errors behind code generation. The static descriptor keeps the boundary testable.
@@ -188,7 +188,7 @@ python -m edmir compile-graph /tmp/a2a-gemm.dataflow.json \
   --profile examples/synthetic_profile.json \
   --topology examples/full_p2p_topology.json \
   --chunk-rows 16,32,64 --buffers 1,2,4 \
-  --target cuda --arch sm_89 --backend cpp \
+  --target cuda --arch sm_89 --gemm-provider cublas --backend cpp \
   --out-dir /tmp/edmir-artifact
 ```
 
@@ -211,17 +211,20 @@ edmir_program.hpp  compile-time C++ runtime descriptor
 
 ## Runtime completion boundary
 
-The minimal executable backend now exists in `runtime/` and deliberately uses
-cuBLAS as its GEMM correctness baseline. Its host ABI and validation path are
-covered by CPU-only compilation tests; the CUDA/NCCL path must still be built
-and run on the target server.
+The minimal executable backend now exists in `runtime/`. cuBLAS remains the
+general correctness baseline, while a guarded SM80 FP16 CUTLASS provider proves
+that the backend can substitute kernels without changing IR or schedule. Both
+paths are covered by host compilation tests and 4x A100 numerical/latency
+experiments.
 
 The next milestone is not another IR layer. It is:
 
-1. randomized CPU-vs-GPU numerical validation;
-2. Nsight Systems trace comparison against the compiler's dependency order;
-3. measured sequential/pipelined comparison on one fixed topology;
-4. a narrow CUTLASS/CuTe GEMM provider if cuBLAS dispatch limits the experiment;
-5. only then evaluate NCCL Device API fusion or another frontend/backend.
+1. represent a small CUTLASS kernel family as backend policy, not new IR;
+2. calibrate provider-specific GEMM samples and preserve held-out selection;
+3. add Nsight Systems trace comparison against compiler dependency order;
+4. only then introduce a distinct fused communication/compute lowering with
+   explicit legality and synchronization semantics;
+5. evaluate CuTe/NCCL Device API at that boundary rather than hiding it behind
+   the existing `gemm` operation.
 
 See `runtime/README.md` for the server build and smoke runner.

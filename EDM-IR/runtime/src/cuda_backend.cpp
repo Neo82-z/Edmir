@@ -15,6 +15,9 @@
 #include <nccl.h>
 
 #include "edmir/runtime/validate.hpp"
+#if defined(EDMIR_HAS_CUTLASS)
+#include "edmir/runtime/cutlass_gemm.hpp"
+#endif
 
 namespace edmir::runtime {
 namespace {
@@ -94,6 +97,13 @@ class CudaBackend::Impl {
       }
       throw std::invalid_argument(message);
     }
+#if !defined(EDMIR_HAS_CUTLASS)
+    if (program_.gemm_provider == GemmProvider::kCUTLASS) {
+      throw std::invalid_argument(
+          "generated Program requests CUTLASS, but the runtime was built without "
+          "EDMIR_ENABLE_CUTLASS=ON");
+    }
+#endif
 
     const auto world_size = static_cast<std::size_t>(program_.problem.world_size);
     configure_devices(world_size);
@@ -111,8 +121,10 @@ class CudaBackend::Impl {
         EDMIR_CUDA(cudaStreamCreateWithFlags(&ranks_[rank].comm, cudaStreamNonBlocking));
         EDMIR_CUDA(cudaStreamCreateWithFlags(&ranks_[rank].compute, cudaStreamNonBlocking));
         EDMIR_CUDA(cudaStreamCreateWithFlags(&ranks_[rank].control, cudaStreamNonBlocking));
-        EDMIR_CUBLAS(cublasCreate(&ranks_[rank].blas));
-        EDMIR_CUBLAS(cublasSetStream(ranks_[rank].blas, ranks_[rank].compute));
+        if (program_.gemm_provider == GemmProvider::kCuBLAS) {
+          EDMIR_CUBLAS(cublasCreate(&ranks_[rank].blas));
+          EDMIR_CUBLAS(cublasSetStream(ranks_[rank].blas, ranks_[rank].compute));
+        }
       }
 
       buffers_.resize(program_.buffers.size(), nullptr);
@@ -365,16 +377,25 @@ class CudaBackend::Impl {
     const auto m = op.rows;
     const auto n = program_.problem.n;
     const auto k = program_.problem.k;
-    const float alpha = 1.0f;
-    const float beta = 0.0f;
-    const auto type = cuda_dtype(program_.problem.dtype);
-
     EDMIR_CUDA(cudaSetDevice(device_id(op.rank)));
-    // Row-major C=A*B is column-major C^T=B^T*A^T with dimensions n,m,k.
-    EDMIR_CUBLAS(cublasGemmEx(
-        ranks_[op.rank].blas, CUBLAS_OP_N, CUBLAS_OP_N, n, m, k, &alpha,
-        buffers_[weight], type, n, buffers_[activation], type, k, &beta,
-        buffers_[output], type, n, CUBLAS_COMPUTE_32F, CUBLAS_GEMM_DEFAULT_TENSOR_OP));
+    if (program_.gemm_provider == GemmProvider::kCuBLAS) {
+      const float alpha = 1.0f;
+      const float beta = 0.0f;
+      const auto type = cuda_dtype(program_.problem.dtype);
+      // Row-major C=A*B is column-major C^T=B^T*A^T with dimensions n,m,k.
+      EDMIR_CUBLAS(cublasGemmEx(
+          ranks_[op.rank].blas, CUBLAS_OP_N, CUBLAS_OP_N, n, m, k, &alpha,
+          buffers_[weight], type, n, buffers_[activation], type, k, &beta,
+          buffers_[output], type, n, CUBLAS_COMPUTE_32F, CUBLAS_GEMM_DEFAULT_TENSOR_OP));
+      return;
+    }
+#if defined(EDMIR_HAS_CUTLASS)
+    launch_cutlass_gemm_f16_sm80(
+        m, n, k, buffers_[activation], buffers_[weight], buffers_[output],
+        ranks_[op.rank].compute);
+#else
+    throw std::logic_error("CUTLASS provider reached an unavailable runtime path");
+#endif
   }
 
   void record_completion(std::size_t op_index) {

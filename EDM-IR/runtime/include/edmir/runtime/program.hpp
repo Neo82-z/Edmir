@@ -13,6 +13,21 @@ enum class DType : std::uint8_t {
   kFloat32,
 };
 
+enum class GemmProvider : std::uint8_t {
+  kCuBLAS,
+  kCUTLASS,
+};
+
+constexpr std::string_view gemm_provider_name(GemmProvider provider) {
+  switch (provider) {
+    case GemmProvider::kCuBLAS:
+      return "cublas";
+    case GemmProvider::kCUTLASS:
+      return "cutlass";
+  }
+  return "unknown";
+}
+
 enum class BufferRole : std::uint8_t {
   kInput,
   kWeight,
@@ -81,6 +96,7 @@ struct DependencyDesc {
 struct ProgramView {
   std::string_view target;
   std::string_view arch;
+  GemmProvider gemm_provider;
   std::string_view strategy;
   ProblemDesc problem;
   std::int32_t chunk_rows;
@@ -103,4 +119,3 @@ constexpr std::size_t dtype_size(DType dtype) {
 }
 
 }  // namespace edmir::runtime
-

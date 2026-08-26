@@ -41,6 +41,10 @@ DEPENDENCY_KIND_ENUM = {
     "buffer_reuse": "DependencyKind::kBufferReuse",
     "write_after_write": "DependencyKind::kWriteAfterWrite",
 }
+GEMM_PROVIDER_ENUM = {
+    "cublas": "GemmProvider::kCuBLAS",
+    "cutlass": "GemmProvider::kCUTLASS",
+}
 
 
 class CppManifestBackend:
@@ -54,7 +58,7 @@ class CppManifestBackend:
     name = "cpp"
 
     def emit(self, program: Program, target: Target) -> BackendArtifact:
-        target.validate()
+        target.validate_problem(program.problem)
         if target.world_size != program.problem.world_size:
             raise ValueError("target world size does not match Program")
         report = verify_program(program.problem, program)
@@ -92,6 +96,8 @@ class CppManifestBackend:
             "",
             f"inline constexpr std::string_view kTarget = {_cpp_string(target.name)};",
             f"inline constexpr std::string_view kArch = {_cpp_string(target.arch)};",
+            "inline constexpr GemmProvider kGemmProvider = "
+            f"{GEMM_PROVIDER_ENUM[target.gemm_provider]};",
             f"inline constexpr std::string_view kStrategy = {_cpp_string(program.strategy)};",
             "inline constexpr ProblemDesc kProblem{"
             f"{program.problem.world_size}, {program.problem.rows_per_peer}, "
@@ -153,7 +159,8 @@ class CppManifestBackend:
                 "",
                 "inline constexpr ProgramView program() {",
                 "  return {",
-                "      kTarget, kArch, kStrategy, kProblem, kChunkRows, kBufferCount,",
+                "      kTarget, kArch, kGemmProvider, kStrategy, kProblem, kChunkRows, "
+                "kBufferCount,",
                 "      std::span<const BufferDesc>{kBuffers},",
                 "      std::span<const OpDesc>{kOps},",
                 "      std::span<const AccessDesc>{kAccesses},",
@@ -174,6 +181,7 @@ class CppManifestBackend:
             metadata={
                 "target": target.name,
                 "arch": target.arch,
+                "gemm_provider": target.gemm_provider,
                 "buffers": len(program.buffers),
                 "ops": len(program.ops),
                 "dependencies": len(dependencies),

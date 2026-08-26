@@ -10,7 +10,7 @@ generated ProgramView
   -> per-rank comm / compute / control streams
   -> dependency CUDA events
   -> NCCL send/recv or local D2D copy
-  -> row-major cublasGemmEx
+  -> selected row-major GEMM provider (cuBLAS or CUTLASS)
 ```
 
 The host-only library contains the stable ABI and validator. The optional CUDA
@@ -39,7 +39,7 @@ python -m edmir compile-graph /tmp/a2a-gemm.dataflow.json \
   --profile examples/synthetic_profile.json \
   --topology examples/full_p2p_topology.json \
   --chunk-rows 16,32,64 --buffers 1,2,4 \
-  --target cuda --arch sm_89 --backend cpp \
+  --target cuda --arch sm_89 --gemm-provider cublas --backend cpp \
   --out-dir /tmp/edmir-artifact
 ```
 
@@ -62,14 +62,50 @@ CUDA_VISIBLE_DEVICES=0,1,2,3 \
 If NCCL is outside the default search path, pass
 `-DNCCL_INCLUDE_DIR=/path/to/include -DNCCL_LIBRARY=/path/to/libnccl.so`.
 
+## Optional CUTLASS provider
+
+`gemm_provider` belongs to the compiler target and is materialized in
+`ProgramView`; it is not a new IR operation. Thus a verified Program can be
+emitted twice and compared with identical transfers, buffers, streams, events,
+and dependencies:
+
+```bash
+git clone --depth 1 --branch v4.7.0 \
+  https://github.com/NVIDIA/cutlass.git /opt/cutlass
+
+python -m edmir compile-graph /tmp/a2a-gemm.dataflow.json \
+  --profile examples/synthetic_profile.json \
+  --topology examples/full_p2p_topology.json \
+  --chunk-rows 16,32,64 --buffers 1,2,4 \
+  --target a100 --arch sm_80 --gemm-provider cutlass --backend cpp \
+  --out-dir /tmp/edmir-cutlass-artifact
+
+cmake -S runtime -B build/runtime-cutlass \
+  -DEDMIR_ENABLE_CUDA=ON \
+  -DEDMIR_ENABLE_CUTLASS=ON \
+  -DEDMIR_CUTLASS_DIR=/opt/cutlass \
+  -DEDMIR_GENERATED_DIR=/tmp/edmir-cutlass-artifact
+cmake --build build/runtime-cutlass -j
+```
+
+The deliberately narrow v0.1 specialization is FP16, row-major, `sm_80`, with
+K and N divisible by eight. The compiler and runtime both reject unsupported
+combinations. It uses the host-side `cutlass::gemm::device::Gemm` interface
+with an Ampere tensor-op kernel (`128x128x32` threadblock, `64x64x32` warp,
+`16x8x16` instruction, three stages, alignment eight). See the official
+[CUTLASS GEMM API](https://github.com/NVIDIA/cutlass/blob/main/media/docs/cpp/gemm_api.md)
+and [SM80 example](https://github.com/NVIDIA/cutlass/blob/main/examples/45_dual_gemm/dual_gemm.cu).
+
 The smoke runner fills every external input and weight buffer with zero,
 executes the selected Program, and requires all output bytes to remain zero.
 It checks allocation, communicator creation, stream/event dependency lowering,
 transfers, and GEMM dispatch. It is not a performance benchmark or a substitute
 for numerical comparison.
 
-For a non-zero correctness check, generate a small `float32` Program from
-`examples/runtime_validation_problem.json`, rebuild with that artifact, and run:
+For a non-zero correctness check, generate a small `float32` or `float16`
+Program from `examples/runtime_validation_problem.json` or
+`examples/runtime_validation_problem_fp16.json`, rebuild with that artifact,
+and run:
 
 ```bash
 CUDA_VISIBLE_DEVICES=0,1,2,3 \
@@ -122,9 +158,10 @@ runtime.synchronize();
 - one host process controls all GPUs;
 - one NCCL communicator and three streams per logical rank;
 - each Program buffer owns a separate allocation;
-- GEMM uses cuBLAS as the correctness baseline;
-- no CUDA Graph capture, memory pool, CUTLASS kernel adapter, Device API, GIN,
-  multi-node bootstrap, or dynamic MoE routing.
+- GEMM provider selection is static; CUTLASS v0.1 has one SM80 FP16 kernel;
+- no CUDA Graph capture, memory pool, CUTLASS kernel-family autotuning, Device
+  API, GIN, multi-node bootstrap, or dynamic MoE routing.
 
-The next runtime step is trace comparison, followed only then by a CUTLASS/CuTe
-GEMM provider.
+The next backend step is a small measured CUTLASS kernel family. CuTe device
+communication remains a later lowering boundary and is not hidden inside this
+provider substitution.

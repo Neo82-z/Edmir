@@ -39,6 +39,7 @@ class CompilerPipeline:
         profile.validate()
         normalized, pass_trace = self.pass_manager.run(module)
         match = match_a2a_gemm(normalized)
+        target.validate_problem(match.problem)
         if match.problem.world_size != target.world_size:
             raise ValueError("frontend world size does not match target topology")
         compile_result = compile_a2a_gemm(

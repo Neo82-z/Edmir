@@ -91,6 +91,7 @@ def _compile_graph(args: argparse.Namespace) -> int:
         name=args.target,
         kind="cuda",
         arch=args.arch,
+        gemm_provider=args.gemm_provider,
         topology=topology,
     )
     options = CompilerOptions(
@@ -260,6 +261,9 @@ def build_parser() -> argparse.ArgumentParser:
     compile_graph.add_argument("--topology", required=True)
     compile_graph.add_argument("--target", default="cuda")
     compile_graph.add_argument("--arch", default="unknown")
+    compile_graph.add_argument(
+        "--gemm-provider", choices=("cublas", "cutlass"), default="cublas"
+    )
     compile_graph.add_argument("--backend", choices=("json", "cpp"), default="json")
     compile_graph.add_argument("--chunk-rows", default="")
     compile_graph.add_argument("--buffers", default="2")

@@ -92,6 +92,7 @@ int main(int argc, char** argv) {
 
     std::cout << std::fixed << std::setprecision(4)
               << "bench target=" << program.target << " arch=" << program.arch
+              << " gemm_provider=" << edmir::runtime::gemm_provider_name(program.gemm_provider)
               << " strategy=" << program.strategy << " ranks=" << program.problem.world_size
               << " rows_per_peer=" << program.problem.rows_per_peer
               << " k=" << program.problem.k << " n=" << program.problem.n

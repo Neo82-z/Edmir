@@ -17,10 +17,12 @@ derived in one place. The resulting graph is consumed by both the legality
 checker and the deterministic cost simulator.
 
 The current artifact generates a compileable C++20 `ProgramView`. The optional
-C++ runtime executes it with CUDA streams/events, grouped NCCL send/recv and a
-cuBLAS GEMM correctness baseline. This path has been compiled, numerically
-validated, and benchmarked on 4x A100 SXM; the retained logs are under
-`experiments/2026-08-25-runpod-4xa100-sxm`. The complete layer contract is documented in
+C++ runtime executes it with CUDA streams/events, grouped NCCL send/recv, and a
+statically selected cuBLAS or CUTLASS GEMM provider. Both provider paths have
+been compiled, numerically validated, and benchmarked on 4x A100 SXM; the
+retained baselines are under `experiments/2026-08-25-runpod-4xa100-sxm` and the
+controlled provider substitution is under
+`experiments/2026-08-26-a100-cutlass-provider`. The complete layer contract is documented in
 [`docs/COMPILER_ARCHITECTURE.md`](docs/COMPILER_ARCHITECTURE.md).
 
 ## Minimal compiler model
@@ -82,7 +84,7 @@ python -m edmir compile-graph /tmp/a2a-gemm.dataflow.json \
   --profile examples/synthetic_profile.json \
   --topology examples/full_p2p_topology.json \
   --chunk-rows 16,32,64 --buffers 1,2,4 \
-  --target cuda --arch sm_89 --backend cpp \
+  --target cuda --arch sm_89 --gemm-provider cublas --backend cpp \
   --out-dir /tmp/edmir-artifact
 ```
 
@@ -145,9 +147,9 @@ compiler/verify.py      All2All->GEMM semantic checks
 compiler/simulate.py    ready-time/resource interpreter and EventGraph emission
 compiler/compile.py     candidate enumeration, selection, and fallback
 compiler/pipeline.py    end-to-end compiler orchestration
-compiler/target.py      CUDA target and topology contract
+compiler/target.py      CUDA topology, architecture, and GEMM-provider contract
 compiler/backends/      JSON and compileable C++20 manifest backends
-runtime/                shared ProgramView ABI, validator, CUDA/NCCL/cuBLAS executor
+runtime/                ProgramView validator and CUDA/NCCL/cuBLAS/CUTLASS executor
 analysis.py             critical path and counterfactual exposure on EventGraph
 ```
 

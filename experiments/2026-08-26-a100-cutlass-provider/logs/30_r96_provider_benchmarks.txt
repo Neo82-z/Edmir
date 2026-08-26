@@ -1,0 +1,60 @@
+process=1 provider=cublas started=2026-08-26T01:42:26+00:00
+bench target=a100-sxm4 arch=sm_80 gemm_provider=cublas strategy=pipelined ranks=4 rows_per_peer=96 k=4096 n=4096 chunk_rows=96 buffer_count=4 ops=32 op_dispatch=32 event_record=44 event_wait=72 buffer_reuse=0 warmup=10 iterations=50 min_ms=0.6109 median_ms=0.6206 p95_ms=0.6490 max_ms=0.6765 mean_ms=0.6261
+post process=1 provider=cublas 0, 33, 1155 MHz, 86.48 W
+post process=1 provider=cublas 1, 32, 1155 MHz, 87.08 W
+post process=1 provider=cublas 2, 33, 1155 MHz, 71.43 W
+post process=1 provider=cublas 3, 34, 1155 MHz, 86.06 W
+process=1 provider=cutlass started=2026-08-26T01:42:32+00:00
+bench target=a100-sxm4 arch=sm_80 gemm_provider=cutlass strategy=pipelined ranks=4 rows_per_peer=96 k=4096 n=4096 chunk_rows=96 buffer_count=4 ops=32 op_dispatch=32 event_record=44 event_wait=72 buffer_reuse=0 warmup=10 iterations=50 min_ms=0.6036 median_ms=0.6122 p95_ms=0.6399 max_ms=0.6669 mean_ms=0.6170
+post process=1 provider=cutlass 0, 33, 1155 MHz, 86.15 W
+post process=1 provider=cutlass 1, 32, 1155 MHz, 87.35 W
+post process=1 provider=cutlass 2, 33, 1155 MHz, 72.10 W
+post process=1 provider=cutlass 3, 35, 1155 MHz, 86.06 W
+process=2 provider=cutlass started=2026-08-26T01:42:37+00:00
+bench target=a100-sxm4 arch=sm_80 gemm_provider=cutlass strategy=pipelined ranks=4 rows_per_peer=96 k=4096 n=4096 chunk_rows=96 buffer_count=4 ops=32 op_dispatch=32 event_record=44 event_wait=72 buffer_reuse=0 warmup=10 iterations=50 min_ms=0.6014 median_ms=0.6110 p95_ms=0.6465 max_ms=0.6767 mean_ms=0.6159
+post process=2 provider=cutlass 0, 33, 1155 MHz, 85.88 W
+post process=2 provider=cutlass 1, 32, 1155 MHz, 87.35 W
+post process=2 provider=cutlass 2, 33, 1155 MHz, 71.50 W
+post process=2 provider=cutlass 3, 35, 1155 MHz, 86.06 W
+process=2 provider=cublas started=2026-08-26T01:42:41+00:00
+bench target=a100-sxm4 arch=sm_80 gemm_provider=cublas strategy=pipelined ranks=4 rows_per_peer=96 k=4096 n=4096 chunk_rows=96 buffer_count=4 ops=32 op_dispatch=32 event_record=44 event_wait=72 buffer_reuse=0 warmup=10 iterations=50 min_ms=0.6143 median_ms=0.6230 p95_ms=0.6749 max_ms=0.7434 mean_ms=0.6304
+post process=2 provider=cublas 0, 33, 1155 MHz, 86.39 W
+post process=2 provider=cublas 1, 32, 1155 MHz, 87.44 W
+post process=2 provider=cublas 2, 33, 1155 MHz, 71.83 W
+post process=2 provider=cublas 3, 35, 1155 MHz, 86.33 W
+process=3 provider=cublas started=2026-08-26T01:42:46+00:00
+bench target=a100-sxm4 arch=sm_80 gemm_provider=cublas strategy=pipelined ranks=4 rows_per_peer=96 k=4096 n=4096 chunk_rows=96 buffer_count=4 ops=32 op_dispatch=32 event_record=44 event_wait=72 buffer_reuse=0 warmup=10 iterations=50 min_ms=0.6079 median_ms=0.6195 p95_ms=0.6553 max_ms=0.6776 mean_ms=0.6245
+post process=3 provider=cublas 0, 33, 1155 MHz, 86.06 W
+post process=3 provider=cublas 1, 32, 1155 MHz, 87.35 W
+post process=3 provider=cublas 2, 33, 1155 MHz, 71.83 W
+post process=3 provider=cublas 3, 35, 1155 MHz, 86.24 W
+process=3 provider=cutlass started=2026-08-26T01:42:51+00:00
+bench target=a100-sxm4 arch=sm_80 gemm_provider=cutlass strategy=pipelined ranks=4 rows_per_peer=96 k=4096 n=4096 chunk_rows=96 buffer_count=4 ops=32 op_dispatch=32 event_record=44 event_wait=72 buffer_reuse=0 warmup=10 iterations=50 min_ms=0.6038 median_ms=0.6174 p95_ms=0.6430 max_ms=0.6856 mean_ms=0.6197
+post process=3 provider=cutlass 0, 34, 1155 MHz, 86.15 W
+post process=3 provider=cutlass 1, 32, 1155 MHz, 87.35 W
+post process=3 provider=cutlass 2, 33, 1155 MHz, 71.83 W
+post process=3 provider=cutlass 3, 35, 1155 MHz, 86.33 W
+process=4 provider=cutlass started=2026-08-26T01:42:56+00:00
+bench target=a100-sxm4 arch=sm_80 gemm_provider=cutlass strategy=pipelined ranks=4 rows_per_peer=96 k=4096 n=4096 chunk_rows=96 buffer_count=4 ops=32 op_dispatch=32 event_record=44 event_wait=72 buffer_reuse=0 warmup=10 iterations=50 min_ms=0.6001 median_ms=0.6121 p95_ms=0.6397 max_ms=0.6789 mean_ms=0.6168
+post process=4 provider=cutlass 0, 34, 1155 MHz, 86.67 W
+post process=4 provider=cutlass 1, 32, 1155 MHz, 87.35 W
+post process=4 provider=cutlass 2, 33, 1155 MHz, 71.75 W
+post process=4 provider=cutlass 3, 35, 1155 MHz, 86.24 W
+process=4 provider=cublas started=2026-08-26T01:43:01+00:00
+bench target=a100-sxm4 arch=sm_80 gemm_provider=cublas strategy=pipelined ranks=4 rows_per_peer=96 k=4096 n=4096 chunk_rows=96 buffer_count=4 ops=32 op_dispatch=32 event_record=44 event_wait=72 buffer_reuse=0 warmup=10 iterations=50 min_ms=0.6072 median_ms=0.6213 p95_ms=0.6492 max_ms=0.6756 mean_ms=0.6260
+post process=4 provider=cublas 0, 34, 1155 MHz, 86.48 W
+post process=4 provider=cublas 1, 32, 1155 MHz, 87.35 W
+post process=4 provider=cublas 2, 33, 1155 MHz, 71.83 W
+post process=4 provider=cublas 3, 35, 1155 MHz, 86.33 W
+process=5 provider=cublas started=2026-08-26T01:43:06+00:00
+bench target=a100-sxm4 arch=sm_80 gemm_provider=cublas strategy=pipelined ranks=4 rows_per_peer=96 k=4096 n=4096 chunk_rows=96 buffer_count=4 ops=32 op_dispatch=32 event_record=44 event_wait=72 buffer_reuse=0 warmup=10 iterations=50 min_ms=0.6097 median_ms=0.6214 p95_ms=0.6495 max_ms=0.6607 mean_ms=0.6253
+post process=5 provider=cublas 0, 34, 1155 MHz, 86.15 W
+post process=5 provider=cublas 1, 32, 1155 MHz, 87.35 W
+post process=5 provider=cublas 2, 34, 1155 MHz, 71.83 W
+post process=5 provider=cublas 3, 35, 1155 MHz, 86.33 W
+process=5 provider=cutlass started=2026-08-26T01:43:11+00:00
+bench target=a100-sxm4 arch=sm_80 gemm_provider=cutlass strategy=pipelined ranks=4 rows_per_peer=96 k=4096 n=4096 chunk_rows=96 buffer_count=4 ops=32 op_dispatch=32 event_record=44 event_wait=72 buffer_reuse=0 warmup=10 iterations=50 min_ms=0.6024 median_ms=0.6119 p95_ms=0.6429 max_ms=0.6640 mean_ms=0.6163
+post process=5 provider=cutlass 0, 34, 1155 MHz, 86.15 W
+post process=5 provider=cutlass 1, 32, 1155 MHz, 87.35 W
+post process=5 provider=cutlass 2, 34, 1155 MHz, 71.83 W
+post process=5 provider=cutlass 3, 35, 1155 MHz, 86.33 W
