@@ -17,7 +17,8 @@ using Layout = cutlass::layout::RowMajor;
 using Accumulator = float;
 using Epilogue = cutlass::epilogue::thread::LinearCombination<
     Element, 8, Accumulator, Accumulator>;
-using Gemm = cutlass::gemm::device::Gemm<
+template <int ThreadblockM, int ThreadblockN, int WarpM, int WarpN>
+using Sm80Gemm = cutlass::gemm::device::Gemm<
     Element,
     Layout,
     Element,
@@ -27,8 +28,8 @@ using Gemm = cutlass::gemm::device::Gemm<
     Accumulator,
     cutlass::arch::OpClassTensorOp,
     cutlass::arch::Sm80,
-    cutlass::gemm::GemmShape<128, 128, 32>,
-    cutlass::gemm::GemmShape<64, 64, 32>,
+    cutlass::gemm::GemmShape<ThreadblockM, ThreadblockN, 32>,
+    cutlass::gemm::GemmShape<WarpM, WarpN, 32>,
     cutlass::gemm::GemmShape<16, 8, 16>,
     Epilogue,
     cutlass::gemm::threadblock::GemmIdentityThreadblockSwizzle<>,
@@ -43,9 +44,8 @@ void check_cutlass(cutlass::Status status, const char* expression) {
   }
 }
 
-}  // namespace
-
-void launch_cutlass_gemm_f16_sm80(
+template <class Gemm>
+void launch(
     int m, int n, int k, const void* activation, const void* weight, void* output,
     cudaStream_t stream) {
   Gemm gemm;
@@ -59,6 +59,27 @@ void launch_cutlass_gemm_f16_sm80(
   };
   check_cutlass(gemm.can_implement(arguments), "CUTLASS can_implement");
   check_cutlass(gemm(arguments, nullptr, stream), "CUTLASS GEMM launch");
+}
+
+}  // namespace
+
+void launch_cutlass_gemm_f16_sm80(
+    GemmKernel kernel, int m, int n, int k, const void* activation, const void* weight,
+    void* output, cudaStream_t stream) {
+  switch (kernel) {
+    case GemmKernel::kSm80_128x128x32:
+      return launch<Sm80Gemm<128, 128, 64, 64>>(
+          m, n, k, activation, weight, output, stream);
+    case GemmKernel::kSm80_64x128x32:
+      return launch<Sm80Gemm<64, 128, 32, 64>>(
+          m, n, k, activation, weight, output, stream);
+    case GemmKernel::kSm80_128x64x32:
+      return launch<Sm80Gemm<128, 64, 64, 32>>(
+          m, n, k, activation, weight, output, stream);
+    case GemmKernel::kLibraryDefault:
+      break;
+  }
+  throw std::invalid_argument("CUTLASS provider received an incompatible GEMM kernel");
 }
 
 }  // namespace edmir::runtime

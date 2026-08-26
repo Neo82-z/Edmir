@@ -391,7 +391,7 @@ class CudaBackend::Impl {
     }
 #if defined(EDMIR_HAS_CUTLASS)
     launch_cutlass_gemm_f16_sm80(
-        m, n, k, buffers_[activation], buffers_[weight], buffers_[output],
+        program_.gemm_kernel, m, n, k, buffers_[activation], buffers_[weight], buffers_[output],
         ranks_[op.rank].compute);
 #else
     throw std::logic_error("CUTLASS provider reached an unavailable runtime path");

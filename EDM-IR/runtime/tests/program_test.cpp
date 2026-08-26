@@ -27,7 +27,8 @@ int main() {
       DependencyDesc{0, 1, DependencyKind::kReadAfterWrite, 1},
   };
   const ProgramView program{
-      "test", "host", GemmProvider::kCuBLAS, "pipelined", problem, 16, 1,
+      "test", "host", GemmProvider::kCuBLAS, GemmKernel::kLibraryDefault,
+      "pipelined", problem, 16, 1,
       buffers, ops, accesses, dependencies,
   };
   assert(validate_program(program).valid());
@@ -41,7 +42,8 @@ int main() {
       BufferDesc{"output", 1, BufferRole::kOutput, 2048},
   };
   const ProgramView invalid_transfer{
-      "test", "host", GemmProvider::kCuBLAS, "pipelined", problem, 16, 1,
+      "test", "host", GemmProvider::kCuBLAS, GemmKernel::kLibraryDefault,
+      "pipelined", problem, 16, 1,
       invalid_buffers, ops, accesses, dependencies,
   };
   assert(!validate_program(invalid_transfer).valid());
@@ -51,7 +53,8 @@ int main() {
       DependencyDesc{1, 0, DependencyKind::kQueue, -1},
   };
   const ProgramView cyclic{
-      "test", "host", GemmProvider::kCuBLAS, "pipelined", problem, 16, 1,
+      "test", "host", GemmProvider::kCuBLAS, GemmKernel::kLibraryDefault,
+      "pipelined", problem, 16, 1,
       buffers, ops, accesses, cyclic_dependencies,
   };
   assert(!validate_program(cyclic).valid());

@@ -45,6 +45,12 @@ GEMM_PROVIDER_ENUM = {
     "cublas": "GemmProvider::kCuBLAS",
     "cutlass": "GemmProvider::kCUTLASS",
 }
+GEMM_KERNEL_ENUM = {
+    "library_default": "GemmKernel::kLibraryDefault",
+    "sm80_128x128x32": "GemmKernel::kSm80_128x128x32",
+    "sm80_64x128x32": "GemmKernel::kSm80_64x128x32",
+    "sm80_128x64x32": "GemmKernel::kSm80_128x64x32",
+}
 
 
 class CppManifestBackend:
@@ -58,7 +64,7 @@ class CppManifestBackend:
     name = "cpp"
 
     def emit(self, program: Program, target: Target) -> BackendArtifact:
-        target.validate_problem(program.problem)
+        target = target.resolve(program.problem, gemm_m=program.chunk_rows)
         if target.world_size != program.problem.world_size:
             raise ValueError("target world size does not match Program")
         report = verify_program(program.problem, program)
@@ -98,6 +104,8 @@ class CppManifestBackend:
             f"inline constexpr std::string_view kArch = {_cpp_string(target.arch)};",
             "inline constexpr GemmProvider kGemmProvider = "
             f"{GEMM_PROVIDER_ENUM[target.gemm_provider]};",
+            "inline constexpr GemmKernel kGemmKernel = "
+            f"{GEMM_KERNEL_ENUM[target.gemm_kernel]};",
             f"inline constexpr std::string_view kStrategy = {_cpp_string(program.strategy)};",
             "inline constexpr ProblemDesc kProblem{"
             f"{program.problem.world_size}, {program.problem.rows_per_peer}, "
@@ -159,8 +167,8 @@ class CppManifestBackend:
                 "",
                 "inline constexpr ProgramView program() {",
                 "  return {",
-                "      kTarget, kArch, kGemmProvider, kStrategy, kProblem, kChunkRows, "
-                "kBufferCount,",
+                "      kTarget, kArch, kGemmProvider, kGemmKernel, kStrategy, kProblem, "
+                "kChunkRows, kBufferCount,",
                 "      std::span<const BufferDesc>{kBuffers},",
                 "      std::span<const OpDesc>{kOps},",
                 "      std::span<const AccessDesc>{kAccesses},",
@@ -182,6 +190,7 @@ class CppManifestBackend:
                 "target": target.name,
                 "arch": target.arch,
                 "gemm_provider": target.gemm_provider,
+                "gemm_kernel": target.gemm_kernel,
                 "buffers": len(program.buffers),
                 "ops": len(program.ops),
                 "dependencies": len(dependencies),

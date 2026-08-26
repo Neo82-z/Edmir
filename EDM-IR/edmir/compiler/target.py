@@ -1,12 +1,19 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 from .model import A2AGemmProblem, TopologySnapshot
 
 
 SCHEMA_TARGET = "edmir.target.v1"
 GEMM_PROVIDERS = ("cublas", "cutlass")
+GEMM_KERNELS = (
+    "auto",
+    "library_default",
+    "sm80_128x128x32",
+    "sm80_64x128x32",
+    "sm80_128x64x32",
+)
 
 
 @dataclass(frozen=True, slots=True)
@@ -18,6 +25,7 @@ class Target:
     kind: str = "cuda"
     arch: str = "unknown"
     gemm_provider: str = "cublas"
+    gemm_kernel: str = "auto"
 
     def validate(self) -> None:
         if not self.name:
@@ -29,6 +37,17 @@ class Target:
                 f"unsupported GEMM provider {self.gemm_provider!r}; "
                 f"expected one of {GEMM_PROVIDERS}"
             )
+        if self.gemm_kernel not in GEMM_KERNELS:
+            raise ValueError(
+                f"unsupported GEMM kernel {self.gemm_kernel!r}; expected one of {GEMM_KERNELS}"
+            )
+        if self.gemm_provider == "cublas" and self.gemm_kernel not in (
+            "auto",
+            "library_default",
+        ):
+            raise ValueError("cuBLAS targets require gemm_kernel=auto or library_default")
+        if self.gemm_provider == "cutlass" and self.gemm_kernel == "library_default":
+            raise ValueError("CUTLASS targets require gemm_kernel=auto or an SM80 kernel name")
         self.topology.validate()
 
     def validate_problem(self, problem: A2AGemmProblem) -> None:
@@ -47,6 +66,19 @@ class Target:
         if problem.k % 8 != 0 or problem.n % 8 != 0:
             raise ValueError("CUTLASS v0.1 requires K and N to be divisible by 8")
 
+    def resolve(self, problem: A2AGemmProblem, *, gemm_m: int | None = None) -> "Target":
+        """Materialize backend policy so emitted artifacts never contain `auto`."""
+
+        self.validate_problem(problem)
+        if self.gemm_kernel != "auto":
+            return self
+        if self.gemm_provider == "cublas":
+            return replace(self, gemm_kernel="library_default")
+        effective_m = problem.rows_per_peer if gemm_m is None else gemm_m
+        if effective_m <= 96:
+            return replace(self, gemm_kernel="sm80_64x128x32")
+        return replace(self, gemm_kernel="sm80_128x128x32")
+
     @property
     def world_size(self) -> int:
         return self.topology.world_size
@@ -58,6 +90,7 @@ class Target:
             "kind": self.kind,
             "arch": self.arch,
             "gemm_provider": self.gemm_provider,
+            "gemm_kernel": self.gemm_kernel,
             "topology": self.topology.to_dict(),
         }
 
@@ -71,10 +104,11 @@ class Target:
             kind=str(value.get("kind", "cuda")),
             arch=str(value.get("arch", "unknown")),
             gemm_provider=str(value.get("gemm_provider", "cublas")),
+            gemm_kernel=str(value.get("gemm_kernel", "auto")),
             topology=TopologySnapshot.from_dict(value["topology"]),
         )
         target.validate()
         return target
 
 
-__all__ = ["GEMM_PROVIDERS", "SCHEMA_TARGET", "Target"]
+__all__ = ["GEMM_KERNELS", "GEMM_PROVIDERS", "SCHEMA_TARGET", "Target"]

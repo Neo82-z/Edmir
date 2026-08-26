@@ -91,8 +91,10 @@ cmake --build build/runtime-cutlass -j
 The deliberately narrow v0.1 specialization is FP16, row-major, `sm_80`, with
 K and N divisible by eight. The compiler and runtime both reject unsupported
 combinations. It uses the host-side `cutlass::gemm::device::Gemm` interface
-with an Ampere tensor-op kernel (`128x128x32` threadblock, `64x64x32` warp,
-`16x8x16` instruction, three stages, alignment eight). See the official
+with a three-member Ampere tensor-op family. `auto` is resolved in generated
+artifacts to `64x128x32` for lowered GEMM M at most 96 and `128x128x32`
+otherwise; `128x64x32` remains available for explicit experiments. All use a
+`16x8x16` instruction, three stages, and alignment eight. See the official
 [CUTLASS GEMM API](https://github.com/NVIDIA/cutlass/blob/main/media/docs/cpp/gemm_api.md)
 and [SM80 example](https://github.com/NVIDIA/cutlass/blob/main/examples/45_dual_gemm/dual_gemm.cu).
 
@@ -158,10 +160,10 @@ runtime.synchronize();
 - one host process controls all GPUs;
 - one NCCL communicator and three streams per logical rank;
 - each Program buffer owns a separate allocation;
-- GEMM provider selection is static; CUTLASS v0.1 has one SM80 FP16 kernel;
-- no CUDA Graph capture, memory pool, CUTLASS kernel-family autotuning, Device
+- GEMM provider/kernel selection is static and materialized in `ProgramView`;
+- no CUDA Graph capture, memory pool, online CUTLASS autotuning, Device
   API, GIN, multi-node bootstrap, or dynamic MoE routing.
 
-The next backend step is a small measured CUTLASS kernel family. CuTe device
-communication remains a later lowering boundary and is not hidden inside this
-provider substitution.
+The next backend step is provider-specific calibration followed by trace
+comparison. CuTe device communication remains a later lowering boundary and is
+not hidden inside this provider substitution.

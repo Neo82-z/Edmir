@@ -18,6 +18,27 @@ enum class GemmProvider : std::uint8_t {
   kCUTLASS,
 };
 
+enum class GemmKernel : std::uint8_t {
+  kLibraryDefault,
+  kSm80_128x128x32,
+  kSm80_64x128x32,
+  kSm80_128x64x32,
+};
+
+constexpr std::string_view gemm_kernel_name(GemmKernel kernel) {
+  switch (kernel) {
+    case GemmKernel::kLibraryDefault:
+      return "library_default";
+    case GemmKernel::kSm80_128x128x32:
+      return "sm80_128x128x32";
+    case GemmKernel::kSm80_64x128x32:
+      return "sm80_64x128x32";
+    case GemmKernel::kSm80_128x64x32:
+      return "sm80_128x64x32";
+  }
+  return "unknown";
+}
+
 constexpr std::string_view gemm_provider_name(GemmProvider provider) {
   switch (provider) {
     case GemmProvider::kCuBLAS:
@@ -97,6 +118,7 @@ struct ProgramView {
   std::string_view target;
   std::string_view arch;
   GemmProvider gemm_provider;
+  GemmKernel gemm_kernel;
   std::string_view strategy;
   ProblemDesc problem;
   std::int32_t chunk_rows;

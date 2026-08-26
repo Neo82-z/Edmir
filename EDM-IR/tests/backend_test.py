@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import shutil
 import subprocess
 import sys
@@ -75,6 +76,7 @@ class BackendTest(unittest.TestCase):
         self.assertIn("kDependencies", header)
         self.assertIn('kArch = "sm_89"', header)
         self.assertIn("kGemmProvider = GemmProvider::kCuBLAS", header)
+        self.assertIn("kGemmKernel = GemmKernel::kLibraryDefault", header)
 
     def test_cutlass_target_accepts_sm80_fp16_aligned_problem(self) -> None:
         target = Target(
@@ -91,6 +93,45 @@ class BackendTest(unittest.TestCase):
             "kGemmProvider = GemmProvider::kCUTLASS",
             result.artifact.files["edmir_program.hpp"],
         )
+        self.assertIn(
+            "kGemmKernel = GemmKernel::kSm80_64x128x32",
+            result.artifact.files["edmir_program.hpp"],
+        )
+        emitted_target = json.loads(result.artifact.files["target.json"])
+        self.assertEqual(emitted_target["gemm_kernel"], "sm80_64x128x32")
+
+    def test_cutlass_auto_kernel_uses_lowered_gemm_m(self) -> None:
+        target = Target(
+            "test-cutlass", topology(), arch="sm_80", gemm_provider="cutlass"
+        )
+        small_m = target.resolve(self.problem, gemm_m=96)
+        large_m = target.resolve(self.problem, gemm_m=128)
+        self.assertEqual(small_m.gemm_kernel, "sm80_64x128x32")
+        self.assertEqual(large_m.gemm_kernel, "sm80_128x128x32")
+
+    def test_cutlass_target_materializes_each_explicit_kernel(self) -> None:
+        for kernel in (
+            "sm80_128x128x32",
+            "sm80_64x128x32",
+            "sm80_128x64x32",
+        ):
+            with self.subTest(kernel=kernel):
+                target = Target(
+                    "test-cutlass",
+                    topology(),
+                    arch="sm_80",
+                    gemm_provider="cutlass",
+                    gemm_kernel=kernel,
+                )
+                result = CompilerPipeline().compile(
+                    self.module,
+                    target=target,
+                    profile=profile(),
+                    backend=CppManifestBackend(),
+                    options=self.options,
+                )
+                emitted_target = json.loads(result.artifact.files["target.json"])
+                self.assertEqual(emitted_target["gemm_kernel"], kernel)
 
     def test_cutlass_target_rejects_unsupported_arch_dtype_and_alignment(self) -> None:
         with self.assertRaisesRegex(ValueError, "arch=sm_80"):
@@ -107,6 +148,22 @@ class BackendTest(unittest.TestCase):
             Target(
                 "bad-alignment", topology(), arch="sm_80", gemm_provider="cutlass"
             ).validate_problem(A2AGemmProblem(4, 32, 130, 256))
+        with self.assertRaisesRegex(ValueError, "cuBLAS targets"):
+            Target(
+                "bad-cublas-kernel",
+                topology(),
+                arch="sm_80",
+                gemm_provider="cublas",
+                gemm_kernel="sm80_128x128x32",
+            ).validate_problem(self.problem)
+        with self.assertRaisesRegex(ValueError, "CUTLASS targets"):
+            Target(
+                "bad-cutlass-kernel",
+                topology(),
+                arch="sm_80",
+                gemm_provider="cutlass",
+                gemm_kernel="library_default",
+            ).validate_problem(self.problem)
 
     @unittest.skipUnless(shutil.which("c++"), "C++ compiler is unavailable")
     def test_generated_cpp_header_links_to_and_passes_runtime_validation(self) -> None:

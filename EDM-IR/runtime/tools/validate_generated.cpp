@@ -207,6 +207,7 @@ int main() {
         program.problem.dtype == edmir::runtime::DType::kFloat16 ? 2.0e-2 : 1.0e-4;
     std::cout << "validated target=" << program.target << " arch=" << program.arch
               << " gemm_provider=" << edmir::runtime::gemm_provider_name(program.gemm_provider)
+              << " gemm_kernel=" << edmir::runtime::gemm_kernel_name(program.gemm_kernel)
               << " strategy=" << program.strategy << " ranks=" << program.problem.world_size
               << " ops=" << program.ops.size() << " checked_elements=" << checked_elements
               << " max_abs_error=" << max_absolute_error

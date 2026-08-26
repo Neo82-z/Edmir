@@ -53,6 +53,7 @@ int main() {
 
     std::cout << "executed target=" << program.target << " arch=" << program.arch
               << " gemm_provider=" << edmir::runtime::gemm_provider_name(program.gemm_provider)
+              << " gemm_kernel=" << edmir::runtime::gemm_kernel_name(program.gemm_kernel)
               << " strategy=" << program.strategy << " ranks=" << program.problem.world_size
               << " ops=" << program.ops.size() << " checked_output_bytes=" << output_bytes
               << '\n';

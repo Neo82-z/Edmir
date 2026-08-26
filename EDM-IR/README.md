@@ -22,7 +22,8 @@ statically selected cuBLAS or CUTLASS GEMM provider. Both provider paths have
 been compiled, numerically validated, and benchmarked on 4x A100 SXM; the
 retained baselines are under `experiments/2026-08-25-runpod-4xa100-sxm` and the
 controlled provider substitution is under
-`experiments/2026-08-26-a100-cutlass-provider`. The complete layer contract is documented in
+`experiments/2026-08-26-a100-cutlass-provider`; measured static kernel selection
+is under `experiments/2026-08-26-a100-cutlass-kernel-family`. The complete layer contract is documented in
 [`docs/COMPILER_ARCHITECTURE.md`](docs/COMPILER_ARCHITECTURE.md).
 
 ## Minimal compiler model

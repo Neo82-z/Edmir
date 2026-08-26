@@ -11,19 +11,23 @@ class JsonBackend:
     name = "json"
 
     def emit(self, program: Program, target: Target) -> BackendArtifact:
-        target.validate_problem(program.problem)
-        if target.world_size != program.problem.world_size:
+        resolved_target = target.resolve(program.problem, gemm_m=program.chunk_rows)
+        if resolved_target.world_size != program.problem.world_size:
             raise ValueError("target world size does not match Program")
         return BackendArtifact(
             backend=self.name,
             files={
                 "program.json": json.dumps(program.to_dict(), indent=2, sort_keys=True) + "\n",
-                "target.json": json.dumps(target.to_dict(), indent=2, sort_keys=True) + "\n",
+                "target.json": json.dumps(
+                    resolved_target.to_dict(), indent=2, sort_keys=True
+                )
+                + "\n",
             },
             metadata={
-                "target": target.name,
-                "arch": target.arch,
-                "gemm_provider": target.gemm_provider,
+                "target": resolved_target.name,
+                "arch": resolved_target.arch,
+                "gemm_provider": resolved_target.gemm_provider,
+                "gemm_kernel": resolved_target.gemm_kernel,
             },
         )
 

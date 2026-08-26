@@ -52,7 +52,7 @@ if(EDMIR_ENABLE_CUDA)
     target_include_directories(edmir_cuda_runtime PRIVATE "${EDMIR_CUTLASS_DIR}/include")
     target_compile_definitions(edmir_cuda_runtime PRIVATE EDMIR_HAS_CUTLASS=1)
     set_property(TARGET edmir_cuda_runtime PROPERTY CUDA_ARCHITECTURES 80)
-    set_property(TARGET edmir_cuda_runtime PROPERTY CUDA_STANDARD 17)
+    set_property(TARGET edmir_cuda_runtime PROPERTY CUDA_STANDARD 20)
     target_compile_options(
       edmir_cuda_runtime PRIVATE
       $<$<COMPILE_LANGUAGE:CUDA>:--expt-relaxed-constexpr>

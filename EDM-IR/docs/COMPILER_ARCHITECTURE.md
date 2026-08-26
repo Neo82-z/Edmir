@@ -152,7 +152,7 @@ The verifier, simulator and C++ backend all call the same implementation. This i
 
 Files: `compiler/target.py`, `compiler/calibration.py`
 
-`Target` owns CUDA target identity, architecture label, GEMM provider and the measured topology snapshot. `CalibrationProfile` owns replaceable timing information, including optional per-`(src,dst,size)` NCCL curves.
+`Target` owns CUDA target identity, architecture label, GEMM provider, resolved kernel policy and the measured topology snapshot. `CalibrationProfile` owns replaceable timing information, including optional per-`(src,dst,size)` NCCL curves.
 
 Topology describes what is legal; the profile estimates cost. Neither is embedded into the frontend graph.
 
@@ -212,16 +212,17 @@ edmir_program.hpp  compile-time C++ runtime descriptor
 ## Runtime completion boundary
 
 The minimal executable backend now exists in `runtime/`. cuBLAS remains the
-general correctness baseline, while a guarded SM80 FP16 CUTLASS provider proves
-that the backend can substitute kernels without changing IR or schedule. Both
-paths are covered by host compilation tests and 4x A100 numerical/latency
-experiments.
+general correctness baseline, while a guarded SM80 FP16 CUTLASS family proves
+that the backend can substitute and statically select kernels without changing
+IR or schedule. `auto` is resolved before artifact emission, so target JSON and
+the C++ ABI contain a reproducible concrete kernel. Both paths are covered by
+host compilation tests and 4x A100 numerical/latency experiments.
 
 The next milestone is not another IR layer. It is:
 
-1. represent a small CUTLASS kernel family as backend policy, not new IR;
-2. calibrate provider-specific GEMM samples and preserve held-out selection;
-3. add Nsight Systems trace comparison against compiler dependency order;
+1. calibrate provider-specific GEMM samples and preserve held-out selection;
+2. add Nsight Systems trace comparison against compiler dependency order;
+3. model generated kernel identity in experiment provenance and diagnostics;
 4. only then introduce a distinct fused communication/compute lowering with
    explicit legality and synchronization semantics;
 5. evaluate CuTe/NCCL Device API at that boundary rather than hiding it behind

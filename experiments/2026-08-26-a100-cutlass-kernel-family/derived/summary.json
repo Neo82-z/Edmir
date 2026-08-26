@@ -1,0 +1,47 @@
+{
+  "auto_policy": {
+    "chunk_rows_le_96": "sm80_64x128x32",
+    "otherwise": "sm80_128x128x32"
+  },
+  "protocol": {
+    "kernel_sweep_processes": 3,
+    "matched_provider_processes": 5,
+    "measured_iterations": 100,
+    "warmup_iterations": 10
+  },
+  "shapes": {
+    "r64_k2048_n4096": {
+      "cublas_process_median_ms": 0.567,
+      "cutlass_auto_process_median_ms": 0.5228,
+      "latency_reduction_percent": 7.795414462081114
+    },
+    "r96_k4096_n4096": {
+      "cublas_process_median_ms": 0.62,
+      "cutlass_auto_process_median_ms": 0.6029,
+      "latency_reduction_percent": 2.758064516129033
+    }
+  },
+  "validation": [
+    {
+      "case": "25_validate_cxx20",
+      "checked_elements": 65536,
+      "kernel": "sm80_128x128x32",
+      "max_abs_error": 0.0,
+      "max_rel_error": 0.0
+    },
+    {
+      "case": "28_validate_sm80_128x64x32",
+      "checked_elements": 65536,
+      "kernel": "sm80_128x64x32",
+      "max_abs_error": 0.0,
+      "max_rel_error": 0.0
+    },
+    {
+      "case": "28_validate_sm80_64x128x32",
+      "checked_elements": 65536,
+      "kernel": "sm80_64x128x32",
+      "max_abs_error": 0.0,
+      "max_rel_error": 0.0
+    }
+  ]
+}

@@ -56,6 +56,11 @@ ValidationReport validate_program(ProgramView program) {
     if (program.problem.k % 8 != 0 || program.problem.n % 8 != 0) {
       report.errors.emplace_back("CUTLASS v0.1 requires K and N divisible by 8");
     }
+    if (program.gemm_kernel == GemmKernel::kLibraryDefault) {
+      report.errors.emplace_back("CUTLASS requires an explicit generated kernel");
+    }
+  } else if (program.gemm_kernel != GemmKernel::kLibraryDefault) {
+    report.errors.emplace_back("cuBLAS requires the library_default GEMM kernel");
   }
   if (program.chunk_rows <= 0 ||
       (program.problem.rows_per_peer > 0 &&
