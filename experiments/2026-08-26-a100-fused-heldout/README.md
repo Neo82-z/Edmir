@@ -65,3 +65,12 @@ extrapolation, not a global hard-coded K threshold.
 
 `evaluation.json` is the machine-readable report. The per-directory
 `results.csv` files and retained logs are authoritative for the measurements.
+
+## Compiler integration
+
+The follow-up selector is now implemented in
+`EDM-IR/edmir/compiler/fused_selection.py` and exposed as
+`python -m edmir compile-fused`. The retained profile admits only the exact
+device/software fingerprint and the 45 measured M/N/K points above, requires
+an explicit `--allow-experimental-fused`, and otherwise emits an auditable host
+fallback. The source measurements and evaluation artifact remain unchanged.

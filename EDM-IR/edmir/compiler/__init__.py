@@ -30,6 +30,16 @@ from .fused_evaluation import (
     fit_fused_k_boundary,
     read_fused_measurements,
 )
+from .fused_selection import (
+    FusedCandidateDecision,
+    FusedEnvironmentFingerprint,
+    FusedEvidence,
+    FusedKRule,
+    FusedSelectionProfile,
+    FusedSelectionResult,
+    FusedShapeEnvelope,
+    select_fused_a2a_gemm,
+)
 from .frontend import GraphBuilder, build_a2a_gemm_module
 from .lowering import A2AGemmMatch, lower_fused_a2a_gemm, match_a2a_gemm
 from .model import (
@@ -96,6 +106,13 @@ __all__ = [
     "ExecutionFeatures",
     "ExecutionOverhead",
     "FusedTrafficEstimate",
+    "FusedCandidateDecision",
+    "FusedEnvironmentFingerprint",
+    "FusedEvidence",
+    "FusedKRule",
+    "FusedSelectionProfile",
+    "FusedSelectionResult",
+    "FusedShapeEnvelope",
     "FUSED_FAMILIES",
     "FusedMeasurement",
     "DependenceResult",
@@ -152,4 +169,5 @@ __all__ = [
     "verify_program",
     "verify_schedule",
     "verify_dataflow",
+    "select_fused_a2a_gemm",
 ]

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+from pathlib import Path
 
 from .compiler import (
     A2AGemmProblem,
@@ -8,6 +9,8 @@ from .compiler import (
     CompilerPipeline,
     CompilerOptions,
     DataflowModule,
+    FusedEnvironmentFingerprint,
+    FusedSelectionProfile,
     PassManager,
     Program,
     TopologySnapshot,
@@ -24,6 +27,7 @@ from .compiler import (
     match_a2a_gemm,
     read_runtime_measurements,
     read_fused_measurements,
+    select_fused_a2a_gemm,
     create_backend,
     simulate_program,
     verify_program,
@@ -192,6 +196,47 @@ def _lower_fused(args: argparse.Namespace) -> int:
         f"split_k_slices={artifact.metadata['split_k_slices']} "
         f"estimated_ctas_per_op={artifact.metadata['estimated_ctas_per_op']}"
     )
+    for path in written:
+        print(f"wrote {path}")
+    return 0
+
+
+def _compile_fused(args: argparse.Namespace) -> int:
+    problem = A2AGemmProblem.from_dict(read_json(args.problem))
+    normalized, pass_trace = PassManager().run(build_a2a_gemm_module(problem))
+    match = match_a2a_gemm(normalized)
+    topology = TopologySnapshot.from_dict(read_json(args.topology))
+    profile = FusedSelectionProfile.from_dict(read_json(args.profile))
+    environment = FusedEnvironmentFingerprint.from_dict(read_json(args.environment))
+    result = select_fused_a2a_gemm(
+        match.problem,
+        topology,
+        profile,
+        environment,
+        allow_experimental_fused=args.allow_experimental_fused,
+    )
+    artifact = create_backend(args.backend).emit(result.program, result.target)
+    written = list(artifact.write_to(args.out_dir))
+    report_path = Path(args.out_dir) / "selection.json"
+    write_json(report_path, result.to_dict())
+    written.append(report_path)
+    for trace in pass_trace:
+        print(f"pass={trace.name} changed={str(trace.changed).lower()}")
+    print(
+        f"selected={result.selected_family} admitted={str(result.admitted).lower()} "
+        f"reason={result.reason}"
+    )
+    for candidate in result.candidates:
+        print(
+            f"candidate={candidate.family} eligible={str(candidate.eligible).lower()} "
+            f"provider={candidate.gemm_provider} kernel={candidate.gemm_kernel} "
+            f"communication_api={candidate.communication_api} reason={candidate.reason}"
+        )
+    if result.traffic is not None:
+        print(
+            "traffic "
+            + " ".join(f"{key}={value}" for key, value in result.traffic.items())
+        )
     for path in written:
         print(f"wrote {path}")
     return 0
@@ -458,6 +503,19 @@ def build_parser() -> argparse.ArgumentParser:
     lower_fused.add_argument("--out-dir", required=True)
     lower_fused.add_argument("--backend", choices=("json", "cpp"), default="json")
     lower_fused.set_defaults(func=_lower_fused)
+
+    compile_fused = subparsers.add_parser(
+        "compile-fused",
+        help="profile-gated selection of host, direct, or split-K All2All->GEMM",
+    )
+    compile_fused.add_argument("problem")
+    compile_fused.add_argument("--topology", required=True)
+    compile_fused.add_argument("--profile", required=True)
+    compile_fused.add_argument("--environment", required=True)
+    compile_fused.add_argument("--allow-experimental-fused", action="store_true")
+    compile_fused.add_argument("--backend", choices=("json", "cpp"), default="json")
+    compile_fused.add_argument("--out-dir", required=True)
+    compile_fused.set_defaults(func=_compile_fused)
 
     fit_nccl = subparsers.add_parser(
         "fit-nccl", help="attach pairwise nccl-tests sendrecv curves to a profile"

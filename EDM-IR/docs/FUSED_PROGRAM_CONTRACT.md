@@ -47,19 +47,19 @@ to `lsa_naive_f16`. The CUTLASS path resolves the remote A pointer inside a
 custom device wrapper, substitutes it into `GemmKernel::Params`, and invokes
 the ordinary predicated tensor-core mainloop and epilogue in the same launch.
 
-## Why the cost model rejects it
+## Why the decomposed cost model still rejects it
 
 The existing model is calibrated from independent transfer, GEMM, event, and
 dispatch measurements. Summing or overlapping those terms does not measure an
 in-kernel communication/GEMM pipeline. `simulate_program()` therefore rejects
-the fused op rather than assigning it an invented duration. Fused selection can
-begin only after a profile contains measurements from the exact fused kernel
-identity and launch path.
+the fused op rather than assigning it an invented duration. Fused selection is
+instead performed by a measured, environment-fingerprinted decision profile;
+the two models are not mixed.
 
-## Runtime experiment gate
+## Runtime experiment and admission gate
 
-The ABI/reference-runtime gate is complete. Before admitting fusion to schedule
-selection, capture the following on one fixed machine:
+The ABI/reference-runtime gate and first fixed-machine measurements are
+complete. Any new profile must still capture:
 
 1. environment provenance: GPU UUIDs, topology, driver, CUDA, NCCL, clocks,
    persistence state, and Device API symbols available in the installed headers;
@@ -76,7 +76,11 @@ The minimum admission criterion is not a single speedup. It is: zero numerical
 failures, an explicit runtime capability check, reproducible kernel identity,
 held-out direction accuracy, and lower measured runtime for at least one
 declared workload region. Until then, the compiler continues to emit the
-measured host-NCCL plus GEMM-provider schedule.
+measured host-NCCL plus GEMM-provider schedule. The retained A100/NV12 profile
+meets that criterion only for its explicit 45-point envelope. Missing opt-in,
+insufficient evidence, an environment mismatch, or an unmeasured shape emits
+the host-NCCL plus cuBLAS Program and records the rejection in
+`selection.json`.
 
 Run the admission probe with:
 
@@ -122,9 +126,9 @@ different fixed and bandwidth costs. On 4x A100, direct fusion won for the tiny
 `M8 K64 N64` validation shape but lost for every `M64 K4096` N-sweep point,
 including replay one. Adding serial split-K=8 at `M64 K4096 N64` kept bytes and
 replay fixed, increased estimated CTAs per op from one to eight, and changed the
-result from 82.3% slower to 11.8% faster than the host baseline. Fused schedule
-selection stays disabled until remote bytes, replay, and CTA concurrency are
-calibrated across train and held-out shapes.
+result from 82.3% slower to 11.8% faster than the host baseline. Those features
+are retained in every admitted selection report; they are descriptive traffic
+terms, not an invented latency prediction.
 
 A fixed-`M64 N64` K sweep subsequently isolated the concurrency boundary from
 N-tile replay. Direct fusion won for K=256, 512, and 1024; split-K=8 won for
@@ -136,6 +140,9 @@ preserve the choice direction.
 The follow-up completed the full `M={32,64,128}` by `N={64,128,256}` grid.
 Training on M64/N64 and holding out the other eight M/N pairs produced 100%
 direction accuracy and zero selection regret over 40 held-out problems. This
-admits the boundary as a measured A100/NV12 profile candidate, but not as a
-portable compiler default: the evaluation artifact explicitly keeps default
-admission disabled and requires a future environment-fingerprinted profile.
+admits the boundary as a measured A100/NV12 profile, but not as a portable
+compiler default. `compile-fused` requires an exact environment fingerprint,
+the exact measured M/N/K set, full NV12 P2P topology, the held-out evidence
+gate, and `--allow-experimental-fused`. The selector chooses direct through
+K=1024 and split-K8 from K=2048 only after all guards pass; otherwise it emits
+the host fallback.

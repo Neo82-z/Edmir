@@ -1,0 +1,39 @@
+{
+  "schema": "edmir.fused_selection_profile.v1",
+  "profile_id": "a100-nv12-fused-2026-08-26",
+  "source": "experiments/2026-08-26-a100-fused-heldout/evaluation.json",
+  "default_compiler_admission": false,
+  "environment": {
+    "schema": "edmir.fused_environment.v1",
+    "arch": "sm_80",
+    "device": "NVIDIA A100-SXM4-80GB",
+    "world_size": 4,
+    "link_label": "NV12",
+    "driver_version": "580.126.16",
+    "cuda_version": "12.8.93",
+    "nccl_version": "v2.28.9-1",
+    "nccl_commit": "dbc86fd06e8b0c4517b95d8958a09ccacf9520c9",
+    "cutlass_version": "v4.7.0",
+    "cutlass_commit": "dcf215af68a2d08d305076c152a06f201728cd53"
+  },
+  "envelope": {
+    "rows_per_peer": [32, 64, 128],
+    "n": [64, 128, 256],
+    "k": [256, 512, 1024, 2048, 4096],
+    "dtype": "float16",
+    "layout": "row_major"
+  },
+  "rule": {
+    "max_direct_k": 1024,
+    "min_split_k": 2048,
+    "direct_kernel": "sm80_64x128x32",
+    "split_kernel": "sm80_64x128x32_splitk8"
+  },
+  "evidence": {
+    "train_problems": 5,
+    "heldout_problems": 40,
+    "heldout_direction_accuracy": 1.0,
+    "heldout_max_selection_regret": 0.0,
+    "heldout_host_wins": 0
+  }
+}

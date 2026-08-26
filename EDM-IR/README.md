@@ -16,6 +16,12 @@ physical buffers it reads and writes; queue order and RAW/WAR/WAW hazards are
 derived in one place. The resulting graph is consumed by both the legality
 checker and the deterministic cost simulator.
 
+Fused kernels use a separate, deliberately conservative selection path. A
+versioned profile binds a measured shape envelope and direct/split-K rule to an
+exact GPU, topology, CUDA, NCCL, and CUTLASS fingerprint. Selection requires an
+explicit opt-in and refuses every extrapolation; the ordinary host NCCL +
+cuBLAS Program is the successful fallback, not an error path.
+
 The current artifact generates a compileable C++20 `ProgramView`. The optional
 C++ runtime executes it with CUDA streams/events, grouped NCCL send/recv, and a
 statically selected cuBLAS or CUTLASS GEMM provider. Both provider paths have
@@ -123,9 +129,29 @@ This command emits a verified `fused` Program and a
 `communication_api=nccl_device` target. A runtime built with NCCL 2.28+,
 `EDMIR_ENABLE_NCCL_DEVICE=ON`, and optionally `EDMIR_ENABLE_CUTLASS=ON`
 executes the selected fused kernel. The calibrated simulator still rejects the
-fused op because no fused cost has been admitted; ordinary cost-based
-compilation therefore remains on the measured host-NCCL path. See
+fused op because decomposed transfer/GEMM costs do not describe an in-kernel
+implementation. `lower-fused` is therefore an explicit force-lowering/debug
+entry point, not an automatic selector. See
 [`docs/FUSED_PROGRAM_CONTRACT.md`](docs/FUSED_PROGRAM_CONTRACT.md).
+
+Run the measured, profile-gated selector locally with:
+
+```bash
+python -m edmir compile-fused examples/a100_fused_problem.json \
+  --topology examples/a100_fused_topology.json \
+  --profile examples/a100_fused_selection_profile.json \
+  --environment examples/a100_fused_environment.json \
+  --allow-experimental-fused --backend cpp \
+  --out-dir /tmp/edmir-fused-selected
+```
+
+The example selects split-K8 for the measured K=4096 point. Removing
+`--allow-experimental-fused`, changing any environment field, removing the
+NV12 link labels, or using a shape outside the explicit 45-point envelope
+emits a host fallback. `selection.json` records the chosen family, every
+candidate, the guard result, exact reason, resolved target, and static traffic
+features. The supplied fingerprint is a retained experiment fixture; it must
+be replaced by the observed server environment on a new run.
 
 The output schema is `edmir.program.v1`. Compiler-generated `edmir.plan.v1`
 files from the first prototype remain readable and are rebuilt as Programs;
@@ -188,8 +214,9 @@ python -m edmir evaluate-fused \
 
 The report fits the observed direct/split-K boundary and computes held-out
 direction accuracy and selection regret. Its schema explicitly leaves default
-compiler admission disabled; an environment-fingerprinted profile is still
-required before automatic fused selection.
+compiler admission disabled. `compiler/fused_selection.py` consumes that
+evidence through an environment-fingerprinted profile and still requires
+explicit experimental admission at each compile.
 
 ## Code map
 
@@ -198,6 +225,7 @@ compiler/model.py       Buffer, Op, Program, problem/profile/topology schemas
 compiler/calibration.py NCCL and exact-shape GEMM parsers/calibration
 compiler/evaluation.py train/heldout runtime fit and selection metrics
 compiler/fused_evaluation.py guarded fused-family boundary and held-out metrics
+compiler/fused_selection.py exact-envelope admission, selection, and fallback
 compiler/dataflow.py    typed SSA-like tensor Dataflow IR
 compiler/frontend.py    small graph builder and A2AGemm frontend
 compiler/passes.py      canonicalization, verification, pass trace
@@ -225,6 +253,7 @@ Runtime build and generated-program smoke instructions are in
 - one destination-local GEMM per received row tile;
 - one communication, compute, and control resource model per rank;
 - sequential fallback when P2P connectivity or predicted gain is absent.
+- fused selection only for the exact versioned A100/NV12 measured envelope.
 
 Dynamic MoE routing, ragged tokens, Grouped GEMM, multi-node networking, true
 collective rendezvous, and GPU code generation remain outside this version.

@@ -41,8 +41,8 @@ A2AGemmProblem / GraphBuilder
 └──────────────┬───────────────┘
                ▼
 ┌──────────────────────────────┐
-│ Schedule search/lowering     │  sequential and pipelined candidates
-│ profile + topology + options │
+│ Selection/lowering           │  host search or guarded fused family
+│ profile + topology + options │  exact-envelope admission
 └──────────────┬───────────────┘
                ▼
 ┌──────────────────────────────┐
@@ -139,17 +139,20 @@ Files: `compiler/model.py`, `compiler/schedule.py`, `compiler/compile.py`
 The candidate generator varies strategy, chunk rows and staging buffer count.
 The calibrated simulator ranks legal baseline candidates. The fused strategy
 has formal lowering, verification, a guarded executable correctness reference,
-and a CUTLASS tensor-core research kernel, but remains excluded from selection
-until the measured workload-region gate is complete. Dataflow nodes never
-contain these choices.
+and two CUTLASS tensor-core kernels. It remains excluded from the decomposed
+host cost simulator, but `fused_selection.py` can select direct or split-K8
+through a separate measured profile. Dataflow nodes never contain these
+choices.
 
 Fused-family evaluation is a separate offline layer. It may fit and validate a
 direct-versus-split-K boundary from measured CSVs, but it cannot mutate
 `CalibrationProfile` or enter normal candidate selection. The emitted report
 records train/held-out direction accuracy, regret, host wins, and
-`default_compiler_admission=false`. This keeps a reproducible path from
-measurement to future admission without treating one A100 profile as an
-architecture law.
+`default_compiler_admission=false`. `FusedSelectionProfile` then binds that
+evidence and rule to the exact device, NVLink label, CUDA, NCCL, and CUTLASS
+identity plus the measured M/N/K set. The compiler requires an explicit opt-in
+and emits a reasoned host fallback for every mismatch. This is admission of one
+reproducible region, not an architecture law.
 
 ### 6. Dependency and legality lowering
 
@@ -166,7 +169,8 @@ The verifier, simulator and C++ backend all call the same implementation. This i
 
 ### 7. Target and profile
 
-Files: `compiler/target.py`, `compiler/calibration.py`
+Files: `compiler/target.py`, `compiler/calibration.py`,
+`compiler/fused_selection.py`
 
 `Target` owns CUDA target identity, architecture label, communication API,
 GEMM provider, resolved kernel policy and the measured topology snapshot.
@@ -175,6 +179,9 @@ required by the fused reference. `CalibrationProfile` owns replaceable timing in
 optional per-`(src,dst,size)` NCCL curves.
 
 Topology describes what is legal; the profile estimates cost. Neither is embedded into the frontend graph.
+The fused selection profile is intentionally distinct from
+`CalibrationProfile`: it stores a measured decision rule and exact environment
+fingerprint, not additive latency terms.
 
 ### 8. Backends
 
@@ -225,6 +232,21 @@ target.json        architecture and measured topology contract
 edmir_program.hpp  compile-time C++ runtime descriptor
 ```
 
+The guarded fused entry point produces the same backend artifacts plus an
+auditable selection report:
+
+```bash
+python -m edmir compile-fused examples/a100_fused_problem.json \
+  --topology examples/a100_fused_topology.json \
+  --profile examples/a100_fused_selection_profile.json \
+  --environment examples/a100_fused_environment.json \
+  --allow-experimental-fused --backend cpp \
+  --out-dir /tmp/edmir-fused-selected
+```
+
+No opt-in or any fingerprint/envelope/evidence mismatch selects the host
+fallback while still producing a valid Program, target, and `selection.json`.
+
 ## Extension rules
 
 1. New frontend syntax must lower to existing Dataflow IR or add explicit typed IR semantics.
@@ -262,11 +284,13 @@ than a universal speedup. Tiny `M8 K64 N64` lowered latency by 42.6% versus the
 host-NCCL/CUTLASS Program, while `M64 K4096` was slower for every measured N.
 For the standard 128-column tile, direct remote A reads are replayed
 `ceil(N/128)` times; even replay one loses once A is 512 KiB. An admitted fused
-model must therefore include remote A bytes and N-tile replay, and a future
+profile must therefore include remote A bytes and N-tile replay, and a future
 persistent kernel must explicitly trade A reuse against CTA occupancy. A first
 serial split-K=8 kernel already demonstrates the missing concurrency axis: at
 `M64 K4096 N64` it turns the direct fused path from 82.3% slower into 11.8%
 faster than the host baseline without changing remote bytes or replay.
+The exact-envelope selector now admits the retained 45-point A100/NV12 region
+only; every other hardware, software, or shape combination falls back to host.
 The contract and experiment gate are in
 [`FUSED_PROGRAM_CONTRACT.md`](FUSED_PROGRAM_CONTRACT.md).
 
