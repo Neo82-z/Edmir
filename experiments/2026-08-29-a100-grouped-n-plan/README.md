@@ -1,10 +1,11 @@
-# A100 grouped-N remote-A reuse plan
+# Four-A100 fused LSA + GEMM schedule boundary
 
-Status: **design only; all latency and correctness result cells remain empty**.
+Status: **measured on 2026-08-29; grouped-N remains experimental and is not
+profile-admitted**.
 
 ## Question
 
-For fused LSA + GEMM, which pair
+For fused LSA + GEMM, which schedule
 
 ```text
 (g = N tiles retained per CTA, q = split-K slices)
@@ -20,87 +21,129 @@ CTA_supply_per_remote_op = ceil(M / T_M) * rho_N * q
 ```
 
 `g` can reduce remote bytes. `q` cannot; it only changes concurrency and adds
-serial split-K reduction cost. Neither axis is admitted by a latency formula.
+split-K reduction cost. The experiment tests both claims and the separate
+host-versus-fused admission decision.
 
-## Candidate matrix
+## Reproducibility envelope
 
-- host NCCL + identical local CUTLASS GEMM;
-- direct LSA + CUTLASS: `(g=1, q=1)`;
-- current split-K family: `(g=1, q in {2,4,8,16})`;
-- grouped-N direct: `(g in {2,4}, q=1)`;
-- grouped-N plus split-K: `(g in {2,4}, q in {2,4,8,16})`.
+- 4 x NVIDIA A100-SXM4-80GB, every GPU pair reported as `NV12`, full P2P;
+- driver 570.195.03, CUDA 12.8.93;
+- isolated NCCL 2.28.9 with Device API enabled;
+- CUTLASS commit `dcf215af68a2d08d305076c152a06f201728cd53`;
+- EDM-IR commit `f584d7d` plus the direct-script import fix committed with
+  this result;
+- FP16, 30 warmups and 300 timed iterations for the main surface;
+- 100 warmups and 2,000 iterations for the grouped-N crossover replication.
 
-The current source implements `g=2` by doubling the CUTLASS N-threadblock;
-`g=4` remains analysis-only. Neither grouped family is profile-admitted before
-the new source compiles and passes the protocol below on the pinned A100 stack.
+The compact raw archive is
+`raw/edmir-a100-4gpu-20260829-compact-v2.tar.gz`, SHA-256
+`262ef0947a7b943200fe3a884b20c29be156fca055014a09981364e6ea133d02`.
+It retains CSVs, manifests, environment/topology fingerprints, correctness and
+run logs, NCCL output, P2P output, and held-out decisions. Rebuildable binaries
+and per-candidate build trees are excluded.
 
-## Shape grid
+## Measurement coverage and correctness
 
-Use four A100 SXM GPUs and retain exact topology/software fingerprints.
+- 358 timed candidate rows including the smoke gate and high-statistic repeat;
+- 41 distinct base-family shapes over rows-per-peer 32--512, N 128--2048,
+  and K 512--8192, plus the K=256 smoke point;
+- host, direct, and split-K q in {2,4,8,16};
+- grouped-N g=2 paired with direct and each split-K family on four N sweeps;
+- 61 per-kernel correctness runs, all with `max_abs_error=0` and
+  `max_rel_error=0`;
+- every NCCL validation reported zero wrong elements.
 
-```text
-M = rows_per_peer in {32, 64, 128}
-K in {256, 512, 1024, 2048, 4096}
-N in {128, 256, 512, 1024}
-dtype = FP16 first; BF16 is a separate replication
-```
+## Split-K boundary at rows-per-peer=64, N=512
 
-Planning command:
+All values are median milliseconds. `speedup` compares the best candidate with
+the host NCCL + local CUTLASS pipeline.
 
-```bash
-python tools/plan_grouped_n_sweep.py \
-  --problem INPUT_PROBLEM.json \
-  --topology INPUT_TOPOLOGY.json \
-  --kernels sm80_64x128x32,sm80_64x128x32_splitk2,sm80_64x128x32_splitk4,sm80_64x128x32_splitk8,sm80_64x128x32_splitk16 \
-  --n-tiles-per-cta 1,2,4 \
-  --out results/schedule-space.json
-```
+| K | host | direct | q=2 | q=4 | q=8 | q=16 | oracle | speedup |
+|---:|---:|---:|---:|---:|---:|---:|:---|---:|
+| 512 | 0.5649 | 0.3148 | 0.3128 | 0.3369 | 0.4411 | 0.7016 | q=2 | 1.806x |
+| 1024 | 0.5811 | 0.4037 | 0.3426 | 0.3492 | 0.4581 | 0.7155 | q=2 | 1.696x |
+| 2048 | 0.5826 | 0.6079 | 0.4433 | 0.4003 | 0.4844 | 0.7448 | q=4 | 1.455x |
+| 4096 | 0.6370 | 1.0334 | 0.6482 | 0.5079 | 0.5467 | 0.7851 | q=4 | 1.254x |
+| 8192 | 0.8427 | 1.8886 | 1.0863 | 0.7214 | 0.6556 | 0.8742 | q=8 | 1.285x |
 
-After the source build passes, the executable smoke matrix adds
-`--grouped-n-values 2` to `tools/run_fused_kernel_sweep.py`.
+This is the central split-K result: q does not reduce remote bytes. It improves
+long-K latency only until the CTA grid is large enough to cover the SMs; larger
+q then loses to extra reduction and synchronization work. Increasing either M
+or N increases the base CTA grid and moves the oracle back toward smaller q.
 
-The first server invocation is deliberately small and correctness-first:
+## Grouped-N result
 
-```bash
-python tools/run_fused_kernel_sweep.py \
-  --runtime runtime \
-  --topology INPUT_TOPOLOGY.json \
-  --cutlass /opt/cutlass \
-  --nccl-home /opt/nccl-device \
-  --out results/g2-smoke \
-  --rows-per-peer 64 --n 256 --k-values 256 \
-  --split-k-values 2 --grouped-n-values 2 \
-  --warmup 2 --iterations 5 --validate-first
-```
+The g=2 kernel halves both estimated remote-A replay and CTA supply. Across 100
+matched main-sweep pairs it won only four times; the geometric conclusion is
+therefore not "reuse is always faster". Most points lose because the wider
+CUTLASS tile and reduced grid outweigh the saved LSA loads.
 
-Only after all five host/direct/split-K/grouped candidates build and validate
-does the full grid begin.
+The only useful crossover was independently repeated at
+rows-per-peer=64, N=1024, K=8192:
 
-## Measurement protocol
+| candidate | replay | CTA/op | median ms | p95 ms |
+|:---|---:|---:|---:|---:|
+| split-K q=4, g=1 | 8 | 32 | 0.7767 | 0.8381 |
+| split-K q=8, g=1 | 8 | 64 | 0.8430 | 0.9261 |
+| split-K q=4, g=2 | 4 | 16 | 0.8604 | 0.9036 |
+| split-K q=8, g=2 | 4 | 32 | **0.7685** | 0.8459 |
 
-1. Run numerical validation before timing every new `(g,q)` family.
-2. Use identical generated inputs and weights for host and fused candidates.
-3. Warm up 30 iterations and record at least 300 measured iterations.
-4. Retain min/median/p95/max/mean, CUDA/NCCL/CUTLASS commits, clocks, power
-   state, topology, and the generated target/program artifacts.
-5. Train a selection rule on the designated M64 subset; use the other M/N
-   pairs only for held-out direction accuracy and regret.
-6. Admit no grouped-N point unless all exact-shape numerical checks pass,
-   held-out direction accuracy is at least 99%, maximum selection regret is at
-   most 1%, and host has no unmodeled win inside the claimed envelope.
+Grouped q=8 is 1.1% faster than the best ungrouped schedule while restoring the
+same 32-CTA supply as ungrouped q=4. This is evidence of a narrow interaction,
+not sufficient evidence to admit g=2 globally.
 
-## Result table (intentionally empty)
+## Host admission boundary
 
-| M | K | N | g | q | rho_N | CTA/op | median ms | p95 ms | max abs error | status |
-|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|:---|
-| TBD | TBD | TBD | TBD | TBD | TBD | TBD | TBD | TBD | TBD | pending |
+Among 41 base-family shapes, the oracle counts were direct=5, q2=14, q4=15,
+q8=4, and host=3. Fused winners averaged 1.467x over host and reached 1.878x,
+but host won these compute-heavy points:
 
-## Stop conditions before the timed sweep
+| rows/peer | N | K | host ms | best fused ms | host advantage |
+|---:|---:|---:|---:|---:|---:|
+| 64 | 2048 | 4096 | 0.6453 | 0.7209 | 1.117x |
+| 64 | 2048 | 8192 | 1.0471 | 1.1937 | 1.140x |
+| 512 | 512 | 8192 | 1.5298 | 1.8079 | 1.182x |
 
-- grouped-N kernel compiles in the pinned A100 runtime during a short build-only gate;
-- C++ descriptor carries the schedule contract end to end;
-- invalid `g`, shape alignment, and unsupported runtime combinations fail
-  before launch;
-- CPU-only tests and host C++ validation are green;
-- the runner emits one machine-readable row per candidate and never overwrites
-  retained results.
+The compiler therefore needs two decisions: host versus fused admission, then
+direct/split/grouped schedule selection inside the admitted fused region.
+
+## Held-out result: the old K-only rule is rejected
+
+A per-K rule frozen on rows-per-peer=64, N=512 selected q2/q2/q4/q4/q8 for
+K=512/1024/2048/4096/8192. On 30 held-out M/N problems it achieved:
+
+- exact-family accuracy: 66.7%;
+- mean selection regret: 2.15%;
+- maximum selection regret: 19.47%;
+- selected schedule faster than host: 28/30;
+- mean selected speedup over host: 1.454x.
+
+This clears the evidence-count threshold but fails the 99% direction and 1%
+maximum-regret admission gates. The result falsifies K-only selection. The next
+cost model must include the base CTA grid from M and N, q, grouped replay, and
+an explicit host-admission term.
+
+## Communication baselines
+
+NCCL 2.28.9, four GPUs, 1 KiB--1 GiB, five warmups and 20 iterations:
+
+| collective at 1 GiB | algorithm BW | bus BW |
+|:---|---:|---:|
+| AllReduce | 139.04 GB/s | 208.56 GB/s |
+| AllGather | 249.79 GB/s | 187.35 GB/s |
+| ReduceScatter | 265.90 GB/s | 199.42 GB/s |
+| AllToAll | 269.82 GB/s | 202.37 GB/s |
+
+Small-message latency was approximately 24--31 us after initialization. The
+CUDA P2P sample reported 273--276 GB/s unidirectional writes, mostly 518--519
+GB/s bidirectional bandwidth (some GPU-2 pairs were 425--427 GB/s), and roughly
+3.0--3.4 us GPU-initiated peer latency. P2P-disabled copies were only 15--18
+GB/s at roughly 24.6 us.
+
+## Decision
+
+- Keep g=2 executable as an experimental cost-model candidate and regression
+  test; do not profile-admit it yet.
+- Replace the K-only selector with a two-stage admission + CTA-supply model.
+- Use the measured four-A100 topology and communication curves as the
+  single-node control when the project moves to eight-card inference.

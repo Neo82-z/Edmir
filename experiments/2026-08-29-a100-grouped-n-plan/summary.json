@@ -1,0 +1,67 @@
+{
+  "schema": "edmir.a100-grouped-n-experiment.v1",
+  "date": "2026-08-29",
+  "hardware": {
+    "gpu_count": 4,
+    "gpu": "NVIDIA A100-SXM4-80GB",
+    "topology": "all pairs NV12",
+    "p2p_full_mesh": true
+  },
+  "software": {
+    "driver": "570.195.03",
+    "cuda": "12.8.93",
+    "nccl": "2.28.9",
+    "cutlass_commit": "dcf215af68a2d08d305076c152a06f201728cd53",
+    "edmir_base_commit": "f584d7d"
+  },
+  "raw_archive": {
+    "path": "raw/edmir-a100-4gpu-20260829-compact-v2.tar.gz",
+    "sha256": "262ef0947a7b943200fe3a884b20c29be156fca055014a09981364e6ea133d02"
+  },
+  "coverage": {
+    "timed_candidate_rows": 358,
+    "base_shapes": 41,
+    "correctness_runs": 61,
+    "correctness_failures": 0
+  },
+  "base_oracle": {
+    "winner_counts": {
+      "host": 3,
+      "direct": 5,
+      "splitk2": 14,
+      "splitk4": 15,
+      "splitk8": 4,
+      "splitk16": 0
+    },
+    "mean_fused_speedup_when_fused_wins": 1.4670737229622388,
+    "max_fused_speedup": 1.8782894736842104
+  },
+  "grouped_n2": {
+    "matched_pairs": 100,
+    "wins": 4,
+    "profile_admitted": false,
+    "replicated_crossover": {
+      "rows_per_peer": 64,
+      "n": 1024,
+      "k": 8192,
+      "best_ungrouped_ms": 0.7767,
+      "best_grouped_ms": 0.7685,
+      "grouped_speedup": 1.0106701366297983
+    }
+  },
+  "heldout_k_only_rule": {
+    "problems": 30,
+    "exact_family_accuracy": 0.6666666666666666,
+    "mean_selection_regret": 0.02149077073633153,
+    "max_selection_regret": 0.19472829720179544,
+    "selected_beats_host": 28,
+    "mean_speedup_vs_host": 1.4540712041824178,
+    "admission_gate_passed": false
+  },
+  "nccl_1gib": {
+    "all_reduce": {"algbw_gbps": 139.04, "busbw_gbps": 208.56},
+    "all_gather": {"algbw_gbps": 249.79, "busbw_gbps": 187.35},
+    "reduce_scatter": {"algbw_gbps": 265.90, "busbw_gbps": 199.42},
+    "all_to_all": {"algbw_gbps": 269.82, "busbw_gbps": 202.37}
+  }
+}
