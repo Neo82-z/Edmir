@@ -60,13 +60,15 @@ ValidationReport validate_program(ProgramView program) {
     if (program.gemm_kernel == GemmKernel::kLibraryDefault) {
       report.errors.emplace_back("CUTLASS requires an explicit generated kernel");
     }
-    if (program.gemm_kernel == GemmKernel::kSm80_64x128x32SplitK8 &&
+    const auto split_k_slices = gemm_kernel_split_k_slices(program.gemm_kernel);
+    if (split_k_slices > 1 &&
         program.communication_api != CommunicationApi::kNCCLDevice) {
-      report.errors.emplace_back("CUTLASS split-K=8 requires NCCL Device API fusion");
+      report.errors.emplace_back("CUTLASS split-K requires NCCL Device API fusion");
     }
-    if (program.gemm_kernel == GemmKernel::kSm80_64x128x32SplitK8 &&
-        program.problem.k % 256 != 0) {
-      report.errors.emplace_back("CUTLASS split-K=8 requires K divisible by 256");
+    if (split_k_slices > 1 &&
+        program.problem.k % (32 * split_k_slices) != 0) {
+      report.errors.emplace_back(
+          "CUTLASS split-K requires K divisible by 32 times the slice count");
     }
   } else if (program.gemm_provider == GemmProvider::kCudaReference) {
     if (program.arch != "sm_80" || program.problem.dtype != DType::kFloat16) {

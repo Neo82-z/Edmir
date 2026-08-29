@@ -23,7 +23,10 @@ enum class GemmKernel : std::uint8_t {
   kLibraryDefault,
   kSm80_128x128x32,
   kSm80_64x128x32,
+  kSm80_64x128x32SplitK2,
+  kSm80_64x128x32SplitK4,
   kSm80_64x128x32SplitK8,
+  kSm80_64x128x32SplitK16,
   kSm80_128x64x32,
   kLsaNaiveF16,
 };
@@ -41,8 +44,14 @@ constexpr std::string_view gemm_kernel_name(GemmKernel kernel) {
       return "sm80_128x128x32";
     case GemmKernel::kSm80_64x128x32:
       return "sm80_64x128x32";
+    case GemmKernel::kSm80_64x128x32SplitK2:
+      return "sm80_64x128x32_splitk2";
+    case GemmKernel::kSm80_64x128x32SplitK4:
+      return "sm80_64x128x32_splitk4";
     case GemmKernel::kSm80_64x128x32SplitK8:
       return "sm80_64x128x32_splitk8";
+    case GemmKernel::kSm80_64x128x32SplitK16:
+      return "sm80_64x128x32_splitk16";
     case GemmKernel::kSm80_128x64x32:
       return "sm80_128x64x32";
     case GemmKernel::kLsaNaiveF16:
@@ -55,7 +64,10 @@ constexpr std::int32_t gemm_kernel_threadblock_n(GemmKernel kernel) {
   switch (kernel) {
     case GemmKernel::kSm80_128x128x32:
     case GemmKernel::kSm80_64x128x32:
+    case GemmKernel::kSm80_64x128x32SplitK2:
+    case GemmKernel::kSm80_64x128x32SplitK4:
     case GemmKernel::kSm80_64x128x32SplitK8:
+    case GemmKernel::kSm80_64x128x32SplitK16:
       return 128;
     case GemmKernel::kSm80_128x64x32:
       return 64;
@@ -72,7 +84,10 @@ constexpr std::int32_t gemm_kernel_threadblock_m(GemmKernel kernel) {
     case GemmKernel::kSm80_128x64x32:
       return 128;
     case GemmKernel::kSm80_64x128x32:
+    case GemmKernel::kSm80_64x128x32SplitK2:
+    case GemmKernel::kSm80_64x128x32SplitK4:
     case GemmKernel::kSm80_64x128x32SplitK8:
+    case GemmKernel::kSm80_64x128x32SplitK16:
       return 64;
     case GemmKernel::kLibraryDefault:
     case GemmKernel::kLsaNaiveF16:
@@ -82,7 +97,18 @@ constexpr std::int32_t gemm_kernel_threadblock_m(GemmKernel kernel) {
 }
 
 constexpr std::int32_t gemm_kernel_split_k_slices(GemmKernel kernel) {
-  return kernel == GemmKernel::kSm80_64x128x32SplitK8 ? 8 : 1;
+  switch (kernel) {
+    case GemmKernel::kSm80_64x128x32SplitK2:
+      return 2;
+    case GemmKernel::kSm80_64x128x32SplitK4:
+      return 4;
+    case GemmKernel::kSm80_64x128x32SplitK8:
+      return 8;
+    case GemmKernel::kSm80_64x128x32SplitK16:
+      return 16;
+    default:
+      return 1;
+  }
 }
 
 constexpr std::string_view gemm_provider_name(GemmProvider provider) {

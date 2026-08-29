@@ -108,9 +108,18 @@ cudaError_t launch_lsa_cutlass_gemm_f16_sm80(
     case GemmKernel::kSm80_64x128x32:
       return launch<detail::Sm80Gemm<64, 128, 32, 64>>(
           input_window, source_rank, m, n, k, weight, output, workspace, 1, stream);
+    case GemmKernel::kSm80_64x128x32SplitK2:
+      return launch<detail::Sm80Gemm<64, 128, 32, 64, true>>(
+          input_window, source_rank, m, n, k, weight, output, workspace, 2, stream);
+    case GemmKernel::kSm80_64x128x32SplitK4:
+      return launch<detail::Sm80Gemm<64, 128, 32, 64, true>>(
+          input_window, source_rank, m, n, k, weight, output, workspace, 4, stream);
     case GemmKernel::kSm80_64x128x32SplitK8:
       return launch<detail::Sm80Gemm<64, 128, 32, 64, true>>(
           input_window, source_rank, m, n, k, weight, output, workspace, 8, stream);
+    case GemmKernel::kSm80_64x128x32SplitK16:
+      return launch<detail::Sm80Gemm<64, 128, 32, 64, true>>(
+          input_window, source_rank, m, n, k, weight, output, workspace, 16, stream);
     case GemmKernel::kSm80_128x64x32:
       return launch<detail::Sm80Gemm<128, 64, 64, 32>>(
           input_window, source_rank, m, n, k, weight, output, workspace, 1, stream);
@@ -122,7 +131,7 @@ cudaError_t launch_lsa_cutlass_gemm_f16_sm80(
 }
 
 std::size_t lsa_cutlass_workspace_size(GemmKernel kernel, int m, int n) {
-  if (kernel != GemmKernel::kSm80_64x128x32SplitK8) return 0;
+  if (gemm_kernel_split_k_slices(kernel) == 1) return 0;
   const auto m_tiles = static_cast<std::size_t>((m + 63) / 64);
   const auto n_tiles = static_cast<std::size_t>((n + 127) / 128);
   return m_tiles * n_tiles * sizeof(int);

@@ -78,9 +78,12 @@ def candidate(
         program = build_fused_program(problem, chunk_rows=problem.rows_per_peer)
         kernel = "sm80_64x128x32"
         communication_api = "nccl_device"
-    elif family == "splitk8":
+    elif family.startswith("splitk"):
+        split_k_slices = int(family.removeprefix("splitk"))
+        if split_k_slices not in {2, 4, 8, 16}:
+            raise ValueError(f"unsupported split-K slice count {split_k_slices}")
         program = build_fused_program(problem, chunk_rows=problem.rows_per_peer)
-        kernel = "sm80_64x128x32_splitk8"
+        kernel = f"sm80_64x128x32_splitk{split_k_slices}"
         communication_api = "nccl_device"
     else:
         raise ValueError(f"unknown family {family!r}")
@@ -98,7 +101,7 @@ def candidate(
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Measure host, direct-LSA, and split-K fused CUTLASS boundaries"
+        description="Measure host, direct-LSA, and serial split-K CUTLASS boundaries"
     )
     parser.add_argument("--runtime", type=Path, required=True)
     parser.add_argument("--topology", type=Path, required=True)
@@ -108,6 +111,7 @@ def main() -> int:
     parser.add_argument("--rows-per-peer", type=int, default=64)
     parser.add_argument("--n", type=int, default=64)
     parser.add_argument("--k-values", default="256,512,1024,2048,4096")
+    parser.add_argument("--split-k-values", default="8")
     parser.add_argument("--warmup", type=int, default=30)
     parser.add_argument("--iterations", type=int, default=300)
     parser.add_argument("--devices", default="0,1,2,3")
@@ -124,6 +128,10 @@ def main() -> int:
     k_values = tuple(int(value) for value in args.k_values.split(","))
     if not k_values or any(k <= 0 or k % 256 for k in k_values):
         raise ValueError("all K values must be positive multiples of 256")
+    split_k_values = tuple(int(value) for value in args.split_k_values.split(","))
+    if not split_k_values or any(value not in {2, 4, 8, 16} for value in split_k_values):
+        raise ValueError("split-K values must be selected from 2,4,8,16")
+    families = ("host", "direct", *(f"splitk{value}" for value in split_k_values))
 
     env = dict(os.environ)
     env["CUDA_VISIBLE_DEVICES"] = args.devices
@@ -148,7 +156,7 @@ def main() -> int:
             k=k,
             n=args.n,
         )
-        for family in ("host", "direct", "splitk8"):
+        for family in families:
             header, kernel = candidate(problem, topology, family)
             candidate_id = f"m{args.rows_per_peer}_k{k}_n{args.n}_{family}"
             directory = artifacts / candidate_id
@@ -213,13 +221,17 @@ def main() -> int:
                 str(build),
                 "--target",
                 "edmir_benchmark_generated",
-                *( ["edmir_validate_generated"] if args.validate_first and index < 3 else [] ),
+                *(
+                    ["edmir_validate_generated"]
+                    if args.validate_first and index < len(families)
+                    else []
+                ),
                 "-j",
             ],
             log=logs / f"10_build_{index:02d}_{entry['candidate_id']}.txt",
             env=env,
         )
-        if args.validate_first and index < 3:
+        if args.validate_first and index < len(families):
             run(
                 [str(build / "edmir_validate_generated")],
                 log=logs / f"11_validate_{index:02d}_{entry['candidate_id']}.txt",

@@ -51,7 +51,10 @@ GEMM_KERNEL_ENUM = {
     "library_default": "GemmKernel::kLibraryDefault",
     "sm80_128x128x32": "GemmKernel::kSm80_128x128x32",
     "sm80_64x128x32": "GemmKernel::kSm80_64x128x32",
+    "sm80_64x128x32_splitk2": "GemmKernel::kSm80_64x128x32SplitK2",
+    "sm80_64x128x32_splitk4": "GemmKernel::kSm80_64x128x32SplitK4",
     "sm80_64x128x32_splitk8": "GemmKernel::kSm80_64x128x32SplitK8",
+    "sm80_64x128x32_splitk16": "GemmKernel::kSm80_64x128x32SplitK16",
     "sm80_128x64x32": "GemmKernel::kSm80_128x64x32",
     "lsa_naive_f16": "GemmKernel::kLsaNaiveF16",
 }

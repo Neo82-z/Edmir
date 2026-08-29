@@ -14,7 +14,13 @@ int main() {
   static_assert(gemm_kernel_threadblock_n(GemmKernel::kLsaNaiveF16) == 0);
   static_assert(gemm_kernel_split_k_slices(GemmKernel::kSm80_64x128x32) == 1);
   static_assert(
+      gemm_kernel_split_k_slices(GemmKernel::kSm80_64x128x32SplitK2) == 2);
+  static_assert(
+      gemm_kernel_split_k_slices(GemmKernel::kSm80_64x128x32SplitK4) == 4);
+  static_assert(
       gemm_kernel_split_k_slices(GemmKernel::kSm80_64x128x32SplitK8) == 8);
+  static_assert(
+      gemm_kernel_split_k_slices(GemmKernel::kSm80_64x128x32SplitK16) == 16);
   constexpr ProblemDesc problem{2, 16, 64, 64, DType::kFloat16};
   constexpr std::array buffers{
       BufferDesc{"input", 0, BufferRole::kInput, 2048},

@@ -47,7 +47,10 @@ void launch_cutlass_gemm_f16_sm80(
     case GemmKernel::kSm80_64x128x32:
       return launch<Sm80Gemm<64, 128, 32, 64>>(
           m, n, k, activation, weight, output, stream);
+    case GemmKernel::kSm80_64x128x32SplitK2:
+    case GemmKernel::kSm80_64x128x32SplitK4:
     case GemmKernel::kSm80_64x128x32SplitK8:
+    case GemmKernel::kSm80_64x128x32SplitK16:
       break;
     case GemmKernel::kSm80_128x64x32:
       return launch<Sm80Gemm<128, 64, 64, 32>>(

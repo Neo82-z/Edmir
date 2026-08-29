@@ -13,23 +13,37 @@ GEMM_KERNELS = (
     "library_default",
     "sm80_128x128x32",
     "sm80_64x128x32",
+    "sm80_64x128x32_splitk2",
+    "sm80_64x128x32_splitk4",
     "sm80_64x128x32_splitk8",
+    "sm80_64x128x32_splitk16",
     "sm80_128x64x32",
     "lsa_naive_f16",
 )
 GEMM_KERNEL_THREADBLOCK_N = {
     "sm80_128x128x32": 128,
     "sm80_64x128x32": 128,
+    "sm80_64x128x32_splitk2": 128,
+    "sm80_64x128x32_splitk4": 128,
     "sm80_64x128x32_splitk8": 128,
+    "sm80_64x128x32_splitk16": 128,
     "sm80_128x64x32": 64,
 }
 GEMM_KERNEL_THREADBLOCK_M = {
     "sm80_128x128x32": 128,
     "sm80_64x128x32": 64,
+    "sm80_64x128x32_splitk2": 64,
+    "sm80_64x128x32_splitk4": 64,
     "sm80_64x128x32_splitk8": 64,
+    "sm80_64x128x32_splitk16": 64,
     "sm80_128x64x32": 128,
 }
-GEMM_KERNEL_SPLIT_K = {"sm80_64x128x32_splitk8": 8}
+GEMM_KERNEL_SPLIT_K = {
+    "sm80_64x128x32_splitk2": 2,
+    "sm80_64x128x32_splitk4": 4,
+    "sm80_64x128x32_splitk8": 8,
+    "sm80_64x128x32_splitk16": 16,
+}
 
 
 @dataclass(frozen=True, slots=True)
@@ -92,15 +106,18 @@ class Target:
             "auto",
             "sm80_128x128x32",
             "sm80_64x128x32",
+            "sm80_64x128x32_splitk2",
+            "sm80_64x128x32_splitk4",
             "sm80_64x128x32_splitk8",
+            "sm80_64x128x32_splitk16",
             "sm80_128x64x32",
         ):
             raise ValueError("CUTLASS targets require gemm_kernel=auto or an SM80 kernel name")
         if (
-            self.gemm_kernel == "sm80_64x128x32_splitk8"
+            self.gemm_kernel in GEMM_KERNEL_SPLIT_K
             and self.communication_api != "nccl_device"
         ):
-            raise ValueError("CUTLASS split-K=8 is a fused NCCL Device API kernel")
+            raise ValueError("CUTLASS split-K is a fused NCCL Device API kernel")
         if self.gemm_provider == "cuda_reference" and self.gemm_kernel not in (
             "auto",
             "lsa_naive_f16",
@@ -133,8 +150,13 @@ class Target:
             raise ValueError("CUTLASS v0.1 supports only row_major GEMM")
         if problem.k % 8 != 0 or problem.n % 8 != 0:
             raise ValueError("CUTLASS v0.1 requires K and N to be divisible by 8")
-        if self.gemm_kernel == "sm80_64x128x32_splitk8" and problem.k % 256 != 0:
-            raise ValueError("CUTLASS split-K=8 kernel requires K divisible by 256")
+        split_k_slices = GEMM_KERNEL_SPLIT_K.get(self.gemm_kernel, 1)
+        split_k_alignment = 32 * split_k_slices
+        if split_k_slices > 1 and problem.k % split_k_alignment != 0:
+            raise ValueError(
+                f"CUTLASS split-K={split_k_slices} kernel requires K divisible by "
+                f"{split_k_alignment}"
+            )
 
     def validate_profile(self, profile: CalibrationProfile) -> None:
         self.validate()
