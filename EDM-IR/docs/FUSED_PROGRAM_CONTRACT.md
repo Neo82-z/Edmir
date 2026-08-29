@@ -135,10 +135,12 @@ This is a two-sided compiler contract, not a speedup formula. Increasing `g`
 reduces the modeled remote bytes but also removes CTA-level parallelism;
 increasing split-K restores CTA supply without reducing those bytes and adds a
 reduction cost. The analysis is valid only for a kernel that actually retains
-the A tile across its grouped N work. Consequently, `n_tiles_per_cta>1` can be
-serialized and compared by the JSON backend today, but the executable C++
-backend rejects it until the grouped/persistent kernel is implemented and
-numerically validated.
+the A tile across its grouped N work. The first source implementation uses
+`g=2`: each supported CUTLASS family doubles its N-threadblock width so one CTA
+shares each K-stage A load across twice the output columns. Factors above two
+remain JSON-analysis-only. The `g=2` path is not eligible for automatic
+selection until it compiles and passes numerical and held-out latency
+validation on the pinned A100 stack.
 
 This estimate counts only non-local source/destination pairs. It is not a
 latency model, because SM-initiated LSA reads and copy-engine transfers have

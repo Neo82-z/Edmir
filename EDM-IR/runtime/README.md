@@ -254,8 +254,9 @@ calibration. The scalar reference remains a separate provider so an optimized
 implementation cannot silently inherit its identity or measurements.
 
 The compiler can already serialize and analyze that future schedule through
-`fused_schedule.n_tiles_per_cta`. Values above one intentionally stop before
-C++ runtime emission. Runtime support is complete only when the CUDA kernel,
-descriptor ABI, numerical validator, and benchmark runner all consume the same
-contract; changing the traffic estimate alone does not make the optimization
-available.
+`fused_schedule.n_tiles_per_cta`. The experimental `g=2` source widens the
+CUTLASS threadblock along N and is carried through the descriptor, validator,
+workspace sizing, launch dispatch, and benchmark fields. Values above two stop
+before C++ runtime emission. The `g=2` candidate is still not profile-admitted:
+source coverage is not a substitute for target compilation, numerical
+validation, or held-out performance evidence.

@@ -517,7 +517,7 @@ def build_parser() -> argparse.ArgumentParser:
         default=1,
         help=(
             "group adjacent N tiles per CTA for analytical traffic lowering; "
-            "values above one are not executable yet"
+            "the experimental runtime supports 1 or 2"
         ),
     )
     lower_fused.set_defaults(func=_lower_fused)

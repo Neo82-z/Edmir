@@ -21,6 +21,7 @@ cudaError_t launch_lsa_naive_gemm_f16(
 
 cudaError_t launch_lsa_cutlass_gemm_f16_sm80(
     GemmKernel kernel,
+    FusedScheduleDesc schedule,
     ncclWindow_t input_window,
     int source_rank,
     int m,
@@ -31,6 +32,7 @@ cudaError_t launch_lsa_cutlass_gemm_f16_sm80(
     void* workspace,
     cudaStream_t stream);
 
-std::size_t lsa_cutlass_workspace_size(GemmKernel kernel, int m, int n);
+std::size_t lsa_cutlass_workspace_size(
+    GemmKernel kernel, FusedScheduleDesc schedule, int m, int n);
 
 }  // namespace edmir::runtime

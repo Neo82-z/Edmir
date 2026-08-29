@@ -34,7 +34,7 @@ class FusedScheduleSpaceTest(unittest.TestCase):
             build_fused_program(problem, chunk_rows=64),
             target,
             gemm_kernels=("sm80_64x128x32", "sm80_64x128x32_splitk8"),
-            n_tiles_per_cta=(1, 2),
+            n_tiles_per_cta=(1, 2, 4),
         )
         by_family = {point.family: point for point in points}
 
@@ -43,9 +43,12 @@ class FusedScheduleSpaceTest(unittest.TestCase):
             "direct_groupedn2",
             "splitk8",
             "splitk8_groupedn2",
+            "direct_groupedn4",
+            "splitk8_groupedn4",
         })
         self.assertTrue(by_family["direct"].execution_ready)
-        self.assertFalse(by_family["direct_groupedn2"].execution_ready)
+        self.assertTrue(by_family["direct_groupedn2"].execution_ready)
+        self.assertFalse(by_family["direct_groupedn4"].execution_ready)
         self.assertEqual(by_family["direct"].traffic.remote_a_replay, 4)
         self.assertEqual(by_family["direct_groupedn2"].traffic.remote_a_replay, 2)
         self.assertEqual(by_family["direct"].traffic.estimated_ctas_per_op, 4)

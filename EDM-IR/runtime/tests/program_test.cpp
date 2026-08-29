@@ -101,8 +101,16 @@ int main() {
   };
   assert(validate_program(fused).valid());
   auto grouped_n = fused;
+  grouped_n.gemm_provider = GemmProvider::kCUTLASS;
+  grouped_n.gemm_kernel = GemmKernel::kSm80_64x128x32;
   grouped_n.fused_schedule.n_tiles_per_cta = 2;
-  assert(!validate_program(grouped_n).valid());
+  assert(validate_program(grouped_n).valid());
+  auto unsupported_grouped_n = grouped_n;
+  unsupported_grouped_n.fused_schedule.n_tiles_per_cta = 4;
+  assert(!validate_program(unsupported_grouped_n).valid());
+  auto grouped_reference = fused;
+  grouped_reference.fused_schedule.n_tiles_per_cta = 2;
+  assert(!validate_program(grouped_reference).valid());
   const ProgramView fused_without_device_api{
       "test", "sm_80", GemmProvider::kCudaReference, GemmKernel::kLsaNaiveF16,
       CommunicationApi::kHostNCCL, "fused", problem, 16, 1,

@@ -469,7 +469,8 @@ class CudaBackend::Impl {
       const auto& op = program_.ops[index];
       if (op.kind != OpKind::kFusedTransferGemm) continue;
       const auto bytes = lsa_cutlass_workspace_size(
-          program_.gemm_kernel, op.rows, program_.problem.n);
+          program_.gemm_kernel, program_.fused_schedule, op.rows,
+          program_.problem.n);
       if (bytes == 0) continue;
       EDMIR_CUDA(cudaSetDevice(device_id(op.rank)));
       EDMIR_CUDA(cudaMalloc(&fused_cutlass_workspaces_[index], bytes));
@@ -580,8 +581,9 @@ class CudaBackend::Impl {
     }
 #if defined(EDMIR_HAS_NCCL_DEVICE_CUTLASS)
     EDMIR_CUDA(launch_lsa_cutlass_gemm_f16_sm80(
-        program_.gemm_kernel, fused_windows_[op_index].windows[op.rank],
-        op.peer_rank, op.rows, program_.problem.n, program_.problem.k,
+        program_.gemm_kernel, program_.fused_schedule,
+        fused_windows_[op_index].windows[op.rank], op.peer_rank, op.rows,
+        program_.problem.n, program_.problem.k,
         buffers_[weight], buffers_[output], fused_cutlass_workspaces_[op_index],
         ranks_[op.rank].compute));
 #else

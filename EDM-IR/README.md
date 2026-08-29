@@ -230,11 +230,12 @@ python tools/plan_grouped_n_sweep.py \
 ```
 
 The report exposes total N tiles, effective remote-A replay, split-K slices,
-and estimated CTA supply for every point. `n_tiles_per_cta>1` is deliberately
-analysis-only: JSON lowering preserves the contract, while the C++ executable
-backend rejects it until a grouped/persistent CUDA kernel implements the same
-semantics. This makes the compiler frontier useful before GPU allocation
-without allowing an unmeasured schedule into execution or selection.
+and estimated CTA supply for every point. The source backend implements the
+first grouped point, `n_tiles_per_cta=2`, as a doubled CUTLASS N-threadblock;
+larger factors remain analysis-only and are rejected by C++ emission. The new
+kernel is experimental, not profile-admitted: it must compile and pass numeric
+validation on the pinned A100 stack before any timing claim or automatic
+selection.
 
 ## Code map
 

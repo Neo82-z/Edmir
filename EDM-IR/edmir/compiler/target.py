@@ -52,8 +52,8 @@ class FusedScheduleContract:
 
     ``n_tiles_per_cta`` describes how many adjacent output-N tiles one CTA
     computes while retaining the remote A tile.  A value above one is an
-    analysis/lowering contract for the planned grouped-N kernel; the current
-    CUDA runtime intentionally implements only the default value of one.
+    analysis/lowering contract for grouped-N kernels. The current CUDA source
+    implements one and two; larger factors remain analysis-only.
     """
 
     n_tiles_per_cta: int = 1
@@ -64,7 +64,7 @@ class FusedScheduleContract:
 
     @property
     def runtime_implemented(self) -> bool:
-        return self.n_tiles_per_cta == 1
+        return self.n_tiles_per_cta in {1, 2}
 
     def to_dict(self) -> dict[str, int]:
         return {"n_tiles_per_cta": self.n_tiles_per_cta}
@@ -260,7 +260,7 @@ class Target:
             raise ValueError(
                 "grouped-N schedule is analysis-only: the runtime does not yet implement "
                 f"n_tiles_per_cta={self.fused_schedule.n_tiles_per_cta}; emit JSON for "
-                "traffic analysis or use n_tiles_per_cta=1"
+                "traffic analysis or use n_tiles_per_cta=1 or 2"
             )
 
     def estimate_fused_traffic(self, program: Program) -> FusedTrafficEstimate:

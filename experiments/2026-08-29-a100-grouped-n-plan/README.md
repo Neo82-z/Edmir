@@ -30,8 +30,9 @@ serial split-K reduction cost. Neither axis is admitted by a latency formula.
 - grouped-N direct: `(g in {2,4}, q=1)`;
 - grouped-N plus split-K: `(g in {2,4}, q in {2,4,8,16})`.
 
-The last two rows require a new kernel and are not executable in the current
-runtime. `CppManifestBackend` must continue rejecting them until that changes.
+The current source implements `g=2` by doubling the CUTLASS N-threadblock;
+`g=4` remains analysis-only. Neither grouped family is profile-admitted before
+the new source compiles and passes the protocol below on the pinned A100 stack.
 
 ## Shape grid
 
@@ -55,6 +56,26 @@ python tools/plan_grouped_n_sweep.py \
   --out results/schedule-space.json
 ```
 
+After the source build passes, the executable smoke matrix adds
+`--grouped-n-values 2` to `tools/run_fused_kernel_sweep.py`.
+
+The first server invocation is deliberately small and correctness-first:
+
+```bash
+python tools/run_fused_kernel_sweep.py \
+  --runtime runtime \
+  --topology INPUT_TOPOLOGY.json \
+  --cutlass /opt/cutlass \
+  --nccl-home /opt/nccl-device \
+  --out results/g2-smoke \
+  --rows-per-peer 64 --n 256 --k-values 256 \
+  --split-k-values 2 --grouped-n-values 2 \
+  --warmup 2 --iterations 5 --validate-first
+```
+
+Only after all five host/direct/split-K/grouped candidates build and validate
+does the full grid begin.
+
 ## Measurement protocol
 
 1. Run numerical validation before timing every new `(g,q)` family.
@@ -74,9 +95,9 @@ python tools/plan_grouped_n_sweep.py \
 |---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|:---|
 | TBD | TBD | TBD | TBD | TBD | TBD | TBD | TBD | TBD | TBD | pending |
 
-## Stop conditions before renting GPUs
+## Stop conditions before the timed sweep
 
-- grouped-N kernel compiles in the pinned A100 runtime;
+- grouped-N kernel compiles in the pinned A100 runtime during a short build-only gate;
 - C++ descriptor carries the schedule contract end to end;
 - invalid `g`, shape alignment, and unsupported runtime combinations fail
   before launch;

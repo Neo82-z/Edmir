@@ -298,9 +298,11 @@ That tradeoff is now represented independently of the GEMM kernel identity by
 `FusedScheduleContract.n_tiles_per_cta`. `schedule_space.py` enumerates the
 direct/split-K product with grouped-N, derives both remote-A replay and CTA
 supply, and retains illegal points with their rejection reason. This is an
-analysis lowering boundary: JSON artifacts preserve it, whereas C++ emission
-requires `n_tiles_per_cta=1`. The runtime guard is intentional until a kernel
-implements the promised reuse; static byte accounting must not be mistaken for
-an executable optimization.
+analysis lowering boundary: JSON artifacts preserve every positive factor,
+while C++ emission accepts only the implemented `g in {1,2}` set. The `g=2`
+source doubles the CUTLASS N-threadblock width; it remains outside measured
+selection until A100 compilation, numerical validation, and held-out timing
+are complete. Static byte accounting must not be mistaken for an admitted
+optimization.
 
 See `runtime/README.md` for the server build and smoke runner.

@@ -49,9 +49,15 @@ ValidationReport validate_program(ProgramView program) {
   }
   if (program.fused_schedule.n_tiles_per_cta <= 0) {
     report.errors.emplace_back("fused n_tiles_per_cta must be positive");
-  } else if (program.fused_schedule.n_tiles_per_cta != 1) {
+  } else if (program.fused_schedule.n_tiles_per_cta > 2) {
     report.errors.emplace_back(
-        "grouped-N runtime kernel is not implemented; n_tiles_per_cta must be 1");
+        "grouped-N runtime supports only n_tiles_per_cta=1 or 2");
+  } else if (program.fused_schedule.n_tiles_per_cta == 2 &&
+             program.gemm_provider != GemmProvider::kCUTLASS) {
+    report.errors.emplace_back("grouped-N runtime requires CUTLASS");
+  } else if (program.fused_schedule.n_tiles_per_cta == 2 &&
+             program.communication_api != CommunicationApi::kNCCLDevice) {
+    report.errors.emplace_back("grouped-N runtime requires NCCL Device API fusion");
   }
   if (program.gemm_provider == GemmProvider::kCUTLASS) {
     if (program.arch != "sm_80") {
@@ -96,6 +102,12 @@ ValidationReport validate_program(ProgramView program) {
   }
   if (program.buffer_count <= 0) {
     report.errors.emplace_back("buffer_count must be positive");
+  }
+  const auto has_fused = std::any_of(
+      program.ops.begin(), program.ops.end(),
+      [](const OpDesc& op) { return op.kind == OpKind::kFusedTransferGemm; });
+  if (program.fused_schedule.n_tiles_per_cta == 2 && !has_fused) {
+    report.errors.emplace_back("grouped-N runtime requires a fused Program");
   }
 
   std::unordered_set<std::string> buffer_names;

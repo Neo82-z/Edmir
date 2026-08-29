@@ -14,6 +14,7 @@ from pathlib import Path
 from edmir.compiler import (
     A2AGemmProblem,
     CppManifestBackend,
+    FusedScheduleContract,
     Target,
     TopologySnapshot,
     build_fused_program,
@@ -72,16 +73,21 @@ def candidate(
     topology: TopologySnapshot,
     family: str,
 ) -> tuple[str, str]:
-    if family == "host":
+    grouped_n = 1
+    base_family = family
+    if "_groupedn" in family:
+        base_family, grouped_value = family.rsplit("_groupedn", 1)
+        grouped_n = int(grouped_value)
+    if base_family == "host":
         program = build_sequential_program(problem)
         kernel = "sm80_64x128x32"
         communication_api = "host_nccl"
-    elif family == "direct":
+    elif base_family == "direct":
         program = build_fused_program(problem, chunk_rows=problem.rows_per_peer)
         kernel = "sm80_64x128x32"
         communication_api = "nccl_device"
-    elif family.startswith("splitk"):
-        split_k_slices = int(family.removeprefix("splitk"))
+    elif base_family.startswith("splitk"):
+        split_k_slices = int(base_family.removeprefix("splitk"))
         if split_k_slices not in {2, 4, 8, 16}:
             raise ValueError(f"unsupported split-K slice count {split_k_slices}")
         program = build_fused_program(problem, chunk_rows=problem.rows_per_peer)
@@ -96,6 +102,7 @@ def candidate(
         gemm_provider="cutlass",
         gemm_kernel=kernel,
         communication_api=communication_api,
+        fused_schedule=FusedScheduleContract(n_tiles_per_cta=grouped_n),
     )
     artifact = CppManifestBackend().emit(program, target)
     return artifact.files["edmir_program.hpp"], kernel
@@ -103,7 +110,9 @@ def candidate(
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Measure host, direct-LSA, and serial split-K CUTLASS boundaries"
+        description=(
+            "Measure host, direct/split-K LSA, and optional grouped-N CUTLASS boundaries"
+        )
     )
     parser.add_argument("--runtime", type=Path, required=True)
     parser.add_argument("--topology", type=Path, required=True)
@@ -114,6 +123,11 @@ def main() -> int:
     parser.add_argument("--n", type=int, default=64)
     parser.add_argument("--k-values", default="256,512,1024,2048,4096")
     parser.add_argument("--split-k-values", default="8")
+    parser.add_argument(
+        "--grouped-n-values",
+        default="",
+        help="optional executable grouped-N factors; current runtime supports only 2",
+    )
     parser.add_argument("--warmup", type=int, default=30)
     parser.add_argument("--iterations", type=int, default=300)
     parser.add_argument("--devices", default="0,1,2,3")
@@ -133,7 +147,21 @@ def main() -> int:
     split_k_values = tuple(int(value) for value in args.split_k_values.split(","))
     if not split_k_values or any(value not in {2, 4, 8, 16} for value in split_k_values):
         raise ValueError("split-K values must be selected from 2,4,8,16")
-    families = ("host", "direct", *(f"splitk{value}" for value in split_k_values))
+    grouped_n_values = tuple(
+        int(value) for value in args.grouped_n_values.split(",") if value
+    )
+    if any(value != 2 for value in grouped_n_values):
+        raise ValueError("the executable grouped-N sweep currently supports only 2")
+    base_families = ("direct", *(f"splitk{value}" for value in split_k_values))
+    families = (
+        "host",
+        *base_families,
+        *(
+            f"{family}_groupedn{grouped_n}"
+            for grouped_n in grouped_n_values
+            for family in base_families
+        ),
+    )
 
     env = dict(os.environ)
     env["CUDA_VISIBLE_DEVICES"] = args.devices

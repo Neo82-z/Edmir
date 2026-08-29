@@ -74,7 +74,7 @@ class BackendTest(unittest.TestCase):
     def test_target_json_round_trip(self) -> None:
         self.assertEqual(Target.from_dict(self.target.to_dict()), self.target)
 
-    def test_grouped_n_schedule_is_analyzable_but_not_executable(self) -> None:
+    def test_grouped_n2_schedule_lowers_to_the_executable_contract(self) -> None:
         problem = replace(self.problem, n=512)
         program = build_fused_program(problem, chunk_rows=32)
         direct_target = Target(
@@ -107,10 +107,19 @@ class BackendTest(unittest.TestCase):
         artifact = JsonBackend().emit(program, grouped_target)
         emitted_target = json.loads(artifact.files["target.json"])
         self.assertEqual(emitted_target["fused_schedule"]["n_tiles_per_cta"], 2)
-        self.assertFalse(artifact.metadata["schedule_execution_ready"])
+        self.assertTrue(artifact.metadata["schedule_execution_ready"])
         self.assertEqual(Target.from_dict(emitted_target), grouped_target)
+        cpp_artifact = CppManifestBackend().emit(program, grouped_target)
+        self.assertIn(
+            "FusedScheduleDesc kFusedSchedule{2}",
+            cpp_artifact.files["edmir_program.hpp"],
+        )
+        analysis_only = replace(
+            grouped_target,
+            fused_schedule=FusedScheduleContract(n_tiles_per_cta=4),
+        )
         with self.assertRaisesRegex(ValueError, "analysis-only"):
-            CppManifestBackend().emit(program, grouped_target)
+            CppManifestBackend().emit(program, analysis_only)
 
     def test_grouped_n_schedule_rejects_nonfused_and_nondevice_targets(self) -> None:
         grouped = FusedScheduleContract(n_tiles_per_cta=2)
