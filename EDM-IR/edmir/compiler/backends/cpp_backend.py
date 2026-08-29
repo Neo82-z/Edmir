@@ -75,7 +75,7 @@ class CppManifestBackend:
     name = "cpp"
 
     def emit(self, program: Program, target: Target) -> BackendArtifact:
-        target.validate_program(program)
+        target.require_executable_program(program)
         has_fused = any(op.kind == "fused_transfer_gemm" for op in program.ops)
         if has_fused and target.gemm_provider not in {"cuda_reference", "cutlass"}:
             raise ValueError("C++ fused runtime requires cuda_reference or CUTLASS")
@@ -132,6 +132,9 @@ class CppManifestBackend:
             "};",
             f"inline constexpr std::int32_t kChunkRows = {program.chunk_rows};",
             f"inline constexpr std::int32_t kBufferCount = {program.buffer_count};",
+            "inline constexpr FusedScheduleDesc kFusedSchedule{"
+            f"{target.fused_schedule.n_tiles_per_cta}"
+            "};",
             "",
             f"inline constexpr std::array<BufferDesc, {len(program.buffers)}> kBuffers{{{{",
         ]
@@ -193,6 +196,7 @@ class CppManifestBackend:
                 "      std::span<const OpDesc>{kOps},",
                 "      std::span<const AccessDesc>{kAccesses},",
                 "      std::span<const DependencyDesc>{kDependencies},",
+                "      kFusedSchedule,",
                 "  };",
                 "}",
                 "",

@@ -120,6 +120,26 @@ remote_a_replay = ceil(N / T_N)
 estimated_remote_a_load_bytes = remote_input_bytes * remote_a_replay
 ```
 
+The grouped-N schedule contract generalizes that accounting. Let `g` be
+`n_tiles_per_cta`, the number of adjacent N tiles computed while one CTA keeps
+the remote A tile live:
+
+```text
+n_tiles = ceil(N / T_N)
+remote_a_replay = ceil(n_tiles / g)
+estimated_remote_a_load_bytes = remote_input_bytes * remote_a_replay
+estimated_ctas_per_op = ceil(M / T_M) * remote_a_replay * split_k_slices
+```
+
+This is a two-sided compiler contract, not a speedup formula. Increasing `g`
+reduces the modeled remote bytes but also removes CTA-level parallelism;
+increasing split-K restores CTA supply without reducing those bytes and adds a
+reduction cost. The analysis is valid only for a kernel that actually retains
+the A tile across its grouped N work. Consequently, `n_tiles_per_cta>1` can be
+serialized and compared by the JSON backend today, but the executable C++
+backend rejects it until the grouped/persistent kernel is implemented and
+numerically validated.
+
 This estimate counts only non-local source/destination pairs. It is not a
 latency model, because SM-initiated LSA reads and copy-engine transfers have
 different fixed and bandwidth costs. On 4x A100, direct fusion won for the tiny

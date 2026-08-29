@@ -21,6 +21,7 @@ int main() {
       gemm_kernel_split_k_slices(GemmKernel::kSm80_64x128x32SplitK8) == 8);
   static_assert(
       gemm_kernel_split_k_slices(GemmKernel::kSm80_64x128x32SplitK16) == 16);
+  static_assert(FusedScheduleDesc{}.n_tiles_per_cta == 1);
   constexpr ProblemDesc problem{2, 16, 64, 64, DType::kFloat16};
   constexpr std::array buffers{
       BufferDesc{"input", 0, BufferRole::kInput, 2048},
@@ -99,6 +100,9 @@ int main() {
       fused_buffers, fused_ops, fused_accesses, no_dependencies,
   };
   assert(validate_program(fused).valid());
+  auto grouped_n = fused;
+  grouped_n.fused_schedule.n_tiles_per_cta = 2;
+  assert(!validate_program(grouped_n).valid());
   const ProgramView fused_without_device_api{
       "test", "sm_80", GemmProvider::kCudaReference, GemmKernel::kLsaNaiveF16,
       CommunicationApi::kHostNCCL, "fused", problem, 16, 1,

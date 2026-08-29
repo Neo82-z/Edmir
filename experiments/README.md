@@ -35,3 +35,4 @@ experiments/YYYY-MM-DD-short-name/
 - `2026-08-26-a100-nccl-device-cutlass-fusion`：将 LSA 指针注入 CUTLASS device kernel，验证单 kernel tensor-core 路径，并用 N-sweep 定位 direct-remote fusion 的收益边界与远端 A 重读问题。
 - `2026-08-26-a100-fused-k-boundary`：固定 N-tile replay，扫描 K/远端字节规模，定位 direct 与 split-K=8 的实测调度边界。
 - `2026-08-26-a100-fused-heldout`：在完整 3x3 M/N 网格上验证 direct/split-K 边界的 held-out 方向准确率与选择 regret。
+- `2026-08-29-a100-grouped-n-plan`：仅保留 grouped-N 远程 A 复用与 split-K CTA 供给的二维实验设计；性能与正确性数据待新 kernel 完成后填写。

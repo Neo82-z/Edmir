@@ -10,6 +10,7 @@ from .compiler import (
     CompilerOptions,
     DataflowModule,
     FusedEnvironmentFingerprint,
+    FusedScheduleContract,
     FusedSelectionProfile,
     PassManager,
     Program,
@@ -165,6 +166,9 @@ def _lower_fused(args: argparse.Namespace) -> int:
         gemm_provider=args.gemm_provider,
         gemm_kernel=args.gemm_kernel,
         communication_api="nccl_device",
+        fused_schedule=FusedScheduleContract(
+            n_tiles_per_cta=args.n_tiles_per_cta
+        ),
         topology=topology,
     )
     program = lower_fused_a2a_gemm(match, chunk_rows=args.chunk_rows)
@@ -194,6 +198,8 @@ def _lower_fused(args: argparse.Namespace) -> int:
         "estimated_remote_a_load_bytes="
         f"{artifact.metadata['estimated_remote_a_load_bytes']} "
         f"split_k_slices={artifact.metadata['split_k_slices']} "
+        f"n_tiles={artifact.metadata['n_tiles']} "
+        f"n_tiles_per_cta={artifact.metadata['n_tiles_per_cta']} "
         f"estimated_ctas_per_op={artifact.metadata['estimated_ctas_per_op']}"
     )
     for path in written:
@@ -505,6 +511,15 @@ def build_parser() -> argparse.ArgumentParser:
     )
     lower_fused.add_argument("--out-dir", required=True)
     lower_fused.add_argument("--backend", choices=("json", "cpp"), default="json")
+    lower_fused.add_argument(
+        "--n-tiles-per-cta",
+        type=int,
+        default=1,
+        help=(
+            "group adjacent N tiles per CTA for analytical traffic lowering; "
+            "values above one are not executable yet"
+        ),
+    )
     lower_fused.set_defaults(func=_lower_fused)
 
     compile_fused = subparsers.add_parser(

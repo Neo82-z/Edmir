@@ -189,6 +189,10 @@ struct DependencyDesc {
   std::int32_t buffer;
 };
 
+struct FusedScheduleDesc {
+  std::int32_t n_tiles_per_cta = 1;
+};
+
 struct ProgramView {
   std::string_view target;
   std::string_view arch;
@@ -203,6 +207,7 @@ struct ProgramView {
   std::span<const OpDesc> ops;
   std::span<const AccessDesc> accesses;
   std::span<const DependencyDesc> dependencies;
+  FusedScheduleDesc fused_schedule{};
 };
 
 constexpr std::size_t dtype_size(DType dtype) {

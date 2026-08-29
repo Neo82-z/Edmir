@@ -47,9 +47,42 @@ GEMM_KERNEL_SPLIT_K = {
 
 
 @dataclass(frozen=True, slots=True)
+class FusedScheduleContract:
+    """Compiler-visible schedule axes that are not GEMM kernel identities.
+
+    ``n_tiles_per_cta`` describes how many adjacent output-N tiles one CTA
+    computes while retaining the remote A tile.  A value above one is an
+    analysis/lowering contract for the planned grouped-N kernel; the current
+    CUDA runtime intentionally implements only the default value of one.
+    """
+
+    n_tiles_per_cta: int = 1
+
+    def validate(self) -> None:
+        if self.n_tiles_per_cta <= 0:
+            raise ValueError("fused n_tiles_per_cta must be positive")
+
+    @property
+    def runtime_implemented(self) -> bool:
+        return self.n_tiles_per_cta == 1
+
+    def to_dict(self) -> dict[str, int]:
+        return {"n_tiles_per_cta": self.n_tiles_per_cta}
+
+    @classmethod
+    def from_dict(cls, value: dict | None) -> "FusedScheduleContract":
+        value = {} if value is None else value
+        contract = cls(n_tiles_per_cta=int(value.get("n_tiles_per_cta", 1)))
+        contract.validate()
+        return contract
+
+
+@dataclass(frozen=True, slots=True)
 class FusedTrafficEstimate:
     remote_ops: int
     remote_input_bytes: int
+    n_tiles: int
+    n_tiles_per_cta: int
     remote_a_replay: int
     estimated_remote_a_load_bytes: int
     split_k_slices: int
@@ -59,6 +92,8 @@ class FusedTrafficEstimate:
         return {
             "remote_ops": self.remote_ops,
             "remote_input_bytes": self.remote_input_bytes,
+            "n_tiles": self.n_tiles,
+            "n_tiles_per_cta": self.n_tiles_per_cta,
             "remote_a_replay": self.remote_a_replay,
             "estimated_remote_a_load_bytes": self.estimated_remote_a_load_bytes,
             "split_k_slices": self.split_k_slices,
@@ -77,6 +112,7 @@ class Target:
     gemm_provider: str = "cublas"
     gemm_kernel: str = "auto"
     communication_api: str = "host_nccl"
+    fused_schedule: FusedScheduleContract = FusedScheduleContract()
 
     def validate(self) -> None:
         if not self.name:
@@ -125,6 +161,12 @@ class Target:
             raise ValueError(
                 "CUDA reference targets require gemm_kernel=auto or lsa_naive_f16"
             )
+        self.fused_schedule.validate()
+        if self.fused_schedule.n_tiles_per_cta > 1:
+            if self.gemm_provider != "cutlass":
+                raise ValueError("grouped-N reuse requires gemm_provider=cutlass")
+            if self.communication_api != "nccl_device":
+                raise ValueError("grouped-N reuse requires communication_api=nccl_device")
         self.topology.validate()
 
     def validate_problem(self, problem: A2AGemmProblem) -> None:
@@ -185,6 +227,7 @@ class Target:
             self.communication_api == "nccl_device"
             and self.gemm_provider in {"cutlass", "cuda_reference"}
             and self.topology.has_full_p2p()
+            and self.fused_schedule.runtime_implemented
         )
 
     def validate_program(self, program: Program) -> None:
@@ -206,6 +249,19 @@ class Target:
             )
         if has_fused and not self.topology.has_full_p2p():
             raise ValueError("fused_transfer_gemm requires full peer-to-peer connectivity")
+        if not has_fused and self.fused_schedule.n_tiles_per_cta != 1:
+            raise ValueError("grouped-N reuse applies only to an all-fused Program")
+
+    def require_executable_program(self, program: Program) -> None:
+        """Reject legal analytical schedules that have no runtime kernel yet."""
+
+        self.validate_program(program)
+        if not self.fused_schedule.runtime_implemented:
+            raise ValueError(
+                "grouped-N schedule is analysis-only: the runtime does not yet implement "
+                f"n_tiles_per_cta={self.fused_schedule.n_tiles_per_cta}; emit JSON for "
+                "traffic analysis or use n_tiles_per_cta=1"
+            )
 
     def estimate_fused_traffic(self, program: Program) -> FusedTrafficEstimate:
         """Expose static remote-A traffic features without pretending to predict latency."""
@@ -233,16 +289,23 @@ class Target:
                 raise ValueError(
                     f"CUTLASS kernel {resolved.gemm_kernel!r} has no traffic tile contract"
                 )
-            replay = (program.problem.n + tile_n - 1) // tile_n
+            n_tiles = (program.problem.n + tile_n - 1) // tile_n
+            replay = (
+                n_tiles + resolved.fused_schedule.n_tiles_per_cta - 1
+            ) // resolved.fused_schedule.n_tiles_per_cta
             split_k_slices = GEMM_KERNEL_SPLIT_K.get(resolved.gemm_kernel, 1)
             ctas_per_op = (
                 (program.chunk_rows + tile_m - 1) // tile_m
                 * replay
                 * split_k_slices
             )
+        if resolved.gemm_provider == "cuda_reference":
+            n_tiles = program.problem.n
         return FusedTrafficEstimate(
             remote_ops=len(remote_ops),
             remote_input_bytes=remote_input_bytes,
+            n_tiles=n_tiles,
+            n_tiles_per_cta=resolved.fused_schedule.n_tiles_per_cta,
             remote_a_replay=replay,
             estimated_remote_a_load_bytes=remote_input_bytes * replay,
             split_k_slices=split_k_slices,
@@ -277,6 +340,7 @@ class Target:
             "gemm_provider": self.gemm_provider,
             "gemm_kernel": self.gemm_kernel,
             "communication_api": self.communication_api,
+            "fused_schedule": self.fused_schedule.to_dict(),
             "topology": self.topology.to_dict(),
         }
 
@@ -292,6 +356,7 @@ class Target:
             gemm_provider=str(value.get("gemm_provider", "cublas")),
             gemm_kernel=str(value.get("gemm_kernel", "auto")),
             communication_api=str(value.get("communication_api", "host_nccl")),
+            fused_schedule=FusedScheduleContract.from_dict(value.get("fused_schedule")),
             topology=TopologySnapshot.from_dict(value["topology"]),
         )
         target.validate()
@@ -300,6 +365,7 @@ class Target:
 
 __all__ = [
     "COMMUNICATION_APIS",
+    "FusedScheduleContract",
     "FusedTrafficEstimate",
     "GEMM_KERNELS",
     "GEMM_KERNEL_SPLIT_K",

@@ -47,6 +47,12 @@ ValidationReport validate_program(ProgramView program) {
   if (dtype_size(program.problem.dtype) == 0) {
     report.errors.emplace_back("problem dtype is invalid");
   }
+  if (program.fused_schedule.n_tiles_per_cta <= 0) {
+    report.errors.emplace_back("fused n_tiles_per_cta must be positive");
+  } else if (program.fused_schedule.n_tiles_per_cta != 1) {
+    report.errors.emplace_back(
+        "grouped-N runtime kernel is not implemented; n_tiles_per_cta must be 1");
+  }
   if (program.gemm_provider == GemmProvider::kCUTLASS) {
     if (program.arch != "sm_80") {
       report.errors.emplace_back("CUTLASS v0.1 requires arch=sm_80");

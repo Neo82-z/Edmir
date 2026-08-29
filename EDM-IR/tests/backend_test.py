@@ -17,11 +17,13 @@ from edmir.compiler import (  # noqa: E402
     CompilerOptions,
     CompilerPipeline,
     CppManifestBackend,
+    FusedScheduleContract,
     JsonBackend,
     Target,
     TopologySnapshot,
     build_a2a_gemm_module,
     build_fused_program,
+    build_sequential_program,
 )
 
 
@@ -72,6 +74,68 @@ class BackendTest(unittest.TestCase):
     def test_target_json_round_trip(self) -> None:
         self.assertEqual(Target.from_dict(self.target.to_dict()), self.target)
 
+    def test_grouped_n_schedule_is_analyzable_but_not_executable(self) -> None:
+        problem = replace(self.problem, n=512)
+        program = build_fused_program(problem, chunk_rows=32)
+        direct_target = Target(
+            "device-direct",
+            topology(),
+            arch="sm_80",
+            gemm_provider="cutlass",
+            gemm_kernel="sm80_64x128x32",
+            communication_api="nccl_device",
+        )
+        grouped_target = replace(
+            direct_target,
+            name="device-grouped-n2",
+            fused_schedule=FusedScheduleContract(n_tiles_per_cta=2),
+        )
+
+        direct = direct_target.estimate_fused_traffic(program)
+        grouped = grouped_target.estimate_fused_traffic(program)
+        self.assertEqual(direct.n_tiles, 4)
+        self.assertEqual(direct.remote_a_replay, 4)
+        self.assertEqual(grouped.n_tiles, 4)
+        self.assertEqual(grouped.n_tiles_per_cta, 2)
+        self.assertEqual(grouped.remote_a_replay, 2)
+        self.assertEqual(
+            grouped.estimated_remote_a_load_bytes,
+            direct.estimated_remote_a_load_bytes // 2,
+        )
+        self.assertEqual(grouped.estimated_ctas_per_op, 2)
+
+        artifact = JsonBackend().emit(program, grouped_target)
+        emitted_target = json.loads(artifact.files["target.json"])
+        self.assertEqual(emitted_target["fused_schedule"]["n_tiles_per_cta"], 2)
+        self.assertFalse(artifact.metadata["schedule_execution_ready"])
+        self.assertEqual(Target.from_dict(emitted_target), grouped_target)
+        with self.assertRaisesRegex(ValueError, "analysis-only"):
+            CppManifestBackend().emit(program, grouped_target)
+
+    def test_grouped_n_schedule_rejects_nonfused_and_nondevice_targets(self) -> None:
+        grouped = FusedScheduleContract(n_tiles_per_cta=2)
+        with self.assertRaisesRegex(ValueError, "gemm_provider=cutlass"):
+            replace(self.target, fused_schedule=grouped).validate()
+        with self.assertRaisesRegex(ValueError, "communication_api=nccl_device"):
+            Target(
+                "bad-grouped-host",
+                topology(),
+                arch="sm_80",
+                gemm_provider="cutlass",
+                gemm_kernel="sm80_64x128x32",
+                fused_schedule=grouped,
+            ).validate()
+        with self.assertRaisesRegex(ValueError, "all-fused Program"):
+            Target(
+                "bad-grouped-program",
+                topology(),
+                arch="sm_80",
+                gemm_provider="cutlass",
+                gemm_kernel="sm80_64x128x32",
+                communication_api="nccl_device",
+                fused_schedule=grouped,
+            ).validate_program(build_sequential_program(self.problem))
+
     def test_fused_program_requires_device_api_and_json_can_preserve_semantics(self) -> None:
         program = build_fused_program(self.problem, chunk_rows=16)
         with self.assertRaisesRegex(ValueError, "communication_api=nccl_device"):
@@ -107,6 +171,7 @@ class BackendTest(unittest.TestCase):
         self.assertIn("GemmProvider::kCUTLASS", cutlass_header)
         self.assertIn("GemmKernel::kSm80_64x128x32", cutlass_header)
         self.assertIn("CommunicationApi::kNCCLDevice", cutlass_header)
+        self.assertIn("FusedScheduleDesc kFusedSchedule{1}", cutlass_header)
         self.assertEqual(cutlass_artifact.metadata["remote_ops"], 24)
         self.assertEqual(cutlass_artifact.metadata["remote_input_bytes"], 98_304)
         self.assertEqual(cutlass_artifact.metadata["remote_a_replay"], 2)

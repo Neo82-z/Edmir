@@ -23,6 +23,8 @@ class JsonBackend:
             "gemm_provider": resolved_target.gemm_provider,
             "gemm_kernel": resolved_target.gemm_kernel,
             "communication_api": resolved_target.communication_api,
+            "fused_schedule": resolved_target.fused_schedule.to_dict(),
+            "schedule_execution_ready": resolved_target.fused_schedule.runtime_implemented,
         }
         if any(op.kind == "fused_transfer_gemm" for op in program.ops):
             metadata.update(resolved_target.estimate_fused_traffic(program).to_dict())

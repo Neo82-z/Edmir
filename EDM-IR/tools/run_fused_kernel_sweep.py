@@ -30,6 +30,8 @@ FIELDS = (
     "n",
     "gemm_kernel",
     "remote_input_bytes",
+    "n_tiles",
+    "n_tiles_per_cta",
     "remote_a_replay",
     "estimated_remote_a_load_bytes",
     "split_k_slices",

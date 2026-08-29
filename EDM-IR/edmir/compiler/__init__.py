@@ -66,6 +66,11 @@ from .schedule import (
     build_sequential_program,
     build_sequential_schedule,
 )
+from .schedule_space import (
+    FusedSchedulePoint,
+    SCHEMA_FUSED_SCHEDULE_SPACE,
+    enumerate_fused_schedule_space,
+)
 from .passes import (
     CanonicalizeDataflowPass,
     DataflowVerificationReport,
@@ -85,7 +90,7 @@ from .simulate import (
     extract_execution_features,
 )
 from .verify import VerificationReport, verify_program, verify_schedule
-from .target import FusedTrafficEstimate, Target
+from .target import FusedScheduleContract, FusedTrafficEstimate, Target
 
 __all__ = [
     "A2AGemmProblem",
@@ -106,6 +111,8 @@ __all__ = [
     "ExecutionFeatures",
     "ExecutionOverhead",
     "FusedTrafficEstimate",
+    "FusedScheduleContract",
+    "FusedSchedulePoint",
     "FusedCandidateDecision",
     "FusedEnvironmentFingerprint",
     "FusedEvidence",
@@ -131,6 +138,7 @@ __all__ = [
     "PipelineResult",
     "PairwiseCommCurve",
     "SchedulePlan",
+    "SCHEMA_FUSED_SCHEDULE_SPACE",
     "SimulationResult",
     "TaskTiming",
     "Target",
@@ -150,6 +158,7 @@ __all__ = [
     "derive_dependencies",
     "evaluate_cost_model",
     "evaluate_fused_k_boundary",
+    "enumerate_fused_schedule_space",
     "extract_execution_features",
     "fit_execution_overhead",
     "fit_and_evaluate_fused_boundary",

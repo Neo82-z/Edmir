@@ -252,3 +252,10 @@ The next backend step is a persistent/grouped-N CuTe schedule that can reuse
 remote A while retaining enough CTAs for occupancy, followed by M/K boundary
 calibration. The scalar reference remains a separate provider so an optimized
 implementation cannot silently inherit its identity or measurements.
+
+The compiler can already serialize and analyze that future schedule through
+`fused_schedule.n_tiles_per_cta`. Values above one intentionally stop before
+C++ runtime emission. Runtime support is complete only when the CUDA kernel,
+descriptor ABI, numerical validator, and benchmark runner all consume the same
+contract; changing the traffic estimate alone does not make the optimization
+available.

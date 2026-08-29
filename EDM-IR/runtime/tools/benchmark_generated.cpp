@@ -119,6 +119,9 @@ int main(int argc, char** argv) {
       }
     }
     std::size_t remote_a_replay = 1;
+    std::size_t n_tiles = 1;
+    const auto n_tiles_per_cta = static_cast<std::size_t>(
+        program.fused_schedule.n_tiles_per_cta);
     std::size_t split_k_slices = 1;
     std::size_t estimated_ctas_per_op = 0;
     if (program.strategy == "fused") {
@@ -128,8 +131,9 @@ int main(int argc, char** argv) {
         if (tile_n <= 0 || tile_m <= 0) {
           throw std::invalid_argument("fused CUTLASS kernel has no CTA tile");
         }
-        remote_a_replay = static_cast<std::size_t>(
+        n_tiles = static_cast<std::size_t>(
             (program.problem.n + tile_n - 1) / tile_n);
+        remote_a_replay = (n_tiles + n_tiles_per_cta - 1) / n_tiles_per_cta;
         split_k_slices = static_cast<std::size_t>(
             edmir::runtime::gemm_kernel_split_k_slices(program.gemm_kernel));
         estimated_ctas_per_op = static_cast<std::size_t>(
@@ -137,7 +141,8 @@ int main(int argc, char** argv) {
             split_k_slices;
       } else if (program.gemm_provider ==
                  edmir::runtime::GemmProvider::kCudaReference) {
-        remote_a_replay = static_cast<std::size_t>(program.problem.n);
+        n_tiles = static_cast<std::size_t>(program.problem.n);
+        remote_a_replay = n_tiles;
         estimated_ctas_per_op = static_cast<std::size_t>(
             (program.chunk_rows + 15) / 16) *
             static_cast<std::size_t>((program.problem.n + 15) / 16);
@@ -158,6 +163,8 @@ int main(int argc, char** argv) {
               << " event_record=" << event_records << " event_wait=" << event_waits
               << " buffer_reuse=" << buffer_reuses
               << " remote_input_bytes=" << remote_input_bytes
+              << " n_tiles=" << n_tiles
+              << " n_tiles_per_cta=" << n_tiles_per_cta
               << " remote_a_replay=" << remote_a_replay
               << " estimated_remote_a_load_bytes=" << estimated_remote_a_load_bytes
               << " split_k_slices=" << split_k_slices

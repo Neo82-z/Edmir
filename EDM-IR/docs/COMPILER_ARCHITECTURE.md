@@ -294,4 +294,13 @@ only; every other hardware, software, or shape combination falls back to host.
 The contract and experiment gate are in
 [`FUSED_PROGRAM_CONTRACT.md`](FUSED_PROGRAM_CONTRACT.md).
 
+That tradeoff is now represented independently of the GEMM kernel identity by
+`FusedScheduleContract.n_tiles_per_cta`. `schedule_space.py` enumerates the
+direct/split-K product with grouped-N, derives both remote-A replay and CTA
+supply, and retains illegal points with their rejection reason. This is an
+analysis lowering boundary: JSON artifacts preserve it, whereas C++ emission
+requires `n_tiles_per_cta=1`. The runtime guard is intentional until a kernel
+implements the promised reuse; static byte accounting must not be mistaken for
+an executable optimization.
+
 See `runtime/README.md` for the server build and smoke runner.

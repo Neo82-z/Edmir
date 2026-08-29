@@ -218,6 +218,24 @@ compiler admission disabled. `compiler/fused_selection.py` consumes that
 evidence through an environment-fingerprinted profile and still requires
 explicit experimental admission at each compile.
 
+Plan the next grouped-N kernel space without claiming executable support:
+
+```bash
+python tools/plan_grouped_n_sweep.py \
+  --problem examples/a2a_gemm_problem.json \
+  --topology examples/full_p2p_topology.json \
+  --kernels sm80_64x128x32,sm80_64x128x32_splitk8 \
+  --n-tiles-per-cta 1,2,4 \
+  --out /tmp/grouped-n-schedule-space.json
+```
+
+The report exposes total N tiles, effective remote-A replay, split-K slices,
+and estimated CTA supply for every point. `n_tiles_per_cta>1` is deliberately
+analysis-only: JSON lowering preserves the contract, while the C++ executable
+backend rejects it until a grouped/persistent CUDA kernel implements the same
+semantics. This makes the compiler frontier useful before GPU allocation
+without allowing an unmeasured schedule into execution or selection.
+
 ## Code map
 
 ```text
@@ -231,6 +249,7 @@ compiler/frontend.py    small graph builder and A2AGemm frontend
 compiler/passes.py      canonicalization, verification, pass trace
 compiler/lowering.py    strict All2All->GEMM match and fused-reference lowering
 compiler/schedule.py    direct ProgramBuilder and finite candidate construction
+compiler/schedule_space.py static direct/split-K x grouped-N traffic/CTA frontier
 compiler/dependence.py  the only queue and buffer dependency implementation
 compiler/verify.py      All2All->GEMM semantic checks
 compiler/simulate.py    ready-time/resource interpreter and EventGraph emission
