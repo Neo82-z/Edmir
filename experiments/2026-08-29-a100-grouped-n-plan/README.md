@@ -147,3 +147,33 @@ GB/s at roughly 24.6 us.
 - Replace the K-only selector with a two-stage admission + CTA-supply model.
 - Use the measured four-A100 topology and communication curves as the
   single-node control when the project moves to eight-card inference.
+
+## Local two-stage selector checkpoint
+
+`two_stage_selector_report.json` is a deterministic leave-one-sweep-group-out
+evaluation over the nine M/N sweeps (346 candidate rows and 41 complete
+problems).  The model predicts the host baseline first, admits fusion only when
+the predicted fused winner is lower, and then chooses among direct,
+q={2,4,8,16}, and the measured g=2 variants.  Its features expose FLOPs,
+unique remote bytes, local bytes, rho_N, Gamma, K/q, and split reduction work.
+
+The first checkpoint is deliberately **not admitted**:
+
+| model | direction | mean regret | max regret | host regressions | fused coverage |
+|:---|---:|---:|---:|---:|---:|
+| full | 92.7% | 4.47% | 28.21% | 2 | 97.4% |
+| no admission | 92.7% | 4.86% | 28.21% | 3 | 100.0% |
+| no Gamma | 87.8% | 7.44% | 24.81% | 3 | 94.7% |
+| no rho_N | 92.7% | 4.47% | 28.21% | 2 | 97.4% |
+| no reduction | 78.0% | 25.60% | 140.43% | 1 | 78.9% |
+| K-only regression | 82.9% | 31.67% | 77.92% | 3 | 89.5% |
+
+The K-only row is the leave-one-group-out regression ablation, not the earlier
+single-surface lookup rule whose separate 30-point evaluation reported 2.15%
+mean regret. Both fail admission, but under different train/test protocols.
+
+This result is more useful than an in-sample fit.  Gamma and reduction terms
+are necessary, while rho_N is collinear with the present M/N geometry and does
+not yet show independent value.  The frozen eight-GPU protocol varies both
+fixed-per-peer and fixed-total-row regimes to break that collinearity.  No
+coefficient from this checkpoint is connected to the default compiler path.

@@ -218,7 +218,24 @@ compiler admission disabled. `compiler/fused_selection.py` consumes that
 evidence through an environment-fingerprinted profile and still requires
 explicit experimental admission at each compile.
 
-Plan the next grouped-N kernel space without claiming executable support:
+Evaluate the replacement two-stage selector on complete declared sweep groups:
+
+```bash
+python tools/evaluate_two_stage_selector.py \
+  --world-size 4 \
+  --out /tmp/two-stage-selector.json \
+  /path/to/sweep-*/results.csv
+```
+
+The first model predicts host admission separately from the fused `(g,q)`
+family. Its interpretable feature surface contains FLOPs, unique remote and
+local bytes, `rho_N`, CTA supply `Gamma`, `K/q`, and split reduction work. The
+tool leaves each complete input directory out in turn and runs no-admission,
+no-Gamma, no-rho, no-reduction, and K-only ablations. Failing the registered
+direction/regret/host-regression gates produces evidence but cannot open the
+default compiler path.
+
+Plan the grouped-N kernel space:
 
 ```bash
 python tools/plan_grouped_n_sweep.py \
@@ -245,6 +262,7 @@ compiler/calibration.py NCCL and exact-shape GEMM parsers/calibration
 compiler/evaluation.py train/heldout runtime fit and selection metrics
 compiler/fused_evaluation.py guarded fused-family boundary and held-out metrics
 compiler/fused_selection.py exact-envelope admission, selection, and fallback
+compiler/two_stage_selection.py host admission, fused schedule fit, group holdout
 compiler/dataflow.py    typed SSA-like tensor Dataflow IR
 compiler/frontend.py    small graph builder and A2AGemm frontend
 compiler/passes.py      canonicalization, verification, pass trace

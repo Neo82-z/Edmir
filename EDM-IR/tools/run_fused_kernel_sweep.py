@@ -5,6 +5,7 @@ import argparse
 import csv
 import json
 import os
+import random
 import re
 import shutil
 import subprocess
@@ -133,6 +134,11 @@ def main() -> int:
     parser.add_argument("--warmup", type=int, default=30)
     parser.add_argument("--iterations", type=int, default=300)
     parser.add_argument("--devices", default="0,1,2,3")
+    parser.add_argument(
+        "--order-seed",
+        type=int,
+        help="shuffle candidate execution order with a recorded deterministic seed",
+    )
     parser.add_argument("--validate-first", action="store_true")
     args = parser.parse_args()
 
@@ -205,6 +211,8 @@ def main() -> int:
                     "artifact": str(directory.relative_to(output)),
                 }
             )
+    if args.order_seed is not None:
+        random.Random(args.order_seed).shuffle(manifest)
     (output / "manifest.json").write_text(
         json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8"
     )
