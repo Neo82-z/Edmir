@@ -16,6 +16,18 @@ physical buffers it reads and writes; queue order and RAW/WAR/WAW hazards are
 derived in one place. The resulting graph is consumed by both the legality
 checker and the deterministic cost simulator.
 
+Correctness and performance claims are deliberately separated. The
+[`spec/ASSURANCE_MODEL.md`](spec/ASSURANCE_MODEL.md) boundary gives host,
+pipelined, direct-LSA, split-K, and grouped-N schedules one executable tensor
+relation, while [`compiler/assurance.py`](edmir/compiler/assurance.py) checks
+small Programs against that relation. Its target-bound evidence gate requires
+matching problem, environment, code, protocol, and raw-source hashes; failed
+numerics, insufficient samples, or touching confidence intervals select host.
+The accompanying [`spec/RISK_REGISTER.md`](spec/RISK_REGISTER.md) says which
+new concurrency mechanisms are modeled and which mature library internals are
+kept behind contracts. This is static and numerical assurance today, not a
+claim that the runtime has been formally proved or model-checked.
+
 Fused kernels use a separate, deliberately conservative selection path. A
 versioned profile binds a measured shape envelope and direct/split-K rule to an
 exact GPU, topology, CUDA, NCCL, and CUTLASS fingerprint. Selection requires an
@@ -271,6 +283,7 @@ compiler/schedule.py    direct ProgramBuilder and finite candidate construction
 compiler/schedule_space.py static direct/split-K x grouped-N traffic/CTA frontier
 compiler/dependence.py  the only queue and buffer dependency implementation
 compiler/verify.py      All2All->GEMM semantic checks
+compiler/assurance.py   executable semantics and target-bound evidence gate
 compiler/simulate.py    ready-time/resource interpreter and EventGraph emission
 compiler/compile.py     candidate enumeration, selection, and fallback
 compiler/pipeline.py    end-to-end compiler orchestration

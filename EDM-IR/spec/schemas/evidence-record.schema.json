@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://edmir.dev/schemas/evidence-record.v1.json",
+  "title": "EDMIR target-bound evidence record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "problem",
+    "family",
+    "environment_hash",
+    "code_commit",
+    "protocol_hash",
+    "source_hash",
+    "numerical_check_passed",
+    "interval"
+  ],
+  "properties": {
+    "schema": {"const": "edmir.evidence_record.v1"},
+    "problem": {"type": "object"},
+    "family": {"type": "string", "minLength": 1},
+    "environment_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "code_commit": {"type": "string", "pattern": "^[0-9a-f]{7,40}$"},
+    "protocol_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "source_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "numerical_check_passed": {"type": "boolean"},
+    "interval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["samples", "median_us", "lower_us", "upper_us"],
+      "properties": {
+        "samples": {"type": "integer", "minimum": 1},
+        "median_us": {"type": "number", "minimum": 0},
+        "lower_us": {"type": "number", "minimum": 0},
+        "upper_us": {"type": "number", "minimum": 0}
+      }
+    }
+  }
+}

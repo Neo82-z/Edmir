@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://edmir.dev/schemas/experiment-spec.v1.json",
+  "title": "EDMIR controlled experiment specification",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "experiment_id",
+    "status",
+    "claim",
+    "code_commit",
+    "protocol_hash",
+    "hardware",
+    "workload",
+    "variables",
+    "protocol",
+    "gates",
+    "provenance"
+  ],
+  "properties": {
+    "schema": {"const": "edmir.experiment_spec.v1"},
+    "experiment_id": {"type": "string", "minLength": 1},
+    "status": {"enum": ["draft", "frozen", "executed", "invalidated"]},
+    "claim": {"type": "string", "minLength": 1},
+    "code_commit": {"type": "string", "pattern": "^[0-9a-f]{7,40}$"},
+    "protocol_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "hardware": {
+      "type": "object",
+      "required": ["accelerator", "world_sizes", "topology_requirement"],
+      "properties": {
+        "accelerator": {"type": "string"},
+        "world_sizes": {"type": "array", "minItems": 1, "items": {"type": "integer", "minimum": 1}},
+        "topology_requirement": {"type": "string"}
+      },
+      "additionalProperties": true
+    },
+    "workload": {
+      "type": "object",
+      "required": ["source", "shape_or_trace_hash"],
+      "properties": {
+        "source": {"enum": ["synthetic", "router_trace", "serving_trace"]},
+        "shape_or_trace_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      },
+      "additionalProperties": true
+    },
+    "variables": {
+      "type": "object",
+      "required": ["independent", "controlled", "observed"],
+      "properties": {
+        "independent": {"type": "array", "items": {"type": "string"}},
+        "controlled": {"type": "array", "items": {"type": "string"}},
+        "observed": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": false
+    },
+    "protocol": {
+      "type": "object",
+      "required": ["warmup", "iterations", "repeats", "stopping_rule"],
+      "properties": {
+        "warmup": {"type": "integer", "minimum": 0},
+        "iterations": {"type": "integer", "minimum": 1},
+        "repeats": {"type": "integer", "minimum": 1},
+        "stopping_rule": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": true
+    },
+    "gates": {
+      "type": "object",
+      "required": ["correctness", "performance", "fallback"],
+      "properties": {
+        "correctness": {"type": "string", "minLength": 1},
+        "performance": {"type": "string", "minLength": 1},
+        "fallback": {"const": "host"}
+      },
+      "additionalProperties": true
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["raw_output_directory", "append_only"],
+      "properties": {
+        "raw_output_directory": {"type": "string", "minLength": 1},
+        "append_only": {"const": true}
+      },
+      "additionalProperties": true
+    }
+  }
+}
