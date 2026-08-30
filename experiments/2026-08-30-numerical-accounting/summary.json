@@ -1,0 +1,102 @@
+{
+  "batch_semantics": {
+    "M": "balanced rows sent by one source rank to one destination rank",
+    "batch_rows_global": "P^2*M rows across all destination ranks",
+    "batch_rows_per_rank": "P*M rows consumed by one destination rank",
+    "warning": "These routed rows are not the request batch size."
+  },
+  "candidate_rows": 346,
+  "ceilings": {
+    "alltoall_gbps": 269.82,
+    "hbm_gbps": 2039.0,
+    "lsa_gbps": 274.0,
+    "tensor_tflops": 312.0
+  },
+  "fused_bottleneck_counts": {
+    "hbm": 17,
+    "remote": 288
+  },
+  "fused_medians": {
+    "achieved_tflops": 0.8866571626754748,
+    "effective_remote_gbps": 4.236100188526798,
+    "floor_fraction": 0.015664837118416687,
+    "unexplained_ms": 0.5966539270072992
+  },
+  "host_win_shapes": [
+    {
+      "batch_rows_per_rank": 256,
+      "k": 4096,
+      "lower_bound_bottleneck": "compute",
+      "measured_ms": 0.6453,
+      "n": 2048,
+      "rows_per_peer": 64
+    },
+    {
+      "batch_rows_per_rank": 256,
+      "k": 8192,
+      "lower_bound_bottleneck": "compute",
+      "measured_ms": 1.0471,
+      "n": 2048,
+      "rows_per_peer": 64
+    },
+    {
+      "batch_rows_per_rank": 2048,
+      "k": 8192,
+      "lower_bound_bottleneck": "remote",
+      "measured_ms": 1.5298,
+      "n": 512,
+      "rows_per_peer": 512
+    }
+  ],
+  "inputs": [
+    "experiments/2026-08-29-a100-grouped-n-plan/raw/extracted-v2/2026-08-29-g2/m64-n128/results.csv",
+    "experiments/2026-08-29-a100-grouped-n-plan/raw/extracted-v2/2026-08-29-g2/m64-n256/results.csv",
+    "experiments/2026-08-29-a100-grouped-n-plan/raw/extracted-v2/2026-08-29-g2/m64-n512/results.csv",
+    "experiments/2026-08-29-a100-grouped-n-plan/raw/extracted-v2/2026-08-29-g2/m64-n1024/results.csv",
+    "experiments/2026-08-29-a100-grouped-n-plan/raw/extracted-v2/2026-08-29-g2/m64-n2048/results.csv",
+    "experiments/2026-08-29-a100-grouped-n-plan/raw/extracted-v2/2026-08-29-g2/m32-n512/results.csv",
+    "experiments/2026-08-29-a100-grouped-n-plan/raw/extracted-v2/2026-08-29-g2/m128-n512/results.csv",
+    "experiments/2026-08-29-a100-grouped-n-plan/raw/extracted-v2/2026-08-29-g2/m256-n512-longk/results.csv",
+    "experiments/2026-08-29-a100-grouped-n-plan/raw/extracted-v2/2026-08-29-g2/m512-n512-longk/results.csv"
+  ],
+  "inputs_sha256": "a03fe1b627e79ec94baef7d9587b6f3562bc2e1dc799b69caab55947b96391da",
+  "machine_balance": {
+    "tensor_to_hbm_flop_per_byte": 153.01618440411966,
+    "tensor_to_lsa_flop_per_byte": 1138.6861313868612
+  },
+  "oracle_bottleneck_counts": {
+    "compute": 2,
+    "remote": 39
+  },
+  "oracle_family_counts": {
+    "direct": 5,
+    "host": 3,
+    "splitk2": 14,
+    "splitk4": 14,
+    "splitk8": 4,
+    "splitk8_groupedn2": 1
+  },
+  "oracle_medians": {
+    "achieved_tflops": 1.6488664373464375,
+    "critical_path_floor_ms": 0.011480759124087591,
+    "effective_remote_gbps": 8.891260599208593,
+    "floor_fraction": 0.032943354731958654,
+    "measured_ms": 0.4568,
+    "unexplained_ms": 0.4108769635036496
+  },
+  "projection": {
+    "bottleneck_counts": {
+      "compute": 11,
+      "hbm": 14,
+      "remote": 228
+    },
+    "candidate_rows": 253,
+    "manifest": "experiments/2026-08-29-a100-8gpu-transfer-plan/manifest.json",
+    "manifest_sha256": "4fcbf170c783be49b21434eec4dad02d90643b143f662e23ad0a2826092641d9",
+    "shapes": 23,
+    "world_size": 8
+  },
+  "schema": "edmir.roofline-accounting.v1",
+  "shapes": 41,
+  "world_size": 4
+}

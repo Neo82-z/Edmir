@@ -161,19 +161,20 @@ The first checkpoint is deliberately **not admitted**:
 
 | model | direction | mean regret | max regret | host regressions | fused coverage |
 |:---|---:|---:|---:|---:|---:|
-| full | 92.7% | 4.47% | 28.21% | 2 | 97.4% |
-| no admission | 92.7% | 4.86% | 28.21% | 3 | 100.0% |
-| no Gamma | 87.8% | 7.44% | 24.81% | 3 | 94.7% |
-| no rho_N | 92.7% | 4.47% | 28.21% | 2 | 97.4% |
-| no reduction | 78.0% | 25.60% | 140.43% | 1 | 78.9% |
+| full | 87.8% | 4.19% | 29.24% | 3 | 94.7% |
+| no admission | 92.7% | 3.18% | 19.47% | 3 | 100.0% |
+| no Gamma | 87.8% | 4.21% | 29.24% | 3 | 94.7% |
+| no rho_N | 92.7% | 2.13% | 24.24% | 2 | 97.4% |
+| no reduction | 87.8% | 9.75% | 57.88% | 1 | 89.5% |
 | K-only regression | 82.9% | 31.67% | 77.92% | 3 | 89.5% |
 
 The K-only row is the leave-one-group-out regression ablation, not the earlier
 single-surface lookup rule whose separate 30-point evaluation reported 2.15%
 mean regret. Both fail admission, but under different train/test protocols.
 
-This result is more useful than an in-sample fit.  Gamma and reduction terms
-are necessary, while rho_N is collinear with the present M/N geometry and does
-not yet show independent value.  The frozen eight-GPU protocol varies both
-fixed-per-peer and fixed-total-row regimes to break that collinearity.  No
-coefficient from this checkpoint is connected to the default compiler path.
+This result is more useful than an in-sample fit.  Removing reduction work is
+clearly harmful, but the nearly unchanged no-Gamma result and improved
+no-rho_N mean regret show that this surface is too correlated to interpret
+individual ridge coefficients causally.  The frozen eight-GPU protocol varies
+both fixed-per-peer and fixed-per-rank-row regimes to break that collinearity.
+No coefficient from this checkpoint is connected to the default compiler path.

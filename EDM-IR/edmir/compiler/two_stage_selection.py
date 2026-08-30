@@ -185,12 +185,34 @@ class AnalyticalScheduleFeatures:
         if sm_count <= 0:
             raise ValueError("SM count must be positive")
         flops = 2 * row.world_size * row.rows_per_peer * row.k * row.n
-        # A, B and C traffic. This is a compiler-visible local-memory proxy,
-        # not a claim that every byte reaches HBM exactly once.
-        local_bytes = 2 * row.world_size * (
-            row.rows_per_peer * row.k
-            + row.k * row.n
-            + row.rows_per_peer * row.n
+        # The benchmark CSV stores traffic summed across all ranks, while
+        # latency, FLOPs, and the remaining model terms are per destination.
+        # Keeping one accounting unit is essential for P=4 -> P=8 transfer.
+        if row.remote_input_bytes % row.world_size:
+            raise ValueError("full-program remote bytes must divide across ranks")
+        unique_remote_bytes = row.remote_input_bytes // row.world_size
+        q = row.split_k_slices
+        local_activation = (
+            2 * row.world_size * row.rows_per_peer * row.k
+            if row.is_host
+            else 2 * row.rows_per_peer * row.k
+        )
+        local_weight = 2 * row.k * row.n
+        local_output = 2 * row.world_size * row.rows_per_peer * row.n
+        local_staging = (
+            unique_remote_bytes if row.is_host else 0
+        )
+        reduction_bytes = (
+            4 * row.world_size * row.rows_per_peer * row.n * (q - 1)
+            if q > 1
+            else 0
+        )
+        local_bytes = (
+            local_activation
+            + local_weight
+            + local_output
+            + local_staging
+            + reduction_bytes
         )
         if row.is_host:
             gamma = (
@@ -201,15 +223,9 @@ class AnalyticalScheduleFeatures:
         else:
             gamma = row.estimated_ctas_per_op
             rho_n = row.remote_a_replay
-        q = row.split_k_slices
-        reduction_bytes = (
-            4 * row.world_size * row.rows_per_peer * row.n * (q - 1)
-            if q > 1
-            else 0
-        )
         return cls(
             flops=flops,
-            unique_remote_bytes=row.remote_input_bytes,
+            unique_remote_bytes=unique_remote_bytes,
             local_bytes=local_bytes,
             rho_n=rho_n,
             gamma=gamma,

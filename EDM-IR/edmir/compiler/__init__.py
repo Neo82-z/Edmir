@@ -53,6 +53,14 @@ from .two_stage_selection import (
     parse_schedule_family,
     read_schedule_measurements,
 )
+from .roofline_accounting import (
+    DEFAULT_ELEMENT_BYTES,
+    HardwareCeilings,
+    RooflineAccount,
+    SCHEMA_ROOFLINE_ACCOUNTING,
+    ScheduleSpec,
+    account_schedule,
+)
 from .frontend import GraphBuilder, build_a2a_gemm_module
 from .lowering import A2AGemmMatch, lower_fused_a2a_gemm, match_a2a_gemm
 from .model import (
@@ -122,6 +130,7 @@ __all__ = [
     "CppManifestBackend",
     "DataflowModule",
     "DataflowVerificationReport",
+    "DEFAULT_ELEMENT_BYTES",
     "DEFAULT_SM_COUNT",
     "ExecutionFeatures",
     "ExecutionOverhead",
@@ -140,6 +149,7 @@ __all__ = [
     "DependenceResult",
     "Dependency",
     "GraphBuilder",
+    "HardwareCeilings",
     "GemmSample",
     "JsonBackend",
     "Node",
@@ -150,13 +160,16 @@ __all__ = [
     "Program",
     "ProgramBuilder",
     "RuntimeMeasurement",
+    "RooflineAccount",
     "RidgeLatencyModel",
     "PipelineResult",
     "PairwiseCommCurve",
     "SchedulePlan",
     "SCHEMA_FUSED_SCHEDULE_SPACE",
+    "SCHEMA_ROOFLINE_ACCOUNTING",
     "SCHEMA_TWO_STAGE_EVALUATION",
     "ScheduleMeasurement",
+    "ScheduleSpec",
     "SelectionGates",
     "SimulationResult",
     "TaskTiming",
@@ -168,6 +181,7 @@ __all__ = [
     "VerifyDataflowPass",
     "Value",
     "build_a2a_gemm_module",
+    "account_schedule",
     "build_fused_program",
     "build_pipelined_program",
     "build_pipelined_schedule",

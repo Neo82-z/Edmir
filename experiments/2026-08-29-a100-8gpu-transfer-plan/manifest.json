@@ -6,7 +6,8 @@
     "The four-GPU model transfers zero-shot when P, total rows, rho_N, Gamma, and reduction terms are explicit.",
     "A preregistered four-shape calibration set reduces regret without changing the held-out shape list.",
     "Split-K changes CTA supply and reduction overhead but does not reduce unique remote bytes.",
-    "Grouped-N is useful only when its replay reduction repays the lost CTA supply."
+    "Grouped-N is useful only when its replay reduction repays the lost CTA supply.",
+    "Remote bytes determine the scaling slope even when fixed overhead and CTA supply dominate finite-shape latency."
   ],
   "hardware": {
     "accelerator": "NVIDIA A100-SXM4-80GB",
@@ -32,8 +33,30 @@
     }
   },
   "scaling_regimes": {
-    "fixed_per_peer": "Hold M equal to a four-GPU point; total rows B=P*M double.",
-    "fixed_total_rows": "Halve M relative to a four-GPU point so B=P*M stays fixed."
+    "fixed_per_peer": "Hold M equal to a four-GPU point; per-rank routed rows B_rank=P*M double.",
+    "fixed_total_rows": "Halve M relative to a four-GPU point so per-rank routed rows B_rank=P*M stay fixed."
+  },
+  "numerical_validation": {
+    "fixed_per_peer_remote_growth_p8_over_p4": "7/3",
+    "fixed_rank_rows_remote_growth_p8_over_p4": "7/6",
+    "interpretation": "Peak roofline quotients are lower bounds and bottleneck classifiers, not end-to-end latency predictions.",
+    "required_derived_fields": [
+      "batch_rows_per_rank",
+      "flops_per_rank",
+      "replayed_remote_bytes_per_rank",
+      "local_bytes_per_rank",
+      "Gamma",
+      "rho_N",
+      "roofline_floor_ms",
+      "floor_fraction"
+    ],
+    "profiling_observables_when_available": [
+      "kernel_count",
+      "per_kernel_duration",
+      "dram_bytes",
+      "lsa_or_nvlink_bytes",
+      "achieved_occupancy"
+    ]
   },
   "candidate_space": {
     "base": ["host", "direct", "splitk2", "splitk4", "splitk8", "splitk16"],
