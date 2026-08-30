@@ -126,6 +126,11 @@ from .simulate import (
     simulate_schedule,
     extract_execution_features,
 )
+from .slot_protocol import (
+    SlotCorrespondenceReport,
+    SlotEpoch,
+    validate_slot_correspondence,
+)
 from .verify import VerificationReport, verify_program, verify_schedule
 from .target import FusedScheduleContract, FusedTrafficEstimate, Target
 
@@ -195,6 +200,8 @@ __all__ = [
     "SelectionGates",
     "SemanticValidationReport",
     "SimulationResult",
+    "SlotCorrespondenceReport",
+    "SlotEpoch",
     "TaskTiming",
     "Target",
     "TensorType",
@@ -246,5 +253,6 @@ __all__ = [
     "verify_schedule",
     "verify_dataflow",
     "validate_program_semantics",
+    "validate_slot_correspondence",
     "select_fused_a2a_gemm",
 ]

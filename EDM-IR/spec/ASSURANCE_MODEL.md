@@ -86,7 +86,7 @@ paper claims can cite the same obligations.
 |---|---|---|
 | Tensor mapping and coverage | Static verifier plus executable reference | Checked for every compiled Program |
 | Algebraic schedule equivalence | Deterministic and randomized property tests | Tested over the declared matrix |
-| Buffer ordering and reuse | Derived hazards now; PlusCal/TLA+ next | Static today, model-checked only after TLC evidence exists |
+| Buffer publication, reuse, and split completion | Derived hazards plus bounded TLA+/TLC model | Model-checked for the recorded abstract bounds; runtime correspondence remains tested, not proved |
 | Floating-point behavior | CPU reference, error ledger, adversarial inputs | Numerically validated, not bitwise assumed |
 | Performance safety | Target-bound confidence intervals and fallback | Statistical admission, not formal proof |
 | End-to-end inference effect | Controlled trace replay and serving experiment | Empirical causal claim |
@@ -109,15 +109,24 @@ row above.
   changes. Candidate families or thresholds are not silently tuned around the
   held-out result.
 
-## Next formal artifact
+## Bounded formal artifact
 
-The first PlusCal/TLA+ model will cover only the slot lifecycle:
+The first TLA+ model covers only the slot lifecycle:
 
 ```text
-Free -> Producing -> Ready -> Consuming -> Released -> Free
+Free -> Producing -> Ready -> Consuming -> Released -> Producing
 ```
 
-It will check `MEM-1`, `MEM-2`, `RED-2`, deadlock freedom, and eventual
-completion for small `P`, split count, and slot count. Until a TLC state-space
-report is checked into the repository, EDMIR does not claim a model-checked
-protocol.
+The retained TLC run checks `MEM-1`, `MEM-2`, `RED-2`, structural typing,
+unique residency, deadlock freedom, and eventual completion.  The expanded
+safe bound uses three slots, four tiles, and three splits: TLC generates
+254,566 states and exhausts 63,295 distinct states without a violation.  Three
+mutated configurations admit early read, early reuse, or incomplete release;
+each produces the expected counterexample.  The model, configurations, raw
+output, hashes, and reproduction runner live under `spec/tla/`.
+
+This is a bounded model-checking claim about the abstract compiler-owned slot
+protocol.  It is not a proof of arbitrary bounds, CUDA execution, NCCL, or the
+CUTLASS semaphore implementation.  The next formal step is a correspondence
+check between Program dependency traces and model transitions, not a larger
+model of the whole inference server.

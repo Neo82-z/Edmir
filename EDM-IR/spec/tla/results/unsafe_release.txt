@@ -1,0 +1,74 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 58 and seed -6064976407440749348 with 1 worker on 10 cores with 3641MB heap and 64MB offheap memory [pid: 39119] (Mac OS X 15.6 aarch64, Homebrew 17.0.19 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file /Users/neo/code/llm-serving/EDM-IR/spec/tla/SlotLifecycle.tla
+Parsing file /private/var/folders/nk/_rg6jcm51gz41h4qjlftf25c0000gn/T/Naturals.tla
+Parsing file /private/var/folders/nk/_rg6jcm51gz41h4qjlftf25c0000gn/T/FiniteSets.tla
+Parsing file /private/var/folders/nk/_rg6jcm51gz41h4qjlftf25c0000gn/T/Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module SlotLifecycle
+Starting... (2026-08-30 21:17:55)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-08-30 21:17:55.
+Error: Invariant CompleteReduction is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ completed = {}
+/\ epoch = <<0>>
+/\ started = {}
+/\ published = {}
+/\ phase = <<"Free">>
+/\ resident = <<0>>
+/\ doneSplits = <<{}>>
+/\ nextTile = 1
+/\ readStarted = {}
+
+State 2: <BeginProduce line 64, col 3 to line 71, col 64 of module SlotLifecycle>
+/\ completed = {}
+/\ epoch = <<1>>
+/\ started = {1}
+/\ published = {}
+/\ phase = <<"Producing">>
+/\ resident = <<1>>
+/\ doneSplits = <<{}>>
+/\ nextTile = 2
+/\ readStarted = {}
+
+State 3: <Publish line 74, col 3 to line 78, col 41 of module SlotLifecycle>
+/\ completed = {}
+/\ epoch = <<1>>
+/\ started = {1}
+/\ published = {1}
+/\ phase = <<"Ready">>
+/\ resident = <<1>>
+/\ doneSplits = <<{}>>
+/\ nextTile = 2
+/\ readStarted = {}
+
+State 4: <StartConsume line 85, col 3 to line 89, col 41 of module SlotLifecycle>
+/\ completed = {}
+/\ epoch = <<1>>
+/\ started = {1}
+/\ published = {1}
+/\ phase = <<"Consuming">>
+/\ resident = <<1>>
+/\ doneSplits = <<{}>>
+/\ nextTile = 2
+/\ readStarted = {1}
+
+State 5: <Release line 104, col 3 to line 109, col 43 of module SlotLifecycle>
+/\ completed = {1}
+/\ epoch = <<1>>
+/\ started = {1}
+/\ published = {1}
+/\ phase = <<"Released">>
+/\ resident = <<1>>
+/\ doneSplits = <<{}>>
+/\ nextTile = 2
+/\ readStarted = {1}
+
+7 states generated, 7 distinct states found, 2 states left on queue.
+The depth of the complete state graph search is 5.
+The average outdegree of the complete state graph is 1 (minimum is 1, the maximum 1 and the 95th percentile is 1).
+Finished in 00s at (2026-08-30 21:17:55)

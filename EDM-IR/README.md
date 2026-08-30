@@ -25,8 +25,12 @@ matching problem, environment, code, protocol, and raw-source hashes; failed
 numerics, insufficient samples, or touching confidence intervals select host.
 The accompanying [`spec/RISK_REGISTER.md`](spec/RISK_REGISTER.md) says which
 new concurrency mechanisms are modeled and which mature library internals are
-kept behind contracts. This is static and numerical assurance today, not a
-claim that the runtime has been formally proved or model-checked.
+kept behind contracts. The compiler-owned slot lifecycle is additionally
+model-checked at two finite TLA+/TLC bounds, with deliberate early-read,
+early-reuse, and incomplete-release mutations producing counterexamples. This
+does not prove the CUDA runtime or the NCCL/CUTLASS internals; those remain
+separate trace, numerical, and library-contract obligations. Reproduction
+instructions and hashed TLC output are under [`spec/tla/`](spec/tla/).
 
 Fused kernels use a separate, deliberately conservative selection path. A
 versioned profile binds a measured shape envelope and direct/split-K rule to an
@@ -284,6 +288,7 @@ compiler/schedule_space.py static direct/split-K x grouped-N traffic/CTA frontie
 compiler/dependence.py  the only queue and buffer dependency implementation
 compiler/verify.py      All2All->GEMM semantic checks
 compiler/assurance.py   executable semantics and target-bound evidence gate
+compiler/slot_protocol.py host-staging correspondence to the TLA+ lifecycle
 compiler/simulate.py    ready-time/resource interpreter and EventGraph emission
 compiler/compile.py     candidate enumeration, selection, and fallback
 compiler/pipeline.py    end-to-end compiler orchestration
