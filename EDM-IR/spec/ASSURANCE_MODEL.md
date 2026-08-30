@@ -6,9 +6,9 @@ inference runtime and wider than a kernel unit test.
 
 ## Boundary
 
-The assured operation begins with immutable routed activation tiles and local
-expert weights. It ends when every destination rank has produced the expert
-GEMM output for every source tile:
+The current executable operation begins with immutable routed activation tiles
+and local expert weights. It ends when every destination rank has produced the
+expert GEMM output for every source tile:
 
 ```text
 router trace -> routed source tiles -> dispatch/remote read -> expert GEMM -> output tiles
@@ -18,7 +18,10 @@ The router, continuous-batching policy, paged KV cache, attention kernels,
 NCCL transport internals, and CUTLASS instruction generation are external.
 They enter through versioned problem, environment, and trace contracts. EDMIR
 assures its use of those contracts; it does not reimplement or verify their
-internals.
+internals. Producer-generated or mutable source activations are a separate
+protocol boundary. Until publication events are Program-visible and backed by
+runtime primitives, the verifier rejects that mode rather than treating a
+remote pointer as ready by implication.
 
 For source rank `s`, destination/expert rank `d`, and chunk `c`, the reference
 semantics are:
@@ -73,6 +76,10 @@ paper claims can cite the same obligations.
 | MEM-1 | A consumer cannot read a staging slot before its producer publishes it. |
 | MEM-2 | A staging slot cannot be overwritten until all prior readers release it. |
 | MEM-3 | Fused schedules do not materialize a hidden program-visible staging buffer. |
+| PUB-1 | A remote consumer acquires only an epoch that its producer has published. |
+| PUB-2 | A remote consumer consumes an epoch only after its matching acquire. |
+| PUB-3 | An epoch retires only after every declared consumer completes. |
+| PUB-4 | A producer overwrites an epoch only after every declared consumer completes. |
 | RED-1 | Split-K partitions are disjoint and their union is exactly `[0, K)`. |
 | RED-2 | Reduction completion requires every declared split partial. |
 | REUSE-1 | Grouped-N changes remote-tile reuse and visit order, not output ownership. |
@@ -111,7 +118,7 @@ row above.
 
 ## Bounded formal artifact
 
-The first TLA+ model covers only the slot lifecycle:
+The first TLA+ model covers only the host staging-slot lifecycle:
 
 ```text
 Free -> Producing -> Ready -> Consuming -> Released -> Producing
@@ -125,10 +132,17 @@ mutated configurations admit early read, early reuse, or incomplete release;
 each produces the expected counterexample.  The model, configurations, raw
 output, hashes, and reproduction runner live under `spec/tla/`.
 
-This is a bounded model-checking claim about the abstract compiler-owned slot
-protocol.  It is not a proof of arbitrary bounds, CUDA execution, NCCL, or the
-CUTLASS semaphore implementation.  `validate_slot_correspondence` now projects
-each Program-visible host staging epoch onto the lifecycle and checks the
-derived publication and reuse edges.  The next extension is a visible
-publication protocol and a new correspondence obligation for producer-generated
-or mutable activations, not a larger model of the whole inference server.
+`RemotePublication.tla` separately models one reusable producer buffer across
+versioned epochs and multiple remote consumers.  The retained safe runs cover
+two epochs/two consumers and three epochs/three consumers.  TLC exhausts 23 and
+88 distinct states without a violation.  Four mutated configurations permit
+acquire-before-publish, consume-before-acquire, incomplete retirement, or
+premature overwrite; each produces the expected counterexample.
+
+These are bounded model-checking claims about abstract compiler-owned
+protocols.  They are not proofs of arbitrary bounds, CUDA execution, NCCL, or
+the CUTLASS semaphore implementation.  `validate_slot_correspondence` projects
+each Program-visible host staging epoch onto the first lifecycle.  The versioned
+`remote_input_contract` is the bridge for the second: immutable prelaunch input
+is executable, while `explicit_epoch` remains fail-closed until publish,
+acquire, completion, and reuse events are Program-visible.

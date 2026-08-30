@@ -13,6 +13,7 @@ from edmir.compiler import (  # noqa: E402
     CommSample,
     CompilerOptions,
     ExecutionOverhead,
+    EXPLICIT_EPOCH,
     Program,
     PairwiseCommCurve,
     TopologySnapshot,
@@ -23,6 +24,7 @@ from edmir.compiler import (  # noqa: E402
     derive_dependencies,
     simulate_program,
     verify_program,
+    validate_remote_publication,
 )
 
 
@@ -75,6 +77,52 @@ class CompilerTest(unittest.TestCase):
                 f"rank{remote.rank}.compute",
             },
         )
+
+    def test_remote_inputs_declare_immutable_prelaunch_publication(self) -> None:
+        program = build_fused_program(self.problem, chunk_rows=16)
+        report = validate_remote_publication(program)
+        self.assertTrue(report.valid, report.errors)
+        self.assertTrue(report.executable)
+        self.assertEqual(report.mode, "immutable_external")
+
+    def test_remote_inputs_reject_a_missing_publication_contract(self) -> None:
+        program = build_fused_program(self.problem, chunk_rows=16)
+        broken = replace(
+            program,
+            metadata={
+                key: value
+                for key, value in program.metadata.items()
+                if key != "remote_input_contract"
+            },
+        )
+        report = verify_program(self.problem, broken)
+        self.assertFalse(report.valid)
+        self.assertTrue(
+            any("versioned remote_input_contract" in error for error in report.errors)
+        )
+
+    def test_mutable_remote_inputs_fail_closed_until_events_are_visible(self) -> None:
+        program = build_fused_program(self.problem, chunk_rows=16)
+        mutable = replace(
+            program,
+            metadata={
+                **program.metadata,
+                "remote_input_contract": {
+                    "schema": "edmir.remote_publication.v1",
+                    "mode": EXPLICIT_EPOCH,
+                    "visibility": "release_acquire",
+                    "reuse": "all_consumers_complete",
+                },
+            },
+        )
+        publication = validate_remote_publication(mutable)
+        self.assertFalse(publication.valid)
+        self.assertFalse(publication.executable)
+        self.assertEqual(publication.mode, EXPLICIT_EPOCH)
+        self.assertTrue(
+            any("not implemented" in error for error in publication.errors)
+        )
+        self.assertFalse(verify_program(self.problem, mutable).valid)
 
     def test_fused_program_rejects_fake_unfused_cost_model(self) -> None:
         program = build_fused_program(self.problem, chunk_rows=16)

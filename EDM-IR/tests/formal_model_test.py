@@ -70,6 +70,55 @@ class FormalModelEvidenceTest(unittest.TestCase):
         )
 
 
+class RemotePublicationEvidenceTest(unittest.TestCase):
+    def test_model_names_the_publication_properties(self) -> None:
+        model = (TLA_DIR / "RemotePublication.tla").read_text()
+        for property_name in (
+            "AcquireAfterPublish",
+            "ConsumeAfterAcquire",
+            "CompleteConsumption",
+            "NoOverwriteBeforeConsume",
+            "EventualCompletion",
+        ):
+            self.assertIn(property_name, model)
+
+    def test_retained_publication_report_matches_model_and_configs(self) -> None:
+        result_dir = TLA_DIR / "publication_results"
+        summary_path = result_dir / "summary.json"
+        self.assertTrue(
+            summary_path.is_file(), "run tools/run_publication_tlc.py first"
+        )
+        summary = json.loads(summary_path.read_text())
+        self.assertEqual(summary["schema"], "edmir.publication_tlc_report.v1")
+        self.assertTrue(summary["all_expectations_met"])
+        self.assertEqual(
+            summary["model_sha256"], sha256(TLA_DIR / summary["model"])
+        )
+        self.assertEqual(len(summary["cases"]), 6)
+        for case in summary["cases"]:
+            self.assertTrue(case["expectation_met"], case)
+            self.assertEqual(
+                case["config_sha256"], sha256(TLA_DIR / case["config"])
+            )
+            self.assertTrue((result_dir / case["raw_output"]).is_file())
+
+    def test_publication_mutations_have_distinct_counterexamples(self) -> None:
+        summary = json.loads(
+            (TLA_DIR / "publication_results" / "summary.json").read_text()
+        )
+        by_config = {case["config"]: case for case in summary["cases"]}
+        expected = {
+            "RemotePublicationUnsafeAcquire.cfg": "AcquireAfterPublish",
+            "RemotePublicationUnsafeConsume.cfg": "ConsumeAfterAcquire",
+            "RemotePublicationUnsafeRetire.cfg": "CompleteConsumption",
+            "RemotePublicationUnsafeOverwrite.cfg": "NoOverwriteBeforeConsume",
+        }
+        self.assertEqual(
+            {name: by_config[name]["expected_violation"] for name in expected},
+            expected,
+        )
+
+
 class SlotCorrespondenceTest(unittest.TestCase):
     def setUp(self) -> None:
         self.problem = A2AGemmProblem(world_size=2, rows_per_peer=4, k=8, n=8)

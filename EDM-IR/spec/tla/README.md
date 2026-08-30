@@ -1,4 +1,9 @@
-# Bounded slot-lifecycle model
+# Bounded concurrency models
+
+These deliberately small models cover compiler protocol boundaries, not the
+whole inference stack.
+
+## Host staging slots
 
 `SlotLifecycle.tla` is the first model-checked EDMIR concurrency boundary.  It
 models only compiler-owned staging publication, consumption, split completion,
@@ -50,3 +55,27 @@ host staging-buffer epoch onto `BeginProduce`, `Publish`, `StartConsume`, one
 abstract split completion, and `Release`, and requires the corresponding RAW
 and buffer-reuse dependency edges.  Fused Programs are explicitly reported as
 not applicable because their CUTLASS semaphore is not Program-visible.
+
+## Mutable remote publication
+
+`RemotePublication.tla` models a reusable producer buffer whose contents are
+identified by epochs.  Each declared remote consumer must acquire the matching
+published epoch, consume it, and complete before retirement or overwrite.  It
+checks `PUB-1..4` as `AcquireAfterPublish`, `ConsumeAfterAcquire`,
+`CompleteConsumption`, and `NoOverwriteBeforeConsume`, plus bounded eventual
+completion.
+
+The four unsafe configurations independently enable early acquire, early
+consume, incomplete retirement, or premature overwrite.  Each must produce the
+corresponding counterexample.  Reproduce and retain this suite with:
+
+```bash
+export TLA2TOOLS_JAR=/path/to/tla2tools.jar
+python3 tools/run_publication_tlc.py --workers 1
+```
+
+The runner writes `publication_results/summary.json` and raw outputs.  The
+compiler-side `remote_input_contract` admits only `immutable_external` today.
+`explicit_epoch` describes the future contract but remains non-executable until
+publish, acquire, completion, and reuse are represented by Program and runtime
+events.

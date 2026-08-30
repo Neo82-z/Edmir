@@ -4,6 +4,7 @@ from dataclasses import dataclass
 
 from .dependence import DependenceResult, derive_dependencies
 from .model import A2AGemmProblem, Program
+from .remote_publication import validate_remote_publication
 
 
 @dataclass(frozen=True, slots=True)
@@ -52,6 +53,8 @@ def verify_program(problem: A2AGemmProblem, program: Program) -> VerificationRep
 
     dependence = derive_dependencies(program)
     errors.extend(dependence.errors)
+    publication = validate_remote_publication(program)
+    errors.extend(publication.errors)
     buffer_map = program.buffer_map()
     expected = _expected_tiles(problem, program.chunk_rows) if program.chunk_rows > 0 else set()
     transfers: dict[str, list] = {}

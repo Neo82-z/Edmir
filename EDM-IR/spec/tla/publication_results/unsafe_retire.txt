@@ -1,0 +1,59 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 16 and seed -7130159868809478263 with 1 worker on 10 cores with 3641MB heap and 64MB offheap memory [pid: 47976] (Mac OS X 15.6 aarch64, Homebrew 17.0.19 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file /Users/neo/code/llm-serving/EDM-IR/spec/tla/RemotePublication.tla
+Parsing file /private/var/folders/nk/_rg6jcm51gz41h4qjlftf25c0000gn/T/Naturals.tla
+Parsing file /private/var/folders/nk/_rg6jcm51gz41h4qjlftf25c0000gn/T/FiniteSets.tla
+Parsing file /private/var/folders/nk/_rg6jcm51gz41h4qjlftf25c0000gn/T/Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module RemotePublication
+Starting... (2026-08-30 23:25:01)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-08-30 23:25:02.
+Error: Invariant CompleteConsumption is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ overwritten = {}
+/\ retired = {}
+/\ consumed = {}
+/\ published = {}
+/\ current = 0
+/\ acquired = {}
+/\ phase = "Empty"
+/\ nextEpoch = 1
+
+State 2: <BeginWrite line 59, col 3 to line 66, col 57 of module RemotePublication>
+/\ overwritten = {}
+/\ retired = {}
+/\ consumed = {}
+/\ published = {}
+/\ current = 1
+/\ acquired = {}
+/\ phase = "Writing"
+/\ nextEpoch = 2
+
+State 3: <Publish line 69, col 3 to line 73, col 31 of module RemotePublication>
+/\ overwritten = {}
+/\ retired = {}
+/\ consumed = {}
+/\ published = {1}
+/\ current = 1
+/\ acquired = {}
+/\ phase = "Published"
+/\ nextEpoch = 2
+
+State 4: <Retire line 105, col 3 to line 110, col 31 of module RemotePublication>
+/\ overwritten = {}
+/\ retired = {1}
+/\ consumed = {}
+/\ published = {1}
+/\ current = 1
+/\ acquired = {}
+/\ phase = "Retired"
+/\ nextEpoch = 2
+
+6 states generated, 6 distinct states found, 2 states left on queue.
+The depth of the complete state graph search is 4.
+The average outdegree of the complete state graph is 1 (minimum is 1, the maximum 1 and the 95th percentile is 1).
+Finished in 00s at (2026-08-30 23:25:02)

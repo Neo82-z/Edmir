@@ -63,6 +63,7 @@ def run_case(
     *,
     java: str,
     jar: Path,
+    model: Path = MODEL,
     config: Path,
     expected_violation: str | None,
     raw_output: Path,
@@ -79,7 +80,7 @@ def run_case(
         str(workers),
         "-config",
         str(config),
-        str(MODEL),
+        str(model),
     ]
     result = subprocess.run(command, capture_output=True, text=True)
     output = result.stdout + result.stderr

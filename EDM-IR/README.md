@@ -31,6 +31,11 @@ early-reuse, and incomplete-release mutations producing counterexamples. This
 does not prove the CUDA runtime or the NCCL/CUTLASS internals; those remain
 separate trace, numerical, and library-contract obligations. Reproduction
 instructions and hashed TLC output are under [`spec/tla/`](spec/tla/).
+Mutable producer-generated remote inputs have a second bounded epoch protocol.
+Its four mutation witnesses cover early acquire, early consume, incomplete
+retirement, and premature overwrite. The executable IR currently admits only
+the versioned immutable-prelaunch contract; declaring the mutable mode fails
+verification until its synchronization events become Program-visible.
 
 Fused kernels use a separate, deliberately conservative selection path. A
 versioned profile binds a measured shape envelope and direct/split-K rule to an
@@ -289,6 +294,7 @@ compiler/dependence.py  the only queue and buffer dependency implementation
 compiler/verify.py      All2All->GEMM semantic checks
 compiler/assurance.py   executable semantics and target-bound evidence gate
 compiler/slot_protocol.py host-staging correspondence to the TLA+ lifecycle
+compiler/remote_publication.py versioned remote-input contract and closed gate
 compiler/simulate.py    ready-time/resource interpreter and EventGraph emission
 compiler/compile.py     candidate enumeration, selection, and fallback
 compiler/pipeline.py    end-to-end compiler orchestration

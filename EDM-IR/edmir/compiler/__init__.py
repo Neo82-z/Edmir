@@ -131,6 +131,16 @@ from .slot_protocol import (
     SlotEpoch,
     validate_slot_correspondence,
 )
+from .remote_publication import (
+    EXPLICIT_EPOCH,
+    IMMUTABLE_EXTERNAL,
+    REMOTE_PUBLICATION_METADATA_KEY,
+    RemotePublicationContract,
+    RemotePublicationReport,
+    SCHEMA_REMOTE_PUBLICATION,
+    immutable_external_contract,
+    validate_remote_publication,
+)
 from .verify import VerificationReport, verify_program, verify_schedule
 from .target import FusedScheduleContract, FusedTrafficEstimate, Target
 
@@ -157,6 +167,7 @@ __all__ = [
     "DEFAULT_SM_COUNT",
     "ExecutionFeatures",
     "ExecutionOverhead",
+    "EXPLICIT_EPOCH",
     "EvidenceRecord",
     "FusedTrafficEstimate",
     "FusedScheduleContract",
@@ -174,6 +185,7 @@ __all__ = [
     "Dependency",
     "GraphBuilder",
     "HardwareCeilings",
+    "IMMUTABLE_EXTERNAL",
     "GemmSample",
     "JsonBackend",
     "Node",
@@ -185,6 +197,9 @@ __all__ = [
     "Program",
     "ProgramBuilder",
     "ReferenceFixture",
+    "REMOTE_PUBLICATION_METADATA_KEY",
+    "RemotePublicationContract",
+    "RemotePublicationReport",
     "RuntimeMeasurement",
     "RooflineAccount",
     "RidgeLatencyModel",
@@ -194,6 +209,7 @@ __all__ = [
     "SCHEMA_FUSED_SCHEDULE_SPACE",
     "SCHEMA_EVIDENCE_RECORD",
     "SCHEMA_ROOFLINE_ACCOUNTING",
+    "SCHEMA_REMOTE_PUBLICATION",
     "SCHEMA_TWO_STAGE_EVALUATION",
     "ScheduleMeasurement",
     "ScheduleSpec",
@@ -236,6 +252,7 @@ __all__ = [
     "fit_gemm_profile",
     "fit_local_copy_profile",
     "fit_pairwise_nccl_profile",
+    "immutable_external_contract",
     "lower_fused_a2a_gemm",
     "match_a2a_gemm",
     "make_reference_fixture",
@@ -253,6 +270,7 @@ __all__ = [
     "verify_schedule",
     "verify_dataflow",
     "validate_program_semantics",
+    "validate_remote_publication",
     "validate_slot_correspondence",
     "select_fused_a2a_gemm",
 ]

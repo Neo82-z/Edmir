@@ -1,6 +1,10 @@
 from __future__ import annotations
 
 from .model import A2AGemmProblem, Buffer, DTYPE_BYTES, Op, Program
+from .remote_publication import (
+    REMOTE_PUBLICATION_METADATA_KEY,
+    immutable_external_contract,
+)
 
 
 class ProgramBuilder:
@@ -154,6 +158,10 @@ class ProgramBuilder:
         return token
 
     def build(self, *, metadata: dict | None = None) -> Program:
+        program_metadata = {
+            REMOTE_PUBLICATION_METADATA_KEY: immutable_external_contract().to_dict(),
+            **dict(metadata or {}),
+        }
         return Program(
             problem=self.problem,
             strategy=self.strategy,
@@ -161,7 +169,7 @@ class ProgramBuilder:
             buffer_count=self.buffer_count,
             buffers=tuple(self._buffers.values()),
             ops=tuple(self._ops),
-            metadata=dict(metadata or {}),
+            metadata=program_metadata,
         )
 
 
