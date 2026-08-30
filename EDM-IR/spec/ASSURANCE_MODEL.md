@@ -127,6 +127,8 @@ output, hashes, and reproduction runner live under `spec/tla/`.
 
 This is a bounded model-checking claim about the abstract compiler-owned slot
 protocol.  It is not a proof of arbitrary bounds, CUDA execution, NCCL, or the
-CUTLASS semaphore implementation.  The next formal step is a correspondence
-check between Program dependency traces and model transitions, not a larger
-model of the whole inference server.
+CUTLASS semaphore implementation.  `validate_slot_correspondence` now projects
+each Program-visible host staging epoch onto the lifecycle and checks the
+derived publication and reuse edges.  The next extension is a visible
+publication protocol and a new correspondence obligation for producer-generated
+or mutable activations, not a larger model of the whole inference server.
