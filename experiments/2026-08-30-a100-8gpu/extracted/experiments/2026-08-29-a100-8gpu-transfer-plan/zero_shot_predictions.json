@@ -1,0 +1,815 @@
+{
+  "eligible_for_default_admission": false,
+  "experiment_id": "a100-8gpu-zero-few-shot-20260829",
+  "four_gpu_group_heldout_metrics": {
+    "admitted": false,
+    "direction_accuracy": 0.8780487804878049,
+    "exact_family_accuracy": 0.5609756097560976,
+    "fused_coverage": 0.9473684210526315,
+    "fused_schedule_exact_accuracy": 0.6388888888888888,
+    "fused_schedule_max_regret": 0.1324083250743311,
+    "fused_schedule_mean_regret": 0.019125409053889098,
+    "gate_failures": [
+      "direction accuracy below gate",
+      "mean regret above gate",
+      "maximum regret above gate",
+      "host regression count above gate"
+    ],
+    "host_regressions": 3,
+    "max_selection_regret": 0.2924451665312753,
+    "mean_selection_regret": 0.04187882405611013,
+    "oracle_fused_problems": 38,
+    "problems": 41,
+    "selected_fused_problems": 39
+  },
+  "manifest_sha256": "4fcbf170c783be49b21434eec4dad02d90643b143f662e23ad0a2826092641d9",
+  "minimum_fused_advantage": 0.0,
+  "model": {
+    "force_fused": false,
+    "fused_model": {
+      "ablation": "full",
+      "coefficients": [
+        -0.4466585564892569,
+        -0.5993436257614007,
+        0.23140866115968056,
+        0.8005027820178151,
+        0.24942996328949707,
+        -0.3072575651026867,
+        0.006858411327251944,
+        -0.13521849017439952,
+        -0.0418207568755615,
+        -0.057398254629288006,
+        -0.08374688317068077,
+        0.2537135492568493
+      ],
+      "feature_names": [
+        "log_flops",
+        "log_unique_remote_bytes",
+        "log_local_bytes",
+        "log_split_k_depth",
+        "log_q",
+        "grouped",
+        "log_rho_n",
+        "log_gamma",
+        "underfill",
+        "log_reduction_bytes",
+        "q_minus_one"
+      ],
+      "means": [
+        29.18032786885246,
+        19.929224795803126,
+        22.370162242077217,
+        9.098360655737705,
+        2.0,
+        0.32786885245901637,
+        1.5901639344262295,
+        3.918032786885246,
+        0.7234669095324834,
+        16.925416625201798,
+        5.2
+      ],
+      "ridge": 1.0,
+      "scales": [
+        2.131021433847724,
+        1.773070374844752,
+        1.6722835946690646,
+        1.9893562516947403,
+        1.4142135623730951,
+        0.46943675617299524,
+        1.1787329844096754,
+        2.0668744278655065,
+        0.313462526763607,
+        8.65975980509679,
+        5.455272678794342
+      ],
+      "sm_count": 108,
+      "stage": "fused"
+    },
+    "host_model": {
+      "ablation": "full",
+      "coefficients": [
+        -0.38446558569570044,
+        -0.041106778550765236,
+        0.13047759203687112,
+        0.12193087716786251
+      ],
+      "feature_names": [
+        "log_flops",
+        "log_unique_remote_bytes",
+        "log_local_bytes"
+      ],
+      "means": [
+        29.51219512195122,
+        20.097157622672377,
+        22.547472067321003
+      ],
+      "ridge": 1.0,
+      "scales": [
+        2.1989127160165163,
+        1.901500706688583,
+        1.679564932076143
+      ],
+      "sm_count": 108,
+      "stage": "host"
+    },
+    "minimum_fused_advantage": 0.0
+  },
+  "predictions": [
+    {
+      "decision": {
+        "admit_fused": true,
+        "predicted_fused_family": "splitk2",
+        "predicted_fused_ms": 0.3444716095385636,
+        "predicted_host_ms": 0.5783036426563061,
+        "selected": "splitk2"
+      },
+      "k": 1024,
+      "n": 512,
+      "predicted_ms_by_family": {
+        "direct": 0.4514386458001451,
+        "direct_groupedn2": 0.5224907834608339,
+        "host": 0.5783036426563061,
+        "splitk16": 0.7019117798609681,
+        "splitk16_groupedn2": 0.7720980823087001,
+        "splitk2": 0.3444716095385636,
+        "splitk2_groupedn2": 0.3973385202510245,
+        "splitk4": 0.3556014980059573,
+        "splitk4_groupedn2": 0.4074041888459958,
+        "splitk8": 0.4384387647155281,
+        "splitk8_groupedn2": 0.49554169102762374
+      },
+      "regime": "fixed_total_rows",
+      "role": "calibration",
+      "rows_per_peer": 32,
+      "selected_family": "splitk2",
+      "sweep_id": "cal-fixed-total-m32-n512-k1024",
+      "world_size": 8
+    },
+    {
+      "decision": {
+        "admit_fused": true,
+        "predicted_fused_family": "splitk2",
+        "predicted_fused_ms": 0.4934041128575699,
+        "predicted_host_ms": 0.7251992856492909,
+        "selected": "splitk2"
+      },
+      "k": 2048,
+      "n": 1024,
+      "predicted_ms_by_family": {
+        "direct": 0.6547909785541587,
+        "direct_groupedn2": 0.7552833710764871,
+        "host": 0.7251992856492909,
+        "splitk16": 1.0686606105611696,
+        "splitk16_groupedn2": 1.1518442593252451,
+        "splitk2": 0.4934041128575699,
+        "splitk2_groupedn2": 0.5652813711393557,
+        "splitk4": 0.5163017085306816,
+        "splitk4_groupedn2": 0.5835456221389265,
+        "splitk8": 0.6540790432494131,
+        "splitk8_groupedn2": 0.7194824042862086
+      },
+      "regime": "fixed_per_peer",
+      "role": "calibration",
+      "rows_per_peer": 64,
+      "selected_family": "splitk2",
+      "sweep_id": "cal-fixed-peer-m64-n1024-k2048",
+      "world_size": 8
+    },
+    {
+      "decision": {
+        "admit_fused": true,
+        "predicted_fused_family": "splitk4",
+        "predicted_fused_ms": 0.672811739932846,
+        "predicted_host_ms": 0.7791395458101027,
+        "selected": "splitk4"
+      },
+      "k": 4096,
+      "n": 2048,
+      "predicted_ms_by_family": {
+        "direct": 1.1284433914219827,
+        "direct_groupedn2": 1.2928307870435225,
+        "host": 0.7791395458101027,
+        "splitk16": 0.9781713922951301,
+        "splitk16_groupedn2": 1.1359717222249468,
+        "splitk2": 0.7439851744811201,
+        "splitk2_groupedn2": 0.8408829262646598,
+        "splitk4": 0.672811739932846,
+        "splitk4_groupedn2": 0.7400882405190952,
+        "splitk8": 0.7362848542753794,
+        "splitk8_groupedn2": 0.793596651962196
+      },
+      "regime": "fixed_total_rows",
+      "role": "calibration",
+      "rows_per_peer": 32,
+      "selected_family": "splitk4",
+      "sweep_id": "cal-fixed-total-m32-n2048-k4096",
+      "world_size": 8
+    },
+    {
+      "decision": {
+        "admit_fused": true,
+        "predicted_fused_family": "splitk2",
+        "predicted_fused_ms": 0.9632894103191695,
+        "predicted_host_ms": 1.121729607074655,
+        "selected": "splitk2"
+      },
+      "k": 8192,
+      "n": 512,
+      "predicted_ms_by_family": {
+        "direct": 1.3378219450251354,
+        "direct_groupedn2": 1.5327108220567922,
+        "host": 1.121729607074655,
+        "splitk16": 1.8083978451622817,
+        "splitk16_groupedn2": 2.1001317671096515,
+        "splitk2": 0.9632894103191695,
+        "splitk2_groupedn2": 1.0887496767040714,
+        "splitk4": 0.9857158639285991,
+        "splitk4_groupedn2": 1.0842806034560135,
+        "splitk8": 1.224750989070044,
+        "splitk8_groupedn2": 1.3200845824404952
+      },
+      "regime": "fixed_total_rows",
+      "role": "calibration",
+      "rows_per_peer": 256,
+      "selected_family": "splitk2",
+      "sweep_id": "cal-host-anchor-m256-n512-k8192",
+      "world_size": 8
+    },
+    {
+      "decision": {
+        "admit_fused": true,
+        "predicted_fused_family": "splitk2",
+        "predicted_fused_ms": 0.32904431355262637,
+        "predicted_host_ms": 0.5709995070514404,
+        "selected": "splitk2"
+      },
+      "k": 512,
+      "n": 512,
+      "predicted_ms_by_family": {
+        "direct": 0.34416695279386783,
+        "direct_groupedn2": 0.39833554898223117,
+        "host": 0.5709995070514404,
+        "splitk16": 0.9282804287028771,
+        "splitk16_groupedn2": 1.0211020236590918,
+        "splitk2": 0.32904431355262637,
+        "splitk2_groupedn2": 0.37954355895729663,
+        "splitk4": 0.4004980549376204,
+        "splitk4_groupedn2": 0.4588411075915289,
+        "splitk8": 0.5470401733469733,
+        "splitk8_groupedn2": 0.6182875109966358
+      },
+      "regime": "fixed_per_peer",
+      "role": "heldout",
+      "rows_per_peer": 64,
+      "selected_family": "splitk2",
+      "sweep_id": "heldout-fixed-peer-m64-n512",
+      "world_size": 8
+    },
+    {
+      "decision": {
+        "admit_fused": true,
+        "predicted_fused_family": "splitk2",
+        "predicted_fused_ms": 0.47265025504291497,
+        "predicted_host_ms": 0.7132986843435737,
+        "selected": "splitk2"
+      },
+      "k": 2048,
+      "n": 512,
+      "predicted_ms_by_family": {
+        "direct": 0.6309134049939067,
+        "direct_groupedn2": 0.7302131581733154,
+        "host": 0.7132986843435737,
+        "splitk16": 0.9454111105717982,
+        "splitk16_groupedn2": 1.0399456547237453,
+        "splitk2": 0.47265025504291497,
+        "splitk2_groupedn2": 0.5451890598084157,
+        "splitk4": 0.4839206427944675,
+        "splitk4_groupedn2": 0.5544163847707134,
+        "splitk8": 0.5929219751685766,
+        "splitk8_groupedn2": 0.670145027922229
+      },
+      "regime": "fixed_per_peer",
+      "role": "heldout",
+      "rows_per_peer": 64,
+      "selected_family": "splitk2",
+      "sweep_id": "heldout-fixed-peer-m64-n512",
+      "world_size": 8
+    },
+    {
+      "decision": {
+        "admit_fused": true,
+        "predicted_fused_family": "splitk4",
+        "predicted_fused_ms": 0.592668013650481,
+        "predicted_host_ms": 0.802832051864789,
+        "selected": "splitk4"
+      },
+      "k": 4096,
+      "n": 512,
+      "predicted_ms_by_family": {
+        "direct": 0.9295343718736767,
+        "direct_groupedn2": 1.0758342174122641,
+        "host": 0.802832051864789,
+        "splitk16": 1.0009341620022338,
+        "splitk16_groupedn2": 1.101020625629431,
+        "splitk2": 0.6375221093560149,
+        "splitk2_groupedn2": 0.7353642057705556,
+        "splitk4": 0.592668013650481,
+        "splitk4_groupedn2": 0.6790056642342848,
+        "splitk8": 0.6672114061901905,
+        "splitk8_groupedn2": 0.7541100265414005
+      },
+      "regime": "fixed_per_peer",
+      "role": "heldout",
+      "rows_per_peer": 64,
+      "selected_family": "splitk4",
+      "sweep_id": "heldout-fixed-peer-m64-n512",
+      "world_size": 8
+    },
+    {
+      "decision": {
+        "admit_fused": true,
+        "predicted_fused_family": "splitk4",
+        "predicted_fused_ms": 0.7864184225057513,
+        "predicted_host_ms": 0.90547647648412,
+        "selected": "splitk4"
+      },
+      "k": 8192,
+      "n": 512,
+      "predicted_ms_by_family": {
+        "direct": 1.4117665547807143,
+        "direct_groupedn2": 1.6339651470550742,
+        "host": 0.90547647648412,
+        "splitk16": 1.1226961323464362,
+        "splitk16_groupedn2": 1.234957947239148,
+        "splitk2": 0.9148027803465624,
+        "splitk2_groupedn2": 1.0551998277922923,
+        "splitk4": 0.7864184225057513,
+        "splitk4_groupedn2": 0.900980905061136,
+        "splitk8": 0.810522933113895,
+        "splitk8_groupedn2": 0.9160866629859473
+      },
+      "regime": "fixed_per_peer",
+      "role": "heldout",
+      "rows_per_peer": 64,
+      "selected_family": "splitk4",
+      "sweep_id": "heldout-fixed-peer-m64-n512",
+      "world_size": 8
+    },
+    {
+      "decision": {
+        "admit_fused": true,
+        "predicted_fused_family": "splitk2",
+        "predicted_fused_ms": 0.27805363318624554,
+        "predicted_host_ms": 0.517449543221987,
+        "selected": "splitk2"
+      },
+      "k": 512,
+      "n": 512,
+      "predicted_ms_by_family": {
+        "direct": 0.3236011234417688,
+        "direct_groupedn2": 0.37453285421813004,
+        "host": 0.517449543221987,
+        "splitk16": 0.6896746313376727,
+        "splitk16_groupedn2": 0.75863730393334,
+        "splitk2": 0.27805363318624554,
+        "splitk2_groupedn2": 0.32072721263920456,
+        "splitk4": 0.31563455040503036,
+        "splitk4_groupedn2": 0.36161500640635,
+        "splitk8": 0.41479783410315746,
+        "splitk8_groupedn2": 0.46882172993859467
+      },
+      "regime": "fixed_total_rows",
+      "role": "heldout",
+      "rows_per_peer": 32,
+      "selected_family": "splitk2",
+      "sweep_id": "heldout-fixed-total-m32-n512",
+      "world_size": 8
+    },
+    {
+      "decision": {
+        "admit_fused": true,
+        "predicted_fused_family": "splitk4",
+        "predicted_fused_ms": 0.432584270521648,
+        "predicted_host_ms": 0.6496652264654728,
+        "selected": "splitk4"
+      },
+      "k": 2048,
+      "n": 512,
+      "predicted_ms_by_family": {
+        "direct": 0.6629225777488907,
+        "direct_groupedn2": 0.7672602694613659,
+        "host": 0.6496652264654728,
+        "splitk16": 0.7403111211121691,
+        "splitk16_groupedn2": 0.8143370909599614,
+        "splitk2": 0.46186177937059875,
+        "splitk2_groupedn2": 0.5327448500660089,
+        "splitk4": 0.432584270521648,
+        "splitk4_groupedn2": 0.4956015225685476,
+        "splitk8": 0.4906033121710296,
+        "splitk8_groupedn2": 0.5545002278590144
+      },
+      "regime": "fixed_total_rows",
+      "role": "heldout",
+      "rows_per_peer": 32,
+      "selected_family": "splitk4",
+      "sweep_id": "heldout-fixed-total-m32-n512",
+      "world_size": 8
+    },
+    {
+      "decision": {
+        "admit_fused": true,
+        "predicted_fused_family": "splitk4",
+        "predicted_fused_ms": 0.5704158842296844,
+        "predicted_host_ms": 0.7319814055368565,
+        "selected": "splitk4"
+      },
+      "k": 4096,
+      "n": 512,
+      "predicted_ms_by_family": {
+        "direct": 1.0049125677836968,
+        "direct_groupedn2": 1.1630762225070745,
+        "host": 0.7319814055368565,
+        "splitk16": 0.8257706531433529,
+        "splitk16_groupedn2": 0.9083419825851534,
+        "splitk2": 0.6598960909974582,
+        "splitk2_groupedn2": 0.761171977765012,
+        "splitk4": 0.5704158842296844,
+        "splitk4_groupedn2": 0.6535119281628358,
+        "splitk8": 0.5919943764828878,
+        "splitk8_groupedn2": 0.6690966173839876
+      },
+      "regime": "fixed_total_rows",
+      "role": "heldout",
+      "rows_per_peer": 32,
+      "selected_family": "splitk4",
+      "sweep_id": "heldout-fixed-total-m32-n512",
+      "world_size": 8
+    },
+    {
+      "decision": {
+        "admit_fused": true,
+        "predicted_fused_family": "splitk8",
+        "predicted_fused_ms": 0.7746410125735981,
+        "predicted_host_ms": 0.8260262005296558,
+        "selected": "splitk8"
+      },
+      "k": 8192,
+      "n": 512,
+      "predicted_ms_by_family": {
+        "direct": 1.5508174886258068,
+        "direct_groupedn2": 1.7949013718147215,
+        "host": 0.8260262005296558,
+        "splitk16": 0.9926181288343513,
+        "splitk16_groupedn2": 1.0918730469086273,
+        "splitk2": 0.9839534071606989,
+        "splitk2_groupedn2": 1.1349631724974352,
+        "splitk4": 0.8050009495766172,
+        "splitk4_groupedn2": 0.9222704648927653,
+        "splitk8": 0.7746410125735981,
+        "splitk8_groupedn2": 0.8755314269693638
+      },
+      "regime": "fixed_total_rows",
+      "role": "heldout",
+      "rows_per_peer": 32,
+      "selected_family": "splitk8",
+      "sweep_id": "heldout-fixed-total-m32-n512",
+      "world_size": 8
+    },
+    {
+      "decision": {
+        "admit_fused": true,
+        "predicted_fused_family": "splitk2",
+        "predicted_fused_ms": 0.34794137332462627,
+        "predicted_host_ms": 0.5853914256850123,
+        "selected": "splitk2"
+      },
+      "k": 512,
+      "n": 1024,
+      "predicted_ms_by_family": {
+        "direct": 0.3613274485002803,
+        "direct_groupedn2": 0.4167812665476197,
+        "host": 0.5853914256850123,
+        "splitk16": 1.0530132389185043,
+        "splitk16_groupedn2": 1.1349789093516287,
+        "splitk2": 0.34794137332462627,
+        "splitk2_groupedn2": 0.39862816596713657,
+        "splitk4": 0.4315248448759728,
+        "splitk4_groupedn2": 0.48772729183519453,
+        "splitk8": 0.6072355629768303,
+        "splitk8_groupedn2": 0.6679549013651284
+      },
+      "regime": "fixed_per_peer",
+      "role": "heldout",
+      "rows_per_peer": 64,
+      "selected_family": "splitk2",
+      "sweep_id": "heldout-fixed-peer-m64-n1024",
+      "world_size": 8
+    },
+    {
+      "decision": {
+        "admit_fused": true,
+        "predicted_fused_family": "splitk4",
+        "predicted_fused_ms": 0.628073838851162,
+        "predicted_host_ms": 0.8146875160251218,
+        "selected": "splitk4"
+      },
+      "k": 4096,
+      "n": 1024,
+      "predicted_ms_by_family": {
+        "direct": 0.9615386884312287,
+        "direct_groupedn2": 1.1091084113932008,
+        "host": 0.8146875160251218,
+        "splitk16": 1.1271236035526584,
+        "splitk16_groupedn2": 1.2148579628291638,
+        "splitk2": 0.661547991773346,
+        "splitk2_groupedn2": 0.7579198189052688,
+        "splitk4": 0.628073838851162,
+        "splitk4_groupedn2": 0.709875123374311,
+        "splitk8": 0.7319000299802987,
+        "splitk8_groupedn2": 0.8050849491390518
+      },
+      "regime": "fixed_per_peer",
+      "role": "heldout",
+      "rows_per_peer": 64,
+      "selected_family": "splitk4",
+      "sweep_id": "heldout-fixed-peer-m64-n1024",
+      "world_size": 8
+    },
+    {
+      "decision": {
+        "admit_fused": true,
+        "predicted_fused_family": "splitk4",
+        "predicted_fused_ms": 0.8281930679490325,
+        "predicted_host_ms": 0.917912932323294,
+        "selected": "splitk4"
+      },
+      "k": 8192,
+      "n": 1024,
+      "predicted_ms_by_family": {
+        "direct": 1.4575794291031157,
+        "direct_groupedn2": 1.6812777525670919,
+        "host": 0.917912932323294,
+        "splitk16": 1.2572357320267045,
+        "splitk16_groupedn2": 1.3550979106388996,
+        "splitk2": 0.9452025546979905,
+        "splitk2_groupedn2": 1.0828961133494623,
+        "splitk4": 0.8281930679490325,
+        "splitk4_groupedn2": 0.9360581828459019,
+        "splitk8": 0.8831589415461334,
+        "splitk8_groupedn2": 0.9714687012043254
+      },
+      "regime": "fixed_per_peer",
+      "role": "heldout",
+      "rows_per_peer": 64,
+      "selected_family": "splitk4",
+      "sweep_id": "heldout-fixed-peer-m64-n1024",
+      "world_size": 8
+    },
+    {
+      "decision": {
+        "admit_fused": true,
+        "predicted_fused_family": "splitk2",
+        "predicted_fused_ms": 0.2946315480837483,
+        "predicted_host_ms": 0.5340267447463716,
+        "selected": "splitk2"
+      },
+      "k": 512,
+      "n": 1024,
+      "predicted_ms_by_family": {
+        "direct": 0.3420079137138911,
+        "direct_groupedn2": 0.39449671492885213,
+        "host": 0.5340267447463716,
+        "splitk16": 0.7823778345724602,
+        "splitk16_groupedn2": 0.8432774713221468,
+        "splitk2": 0.2946315480837483,
+        "splitk2_groupedn2": 0.33755236557942886,
+        "splitk4": 0.3402864194630533,
+        "splitk4_groupedn2": 0.38460583621949185,
+        "splitk8": 0.46051374491793234,
+        "splitk8_groupedn2": 0.5065619206424513
+      },
+      "regime": "fixed_total_rows",
+      "role": "heldout",
+      "rows_per_peer": 32,
+      "selected_family": "splitk2",
+      "sweep_id": "heldout-fixed-total-m32-n1024",
+      "world_size": 8
+    },
+    {
+      "decision": {
+        "admit_fused": true,
+        "predicted_fused_family": "splitk4",
+        "predicted_fused_ms": 0.46335645958416144,
+        "predicted_host_ms": 0.6673776329356128,
+        "selected": "splitk4"
+      },
+      "k": 2048,
+      "n": 1024,
+      "predicted_ms_by_family": {
+        "direct": 0.6975089298980313,
+        "direct_groupedn2": 0.8045573521684743,
+        "host": 0.6673776329356128,
+        "splitk16": 0.8372375565298337,
+        "splitk16_groupedn2": 0.9024074281861859,
+        "splitk2": 0.4861281696876526,
+        "splitk2_groupedn2": 0.5569454958917771,
+        "splitk4": 0.46335645958416144,
+        "splitk4_groupedn2": 0.5237047040762635,
+        "splitk8": 0.5420326304029014,
+        "splitk8_groupedn2": 0.5962321284388701
+      },
+      "regime": "fixed_total_rows",
+      "role": "heldout",
+      "rows_per_peer": 32,
+      "selected_family": "splitk4",
+      "sweep_id": "heldout-fixed-total-m32-n1024",
+      "world_size": 8
+    },
+    {
+      "decision": {
+        "admit_fused": false,
+        "predicted_fused_family": "splitk8",
+        "predicted_fused_ms": 0.8500001328062601,
+        "predicted_host_ms": 0.8472943087284965,
+        "selected": "host"
+      },
+      "k": 8192,
+      "n": 1024,
+      "predicted_ms_by_family": {
+        "direct": 1.6291161162050452,
+        "direct_groupedn2": 1.8791405997060615,
+        "host": 0.8472943087284965,
+        "splitk16": 1.1155032384827428,
+        "splitk16_groupedn2": 1.2023330782542403,
+        "splitk2": 1.0317813821481188,
+        "splitk2_groupedn2": 1.182087419253258,
+        "splitk4": 0.857258699220143,
+        "splitk4_groupedn2": 0.9689093657932326,
+        "splitk8": 0.8500001328062601,
+        "splitk8_groupedn2": 0.9349942419143441
+      },
+      "regime": "fixed_total_rows",
+      "role": "heldout",
+      "rows_per_peer": 32,
+      "selected_family": "host",
+      "sweep_id": "heldout-fixed-total-m32-n1024",
+      "world_size": 8
+    },
+    {
+      "decision": {
+        "admit_fused": true,
+        "predicted_fused_family": "splitk4",
+        "predicted_fused_ms": 0.6912521754523829,
+        "predicted_host_ms": 0.8368990733659588,
+        "selected": "splitk4"
+      },
+      "k": 4096,
+      "n": 2048,
+      "predicted_ms_by_family": {
+        "direct": 1.018589165544628,
+        "direct_groupedn2": 1.1669734100756708,
+        "host": 0.8368990733659588,
+        "splitk16": 1.1830616295349996,
+        "splitk16_groupedn2": 1.3739152130055772,
+        "splitk2": 0.7058148146645812,
+        "splitk2_groupedn2": 0.7977412011872863,
+        "splitk4": 0.6912521754523829,
+        "splitk4_groupedn2": 0.7603725915017668,
+        "splitk8": 0.8252446225083,
+        "splitk8_groupedn2": 0.8894809742038352
+      },
+      "regime": "fixed_per_peer",
+      "role": "heldout",
+      "rows_per_peer": 64,
+      "selected_family": "splitk4",
+      "sweep_id": "heldout-host-boundary-m64-n2048",
+      "world_size": 8
+    },
+    {
+      "decision": {
+        "admit_fused": true,
+        "predicted_fused_family": "splitk4",
+        "predicted_fused_ms": 0.9084894618612107,
+        "predicted_host_ms": 0.9420273527209544,
+        "selected": "splitk4"
+      },
+      "k": 8192,
+      "n": 2048,
+      "predicted_ms_by_family": {
+        "direct": 1.5424597651069263,
+        "direct_groupedn2": 1.7671595112921739,
+        "host": 0.9420273527209544,
+        "splitk16": 1.315879830257049,
+        "splitk16_groupedn2": 1.5281598795389475,
+        "splitk2": 1.0061271841794615,
+        "splitk2_groupedn2": 1.1371667068732934,
+        "splitk4": 0.9084894618612107,
+        "splitk4_groupedn2": 0.999332097602982,
+        "splitk8": 0.9923257708050814,
+        "splitk8_groupedn2": 1.0695675794414499
+      },
+      "regime": "fixed_per_peer",
+      "role": "heldout",
+      "rows_per_peer": 64,
+      "selected_family": "splitk4",
+      "sweep_id": "heldout-host-boundary-m64-n2048",
+      "world_size": 8
+    },
+    {
+      "decision": {
+        "admit_fused": true,
+        "predicted_fused_family": "splitk4",
+        "predicted_fused_ms": 0.5128016673014449,
+        "predicted_host_ms": 0.6927013760479723,
+        "selected": "splitk4"
+      },
+      "k": 2048,
+      "n": 2048,
+      "predicted_ms_by_family": {
+        "direct": 0.7455896178721684,
+        "direct_groupedn2": 0.8542043134928468,
+        "host": 0.6927013760479723,
+        "splitk16": 0.8807083559137204,
+        "splitk16_groupedn2": 1.0227857773449947,
+        "splitk2": 0.5225418377539434,
+        "splitk2_groupedn2": 0.5905984752084592,
+        "splitk4": 0.5128016673014449,
+        "splitk4_groupedn2": 0.5640782720680007,
+        "splitk8": 0.6134049851792358,
+        "splitk8_groupedn2": 0.6611519165557824
+      },
+      "regime": "fixed_total_rows",
+      "role": "heldout",
+      "rows_per_peer": 32,
+      "selected_family": "splitk4",
+      "sweep_id": "heldout-fixed-total-m32-n2048",
+      "world_size": 8
+    },
+    {
+      "decision": {
+        "admit_fused": false,
+        "predicted_fused_family": "splitk4",
+        "predicted_fused_ms": 0.9458928693587467,
+        "predicted_host_ms": 0.8784476467556402,
+        "selected": "host"
+      },
+      "k": 8192,
+      "n": 2048,
+      "predicted_ms_by_family": {
+        "direct": 1.7399604681762,
+        "direct_groupedn2": 1.9934313751106536,
+        "host": 0.8784476467556402,
+        "splitk16": 1.1696571716428752,
+        "splitk16_groupedn2": 1.3583483243834509,
+        "splitk2": 1.1069150639817638,
+        "splitk2_groupedn2": 1.2510813522279924,
+        "splitk4": 0.9458928693587467,
+        "splitk4_groupedn2": 1.0404755860430517,
+        "splitk8": 0.9585551651329356,
+        "splitk8_groupedn2": 1.033168298048481
+      },
+      "regime": "fixed_total_rows",
+      "role": "heldout",
+      "rows_per_peer": 32,
+      "selected_family": "host",
+      "sweep_id": "heldout-fixed-total-m32-n2048",
+      "world_size": 8
+    },
+    {
+      "decision": {
+        "admit_fused": true,
+        "predicted_fused_family": "splitk2",
+        "predicted_fused_ms": 1.1518220699833486,
+        "predicted_host_ms": 1.260148934677015,
+        "selected": "splitk2"
+      },
+      "k": 8192,
+      "n": 512,
+      "predicted_ms_by_family": {
+        "direct": 1.4821927706650242,
+        "direct_groupedn2": 1.6752357937164213,
+        "host": 1.260148934677015,
+        "splitk16": 2.3445988078988393,
+        "splitk16_groupedn2": 2.722833612508483,
+        "splitk2": 1.1518220699833486,
+        "splitk2_groupedn2": 1.2669962763285347,
+        "splitk4": 1.2749350748517194,
+        "splitk4_groupedn2": 1.3741749555167093,
+        "splitk8": 1.5398259767458338,
+        "splitk8_groupedn2": 1.7882334123741317
+      },
+      "regime": "fixed_per_peer",
+      "role": "heldout",
+      "rows_per_peer": 512,
+      "selected_family": "splitk2",
+      "sweep_id": "heldout-host-anchor-m512-n512-k8192",
+      "world_size": 8
+    }
+  ],
+  "ridge": 1.0,
+  "schema": "edmir.frozen-transfer-predictions.v1",
+  "status": "frozen-before-eight-gpu-measurement",
+  "target_world_size": 8,
+  "training_results_sha256": "a03fe1b627e79ec94baef7d9587b6f3562bc2e1dc799b69caab55947b96391da",
+  "training_world_size": 4
+}

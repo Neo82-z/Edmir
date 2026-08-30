@@ -1,0 +1,227 @@
+{
+  "schema": "edmir.frozen-fused-experiment.v1",
+  "status": "frozen",
+  "experiment_id": "a100-8gpu-zero-few-shot-20260829",
+  "hypotheses": [
+    "The four-GPU model transfers zero-shot when P, total rows, rho_N, Gamma, and reduction terms are explicit.",
+    "A preregistered four-shape calibration set reduces regret without changing the held-out shape list.",
+    "Split-K changes CTA supply and reduction overhead but does not reduce unique remote bytes.",
+    "Grouped-N is useful only when its replay reduction repays the lost CTA supply.",
+    "Remote bytes determine the scaling slope even when fixed overhead and CTA supply dominate finite-shape latency."
+  ],
+  "hardware": {
+    "accelerator": "NVIDIA A100-SXM4-80GB",
+    "arch": "sm_80",
+    "world_size": 8,
+    "required_link_label": "NVLink",
+    "required_full_p2p": true,
+    "sm_count_per_gpu": 108
+  },
+  "protocol": {
+    "zero_shot": "Freeze the four-GPU coefficients before reading any eight-GPU latency.",
+    "few_shot": "Refit only on sweeps whose role is calibration, then score the unchanged heldout set.",
+    "grouping": "The complete sweep id, not an individual candidate row, is the evaluation unit.",
+    "candidate_order": "Each sweep uses its recorded deterministic random seed.",
+    "correctness": "Validate the first shape of every candidate family before timing.",
+    "statistics": "Report median and p95 after 30 warmups and 300 iterations.",
+    "regret": "T_selected / T_oracle - 1, with host included in the oracle.",
+    "admission_gates": {
+      "minimum_direction_accuracy": 0.99,
+      "maximum_host_regressions": 0,
+      "maximum_mean_regret": 0.005,
+      "maximum_worst_regret": 0.01
+    }
+  },
+  "scaling_regimes": {
+    "fixed_per_peer": "Hold M equal to a four-GPU point; per-rank routed rows B_rank=P*M double.",
+    "fixed_total_rows": "Halve M relative to a four-GPU point so per-rank routed rows B_rank=P*M stay fixed."
+  },
+  "numerical_validation": {
+    "fixed_per_peer_remote_growth_p8_over_p4": "7/3",
+    "fixed_rank_rows_remote_growth_p8_over_p4": "7/6",
+    "interpretation": "Peak roofline quotients are lower bounds and bottleneck classifiers, not end-to-end latency predictions.",
+    "required_derived_fields": [
+      "batch_rows_per_rank",
+      "flops_per_rank",
+      "replayed_remote_bytes_per_rank",
+      "local_bytes_per_rank",
+      "Gamma",
+      "rho_N",
+      "roofline_floor_ms",
+      "floor_fraction"
+    ],
+    "profiling_observables_when_available": [
+      "kernel_count",
+      "per_kernel_duration",
+      "dram_bytes",
+      "lsa_or_nvlink_bytes",
+      "achieved_occupancy"
+    ]
+  },
+  "candidate_space": {
+    "base": ["host", "direct", "splitk2", "splitk4", "splitk8", "splitk16"],
+    "grouped_n_2": ["direct", "splitk2", "splitk4", "splitk8", "splitk16"]
+  },
+  "sweeps": [
+    {
+      "id": "cal-fixed-total-m32-n512-k1024",
+      "role": "calibration",
+      "regime": "fixed_total_rows",
+      "rows_per_peer": 32,
+      "n": 512,
+      "k_values": [1024],
+      "split_k_values": [2, 4, 8, 16],
+      "grouped_n_values": [2],
+      "warmup": 30,
+      "iterations": 300,
+      "repeats": 1,
+      "order_seeds": [82031]
+    },
+    {
+      "id": "cal-fixed-peer-m64-n1024-k2048",
+      "role": "calibration",
+      "regime": "fixed_per_peer",
+      "rows_per_peer": 64,
+      "n": 1024,
+      "k_values": [2048],
+      "split_k_values": [2, 4, 8, 16],
+      "grouped_n_values": [2],
+      "warmup": 30,
+      "iterations": 300,
+      "repeats": 1,
+      "order_seeds": [82047]
+    },
+    {
+      "id": "cal-fixed-total-m32-n2048-k4096",
+      "role": "calibration",
+      "regime": "fixed_total_rows",
+      "rows_per_peer": 32,
+      "n": 2048,
+      "k_values": [4096],
+      "split_k_values": [2, 4, 8, 16],
+      "grouped_n_values": [2],
+      "warmup": 30,
+      "iterations": 300,
+      "repeats": 1,
+      "order_seeds": [82073]
+    },
+    {
+      "id": "cal-host-anchor-m256-n512-k8192",
+      "role": "calibration",
+      "regime": "fixed_total_rows",
+      "rows_per_peer": 256,
+      "n": 512,
+      "k_values": [8192],
+      "split_k_values": [2, 4, 8, 16],
+      "grouped_n_values": [2],
+      "warmup": 30,
+      "iterations": 300,
+      "repeats": 1,
+      "order_seeds": [82091]
+    },
+    {
+      "id": "heldout-fixed-peer-m64-n512",
+      "role": "heldout",
+      "regime": "fixed_per_peer",
+      "rows_per_peer": 64,
+      "n": 512,
+      "k_values": [512, 2048, 4096, 8192],
+      "split_k_values": [2, 4, 8, 16],
+      "grouped_n_values": [2],
+      "warmup": 30,
+      "iterations": 300,
+      "repeats": 1,
+      "order_seeds": [82117]
+    },
+    {
+      "id": "heldout-fixed-total-m32-n512",
+      "role": "heldout",
+      "regime": "fixed_total_rows",
+      "rows_per_peer": 32,
+      "n": 512,
+      "k_values": [512, 2048, 4096, 8192],
+      "split_k_values": [2, 4, 8, 16],
+      "grouped_n_values": [2],
+      "warmup": 30,
+      "iterations": 300,
+      "repeats": 1,
+      "order_seeds": [82133]
+    },
+    {
+      "id": "heldout-fixed-peer-m64-n1024",
+      "role": "heldout",
+      "regime": "fixed_per_peer",
+      "rows_per_peer": 64,
+      "n": 1024,
+      "k_values": [512, 4096, 8192],
+      "split_k_values": [2, 4, 8, 16],
+      "grouped_n_values": [2],
+      "warmup": 30,
+      "iterations": 300,
+      "repeats": 1,
+      "order_seeds": [82159]
+    },
+    {
+      "id": "heldout-fixed-total-m32-n1024",
+      "role": "heldout",
+      "regime": "fixed_total_rows",
+      "rows_per_peer": 32,
+      "n": 1024,
+      "k_values": [512, 2048, 8192],
+      "split_k_values": [2, 4, 8, 16],
+      "grouped_n_values": [2],
+      "warmup": 30,
+      "iterations": 300,
+      "repeats": 1,
+      "order_seeds": [82171]
+    },
+    {
+      "id": "heldout-host-boundary-m64-n2048",
+      "role": "heldout",
+      "regime": "fixed_per_peer",
+      "rows_per_peer": 64,
+      "n": 2048,
+      "k_values": [4096, 8192],
+      "split_k_values": [2, 4, 8, 16],
+      "grouped_n_values": [2],
+      "warmup": 30,
+      "iterations": 300,
+      "repeats": 1,
+      "order_seeds": [82193]
+    },
+    {
+      "id": "heldout-fixed-total-m32-n2048",
+      "role": "heldout",
+      "regime": "fixed_total_rows",
+      "rows_per_peer": 32,
+      "n": 2048,
+      "k_values": [2048, 8192],
+      "split_k_values": [2, 4, 8, 16],
+      "grouped_n_values": [2],
+      "warmup": 30,
+      "iterations": 300,
+      "repeats": 1,
+      "order_seeds": [82207]
+    },
+    {
+      "id": "heldout-host-anchor-m512-n512-k8192",
+      "role": "heldout",
+      "regime": "fixed_per_peer",
+      "rows_per_peer": 512,
+      "n": 512,
+      "k_values": [8192],
+      "split_k_values": [2, 4, 8, 16],
+      "grouped_n_values": [2],
+      "warmup": 30,
+      "iterations": 300,
+      "repeats": 1,
+      "order_seeds": [82223]
+    }
+  ],
+  "profiling_subset": [
+    "cal-host-anchor-m256-n512-k8192",
+    "heldout-host-boundary-m64-n2048",
+    "heldout-fixed-peer-m64-n1024"
+  ],
+  "replication_trigger": "Repeat a shape with 100 warmups and 2000 iterations when the best two medians differ by less than 2%."
+}

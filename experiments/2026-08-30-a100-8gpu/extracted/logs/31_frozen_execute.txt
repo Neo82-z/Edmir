@@ -1,0 +1,14 @@
+/usr/bin/python3 /workspace/edmir-p8-20260830/EDM-IR/tools/run_fused_kernel_sweep.py --runtime /workspace/edmir-p8-20260830/EDM-IR/runtime --topology /workspace/edmir-p8-20260830/topology-8xa100.json --cutlass /workspace/edmir-p8-20260830/deps/cutlass --nccl-home /workspace/edmir-p8-20260830/deps/nccl/build --out /workspace/edmir-p8-20260830/results/p8-frozen/cal-fixed-total-m32-n512-k1024/repeat-01 --rows-per-peer 32 --n 512 --k-values 1024 --split-k-values 2,4,8,16 --warmup 30 --iterations 300 --devices 0,1,2,3,4,5,6,7 --order-seed 82031 --validate-first --grouped-n-values 2
+measured=m32_k1024_n512_splitk16 median_ms=1.9755 ctas_per_op=64
+measured=m32_k1024_n512_splitk8 median_ms=1.2704 ctas_per_op=32
+measured=m32_k1024_n512_splitk2 median_ms=1.1473 ctas_per_op=8
+measured=m32_k1024_n512_direct median_ms=1.2096 ctas_per_op=4
+measured=m32_k1024_n512_splitk16_groupedn2 median_ms=2.1317 ctas_per_op=32
+measured=m32_k1024_n512_host median_ms=2.5988 ctas_per_op=0
+measured=m32_k1024_n512_splitk8_groupedn2 median_ms=1.3746 ctas_per_op=16
+measured=m32_k1024_n512_splitk4 median_ms=1.1630 ctas_per_op=16
+measured=m32_k1024_n512_direct_groupedn2 median_ms=1.3724 ctas_per_op=2
+measured=m32_k1024_n512_splitk2_groupedn2 median_ms=1.1930 ctas_per_op=4
+measured=m32_k1024_n512_splitk4_groupedn2 median_ms=1.2030 ctas_per_op=8
+complete=/workspace/edmir-p8-20260830/results/p8-frozen/cal-fixed-total-m32-n512-k1024/repeat-01/results.csv rows=11
+/usr/bin/python3 /workspace/edmir-p8-20260830/EDM-IR/tools/run_fused_kernel_sweep.py --runtime /workspace/edmir-p8-20260830/EDM-IR/runtime --topology /workspace/edmir-p8-20260830/topology-8xa100.json --cutlass /workspace/edmir-p8-20260830/deps/cutlass --nccl-home /workspace/edmir-p8-20260830/deps/nccl/build --out /workspace/edmir-p8-20260830/results/p8-frozen/cal-fixed-peer-m64-n1024-k2048/repeat-01 --rows-per-peer 64 --n 1024 --k-values 2048 --split-k-values 2,4,8,16 --warmup 30 --iterations 300 --devices 0,1,2,3,4,5,6,7 --order-seed 82047 --validate-first --grouped-n-values 2

@@ -1,0 +1,118 @@
+{
+  "comparisons": [
+    {
+      "initial_winner": "splitk2",
+      "initial_winner_ms": 1.1473,
+      "k": 1024,
+      "n": 512,
+      "repeat_gap_fraction": 0.008535841825624946,
+      "repeat_runner_up": "splitk4",
+      "repeat_runner_up_ms": 1.1579,
+      "repeat_winner": "splitk2",
+      "repeat_winner_ms": 1.1481,
+      "rows_per_peer": 32,
+      "sweep_id": "cal-fixed-total-m32-n512-k1024",
+      "validation": {
+        "splitk2": "1",
+        "splitk4": "1"
+      },
+      "winner_stable": true
+    },
+    {
+      "initial_winner": "splitk2",
+      "initial_winner_ms": 1.1301,
+      "k": 512,
+      "n": 1024,
+      "repeat_gap_fraction": 0.00938717676230949,
+      "repeat_runner_up": "direct",
+      "repeat_runner_up_ms": 1.1398,
+      "repeat_winner": "splitk2",
+      "repeat_winner_ms": 1.1292,
+      "rows_per_peer": 64,
+      "sweep_id": "heldout-fixed-peer-m64-n1024",
+      "validation": {
+        "direct": "1",
+        "splitk2": "1"
+      },
+      "winner_stable": true
+    },
+    {
+      "initial_winner": "splitk8_groupedn2",
+      "initial_winner_ms": 2.2528,
+      "k": 8192,
+      "n": 1024,
+      "repeat_gap_fraction": 0.013879310344827589,
+      "repeat_runner_up": "splitk4",
+      "repeat_runner_up_ms": 2.3522,
+      "repeat_winner": "splitk8_groupedn2",
+      "repeat_winner_ms": 2.32,
+      "rows_per_peer": 64,
+      "sweep_id": "heldout-fixed-peer-m64-n1024",
+      "validation": {
+        "splitk4": "family-validated; shape-validation-skipped-after-timeout",
+        "splitk8_groupedn2": "family-validated; shape-validation-skipped-after-timeout"
+      },
+      "winner_stable": true
+    },
+    {
+      "initial_winner": "splitk2",
+      "initial_winner_ms": 1.1322,
+      "k": 512,
+      "n": 512,
+      "repeat_gap_fraction": 0.015871592539454804,
+      "repeat_runner_up": "direct",
+      "repeat_runner_up_ms": 1.1329,
+      "repeat_winner": "splitk2",
+      "repeat_winner_ms": 1.1152,
+      "rows_per_peer": 64,
+      "sweep_id": "heldout-fixed-peer-m64-n512",
+      "validation": {
+        "direct": "1",
+        "splitk2": "1"
+      },
+      "winner_stable": true
+    },
+    {
+      "initial_winner": "splitk2",
+      "initial_winner_ms": 1.1343,
+      "k": 512,
+      "n": 1024,
+      "repeat_gap_fraction": 0.008960255500354952,
+      "repeat_runner_up": "direct",
+      "repeat_runner_up_ms": 1.1373,
+      "repeat_winner": "splitk2",
+      "repeat_winner_ms": 1.1272,
+      "rows_per_peer": 32,
+      "sweep_id": "heldout-fixed-total-m32-n1024",
+      "validation": {
+        "direct": "1",
+        "splitk2": "1"
+      },
+      "winner_stable": true
+    },
+    {
+      "initial_winner": "splitk2",
+      "initial_winner_ms": 1.1332,
+      "k": 512,
+      "n": 512,
+      "repeat_gap_fraction": 0.007014739833066885,
+      "repeat_runner_up": "direct",
+      "repeat_runner_up_ms": 1.1341,
+      "repeat_winner": "splitk2",
+      "repeat_winner_ms": 1.1262,
+      "rows_per_peer": 32,
+      "sweep_id": "heldout-fixed-total-m32-n512",
+      "validation": {
+        "direct": "1",
+        "splitk2": "1"
+      },
+      "winner_stable": true
+    }
+  ],
+  "iterations": 2000,
+  "schema": "edmir.p8-boundary-replication.v1",
+  "shapes": 6,
+  "stable_winners": 6,
+  "trigger": "initial top-two gap < 2%",
+  "warmup": 100
+}

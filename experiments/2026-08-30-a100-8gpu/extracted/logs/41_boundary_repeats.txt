@@ -1,0 +1,40 @@
+REPEAT 1/6 m32_k512_n512_splitk2 build
+REPEAT 1/6 m32_k512_n512_splitk2 validate
+REPEAT 1/6 m32_k512_n512_splitk2 bench
+REPEAT 1/6 m32_k512_n512_direct build
+REPEAT 1/6 m32_k512_n512_direct validate
+REPEAT 1/6 m32_k512_n512_direct bench
+REPEAT 2/6 m32_k512_n1024_splitk2 build
+REPEAT 2/6 m32_k512_n1024_splitk2 validate
+REPEAT 2/6 m32_k512_n1024_splitk2 bench
+REPEAT 2/6 m32_k512_n1024_direct build
+REPEAT 2/6 m32_k512_n1024_direct validate
+REPEAT 2/6 m32_k512_n1024_direct bench
+REPEAT 3/6 m32_k1024_n512_splitk2 build
+REPEAT 3/6 m32_k1024_n512_splitk2 validate
+REPEAT 3/6 m32_k1024_n512_splitk2 bench
+REPEAT 3/6 m32_k1024_n512_splitk4 build
+REPEAT 3/6 m32_k1024_n512_splitk4 validate
+REPEAT 3/6 m32_k1024_n512_splitk4 bench
+REPEAT 4/6 m64_k512_n512_splitk2 build
+REPEAT 4/6 m64_k512_n512_splitk2 validate
+REPEAT 4/6 m64_k512_n512_splitk2 bench
+REPEAT 4/6 m64_k512_n512_direct build
+REPEAT 4/6 m64_k512_n512_direct validate
+REPEAT 4/6 m64_k512_n512_direct bench
+REPEAT 5/6 m64_k512_n1024_splitk2 build
+REPEAT 5/6 m64_k512_n1024_splitk2 validate
+REPEAT 5/6 m64_k512_n1024_splitk2 bench
+REPEAT 5/6 m64_k512_n1024_direct build
+REPEAT 5/6 m64_k512_n1024_direct validate
+REPEAT 5/6 m64_k512_n1024_direct bench
+REPEAT 6/6 m64_k8192_n1024_splitk8_groupedn2 build
+REPEAT 6/6 m64_k8192_n1024_splitk8_groupedn2 validate
+Traceback (most recent call last):
+  File "<stdin>", line 26, in <module>
+RuntimeError: m64_k8192_n1024_splitk8_groupedn2 validate failed; see /workspace/edmir-p8-20260830/results/p8-analysis/boundary-repeats/heldout-fixed-peer-m64-n1024/m64_k8192_n1024
+FINAL_REPEAT m64_k8192_n1024_splitk8_groupedn2 build
+FINAL_REPEAT m64_k8192_n1024_splitk8_groupedn2 bench
+FINAL_REPEAT m64_k8192_n1024_splitk4 build
+FINAL_REPEAT m64_k8192_n1024_splitk4 bench
+complete rows 12 /workspace/edmir-p8-20260830/results/p8-analysis/boundary-repeats/replication_results.csv
