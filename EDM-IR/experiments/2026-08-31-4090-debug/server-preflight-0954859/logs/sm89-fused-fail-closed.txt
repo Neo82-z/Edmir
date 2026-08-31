@@ -1,0 +1,22 @@
+$ /data/venv/bin/python3 -m edmir lower-fused /data/edmir/results/server-toolchain-gated-0954859-20260831T145800/artifacts/runtime-validation.dataflow.json --topology /data/edmir/Edmir-20260831-b1c4620/EDM-IR/examples/full_p2p_topology.json --chunk-rows 8 --target rtx4090-negative-gate --arch sm_89 --gemm-provider cutlass --backend cpp --out-dir /data/edmir/results/server-toolchain-gated-0954859-20260831T145800/artifacts/forbidden-fused-sm89
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/data/edmir/Edmir-20260831-b1c4620/EDM-IR/edmir/__main__.py", line 3, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/data/edmir/Edmir-20260831-b1c4620/EDM-IR/edmir/cli.py", line 615, in main
+    return int(args.func(args))
+               ^^^^^^^^^^^^^^^
+  File "/data/edmir/Edmir-20260831-b1c4620/EDM-IR/edmir/cli.py", line 176, in _lower_fused
+    artifact = create_backend(args.backend).emit(program, target)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/edmir/Edmir-20260831-b1c4620/EDM-IR/edmir/compiler/backends/cpp_backend.py", line 78, in emit
+    target.require_executable_program(program)
+  File "/data/edmir/Edmir-20260831-b1c4620/EDM-IR/edmir/compiler/target.py", line 258, in require_executable_program
+    self.validate_program(program)
+  File "/data/edmir/Edmir-20260831-b1c4620/EDM-IR/edmir/compiler/target.py", line 236, in validate_program
+    self.validate_problem(program.problem)
+  File "/data/edmir/Edmir-20260831-b1c4620/EDM-IR/edmir/compiler/target.py", line 188, in validate_problem
+    raise ValueError("CUTLASS v0.1 supports only arch=sm_80")
+ValueError: CUTLASS v0.1 supports only arch=sm_80

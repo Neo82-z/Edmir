@@ -1,0 +1,626 @@
+{
+  "allow_gpu": true,
+  "commands": [
+    {
+      "argv": [
+        "/data/venv/bin/python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "*_test.py"
+      ],
+      "expected_output": null,
+      "expected_returncodes": [
+        0
+      ],
+      "finished_at": "2026-08-31T06:58:31.701918+00:00",
+      "gpu_required": false,
+      "log": "logs/python-tests.txt",
+      "log_sha256": "ed861e0c742da01ac73acc0f7656ee95b5f44a9067b5c920d51e28a2a68ccbbb",
+      "name": "python-tests",
+      "phase": "cpu",
+      "returncode": 0,
+      "started_at": "2026-08-31T06:58:27.056886+00:00",
+      "status": "passed"
+    },
+    {
+      "argv": [
+        "cmake",
+        "-S",
+        "/data/edmir/Edmir-20260831-b1c4620/EDM-IR/runtime",
+        "-B",
+        "/data/edmir/results/server-toolchain-gated-0954859-20260831T145800/build/host",
+        "-DEDMIR_BUILD_TESTS=ON"
+      ],
+      "expected_output": null,
+      "expected_returncodes": [
+        0
+      ],
+      "finished_at": "2026-08-31T06:58:32.236876+00:00",
+      "gpu_required": false,
+      "log": "logs/host-configure.txt",
+      "log_sha256": "39c2bd58453bca8cf0ecc05f087b6fc6014036806582fd348d74c13050ca738d",
+      "name": "host-configure",
+      "phase": "cpu",
+      "returncode": 0,
+      "started_at": "2026-08-31T06:58:31.702345+00:00",
+      "status": "passed"
+    },
+    {
+      "argv": [
+        "cmake",
+        "--build",
+        "/data/edmir/results/server-toolchain-gated-0954859-20260831T145800/build/host",
+        "-j"
+      ],
+      "expected_output": null,
+      "expected_returncodes": [
+        0
+      ],
+      "finished_at": "2026-08-31T06:58:34.122800+00:00",
+      "gpu_required": false,
+      "log": "logs/host-build.txt",
+      "log_sha256": "7f2a19e54edefaeab87e0631fc0b94a87fd97177284b778b163eee6c5089526b",
+      "name": "host-build",
+      "phase": "cpu",
+      "returncode": 0,
+      "started_at": "2026-08-31T06:58:32.237268+00:00",
+      "status": "passed"
+    },
+    {
+      "argv": [
+        "ctest",
+        "--test-dir",
+        "/data/edmir/results/server-toolchain-gated-0954859-20260831T145800/build/host",
+        "--output-on-failure"
+      ],
+      "expected_output": null,
+      "expected_returncodes": [
+        0
+      ],
+      "finished_at": "2026-08-31T06:58:34.142123+00:00",
+      "gpu_required": false,
+      "log": "logs/host-ctest.txt",
+      "log_sha256": "6e39566419e47c9efceeda0af75fcb4d135645128ac4bf006db608f2e1e5d420",
+      "name": "host-ctest",
+      "phase": "cpu",
+      "returncode": 0,
+      "started_at": "2026-08-31T06:58:34.123202+00:00",
+      "status": "passed"
+    },
+    {
+      "argv": [
+        "/data/venv/bin/python3",
+        "-m",
+        "edmir",
+        "frontend",
+        "/data/edmir/Edmir-20260831-b1c4620/EDM-IR/examples/runtime_validation_problem_fp16.json",
+        "--out",
+        "/data/edmir/results/server-toolchain-gated-0954859-20260831T145800/artifacts/runtime-validation.dataflow.json"
+      ],
+      "expected_output": null,
+      "expected_returncodes": [
+        0
+      ],
+      "finished_at": "2026-08-31T06:58:34.318349+00:00",
+      "gpu_required": false,
+      "log": "logs/frontend.txt",
+      "log_sha256": "87a54f4d31529dddbca50f708582830c9c658ae5e1bc23619a1c4a275e334134",
+      "name": "frontend",
+      "phase": "cpu",
+      "returncode": 0,
+      "started_at": "2026-08-31T06:58:34.142467+00:00",
+      "status": "passed"
+    },
+    {
+      "argv": [
+        "/data/venv/bin/python3",
+        "-m",
+        "edmir",
+        "compile-graph",
+        "/data/edmir/results/server-toolchain-gated-0954859-20260831T145800/artifacts/runtime-validation.dataflow.json",
+        "--profile",
+        "/data/edmir/Edmir-20260831-b1c4620/EDM-IR/examples/synthetic_profile.json",
+        "--topology",
+        "/data/edmir/Edmir-20260831-b1c4620/EDM-IR/examples/full_p2p_topology.json",
+        "--target",
+        "rtx4090-debug-fixture",
+        "--arch",
+        "sm_89",
+        "--gemm-provider",
+        "cublas",
+        "--communication-api",
+        "host_nccl",
+        "--backend",
+        "cpp",
+        "--chunk-rows",
+        "8",
+        "--buffers",
+        "1,2",
+        "--out-dir",
+        "/data/edmir/results/server-toolchain-gated-0954859-20260831T145800/artifacts/fixture-host-sm89"
+      ],
+      "expected_output": null,
+      "expected_returncodes": [
+        0
+      ],
+      "finished_at": "2026-08-31T06:58:34.505705+00:00",
+      "gpu_required": false,
+      "log": "logs/fixture-host-sm89-codegen.txt",
+      "log_sha256": "a00ca3e9b7cf305bd97d32665b1da443bff6eb7e453d23e130e966f1be564e29",
+      "name": "fixture-host-sm89-codegen",
+      "phase": "cpu",
+      "returncode": 0,
+      "started_at": "2026-08-31T06:58:34.318765+00:00",
+      "status": "passed"
+    },
+    {
+      "argv": [
+        "/data/venv/bin/python3",
+        "-m",
+        "edmir",
+        "lower-fused",
+        "/data/edmir/results/server-toolchain-gated-0954859-20260831T145800/artifacts/runtime-validation.dataflow.json",
+        "--topology",
+        "/data/edmir/Edmir-20260831-b1c4620/EDM-IR/examples/full_p2p_topology.json",
+        "--chunk-rows",
+        "8",
+        "--target",
+        "rtx4090-negative-gate",
+        "--arch",
+        "sm_89",
+        "--gemm-provider",
+        "cutlass",
+        "--backend",
+        "cpp",
+        "--out-dir",
+        "/data/edmir/results/server-toolchain-gated-0954859-20260831T145800/artifacts/forbidden-fused-sm89"
+      ],
+      "expected_output": "CUTLASS v0.1 supports only arch=sm_80",
+      "expected_returncodes": [
+        1
+      ],
+      "finished_at": "2026-08-31T06:58:34.659169+00:00",
+      "gpu_required": false,
+      "log": "logs/sm89-fused-fail-closed.txt",
+      "log_sha256": "933f96791d168dd4264deb83725876f2717822d2b94d2ae73b21c1d90dc07ac6",
+      "name": "sm89-fused-fail-closed",
+      "phase": "cpu",
+      "returncode": 1,
+      "started_at": "2026-08-31T06:58:34.506047+00:00",
+      "status": "passed"
+    },
+    {
+      "argv": [
+        "cmake",
+        "-S",
+        "/data/edmir/Edmir-20260831-b1c4620/EDM-IR/runtime",
+        "-B",
+        "/data/edmir/results/server-toolchain-gated-0954859-20260831T145800/build/cuda-offline",
+        "-DEDMIR_ENABLE_CUDA=ON",
+        "-DEDMIR_BUILD_TESTS=ON",
+        "-DEDMIR_GENERATED_DIR=/data/edmir/results/server-toolchain-gated-0954859-20260831T145800/artifacts/fixture-host-sm89",
+        "-DCUDAToolkit_ROOT=/usr/local/cuda-13.0",
+        "-DNCCL_INCLUDE_DIR=/data/venv/lib/python3.12/site-packages/nvidia/nccl/include",
+        "-DNCCL_LIBRARY=/data/venv/lib/python3.12/site-packages/nvidia/nccl/lib/libnccl.so.2"
+      ],
+      "expected_output": null,
+      "expected_returncodes": [
+        0
+      ],
+      "finished_at": "2026-08-31T06:58:35.507284+00:00",
+      "gpu_required": false,
+      "log": "logs/cuda-offline-configure.txt",
+      "log_sha256": "85868f87161fba4ea5d61700e373ed29d08ee51cc82fca23c9c11cc6a09df622",
+      "name": "cuda-offline-configure",
+      "phase": "cpu",
+      "returncode": 0,
+      "started_at": "2026-08-31T06:58:34.659639+00:00",
+      "status": "passed"
+    },
+    {
+      "argv": [
+        "cmake",
+        "--build",
+        "/data/edmir/results/server-toolchain-gated-0954859-20260831T145800/build/cuda-offline",
+        "-j"
+      ],
+      "expected_output": null,
+      "expected_returncodes": [
+        0
+      ],
+      "finished_at": "2026-08-31T06:58:40.569060+00:00",
+      "gpu_required": false,
+      "log": "logs/cuda-offline-build.txt",
+      "log_sha256": "5bf88b5b276050f13bc1a478d2dcc9aa43c58f702b987f9553cd4534d5844b3f",
+      "name": "cuda-offline-build",
+      "phase": "cpu",
+      "returncode": 0,
+      "started_at": "2026-08-31T06:58:35.507748+00:00",
+      "status": "passed"
+    },
+    {
+      "argv": [
+        "ctest",
+        "--test-dir",
+        "/data/edmir/results/server-toolchain-gated-0954859-20260831T145800/build/cuda-offline",
+        "--output-on-failure"
+      ],
+      "expected_output": null,
+      "expected_returncodes": [
+        0
+      ],
+      "finished_at": "2026-08-31T06:58:40.582690+00:00",
+      "gpu_required": false,
+      "log": "logs/cuda-offline-ctest.txt",
+      "log_sha256": "c5acd23173645e631427804dd8bcf709444b6b37c4e54491dbb930407adfa228",
+      "name": "cuda-offline-ctest",
+      "phase": "cpu",
+      "returncode": 0,
+      "started_at": "2026-08-31T06:58:40.569448+00:00",
+      "status": "passed"
+    },
+    {
+      "argv": [
+        "/data/venv/bin/python3",
+        "-m",
+        "edmir",
+        "probe",
+        "--out",
+        "/data/edmir/results/server-toolchain-gated-0954859-20260831T145800/environment/observed-topology.json"
+      ],
+      "expected_output": null,
+      "expected_returncodes": [
+        0
+      ],
+      "gpu_required": true,
+      "name": "topology-probe",
+      "phase": "gpu",
+      "reason": "GPU idle gate rejected execution",
+      "status": "skipped"
+    },
+    {
+      "argv": [
+        "/data/venv/bin/python3",
+        "-m",
+        "edmir",
+        "probe-runtime",
+        "--out",
+        "/data/edmir/results/server-toolchain-gated-0954859-20260831T145800/environment/runtime-capabilities.json"
+      ],
+      "expected_output": null,
+      "expected_returncodes": [
+        0
+      ],
+      "gpu_required": true,
+      "name": "runtime-probe",
+      "phase": "gpu",
+      "reason": "GPU idle gate rejected execution",
+      "status": "skipped"
+    },
+    {
+      "argv": [
+        "/data/venv/bin/python3",
+        "-m",
+        "edmir",
+        "compile-graph",
+        "/data/edmir/results/server-toolchain-gated-0954859-20260831T145800/artifacts/runtime-validation.dataflow.json",
+        "--profile",
+        "/data/edmir/Edmir-20260831-b1c4620/EDM-IR/examples/synthetic_profile.json",
+        "--topology",
+        "/data/edmir/results/server-toolchain-gated-0954859-20260831T145800/environment/observed-topology.json",
+        "--target",
+        "rtx4090-observed",
+        "--arch",
+        "sm_89",
+        "--gemm-provider",
+        "cublas",
+        "--communication-api",
+        "host_nccl",
+        "--backend",
+        "cpp",
+        "--chunk-rows",
+        "8",
+        "--buffers",
+        "1,2",
+        "--out-dir",
+        "/data/edmir/results/server-toolchain-gated-0954859-20260831T145800/artifacts/observed-host-sm89"
+      ],
+      "expected_output": null,
+      "expected_returncodes": [
+        0
+      ],
+      "gpu_required": true,
+      "name": "observed-host-sm89-codegen",
+      "phase": "gpu",
+      "reason": "GPU idle gate rejected execution",
+      "status": "skipped"
+    },
+    {
+      "argv": [
+        "cmake",
+        "-S",
+        "/data/edmir/Edmir-20260831-b1c4620/EDM-IR/runtime",
+        "-B",
+        "/data/edmir/results/server-toolchain-gated-0954859-20260831T145800/build/cuda",
+        "-DEDMIR_ENABLE_CUDA=ON",
+        "-DEDMIR_BUILD_TESTS=ON",
+        "-DEDMIR_GENERATED_DIR=/data/edmir/results/server-toolchain-gated-0954859-20260831T145800/artifacts/observed-host-sm89",
+        "-DCUDAToolkit_ROOT=/usr/local/cuda-13.0",
+        "-DNCCL_INCLUDE_DIR=/data/venv/lib/python3.12/site-packages/nvidia/nccl/include",
+        "-DNCCL_LIBRARY=/data/venv/lib/python3.12/site-packages/nvidia/nccl/lib/libnccl.so.2"
+      ],
+      "expected_output": null,
+      "expected_returncodes": [
+        0
+      ],
+      "gpu_required": true,
+      "name": "cuda-configure",
+      "phase": "gpu",
+      "reason": "GPU idle gate rejected execution",
+      "status": "skipped"
+    },
+    {
+      "argv": [
+        "cmake",
+        "--build",
+        "/data/edmir/results/server-toolchain-gated-0954859-20260831T145800/build/cuda",
+        "-j"
+      ],
+      "expected_output": null,
+      "expected_returncodes": [
+        0
+      ],
+      "gpu_required": true,
+      "name": "cuda-build",
+      "phase": "gpu",
+      "reason": "GPU idle gate rejected execution",
+      "status": "skipped"
+    },
+    {
+      "argv": [
+        "ctest",
+        "--test-dir",
+        "/data/edmir/results/server-toolchain-gated-0954859-20260831T145800/build/cuda",
+        "--output-on-failure"
+      ],
+      "expected_output": null,
+      "expected_returncodes": [
+        0
+      ],
+      "gpu_required": true,
+      "name": "cuda-ctest",
+      "phase": "gpu",
+      "reason": "GPU idle gate rejected execution",
+      "status": "skipped"
+    },
+    {
+      "argv": [
+        "/data/edmir/results/server-toolchain-gated-0954859-20260831T145800/build/cuda/edmir_validate_generated"
+      ],
+      "expected_output": null,
+      "expected_returncodes": [
+        0
+      ],
+      "gpu_required": true,
+      "name": "numerical-round-01",
+      "phase": "gpu",
+      "reason": "GPU idle gate rejected execution",
+      "status": "skipped"
+    },
+    {
+      "argv": [
+        "/data/edmir/results/server-toolchain-gated-0954859-20260831T145800/build/cuda/edmir_benchmark_generated",
+        "--warmup",
+        "3",
+        "--iterations",
+        "10"
+      ],
+      "expected_output": null,
+      "expected_returncodes": [
+        0
+      ],
+      "gpu_required": true,
+      "name": "reuse-round-01",
+      "phase": "gpu",
+      "reason": "GPU idle gate rejected execution",
+      "status": "skipped"
+    },
+    {
+      "argv": [
+        "/data/edmir/results/server-toolchain-gated-0954859-20260831T145800/build/cuda/edmir_validate_generated"
+      ],
+      "expected_output": null,
+      "expected_returncodes": [
+        0
+      ],
+      "gpu_required": true,
+      "name": "numerical-round-02",
+      "phase": "gpu",
+      "reason": "GPU idle gate rejected execution",
+      "status": "skipped"
+    },
+    {
+      "argv": [
+        "/data/edmir/results/server-toolchain-gated-0954859-20260831T145800/build/cuda/edmir_benchmark_generated",
+        "--warmup",
+        "3",
+        "--iterations",
+        "10"
+      ],
+      "expected_output": null,
+      "expected_returncodes": [
+        0
+      ],
+      "gpu_required": true,
+      "name": "reuse-round-02",
+      "phase": "gpu",
+      "reason": "GPU idle gate rejected execution",
+      "status": "skipped"
+    },
+    {
+      "argv": [
+        "/data/edmir/results/server-toolchain-gated-0954859-20260831T145800/build/cuda/edmir_validate_generated"
+      ],
+      "expected_output": null,
+      "expected_returncodes": [
+        0
+      ],
+      "gpu_required": true,
+      "name": "numerical-round-03",
+      "phase": "gpu",
+      "reason": "GPU idle gate rejected execution",
+      "status": "skipped"
+    },
+    {
+      "argv": [
+        "/data/edmir/results/server-toolchain-gated-0954859-20260831T145800/build/cuda/edmir_benchmark_generated",
+        "--warmup",
+        "3",
+        "--iterations",
+        "10"
+      ],
+      "expected_output": null,
+      "expected_returncodes": [
+        0
+      ],
+      "gpu_required": true,
+      "name": "reuse-round-03",
+      "phase": "gpu",
+      "reason": "GPU idle gate rejected execution",
+      "status": "skipped"
+    }
+  ],
+  "created_at": "2026-08-31T06:58:26.515123+00:00",
+  "cuda_toolchain": {
+    "nccl_include_dir": "/data/venv/lib/python3.12/site-packages/nvidia/nccl/include",
+    "nccl_library": "/data/venv/lib/python3.12/site-packages/nvidia/nccl/lib/libnccl.so.2",
+    "root": "/usr/local/cuda-13.0"
+  },
+  "execute": true,
+  "files": {
+    "artifacts/fixture-host-sm89/edmir_program.hpp": {
+      "required": true,
+      "sha256": "d7ffa9dcb94b8036dba92ad748abfb8fe32ef91e3e3b00e5c6bc2e2e2cb58c05",
+      "size_bytes": 10713
+    },
+    "artifacts/fixture-host-sm89/program.json": {
+      "required": true,
+      "sha256": "df1a0d2cb03ea3b3524e0332421eb6ea825e615947ee4af8fba26b6f593f7b4f",
+      "size_bytes": 15013
+    },
+    "artifacts/fixture-host-sm89/target.json": {
+      "required": true,
+      "sha256": "dcf264e5b9e30e4e518c4b75ab24c478e688d49f51c76d2bfd003f496415136d",
+      "size_bytes": 848
+    },
+    "artifacts/runtime-validation.dataflow.json": {
+      "required": true,
+      "sha256": "f6c956832116d5775a8e08c7f4fc7246d3e8c3e51d590ed77793f2f7c6d68bc0",
+      "size_bytes": 1638
+    },
+    "logs/cmake-version.txt": {
+      "required": false,
+      "returncode": 0,
+      "sha256": "d845334af89c64267141976627f46f3599d6870474137002d97ca3d9433d72c2"
+    },
+    "logs/date.txt": {
+      "required": false,
+      "returncode": 0,
+      "sha256": "32c265960e861c5653ee8b82f310bfb07749633dbf51345751cc4a0519b4abb5"
+    },
+    "logs/docker-ps-read-only.txt": {
+      "required": false,
+      "returncode": 0,
+      "sha256": "0c90d83731dff04e62c710d6e2aff2cc6b38008661f7efbf23f0bec2b491326b"
+    },
+    "logs/git-commit.txt": {
+      "required": false,
+      "returncode": 0,
+      "sha256": "68ad6c895b0f6f369d765df8a8f5505a01490cfead96f0a093d5afa6119309a9"
+    },
+    "logs/gpu-inventory-before-topology-probe.txt": {
+      "required": true,
+      "returncode": 0,
+      "sha256": "6fe4d4585245a7644bb3d7de097e2ac731fa3c4f0b17f0f0d73d85335a86fded"
+    },
+    "logs/gpu-process-before-topology-probe.txt": {
+      "required": true,
+      "returncode": 0,
+      "sha256": "a61ef0174305dda12eb630ddc34a6d601241a17f466fe0bc939dd4faf5c67ee6"
+    },
+    "logs/nvcc-version.txt": {
+      "required": false,
+      "returncode": 0,
+      "sha256": "46f16652032ade29fecd99ba04297697ed35a750265355b4651cfa8086ead2ab"
+    },
+    "logs/nvidia-smi-list.txt": {
+      "required": false,
+      "returncode": 0,
+      "sha256": "0d8372e31e265154306358e941b7ef8b25799bd0a54ad279af67e6c074bb2159"
+    },
+    "logs/nvidia-smi-topology.txt": {
+      "required": false,
+      "returncode": 0,
+      "sha256": "74ae3289df11ecc2d2a3d443367adb1c35797d40c61ea5b2721cde2a199234bf"
+    },
+    "logs/python-version.txt": {
+      "required": false,
+      "returncode": 0,
+      "sha256": "773692d3bc12980f7ee71868554b1c877389378d035d206ff599fa6d67c0279f"
+    },
+    "logs/uname.txt": {
+      "required": false,
+      "returncode": 0,
+      "sha256": "81256e3d8ef1e80661b8a7188bd946b8a2b63df7192404cc5ea89131f60a2d01"
+    }
+  },
+  "forbidden_actions": [
+    "delete pre-existing files",
+    "stop containers or services",
+    "kill foreign processes",
+    "admit SM80 fused evidence on SM89",
+    "treat diagnostic latency as a paper result"
+  ],
+  "gpu_admission_checks": [
+    {
+      "admitted": false,
+      "before": "topology-probe",
+      "reasons": [
+        "GPU 0 uses 18839 MiB, above 1024 MiB",
+        "GPU 1 uses 9767 MiB, above 1024 MiB",
+        "GPU 2 uses 19173 MiB, above 1024 MiB",
+        "GPU 3 uses 19171 MiB, above 1024 MiB",
+        "GPU 0 has foreign compute PID 2043705",
+        "GPU 0 has foreign compute PID 2090723",
+        "GPU 0 has foreign compute PID 4047033",
+        "GPU 0 has foreign compute PID 4051452",
+        "GPU 1 has foreign compute PID 1427584",
+        "GPU 2 has foreign compute PID 2026668",
+        "GPU 3 has foreign compute PID 2026669"
+      ]
+    }
+  ],
+  "idle_gate": {
+    "maximum_memory_used_mib": 1024,
+    "maximum_utilization_percent": 10
+  },
+  "paper_evidence": false,
+  "purpose": "correctness, portability, fail-closed, and runtime reuse debugging",
+  "repository": "/data/edmir/Edmir-20260831-b1c4620",
+  "requested_devices": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "root": "/data/edmir/Edmir-20260831-b1c4620/EDM-IR",
+  "rounds": 3,
+  "run_id": "server-toolchain-gated-0954859-20260831T145800",
+  "schema": "edmir.sm89-debug-protocol.v1",
+  "status": "cpu-passed-gpu-skipped",
+  "updated_at": "2026-08-31T06:58:40.737714+00:00"
+}
