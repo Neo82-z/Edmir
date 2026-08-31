@@ -105,7 +105,7 @@ candidate. A standard `(M tile, N tile)` grid reloads remote A for every N tile,
 so `edmir_benchmark_generated` reports `remote_input_bytes`,
 `remote_a_replay`, and `estimated_remote_a_load_bytes`. These are static traffic
 features, not latency predictions. The explicit
-The `sm80_64x128x32_splitk{2,4,8,16}` identities add CUTLASS serial split-K
+`sm80_64x128x32_splitk{2,4,8,16}` identities add CUTLASS serial split-K
 semaphore workspace and report `split_k_slices` plus
 `estimated_ctas_per_op`.  A split count `q` requires K divisible by `32q` and
 is available only for fused Device API Programs.  The identities remain

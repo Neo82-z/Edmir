@@ -136,6 +136,12 @@ python -m edmir compile-graph /tmp/a2a-gemm.dataflow.json \
   --out-dir /tmp/edmir-artifact
 ```
 
+For four-RTX-4090 portability debugging, use the non-destructive protocol in
+[`experiments/2026-08-31-4090-debug/`](experiments/2026-08-31-4090-debug/).
+It keeps host NCCL + cuBLAS validation separate from the SM80 fused research
+path, refuses occupied GPUs, and labels every timing as diagnostic rather than
+paper evidence.
+
 Generate the guarded fused reference artifact:
 
 ```bash
