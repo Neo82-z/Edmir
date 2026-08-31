@@ -75,7 +75,12 @@ python3 tools/run_publication_tlc.py --workers 1
 ```
 
 The runner writes `publication_results/summary.json` and raw outputs.  The
-compiler-side `remote_input_contract` admits only `immutable_external` today.
-`explicit_epoch` describes the future contract but remains non-executable until
-publish, acquire, completion, and reuse are represented by Program and runtime
-events.
+compiler-side `validate_publication_trace` interprets the same five action
+names and requires the same `PUB-1..4` obligations.  Unit tests replay one
+complete execution, one safe prefix, and the four unsafe TLC action prefixes;
+the unsafe prefixes must terminate at the matching stable diagnostic.  This
+checks the abstraction boundary without claiming that a CUDA execution emitted
+the trace.  The `remote_input_contract` therefore still admits only
+`immutable_external` today.  `explicit_epoch` describes the future contract but
+remains non-executable until publish, acquire, completion, and reuse are
+represented by Program and runtime events.

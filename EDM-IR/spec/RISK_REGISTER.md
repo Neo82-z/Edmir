@@ -6,8 +6,8 @@ semantics and checks; mature library internals remain abstract contracts.
 | ID | Failure | Consequence | Priority | Control |
 |---|---|---|---|---|
 | R1 | Source/destination/chunk offset mismatch | Silent wrong expert output | Critical | `SEM-1/2`, executable reference, rank-permutation tests |
-| R2 | Consumer observes an unpublished remote or staging tile | Nondeterministic corruption | Critical | `MEM-1`, `PUB-1/2`, dependency validation, bounded TLC checks plus unsafe read/acquire/consume counterexamples |
-| R3 | Slot or mutable source epoch is reused before prior consumers finish | Rare data race under load | Critical | `MEM-2`, `PUB-3/4`, buffer-reuse hazards, bounded TLC checks plus unsafe reuse/retire/overwrite counterexamples |
+| R2 | Consumer observes an unpublished remote or staging tile | Nondeterministic corruption | Critical | `MEM-1`, `PUB-1/2`, dependency validation, bounded TLC checks, unsafe counterexamples, and trace-to-diagnostic correspondence tests |
+| R3 | Slot or mutable source epoch is reused before prior consumers finish | Rare data race under load | Critical | `MEM-2`, `PUB-3/4`, buffer-reuse hazards, bounded TLC checks, unsafe counterexamples, and trace-to-diagnostic correspondence tests |
 | R4 | Split-K omits or duplicates a partition | Wrong output with plausible magnitude | Critical | `RED-1/2`, partition property tests, numerical ledger, bounded incomplete-release counterexample |
 | R5 | Barrier/semaphore cycle | Multi-rank deadlock | Critical | Dependency-cycle check and bounded TLC deadlock/liveness check; CUTLASS internals remain external |
 | R6 | Grouped-N aliases output columns or reuses mutable A | Wrong result or stale read | High | `REUSE-1`, versioned immutable-input contract, fail-closed mutable mode, grouped equivalence tests |

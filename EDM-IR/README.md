@@ -294,7 +294,7 @@ compiler/dependence.py  the only queue and buffer dependency implementation
 compiler/verify.py      All2All->GEMM semantic checks
 compiler/assurance.py   executable semantics and target-bound evidence gate
 compiler/slot_protocol.py host-staging correspondence to the TLA+ lifecycle
-compiler/remote_publication.py versioned remote-input contract and closed gate
+compiler/remote_publication.py publication trace correspondence and closed gate
 compiler/simulate.py    ready-time/resource interpreter and EventGraph emission
 compiler/compile.py     candidate enumeration, selection, and fallback
 compiler/pipeline.py    end-to-end compiler orchestration

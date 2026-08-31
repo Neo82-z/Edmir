@@ -11,8 +11,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from edmir.compiler import (  # noqa: E402
     A2AGemmProblem,
+    PublicationEvent,
     build_fused_program,
     build_pipelined_program,
+    validate_publication_trace,
     validate_slot_correspondence,
 )
 
@@ -117,6 +119,101 @@ class RemotePublicationEvidenceTest(unittest.TestCase):
             {name: by_config[name]["expected_violation"] for name in expected},
             expected,
         )
+
+
+class RemotePublicationCorrespondenceTest(unittest.TestCase):
+    @staticmethod
+    def event(action: str, epoch: int, consumer: int | None = None) -> PublicationEvent:
+        return PublicationEvent(action, epoch, consumer)
+
+    def test_complete_trace_projects_to_tla_actions(self) -> None:
+        events = (
+            self.event("BeginWrite", 1),
+            self.event("Publish", 1),
+            self.event("Acquire", 1, 1),
+            self.event("Consume", 1, 1),
+            self.event("Acquire", 1, 2),
+            self.event("Consume", 1, 2),
+            self.event("Retire", 1),
+            self.event("BeginWrite", 2),
+            self.event("Publish", 2),
+            self.event("Acquire", 2, 1),
+            self.event("Consume", 2, 1),
+            self.event("Acquire", 2, 2),
+            self.event("Consume", 2, 2),
+            self.event("Retire", 2),
+        )
+        report = validate_publication_trace(
+            events,
+            epoch_count=2,
+            consumer_count=2,
+        )
+        self.assertTrue(report.valid, report.errors)
+        self.assertTrue(report.complete)
+        self.assertEqual(report.retired_epochs, (1, 2))
+        self.assertEqual(report.overwritten_epochs, (1,))
+        self.assertEqual(report.actions, tuple(event.action for event in events))
+
+    def test_tla_unsafe_acquire_maps_to_pub1(self) -> None:
+        report = validate_publication_trace(
+            (
+                self.event("BeginWrite", 1),
+                self.event("Acquire", 1, 1),
+            ),
+            epoch_count=1,
+            consumer_count=1,
+        )
+        self.assertFalse(report.valid)
+        self.assertIn("[PUB-1]", report.errors[0])
+
+    def test_tla_unsafe_consume_maps_to_pub2(self) -> None:
+        report = validate_publication_trace(
+            (
+                self.event("BeginWrite", 1),
+                self.event("Publish", 1),
+                self.event("Consume", 1, 1),
+            ),
+            epoch_count=1,
+            consumer_count=1,
+        )
+        self.assertFalse(report.valid)
+        self.assertIn("[PUB-2]", report.errors[0])
+
+    def test_tla_unsafe_retire_maps_to_pub3(self) -> None:
+        report = validate_publication_trace(
+            (
+                self.event("BeginWrite", 1),
+                self.event("Publish", 1),
+                self.event("Retire", 1),
+            ),
+            epoch_count=1,
+            consumer_count=2,
+        )
+        self.assertFalse(report.valid)
+        self.assertIn("[PUB-3]", report.errors[0])
+
+    def test_tla_unsafe_overwrite_maps_to_pub4(self) -> None:
+        report = validate_publication_trace(
+            (
+                self.event("BeginWrite", 1),
+                self.event("Publish", 1),
+                self.event("BeginWrite", 2),
+            ),
+            epoch_count=2,
+            consumer_count=2,
+        )
+        self.assertFalse(report.valid)
+        self.assertIn("[PUB-4]", report.errors[0])
+
+    def test_safe_prefix_is_distinct_from_complete_execution(self) -> None:
+        report = validate_publication_trace(
+            (self.event("BeginWrite", 1), self.event("Publish", 1)),
+            epoch_count=1,
+            consumer_count=1,
+            require_complete=False,
+        )
+        self.assertTrue(report.valid, report.errors)
+        self.assertFalse(report.complete)
 
 
 class SlotCorrespondenceTest(unittest.TestCase):

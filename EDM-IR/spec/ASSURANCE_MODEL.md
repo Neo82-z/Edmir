@@ -142,7 +142,11 @@ premature overwrite; each produces the expected counterexample.
 These are bounded model-checking claims about abstract compiler-owned
 protocols.  They are not proofs of arbitrary bounds, CUDA execution, NCCL, or
 the CUTLASS semaphore implementation.  `validate_slot_correspondence` projects
-each Program-visible host staging epoch onto the first lifecycle.  The versioned
-`remote_input_contract` is the bridge for the second: immutable prelaunch input
-is executable, while `explicit_epoch` remains fail-closed until publish,
-acquire, completion, and reuse events are Program-visible.
+each Program-visible host staging epoch onto the first lifecycle.
+`validate_publication_trace` executes the second model's `BeginWrite`,
+`Publish`, `Acquire`, `Consume`, and `Retire` action surface and maps the four
+mutated counterexamples to stable `PUB-1..4` compiler diagnostics.  This is a
+tested model-to-implementation correspondence layer, not a runtime claim.  The
+versioned `remote_input_contract` admits immutable prelaunch input, while
+`explicit_epoch` remains fail-closed until real publish, acquire, completion,
+and reuse events are Program-visible and backed by runtime primitives.
