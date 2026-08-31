@@ -133,6 +133,9 @@ def build_debug_commands(
     *,
     python: str,
     rounds: int,
+    cuda_toolkit_root: Path | None = None,
+    nccl_include_dir: Path | None = None,
+    nccl_library: Path | None = None,
 ) -> tuple[DebugCommand, ...]:
     if rounds <= 0:
         raise ValueError("rounds must be positive")
@@ -141,7 +144,23 @@ def build_debug_commands(
     observed_topology = output / "environment" / "observed-topology.json"
     observed_artifact = output / "artifacts" / "observed-host-sm89"
     host_build = output / "build" / "host"
+    offline_cuda_build = output / "build" / "cuda-offline"
     cuda_build = output / "build" / "cuda"
+    toolchain_values = (cuda_toolkit_root, nccl_include_dir, nccl_library)
+    if any(value is not None for value in toolchain_values) and not all(
+        value is not None for value in toolchain_values
+    ):
+        raise ValueError(
+            "CUDA toolkit root, NCCL include directory, and NCCL library must "
+            "be supplied together"
+        )
+    toolchain_args: tuple[str, ...] = ()
+    if cuda_toolkit_root is not None:
+        toolchain_args = (
+            f"-DCUDAToolkit_ROOT={cuda_toolkit_root}",
+            f"-DNCCL_INCLUDE_DIR={nccl_include_dir}",
+            f"-DNCCL_LIBRARY={nccl_library}",
+        )
     commands: list[DebugCommand] = [
         DebugCommand(
             "python-tests",
@@ -248,85 +267,137 @@ def build_debug_commands(
             expected_returncodes=(1,),
             expected_output="CUTLASS v0.1 supports only arch=sm_80",
         ),
-        DebugCommand(
-            "topology-probe",
-            "gpu",
-            (python, "-m", "edmir", "probe", "--out", str(observed_topology)),
-            gpu_required=True,
-        ),
-        DebugCommand(
-            "runtime-probe",
-            "gpu",
-            (
-                python,
-                "-m",
-                "edmir",
-                "probe-runtime",
-                "--out",
-                str(output / "environment" / "runtime-capabilities.json"),
-            ),
-            gpu_required=True,
-        ),
-        DebugCommand(
-            "observed-host-sm89-codegen",
-            "gpu",
-            (
-                python,
-                "-m",
-                "edmir",
-                "compile-graph",
-                str(graph),
-                "--profile",
-                str(root / "examples" / "synthetic_profile.json"),
-                "--topology",
-                str(observed_topology),
-                "--target",
-                "rtx4090-observed",
-                "--arch",
-                "sm_89",
-                "--gemm-provider",
-                "cublas",
-                "--communication-api",
-                "host_nccl",
-                "--backend",
-                "cpp",
-                "--chunk-rows",
-                "8",
-                "--buffers",
-                "1,2",
-                "--out-dir",
-                str(observed_artifact),
-            ),
-            gpu_required=True,
-        ),
-        DebugCommand(
-            "cuda-configure",
-            "gpu",
-            (
-                "cmake",
-                "-S",
-                str(root / "runtime"),
-                "-B",
-                str(cuda_build),
-                "-DEDMIR_ENABLE_CUDA=ON",
-                "-DEDMIR_BUILD_TESTS=ON",
-                f"-DEDMIR_GENERATED_DIR={observed_artifact}",
-            ),
-            gpu_required=True,
-        ),
-        DebugCommand(
-            "cuda-build",
-            "gpu",
-            ("cmake", "--build", str(cuda_build), "-j"),
-            gpu_required=True,
-        ),
-        DebugCommand(
-            "cuda-ctest",
-            "gpu",
-            ("ctest", "--test-dir", str(cuda_build), "--output-on-failure"),
-            gpu_required=True,
-        ),
     ]
+    if toolchain_args:
+        commands.extend(
+            (
+                DebugCommand(
+                    "cuda-offline-configure",
+                    "cpu",
+                    (
+                        "cmake",
+                        "-S",
+                        str(root / "runtime"),
+                        "-B",
+                        str(offline_cuda_build),
+                        "-DEDMIR_ENABLE_CUDA=ON",
+                        "-DEDMIR_BUILD_TESTS=ON",
+                        f"-DEDMIR_GENERATED_DIR={fixture_artifact}",
+                        *toolchain_args,
+                    ),
+                ),
+                DebugCommand(
+                    "cuda-offline-build",
+                    "cpu",
+                    ("cmake", "--build", str(offline_cuda_build), "-j"),
+                ),
+                DebugCommand(
+                    "cuda-offline-ctest",
+                    "cpu",
+                    (
+                        "ctest",
+                        "--test-dir",
+                        str(offline_cuda_build),
+                        "--output-on-failure",
+                    ),
+                ),
+            )
+        )
+    commands.extend(
+        (
+            DebugCommand(
+                "topology-probe",
+                "gpu",
+                (
+                    python,
+                    "-m",
+                    "edmir",
+                    "probe",
+                    "--out",
+                    str(observed_topology),
+                ),
+                gpu_required=True,
+            ),
+            DebugCommand(
+                "runtime-probe",
+                "gpu",
+                (
+                    python,
+                    "-m",
+                    "edmir",
+                    "probe-runtime",
+                    "--out",
+                    str(output / "environment" / "runtime-capabilities.json"),
+                ),
+                gpu_required=True,
+            ),
+            DebugCommand(
+                "observed-host-sm89-codegen",
+                "gpu",
+                (
+                    python,
+                    "-m",
+                    "edmir",
+                    "compile-graph",
+                    str(graph),
+                    "--profile",
+                    str(root / "examples" / "synthetic_profile.json"),
+                    "--topology",
+                    str(observed_topology),
+                    "--target",
+                    "rtx4090-observed",
+                    "--arch",
+                    "sm_89",
+                    "--gemm-provider",
+                    "cublas",
+                    "--communication-api",
+                    "host_nccl",
+                    "--backend",
+                    "cpp",
+                    "--chunk-rows",
+                    "8",
+                    "--buffers",
+                    "1,2",
+                    "--out-dir",
+                    str(observed_artifact),
+                ),
+                gpu_required=True,
+            ),
+            DebugCommand(
+                "cuda-configure",
+                "gpu",
+                (
+                    "cmake",
+                    "-S",
+                    str(root / "runtime"),
+                    "-B",
+                    str(cuda_build),
+                    "-DEDMIR_ENABLE_CUDA=ON",
+                    "-DEDMIR_BUILD_TESTS=ON",
+                    f"-DEDMIR_GENERATED_DIR={observed_artifact}",
+                    *toolchain_args,
+                ),
+                gpu_required=True,
+            ),
+            DebugCommand(
+                "cuda-build",
+                "gpu",
+                ("cmake", "--build", str(cuda_build), "-j"),
+                gpu_required=True,
+            ),
+            DebugCommand(
+                "cuda-ctest",
+                "gpu",
+                (
+                    "ctest",
+                    "--test-dir",
+                    str(cuda_build),
+                    "--output-on-failure",
+                ),
+                gpu_required=True,
+            ),
+        )
+    )
     for round_index in range(1, rounds + 1):
         commands.extend(
             (

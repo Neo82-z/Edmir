@@ -86,6 +86,26 @@ class DebugProtocolTest(unittest.TestCase):
         self.assertIn("numerical-round-02", by_name)
         self.assertIn("reuse-round-02", by_name)
 
+    def test_explicit_cuda_toolchain_adds_offline_build_and_reaches_gpu_build(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory)
+            commands = build_debug_commands(
+                base / "EDM-IR",
+                base / "run",
+                python="python3",
+                rounds=1,
+                cuda_toolkit_root=base / "cuda",
+                nccl_include_dir=base / "nccl" / "include",
+                nccl_library=base / "nccl" / "lib" / "libnccl.so.2",
+            )
+        by_name = {command.name: command for command in commands}
+        self.assertFalse(by_name["cuda-offline-build"].gpu_required)
+        self.assertTrue(by_name["cuda-build"].gpu_required)
+        configure = by_name["cuda-configure"].argv
+        self.assertTrue(any(value.startswith("-DCUDAToolkit_ROOT=") for value in configure))
+        self.assertTrue(any(value.startswith("-DNCCL_INCLUDE_DIR=") for value in configure))
+        self.assertTrue(any(value.startswith("-DNCCL_LIBRARY=") for value in configure))
+
 
 if __name__ == "__main__":
     unittest.main()

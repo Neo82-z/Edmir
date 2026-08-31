@@ -28,7 +28,11 @@ Execute three correctness/reuse rounds after the four GPUs are idle:
 python tools/run_4090_debug.py \
   --out-root /data/neo-edmir-debug \
   --run-id sm89-$(date -u +%Y%m%dT%H%M%SZ) \
-  --devices 0,1,2,3 --rounds 3 --execute --allow-gpu
+  --devices 0,1,2,3 --rounds 3 \
+  --cuda-toolkit-root /path/to/cuda \
+  --nccl-include-dir /path/to/nccl/include \
+  --nccl-library /path/to/nccl/lib/libnccl.so.2 \
+  --execute --allow-gpu
 ```
 
 The first server pass should use the defaults: at most 1 GiB memory use and at
@@ -37,7 +41,9 @@ safe outcome; inspect `gpu_admission.reasons` instead of overriding the gate or
 disturbing another workload.
 
 The CPU phase runs the Python suite, host runtime tests, SM89 host codegen, and
-the expected SM89 fused-lowering rejection. The GPU phase records the observed
+the expected SM89 fused-lowering rejection. When all three explicit toolchain
+paths are supplied, it also compiles and links the CUDA host runtime without
+opening a GPU context. The GPU phase records the observed
 topology/runtime capabilities, regenerates the host artifact against that
 topology, builds the CUDA runtime, runs its tests, then repeats numerical and
 runtime-reuse checks. No result from this directory should enter the paper

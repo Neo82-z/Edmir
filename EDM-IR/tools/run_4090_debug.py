@@ -120,6 +120,9 @@ def main() -> int:
     parser.add_argument("--rounds", type=int, default=3)
     parser.add_argument("--maximum-memory-used-mib", type=int, default=1024)
     parser.add_argument("--maximum-utilization-percent", type=int, default=10)
+    parser.add_argument("--cuda-toolkit-root", type=Path)
+    parser.add_argument("--nccl-include-dir", type=Path)
+    parser.add_argument("--nccl-library", type=Path)
     parser.add_argument(
         "--execute",
         action="store_true",
@@ -141,6 +144,25 @@ def main() -> int:
         raise ValueError("--rounds must be positive")
     if min(args.maximum_memory_used_mib, args.maximum_utilization_percent) < 0:
         raise ValueError("idle thresholds must be non-negative")
+    toolchain_paths = (
+        args.cuda_toolkit_root,
+        args.nccl_include_dir,
+        args.nccl_library,
+    )
+    if any(path is not None for path in toolchain_paths) and not all(
+        path is not None for path in toolchain_paths
+    ):
+        raise ValueError(
+            "--cuda-toolkit-root, --nccl-include-dir, and --nccl-library "
+            "must be supplied together"
+        )
+    resolved_toolchain: tuple[Path, Path, Path] | None = None
+    if all(path is not None for path in toolchain_paths):
+        resolved = tuple(path.expanduser().resolve() for path in toolchain_paths)
+        for path in resolved:
+            if not path.exists():
+                raise ValueError(f"toolchain path does not exist: {path}")
+        resolved_toolchain = resolved
     run_id = _safe_run_id(
         args.run_id
         or datetime.now(timezone.utc).strftime("edmir-4090-debug-%Y%m%dT%H%M%SZ")
@@ -153,7 +175,13 @@ def main() -> int:
     (output / "environment").mkdir()
 
     commands = build_debug_commands(
-        root, output, python=sys.executable, rounds=args.rounds
+        root,
+        output,
+        python=sys.executable,
+        rounds=args.rounds,
+        cuda_toolkit_root=None if resolved_toolchain is None else resolved_toolchain[0],
+        nccl_include_dir=None if resolved_toolchain is None else resolved_toolchain[1],
+        nccl_library=None if resolved_toolchain is None else resolved_toolchain[2],
     )
     manifest_path = output / "manifest.json"
     manifest: dict = {
@@ -180,6 +208,13 @@ def main() -> int:
         "idle_gate": {
             "maximum_memory_used_mib": args.maximum_memory_used_mib,
             "maximum_utilization_percent": args.maximum_utilization_percent,
+        },
+        "cuda_toolchain": None
+        if resolved_toolchain is None
+        else {
+            "root": str(resolved_toolchain[0]),
+            "nccl_include_dir": str(resolved_toolchain[1]),
+            "nccl_library": str(resolved_toolchain[2]),
         },
         "commands": [
             {
