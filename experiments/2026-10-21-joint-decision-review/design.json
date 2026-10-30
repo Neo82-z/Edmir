@@ -1,0 +1,20 @@
+{
+  "status": "Adaptive engineering on the previously inspected archive; not independent validation",
+  "hypothesis": "Separately selecting host and fused parameters for latency error can produce a poor difference and wrong ranking. Test joint training-only selection before adding new feature families.",
+  "variants": [
+    {"name": "traffic_joint_mean", "basis": "traffic", "objective": "mean_regret"},
+    {"name": "resource_joint_mean", "basis": "resource", "objective": "mean_regret"},
+    {"name": "resource_joint_worst", "basis": "resource", "objective": "worst_group_mean_regret"}
+  ],
+  "grid": "The existing 48 host parameter settings and 12 fused settings; score all 576 pairs on inner held-out groups. Fit each component only once per setting and fold.",
+  "mean_order": ["mean_regret", "max_regret", "paired_difference_mse", "parameter_order"],
+  "worst_order": ["worst_group_mean_regret", "mean_regret", "max_regret", "paired_difference_mse", "parameter_order"],
+  "loss_unit": "One shape contributes one regret; worst_group_mean is the worst mean among inner held-out acquisition groups. Paired MSE compares fused-host predicted and measured differences, normalized by held-out host latency.",
+  "selection": "Smallest predicted absolute latency, symmetric host/fused comparison, exact ties favor host. Retain training-derived grouped-N eligibility in both inner CV and inference.",
+  "unchanged": "All absolute component features, NNLS solver, weighting and regularization grids are inherited from previously reviewed traffic/resource models. No new shape thresholds, no model-specific offset, no final-test-label input to fitting.",
+  "acceptance": "Original primary and leave-K gates, six exact M512 selections, all training-group deletions, previous adversarial replay and the same 34 one-percent stresses. A mean gain cannot override a failed boundary gate.",
+  "bounds": {"fit_seconds": 30, "max_cache_entries": 128, "variant_process_seconds": 300},
+  "stop_rule": "Finish these three declared alternatives and report every result. Do not change the trial definitions in response to outer failures; do not replace the default compiler or frozen GPU package.",
+  "new_gpu_operations": 0,
+  "new_independent_labels": 0
+}

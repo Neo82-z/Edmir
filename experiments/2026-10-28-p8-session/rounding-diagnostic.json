@@ -1,0 +1,74 @@
+{
+  "shape": [
+    8,
+    64,
+    4096,
+    2048
+  ],
+  "sampled_outputs": 10752,
+  "elapsed_seconds": 7.22115641599521,
+  "model": "Exact integer products/sums on original FP16 inputs; each serial split epilogue rounded to FP16. q1 rounds once. Matches source arithmetic structure, does not test device ordering or semaphore correctness. Sample only, no timing or general correctness claim.",
+  "input_path": "/Users/neo/code/llm-serving/experiments/2026-10-25-p8-gpu-collection/bundle/data/w005/inputs.bin",
+  "records": {
+    "1": {
+      "max_abs": 0.0078125,
+      "max_rel": 0.0004880429477794046,
+      "witness": {
+        "slot": 0,
+        "row": 31,
+        "column": 1776,
+        "expected": 2.0009765625,
+        "simulated": 2.0,
+        "absolute_error": 0.0009765625
+      }
+    },
+    "2": {
+      "max_abs": 0.0107421875,
+      "max_rel": 0.00390625,
+      "witness": {
+        "slot": 29,
+        "row": 0,
+        "column": 555,
+        "expected": 0.0205078125,
+        "simulated": 0.0166015625,
+        "absolute_error": 0.00390625
+      }
+    },
+    "4": {
+      "max_abs": 0.0107421875,
+      "max_rel": 0.00390625,
+      "witness": {
+        "slot": 19,
+        "row": 63,
+        "column": 592,
+        "expected": -0.203125,
+        "simulated": -0.20703125,
+        "absolute_error": 0.00390625
+      }
+    },
+    "8": {
+      "max_abs": 0.015625,
+      "max_rel": 0.005942275042444821,
+      "witness": {
+        "slot": 5,
+        "row": 63,
+        "column": 1554,
+        "expected": -1.150390625,
+        "simulated": -1.1435546875,
+        "absolute_error": 0.0068359375
+      }
+    },
+    "16": {
+      "max_abs": 0.0283203125,
+      "max_rel": 0.008620689655172414,
+      "witness": {
+        "slot": 27,
+        "row": 0,
+        "column": 74,
+        "expected": 1.1328125,
+        "simulated": 1.123046875,
+        "absolute_error": 0.009765625
+      }
+    }
+  }
+}

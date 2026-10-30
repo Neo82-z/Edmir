@@ -77,6 +77,15 @@ from .roofline_accounting import (
     ScheduleSpec,
     account_schedule,
 )
+from .routed_contract import (
+    RouteRecord,
+    RoutedTrace,
+    RoutedTrafficLedger,
+    SCHEMA_ROUTED_TRACE,
+    SCHEMA_ROUTED_TRAFFIC,
+    build_routed_traffic_ledger,
+    validate_fragmentation_sentinel,
+)
 from .frontend import GraphBuilder, build_a2a_gemm_module
 from .lowering import A2AGemmMatch, lower_fused_a2a_gemm, match_a2a_gemm
 from .model import (
@@ -209,6 +218,9 @@ __all__ = [
     "RemotePublicationReport",
     "RuntimeMeasurement",
     "RooflineAccount",
+    "RouteRecord",
+    "RoutedTrace",
+    "RoutedTrafficLedger",
     "RidgeLatencyModel",
     "PipelineResult",
     "PairwiseCommCurve",
@@ -216,6 +228,8 @@ __all__ = [
     "SCHEMA_FUSED_SCHEDULE_SPACE",
     "SCHEMA_EVIDENCE_RECORD",
     "SCHEMA_ROOFLINE_ACCOUNTING",
+    "SCHEMA_ROUTED_TRACE",
+    "SCHEMA_ROUTED_TRAFFIC",
     "SCHEMA_REMOTE_PUBLICATION",
     "SCHEMA_TWO_STAGE_EVALUATION",
     "ScheduleMeasurement",
@@ -239,6 +253,7 @@ __all__ = [
     "build_fused_program",
     "build_pipelined_program",
     "build_pipelined_schedule",
+    "build_routed_traffic_ledger",
     "build_sequential_program",
     "build_sequential_schedule",
     "compile_a2a_gemm",
@@ -277,6 +292,7 @@ __all__ = [
     "verify_schedule",
     "verify_dataflow",
     "validate_program_semantics",
+    "validate_fragmentation_sentinel",
     "validate_publication_trace",
     "validate_remote_publication",
     "validate_slot_correspondence",

@@ -1,0 +1,41 @@
+{
+  "schema": "edmir.mechanism-prediction-design.v1",
+  "status": "Second development revision after inspecting run-01. Not independent validation or blind model selection.",
+  "previous_design": "design.json",
+  "change_reason": "CUTLASS host basis aliases M512/K4096/N512 and M256/K8192/N512: identical remote bytes and FLOPs, different known K-loop depth and observed time. Add that depth only for the two known CUTLASS hosts. No guessed cuBLAS tile.",
+  "data": "2026-10-21 RunPod frozen package; repaired runtime has no timing labels",
+  "primary": "mechanisms/geometry prepared/merged, 20 warmups; three process medians",
+  "quality_rule": "Unchanged: whole-configuration drift/spread/algorithm flags; retain all samples.",
+  "models": [
+    "reduced_counts",
+    "coupled_counts",
+    "cutlass_depth"
+  ],
+  "selected_variant": "cutlass_depth",
+  "loss": "Unchanged nonnegative squared-microsecond loss, shape-balanced, fixed 1e-6 ridge; no search.",
+  "validation": "Whole shape leave-out; all candidates and repeats excluded together. Same already-inspected development data, now used for a structural repair.",
+  "development_acceptance": {
+    "macro_shape_mean_absolute_percentage_error_max": 0.1,
+    "max_candidate_absolute_percentage_error_max": 0.25,
+    "wrong_pair_decisions_with_over_10_percent_loss_max": 0,
+    "compiler_admission_even_if_passed": false
+  },
+  "new_policy_scenarios": {
+    "formula": "T_new = T_old * [a + (1-a) * (4/11) * b]",
+    "a": [
+      0.0,
+      0.25,
+      0.5
+    ],
+    "b": [
+      1.0,
+      1.25,
+      1.5
+    ],
+    "status": "Unidentified scenario assumptions; no new-policy measurements."
+  },
+  "no_gpu": true,
+  "no_neural_training": true,
+  "no_hyperparameter_search": true,
+  "no_automatic_selector_change": true
+}

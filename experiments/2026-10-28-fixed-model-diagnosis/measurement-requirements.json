@@ -1,0 +1,547 @@
+{
+  "status": "bounded diagnostic specification; not an executed or GPU-validated runner",
+  "primary_questions": [
+    "Does short-K direct/q2 sign change repeat under one execution identity?",
+    "Are q penalties and grouped-N benefits predicted separately, or only canceled on the diagonal?"
+  ],
+  "existing_development_shapes_only": true,
+  "new_shape_count": 0,
+  "shape_count": 6,
+  "candidate_cell_count": 20,
+  "cases": [
+    {
+      "shape": [
+        4,
+        64,
+        512,
+        128
+      ],
+      "candidates": [
+        "host",
+        "direct",
+        "splitk2"
+      ],
+      "question": "short-K direct/q2 net benefit; retain both sign controls",
+      "block_orders": [
+        [
+          "host",
+          "direct",
+          "splitk2"
+        ],
+        [
+          "host",
+          "splitk2",
+          "direct"
+        ],
+        [
+          "direct",
+          "host",
+          "splitk2"
+        ],
+        [
+          "direct",
+          "splitk2",
+          "host"
+        ],
+        [
+          "splitk2",
+          "host",
+          "direct"
+        ],
+        [
+          "splitk2",
+          "direct",
+          "host"
+        ],
+        [
+          "host",
+          "direct",
+          "splitk2"
+        ],
+        [
+          "host",
+          "splitk2",
+          "direct"
+        ],
+        [
+          "direct",
+          "host",
+          "splitk2"
+        ],
+        [
+          "direct",
+          "splitk2",
+          "host"
+        ],
+        [
+          "splitk2",
+          "host",
+          "direct"
+        ],
+        [
+          "splitk2",
+          "direct",
+          "host"
+        ]
+      ],
+      "warmup_iterations_per_candidate": 30,
+      "timed_iterations_per_candidate_per_block": 300,
+      "raw_iterations_retained": true
+    },
+    {
+      "shape": [
+        4,
+        64,
+        512,
+        256
+      ],
+      "candidates": [
+        "host",
+        "direct",
+        "splitk2"
+      ],
+      "question": "short-K direct/q2 net benefit; retain both sign controls",
+      "block_orders": [
+        [
+          "host",
+          "direct",
+          "splitk2"
+        ],
+        [
+          "host",
+          "splitk2",
+          "direct"
+        ],
+        [
+          "direct",
+          "host",
+          "splitk2"
+        ],
+        [
+          "direct",
+          "splitk2",
+          "host"
+        ],
+        [
+          "splitk2",
+          "host",
+          "direct"
+        ],
+        [
+          "splitk2",
+          "direct",
+          "host"
+        ],
+        [
+          "host",
+          "direct",
+          "splitk2"
+        ],
+        [
+          "host",
+          "splitk2",
+          "direct"
+        ],
+        [
+          "direct",
+          "host",
+          "splitk2"
+        ],
+        [
+          "direct",
+          "splitk2",
+          "host"
+        ],
+        [
+          "splitk2",
+          "host",
+          "direct"
+        ],
+        [
+          "splitk2",
+          "direct",
+          "host"
+        ]
+      ],
+      "warmup_iterations_per_candidate": 30,
+      "timed_iterations_per_candidate_per_block": 300,
+      "raw_iterations_retained": true
+    },
+    {
+      "shape": [
+        4,
+        64,
+        512,
+        512
+      ],
+      "candidates": [
+        "host",
+        "direct",
+        "splitk2"
+      ],
+      "question": "short-K direct/q2 net benefit; retain both sign controls",
+      "block_orders": [
+        [
+          "host",
+          "direct",
+          "splitk2"
+        ],
+        [
+          "host",
+          "splitk2",
+          "direct"
+        ],
+        [
+          "direct",
+          "host",
+          "splitk2"
+        ],
+        [
+          "direct",
+          "splitk2",
+          "host"
+        ],
+        [
+          "splitk2",
+          "host",
+          "direct"
+        ],
+        [
+          "splitk2",
+          "direct",
+          "host"
+        ],
+        [
+          "host",
+          "direct",
+          "splitk2"
+        ],
+        [
+          "host",
+          "splitk2",
+          "direct"
+        ],
+        [
+          "direct",
+          "host",
+          "splitk2"
+        ],
+        [
+          "direct",
+          "splitk2",
+          "host"
+        ],
+        [
+          "splitk2",
+          "host",
+          "direct"
+        ],
+        [
+          "splitk2",
+          "direct",
+          "host"
+        ]
+      ],
+      "warmup_iterations_per_candidate": 30,
+      "timed_iterations_per_candidate_per_block": 300,
+      "raw_iterations_retained": true
+    },
+    {
+      "shape": [
+        4,
+        64,
+        512,
+        1024
+      ],
+      "candidates": [
+        "host",
+        "direct",
+        "splitk2"
+      ],
+      "question": "short-K direct/q2 net benefit; retain both sign controls",
+      "block_orders": [
+        [
+          "host",
+          "direct",
+          "splitk2"
+        ],
+        [
+          "host",
+          "splitk2",
+          "direct"
+        ],
+        [
+          "direct",
+          "host",
+          "splitk2"
+        ],
+        [
+          "direct",
+          "splitk2",
+          "host"
+        ],
+        [
+          "splitk2",
+          "host",
+          "direct"
+        ],
+        [
+          "splitk2",
+          "direct",
+          "host"
+        ],
+        [
+          "host",
+          "direct",
+          "splitk2"
+        ],
+        [
+          "host",
+          "splitk2",
+          "direct"
+        ],
+        [
+          "direct",
+          "host",
+          "splitk2"
+        ],
+        [
+          "direct",
+          "splitk2",
+          "host"
+        ],
+        [
+          "splitk2",
+          "host",
+          "direct"
+        ],
+        [
+          "splitk2",
+          "direct",
+          "host"
+        ]
+      ],
+      "warmup_iterations_per_candidate": 30,
+      "timed_iterations_per_candidate_per_block": 300,
+      "raw_iterations_retained": true
+    },
+    {
+      "shape": [
+        4,
+        128,
+        512,
+        512
+      ],
+      "candidates": [
+        "host",
+        "direct",
+        "splitk2"
+      ],
+      "question": "short-K direct/q2 net benefit; retain both sign controls",
+      "block_orders": [
+        [
+          "host",
+          "direct",
+          "splitk2"
+        ],
+        [
+          "host",
+          "splitk2",
+          "direct"
+        ],
+        [
+          "direct",
+          "host",
+          "splitk2"
+        ],
+        [
+          "direct",
+          "splitk2",
+          "host"
+        ],
+        [
+          "splitk2",
+          "host",
+          "direct"
+        ],
+        [
+          "splitk2",
+          "direct",
+          "host"
+        ],
+        [
+          "host",
+          "direct",
+          "splitk2"
+        ],
+        [
+          "host",
+          "splitk2",
+          "direct"
+        ],
+        [
+          "direct",
+          "host",
+          "splitk2"
+        ],
+        [
+          "direct",
+          "splitk2",
+          "host"
+        ],
+        [
+          "splitk2",
+          "host",
+          "direct"
+        ],
+        [
+          "splitk2",
+          "direct",
+          "host"
+        ]
+      ],
+      "warmup_iterations_per_candidate": 30,
+      "timed_iterations_per_candidate_per_block": 300,
+      "raw_iterations_retained": true
+    },
+    {
+      "shape": [
+        4,
+        64,
+        8192,
+        1024
+      ],
+      "candidates": [
+        "host",
+        "splitk4",
+        "splitk8",
+        "splitk4_groupedn2",
+        "splitk8_groupedn2"
+      ],
+      "question": "separate split factor and wider tile using the complete measured 2x2",
+      "block_orders": [
+        [
+          "host",
+          "splitk4",
+          "splitk8",
+          "splitk4_groupedn2",
+          "splitk8_groupedn2"
+        ],
+        [
+          "splitk4",
+          "splitk8",
+          "splitk4_groupedn2",
+          "splitk8_groupedn2",
+          "host"
+        ],
+        [
+          "splitk8",
+          "splitk4_groupedn2",
+          "splitk8_groupedn2",
+          "host",
+          "splitk4"
+        ],
+        [
+          "splitk4_groupedn2",
+          "splitk8_groupedn2",
+          "host",
+          "splitk4",
+          "splitk8"
+        ],
+        [
+          "splitk8_groupedn2",
+          "host",
+          "splitk4",
+          "splitk8",
+          "splitk4_groupedn2"
+        ],
+        [
+          "splitk8_groupedn2",
+          "splitk4_groupedn2",
+          "splitk8",
+          "splitk4",
+          "host"
+        ],
+        [
+          "host",
+          "splitk8_groupedn2",
+          "splitk4_groupedn2",
+          "splitk8",
+          "splitk4"
+        ],
+        [
+          "splitk4",
+          "host",
+          "splitk8_groupedn2",
+          "splitk4_groupedn2",
+          "splitk8"
+        ],
+        [
+          "splitk8",
+          "splitk4",
+          "host",
+          "splitk8_groupedn2",
+          "splitk4_groupedn2"
+        ],
+        [
+          "splitk4_groupedn2",
+          "splitk8",
+          "splitk4",
+          "host",
+          "splitk8_groupedn2"
+        ]
+      ],
+      "warmup_iterations_per_candidate": 30,
+      "timed_iterations_per_candidate_per_block": 300,
+      "raw_iterations_retained": true
+    }
+  ],
+  "frozen_six_included": false,
+  "no_training_or_parameter_updates": true,
+  "decision_objective": "median full-operator host wall time; unchanged from archive",
+  "secondary_statistics": [
+    "mean",
+    "p95",
+    "paired block median gaps",
+    "q-by-group difference of differences"
+  ],
+  "new_measurement_rows_need": [
+    "source and binary hashes",
+    "CUTLASS/NCCL/CUDA versions",
+    "world size and device IDs",
+    "precision including partial/output/accumulator",
+    "kernel and baseline identity",
+    "metadata mode locked before run",
+    "NVLink/peer topology",
+    "clock/power/thermal snapshots",
+    "block ID and candidate order",
+    "all per-iteration samples",
+    "correctness outcome and tolerance",
+    "timing scope",
+    "profiler enabled flag"
+  ],
+  "timing_rules": [
+    "Do not pool different identities or legacy/prepared/merged modes.",
+    "Keep steady timing free of profiler instrumentation; any profiling uses a separate labeled window.",
+    "Report primary median and secondary mean/p95 even when rankings disagree.",
+    "Within-run samples are not automatically independent replicates; analyze paired block gaps and preserve order.",
+    "Do not compare timestamps across GPU clock domains or sum concurrent stage durations as end-to-end time.",
+    "Device critical-path timing requires explicit stream dependency closure; the current runner must not be assumed to provide it."
+  ],
+  "conditional_followup": "Only if stable gaps remain unexplained: matched local-A vs remote-A execution or dependency timing with separately labeled implementations, no cross-identity label pooling.",
+  "p8_plan": {
+    "machine_for_paper": "8 GPUs as already planned; no rental in this task",
+    "historical_mechanism_recheck": "these P4 cases may run on a verified four-device subset of that machine",
+    "native_p8": "separate execution identity and frozen native predictions before measuring; do not carry over P4 numeric latency predictions",
+    "bf16": "not included; FP16 evidence is not BF16 evidence"
+  },
+  "execution_budget_seconds_after_build": 1200,
+  "no_automatic_extra_sweeps": true,
+  "stop_conditions": [
+    "Correctness or identity failure: retain failure, stop the affected case.",
+    "Budget exhausted: return all completed samples and mark incomplete cells; no silent extension.",
+    "Direction not resolved by fixed blocks: report inconclusive; no fitting, tolerance change, or measurement-driven branch selection.",
+    "Stable discrepancy localized: record supporting and contradicting evidence before proposing a structural change."
+  ],
+  "acceptance": "Mechanism localization or an explicit evidence gap; zero error is not required by this diagnosis."
+}

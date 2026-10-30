@@ -1,0 +1,61 @@
+{
+  "status": "metadata audit and preparation recommendation; no weights downloaded or GPU validation",
+  "checked_date": "2026-10-25",
+  "sources": "Official Hugging Face model API, config.json and model.safetensors.index.json at each recorded revision",
+  "weight_estimate_assumptions": "3 BF16 matrices per routed expert, all layers MoE, experts evenly placed over EP8; TP1 and all other checkpoint tensors replicated on each rank. This includes vision tensors in the 3.5/3.6 checkpoints although text-only loading may omit them. Excludes allocation padding, KV/SSM state, activations, CUDA graphs, communicator/workspace and loading peaks. Not measured GPU memory.",
+  "models": [
+    {
+      "id": "Qwen/Qwen3-Next-80B-A3B-Instruct",
+      "revision": "9c7f2fbe84465e40164a94cc16cd30b6999b0cc7",
+      "checkpoint_tensor_bytes": 162649725440,
+      "hidden_size": 2048, "expert_intermediate_size": 512, "layers": 48,
+      "routed_experts_per_layer": 512, "routed_top_k": 10, "shared_experts": 1,
+      "routed_experts_per_rank_EP8": 64,
+      "BF16_routed_weight_bytes_per_rank_EP8": 19327352832,
+      "estimated_TP1_EP8_weight_bytes_per_rank": 27358255616,
+      "model_type": "qwen3_next",
+      "recommendation": "single primary preparation candidate, BF16 Instruct; exact EP8 engine execution still requires validation"
+    },
+    {
+      "id": "Qwen/Qwen3.5-35B-A3B",
+      "revision": "59d61f3ce65a6d9863b86d2e96597125219dc754",
+      "checkpoint_tensor_bytes": 71903655008,
+      "hidden_size": 2048, "expert_intermediate_size": 512, "layers": 40,
+      "routed_experts_per_layer": 256, "routed_top_k": 8, "shared_experts": 1,
+      "routed_experts_per_rank_EP8": 32,
+      "BF16_routed_weight_bytes_per_rank_EP8": 8053063680,
+      "estimated_TP1_EP8_weight_bytes_per_rank": 15532209248,
+      "model_type": "qwen3_5_moe_text",
+      "recommendation": "previous anchor; not an additional experiment"
+    },
+    {
+      "id": "Qwen/Qwen3.6-35B-A3B",
+      "revision": "995ad96eacd98c81ed38be0c5b274b04031597b0",
+      "checkpoint_tensor_bytes": 71903645408,
+      "hidden_size": 2048, "expert_intermediate_size": 512, "layers": 40,
+      "routed_experts_per_layer": 256, "routed_top_k": 8, "shared_experts": 1,
+      "routed_experts_per_rank_EP8": 32,
+      "estimated_TP1_EP8_weight_bytes_per_rank": 15532199648,
+      "model_type": "qwen3_5_moe_text",
+      "recommendation": "same principal expert geometry as 3.5; not a size upgrade"
+    },
+    {
+      "id": "Qwen/Qwen3-30B-A3B-Instruct-2507",
+      "revision": "0d7cf23991f47feeb3a57ecb4c9cee8ea4a17bfe",
+      "checkpoint_tensor_bytes": 61064245248,
+      "hidden_size": 2048, "expert_intermediate_size": 768, "layers": 48,
+      "routed_experts_per_layer": 128, "routed_top_k": 8, "shared_experts": 0,
+      "routed_experts_per_rank_EP8": 16,
+      "estimated_TP1_EP8_weight_bytes_per_rank": 10329944064,
+      "model_type": "qwen3_moe",
+      "recommendation": "simpler full-attention alternative, but smaller total expert pool; not added to experiment matrix"
+    }
+  ],
+  "tokens_per_expert_example": {
+    "assumptions": "T is the global tokens in the same MoE forward across EP ranks, uniform expected routing, no speculative decoding; client concurrency is not necessarily T",
+    "formula": "mean expert rows = T * routed_top_k / routed_experts",
+    "T16": {"Qwen3.5-35B-A3B": 0.5, "Qwen3-Next-80B-A3B-Instruct": 0.3125},
+    "T128": {"Qwen3.5-35B-A3B": 4.0, "Qwen3-Next-80B-A3B-Instruct": 2.5},
+    "T4096": {"Qwen3.5-35B-A3B": 128.0, "Qwen3-Next-80B-A3B-Instruct": 80.0}
+  }
+}

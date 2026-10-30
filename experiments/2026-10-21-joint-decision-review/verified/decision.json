@@ -1,0 +1,120 @@
+{
+  "schema": "edmir.joint-decision-review.v1",
+  "date": "2026-10-21",
+  "local_accepted": false,
+  "accepted_variants": [],
+  "compiler_admission": false,
+  "gpu_operations": 0,
+  "new_independent_labels": 0,
+  "scope": "Retrospective engineering on inspected archive",
+  "candidate_assessments": {
+    "traffic_joint_mean": {
+      "candidate_accepted": false,
+      "checks": {
+        "unchanged_primary_gates_and_M512_exact_choices": false,
+        "M512_all_training_deletions_preserve_best": true,
+        "N_all_training_deletions_preserve_host": false,
+        "N_previous_attack_resisted": false,
+        "N_one_percent_stress_all_correct": false
+      },
+      "interpretation": "Retrospective engineering checks only. Passing is not independent GPU validation."
+    },
+    "resource_joint_mean": {
+      "candidate_accepted": false,
+      "checks": {
+        "unchanged_primary_gates_and_M512_exact_choices": false,
+        "M512_all_training_deletions_preserve_best": false,
+        "N_all_training_deletions_preserve_host": false,
+        "N_previous_attack_resisted": true,
+        "N_one_percent_stress_all_correct": false
+      },
+      "interpretation": "Retrospective engineering checks only. Passing is not independent GPU validation."
+    },
+    "resource_joint_worst": {
+      "candidate_accepted": false,
+      "checks": {
+        "unchanged_primary_gates_and_M512_exact_choices": false,
+        "M512_all_training_deletions_preserve_best": false,
+        "N_all_training_deletions_preserve_host": false,
+        "N_previous_attack_resisted": true,
+        "N_one_percent_stress_all_correct": false
+      },
+      "interpretation": "Retrospective engineering checks only. Passing is not independent GPU validation."
+    }
+  },
+  "exact_replay": true,
+  "tests": {
+    "audit_tests": 8,
+    "traffic_tests": 7,
+    "resource_tests": 6
+  },
+  "total_tests": 21,
+  "old_evidence_and_gpu_package_unchanged": true,
+  "performance": [
+    {
+      "method": "traffic_joint_mean",
+      "uncached_fit_seconds": 0.27518745901761577,
+      "decisions": 4100,
+      "mean_ms_per_41_shapes": 3.343797030393034,
+      "max_ms_per_41_shapes": 3.6905419547110796
+    },
+    {
+      "method": "resource_joint_mean",
+      "uncached_fit_seconds": 0.29321108298609033,
+      "decisions": 4100,
+      "mean_ms_per_41_shapes": 4.381110806716606,
+      "max_ms_per_41_shapes": 4.563833004795015
+    },
+    {
+      "method": "resource_joint_worst",
+      "uncached_fit_seconds": 0.29397995898034424,
+      "decisions": 4100,
+      "mean_ms_per_41_shapes": 4.431133306352422,
+      "max_ms_per_41_shapes": 5.112833983730525
+    }
+  ],
+  "versions": {
+    "python": "3.12.14",
+    "numpy": "2.3.5",
+    "scipy": "1.16.3"
+  },
+  "source_sha256": {
+    "experiments/2026-10-21-joint-decision-review/candidate.py": "a3baac98d5f86e1d60bcf8169df542fdc06aea42137aca3cc6bf90dc67084982",
+    "experiments/2026-10-21-joint-decision-review/design.json": "dab42be7672c37a6bc2b0d91f2f061ea6f5d2dc94fd904c22f231103e35163e4",
+    "experiments/2026-10-21-joint-decision-review/evaluate.py": "ada2aa3faaa3c132ba56c089672fe95c72d2e9f9602782c0a1211cc6619a8404",
+    "experiments/2026-10-21-host-boundary-repair/review.py": "513d9217510692b06feba9f2984b9cfe729f22537d45cb72300ed4f60d47f08f",
+    "experiments/2026-10-21-host-boundary-repair/assessment.py": "735627940c9e9b09f19ee19e0a407897311bb955cc4e58bea7146a851e408373",
+    "experiments/2026-10-21-structural-identifiability/candidate.py": "ea0f4c8fea56e47af71a7838773106b87fc3702187b0a2201acc67ca469a3e57",
+    "EDM-IR/tools/evaluate_traffic_selector.py": "6b28660533c8f31a725f1c5e09c38f3be64d9127782a953d9b8976052760ffe3",
+    "EDM-IR/tools/evaluate_execution_cost_selector.py": "0b8fc94a5c275e034197607cc8aa22f82ef522e4cecb9b1db13ee43bc0265740",
+    "EDM-IR/edmir/compiler/traffic_latency_selection.py": "f036089962bc01ab489f98669b061386ca978a2b72c4fcb7ab9571f898231fde",
+    "EDM-IR/edmir/compiler/resource_geometry.py": "64fb43ec6fc1cc6b2d3f4a706522d7b8e8a33e50244e4f3cbcdc33356bb422da",
+    "EDM-IR/edmir/compiler/factorized_selection.py": "fb695e1615ff7a22b7e7bcd8d9e9fcaf4d4d173be25159c7aba0daeb0f41c1d1",
+    "EDM-IR/edmir/compiler/relative_selection.py": "47e425ce32d60577b1ee38e1e7a4f7f542dab06599b2ae1a8b694d7d09aed4c9",
+    "EDM-IR/edmir/compiler/host_baseline.py": "e335c5a38dbbfd661fe4828aa1867fcb14bd4f82984f9dbcb8a20c805b9e2b75",
+    "EDM-IR/edmir/compiler/measurement_dataset.py": "c28fd8a8e79dd222612581e6b9c85f84ee21afabb8c42b58ccdc4c30851c50bf",
+    "EDM-IR/edmir/compiler/two_stage_selection.py": "4d875a82ca57fbd07ce538a4fecf4db0d306c963945c010bcbe6cc05a2e8a8d2",
+    "experiments/2026-10-21-joint-decision-review/diagnose.py": "49751fe7829214d04f7853dff933932548459e0c7afd7298773cedc09357634b",
+    "experiments/2026-10-21-joint-decision-review/test_review.py": "21e729336a43bba896191e57af74bbaf9a4b4d554b5e5ae7926a1425c1aeef0e",
+    "experiments/2026-10-21-joint-decision-review/run_review.py": "dd6d523b7d047a7656173833bef2c1df98cd91ea2ec4b81dfe26b8c72422c309"
+  },
+  "evidence_sha256": {
+    "audit_tests.stderr.txt": "7cf4135886dadbeb4c4d9c271e2f2e9b4c62354500f47baeadc2c07c2d08857a",
+    "audit_tests.stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "diagnose.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "diagnose.stdout.txt": "16bfdf44bc536b699b8db805885b2bacf381021d8d11dc8ccd108070a4f41d57",
+    "diagnosis.json": "298938dc0bf58ec20b8c1600c93e4b3bb11d79749412a76940e173eef9e64289",
+    "evaluate.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "evaluate.stdout.txt": "32f0fbcce153f230b74712aa392774d3c35f46ffb872698a43a7707aa0eddb0c",
+    "performance.json": "5586a4c10cb83bc957a65854fe9169e73bcd07584b1ca19e21a0b59e74792558",
+    "replay/resource_joint_mean.json": "5c7345dbd7acffe3d45a1bd3d71711e3ef8b58527bb3249022c7374563174ed7",
+    "replay/resource_joint_worst.json": "e37d8c61937777e0deed230b79dc806d1a698d87d64910892f3645a8a715243e",
+    "replay/results.json": "56af7cb4e1f968ec234be3a093c74c179eb55109847178354c2430bb26b8ddce",
+    "replay/traffic_joint_mean.json": "723d804d58c4178c177129b5fd039f40a0700f0038ed558e67a0e15ffce64762",
+    "resource_tests.stderr.txt": "f071fda39377566bd443bececb12ced6ea0fe12eafbcba0b5dd1bea2bea210fc",
+    "resource_tests.stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "traffic_tests.stderr.txt": "21b17a134f6ead452815301a359f932b1d7daf794cbce2db6837200a2e01e3ab",
+    "traffic_tests.stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "elapsed_seconds": 35.36647795897443
+}

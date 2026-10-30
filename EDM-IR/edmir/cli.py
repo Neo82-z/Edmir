@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 from pathlib import Path
 
 from .compiler import (
@@ -409,6 +410,26 @@ def _validate_trace(args: argparse.Namespace) -> int:
     return 0 if report.valid else 1
 
 
+def _explain_execution(args: argparse.Namespace) -> int:
+    from .compiler.execution_ledger import execution_ledgers
+    from .compiler.evidence_selection import assess_candidates
+    ledgers = execution_ledgers((args.p, args.m, args.k, args.n), args.families,
+                                environment_id=args.environment,
+                                metadata_mode=args.metadata_mode, baseline_id=args.baseline,
+                                dependency_policy=args.dependency_policy,
+                                algorithm_ids=({'host_merged_cublaslt': args.cublaslt_algorithm_id}
+                                               if args.cublaslt_algorithm_id else None))
+    result = {"schema": "edmir.execution-explanation.v1", "ledgers": ledgers,
+              "decision": assess_candidates(ledgers)}
+    text = json.dumps(result, indent=2, ensure_ascii=False, allow_nan=False)+"\n"
+    if args.out:
+        with Path(args.out).open("x") as output:
+            output.write(text)
+    else:
+        print(text, end="")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="edmir", description="EDM-IR analysis and schedule compiler")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -607,6 +628,20 @@ def build_parser() -> argparse.ArgumentParser:
     validate_trace_parser.add_argument("--tolerance-us", type=float, default=0.5)
     validate_trace_parser.add_argument("--out")
     validate_trace_parser.set_defaults(func=_validate_trace)
+    from .compiler.execution_ledger import FAMILIES, ALL_FAMILIES
+    from .compiler.execution_policy import POLICIES, LEGACY_POLICY
+    explain = subparsers.add_parser("explain-execution", help="account execution and unresolved choices without training or a GPU")
+    explain.add_argument("--p", type=int, default=4)
+    for name in ("m", "k", "n"):
+        explain.add_argument("--"+name, type=int, required=True)
+    explain.add_argument("--environment", required=True)
+    explain.add_argument("--families", nargs="+", choices=ALL_FAMILIES, default=FAMILIES)
+    explain.add_argument("--metadata-mode", choices=("legacy", "prepared"), default="legacy")
+    explain.add_argument("--baseline", default=None)
+    explain.add_argument("--dependency-policy", choices=POLICIES, default=LEGACY_POLICY)
+    explain.add_argument("--cublaslt-algorithm-id")
+    explain.add_argument("--out")
+    explain.set_defaults(func=_explain_execution)
     return parser
 
 

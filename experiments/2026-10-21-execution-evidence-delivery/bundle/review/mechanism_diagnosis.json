@@ -1,0 +1,68 @@
+{
+  "schema": "edmir.mechanism-diagnosis.v1",
+  "M512": {
+    "shape": [
+      4,
+      512,
+      4096,
+      512
+    ],
+    "confirmed_model_defect": "q4-q2 expression is affine in K at fixed M,N; q-independent K tail cancels; archived fit crosses too early",
+    "confirmed_source_facts": [
+      "q4 doubles CTA count against q2",
+      "K mainloop per CTA halves",
+      "serial epilogues per output tile rise from 2 to 4",
+      "additional FP16 output read/write is explicit"
+    ],
+    "not_established": [
+      "how much of the 43.9 us gap is semaphore waiting",
+      "compiled occupancy or memory contention as the unique cause"
+    ],
+    "minimal_discriminating_comparison": "reuse the existing M512/K4096 anchor and M512/K3072 diagnostic; compare fixed q2/q4 under the same source and timing mode; no parameter sweep",
+    "measurement_sequence": [
+      "unprofiled whole-program timings and full-output correctness first",
+      "separate CUDA timeline for host submission and serialized GEMM duration",
+      "only if needed, inspect compiled resource use and kernel stalls for the same q2/q4 pair"
+    ],
+    "falsification": "if the gap appears in CPU submission but not device kernel durations, a kernel-only semaphore explanation is insufficient"
+  },
+  "large_N": {
+    "shape": [
+      4,
+      64,
+      4096,
+      2048
+    ],
+    "confirmed_model_defect": "fused loses separate M,N geometry; host basis changes discretely under small training-data interventions",
+    "confirmed_source_facts": [
+      "n_tiles=16 at g1, so logical A replay differs from unique remote payload",
+      "g2 halves n_tiles and doubles threads per CTA; compiled residency remains unknown",
+      "host stages inputs before per-source GPU GEMMs; fused reads A through peer pointers"
+    ],
+    "not_established": [
+      "physical NVLink/HBM traffic inferred from logical replay",
+      "which component caused the historical 79.5 us host/q2 gap"
+    ],
+    "minimal_discriminating_comparison": "reuse the large-N anchor host/direct/q2; reuse the already frozen equal-tile M64/N1536 and M192/N512 pair at K3072 to separate M,N geometry",
+    "measurement_sequence": [
+      "same legacy implementation for reproducing old-model errors",
+      "prepared metadata as a separately identified control, never mixed into legacy labels",
+      "if the device gap remains, inspect memory traffic separately from primary timing"
+    ],
+    "falsification": "if equal-tile shapes differ while measured traffic is similar, total-traffic-only attribution is insufficient; if metadata mode changes the gap, include CPU execution costs"
+  },
+  "grouped_N_scope": {
+    "confirmed": "archived P4 grouped-N observations are at M64; other M values are not validated by that coverage",
+    "policy": "static legal candidates remain unresolved; absent grouped measurements are not filled with host or neighboring-shape labels",
+    "minimal_discriminating_comparison": "within the existing four priorities compare g1/g2 at the same q and K, including M64 and M256; keep counts, resources and full timing separate"
+  },
+  "baseline_contract": {
+    "identity": "host_nccl_cutlass_sm80_per_source_v1",
+    "metadata_mode": "legacy",
+    "meaning": "NCCL transfers plus P sequential CUTLASS GPU GEMMs per destination; not CPU GEMM",
+    "stronger_baselines": "merged CUTLASS/cuBLASLt are separate implementations; this ledger rejects their IDs until their own execution accounts are supplied"
+  },
+  "ascend_transfer_boundary": "transfer the reasoning about transactions, resource lifetimes and critical paths; do not transfer NPU timings or presume CUDA has the same bottleneck",
+  "new_training_runs": 0,
+  "new_gpu_runs": 0
+}

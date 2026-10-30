@@ -1,0 +1,143 @@
+{
+  "sources": {
+    "experiments/2026-10-28-precision-scoring/datasets-with-evidence-contracts.json": "de3b53d2b70ba7af8a354a03d84565a68c7119f950a04b964a35baffd68f4cc7",
+    "experiments/2026-10-21-runpod-mechanism-collection/remote-run-01/server-backup/work/trace-analysis.json": "efd002e7c624b17bc2ba310f63a31f0bb799be1bc5d65a96d5f749cbc819f9e5",
+    "experiments/2026-10-24-fused-dependency-audit/results.json": "cd5d241126b56792b56a0a272b2c7c2db52daa7ccc9b6efe4c5910847ffc4bb9",
+    "experiments/2026-10-21-runpod-mechanism-collection/remote-run-01/server-backup/work/trace-m512q2/timeline.sqlite": "a58a28bb68fb27545a824bd07e59c794547d684cd86261460c5e5703c5ad0a55",
+    "experiments/2026-10-21-runpod-mechanism-collection/remote-run-01/server-backup/work/trace-m512q4/timeline.sqlite": "60987c31d9124438102e51e03e13142360ea03f42686cf7d8e1145adc2894327",
+    "experiments/2026-10-21-runpod-mechanism-collection/remote-run-01/server-backup/work/trace-largenq2/timeline.sqlite": "df4052060559a06fa351e26c48036bb8e1e68c53038d76899e5cced8e635e73e",
+    "experiments/2026-10-20-offline-predictor/data/component_measurements.jsonl": "0af2a1d9b87666acde7e4779ad95604cb3b293b77a8e0a701012cc5f2ea269b0"
+  },
+  "curvature": {
+    "points_K_us": [
+      [
+        2048,
+        727.9
+      ],
+      [
+        4096,
+        1079.9
+      ],
+      [
+        8192,
+        1529.8
+      ]
+    ],
+    "middle_k": 4096,
+    "middle_us": 1079.9,
+    "chord_us": 995.2,
+    "above_chord_us": 84.70000000000005,
+    "convex_model_minimum_max_absolute_error_us": 42.35000000000002,
+    "convex_model_minimum_max_relative_error": 0.0408173100091562,
+    "noise_free_causal_claim": false,
+    "proof_scope": "fixed M,N original NNLS host basis is a+bK+cK^2 with c>=0; not a restriction on nonlinear residual network"
+  },
+  "traces": {
+    "m512q2": {
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ],
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "profiler": true,
+      "iterations": 100,
+      "local_kernel_median_us": 30.88,
+      "peer_kernel_median_us": 87.999,
+      "gpu_envelope_median_us": 1001.7394999999999,
+      "observed_duration_weighted_chain_median_us": 915.0535,
+      "weighted_chain_over_envelope_median": 0.9153018442946095,
+      "envelope_minus_weighted_chain_median_us": 84.97200000000004,
+      "precedence_checks": 10700,
+      "violations": 0,
+      "a100_archival_scorer_training_eligible": false,
+      "not_identified": [
+        "standalone compute time",
+        "standalone peer transfer time",
+        "semaphore stalls",
+        "CPU-only gaps",
+        "resource contention inflation"
+      ]
+    },
+    "m512q4": {
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ],
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "profiler": true,
+      "iterations": 100,
+      "local_kernel_median_us": 32.576,
+      "peer_kernel_median_us": 90.783,
+      "gpu_envelope_median_us": 1025.7455,
+      "observed_duration_weighted_chain_median_us": 940.9395,
+      "weighted_chain_over_envelope_median": 0.9179620252218121,
+      "envelope_minus_weighted_chain_median_us": 84.14849999999996,
+      "precedence_checks": 10700,
+      "violations": 0,
+      "a100_archival_scorer_training_eligible": false,
+      "not_identified": [
+        "standalone compute time",
+        "standalone peer transfer time",
+        "semaphore stalls",
+        "CPU-only gaps",
+        "resource contention inflation"
+      ]
+    },
+    "largenq2": {
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "profiler": true,
+      "iterations": 100,
+      "local_kernel_median_us": 31.071,
+      "peer_kernel_median_us": 59.008,
+      "gpu_envelope_median_us": 713.108,
+      "observed_duration_weighted_chain_median_us": 621.3734999999999,
+      "weighted_chain_over_envelope_median": 0.8778263169543254,
+      "envelope_minus_weighted_chain_median_us": 87.3540000000001,
+      "precedence_checks": 10700,
+      "violations": 0,
+      "a100_archival_scorer_training_eligible": false,
+      "not_identified": [
+        "standalone compute time",
+        "standalone peer transfer time",
+        "semaphore stalls",
+        "CPU-only gaps",
+        "resource contention inflation"
+      ]
+    }
+  },
+  "component_inventory": {
+    "standalone_collective": {
+      "count": 84,
+      "environments": [
+        "a100-sxm4-80gb-p4-2026-08-29",
+        "a100-sxm4-80gb-p8-2026-08-30"
+      ]
+    },
+    "standalone_gemm": {
+      "count": 72,
+      "environments": [
+        "a100-sxm4-80gb-p4-2026-08-26"
+      ]
+    },
+    "M512_same_shape_standalone_gemm_count": 0,
+    "M512_host_trace_in_collected_trace_set": false
+  },
+  "cross_context_training": false,
+  "missing_matched_components_prevent_causal_decomposition": true,
+  "frozen_six_used": false,
+  "new_gpu_cost": 0,
+  "seconds": 0.14414804195985198
+}

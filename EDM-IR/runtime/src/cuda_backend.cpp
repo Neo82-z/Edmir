@@ -17,6 +17,8 @@
 #include <nvtx3/nvToolsExt.h>
 
 #include "edmir/runtime/validate.hpp"
+#include "edmir/runtime/prepared_execution.hpp"
+#include "edmir/runtime/uniform_workload.hpp"
 #if defined(EDMIR_HAS_CUTLASS)
 #include "edmir/runtime/cutlass_gemm.hpp"
 #endif
@@ -142,6 +144,10 @@ class CudaBackend::Impl {
     }
 #endif
 
+    if (restricted_policy()) validate_uniform_peer_policy(program_);
+    else if (program_.dependency_policy != DependencyPolicy::kResourceQueuesV1)
+      throw std::invalid_argument("unknown dependency policy");
+    if (options_.prepare_metadata) prepared_execution_ = prepare_execution(program_);
     const auto world_size = static_cast<std::size_t>(program_.problem.world_size);
     configure_devices(world_size);
     ranks_.resize(world_size);
@@ -201,15 +207,27 @@ class CudaBackend::Impl {
           EDMIR_CUDA(cudaEventCreateWithFlags(&events_[op][rank], cudaEventDisableTiming));
         }
       }
-      order_ = topological_order(program_);
-      incoming_.resize(program_.ops.size());
-      for (const auto& dependency : program_.dependencies) {
-        auto& predecessors = incoming_[dependency.dst_op];
-        if (std::find(predecessors.begin(), predecessors.end(), dependency.src_op) ==
-            predecessors.end()) {
-          predecessors.push_back(dependency.src_op);
+      order_ = options_.prepare_metadata ? prepared_execution_.order : topological_order(program_);
+      if (!options_.prepare_metadata) {
+        incoming_.resize(program_.ops.size());
+        for (const auto& dependency : program_.dependencies) {
+          auto& predecessors = incoming_[dependency.dst_op];
+          if (std::find(predecessors.begin(), predecessors.end(), dependency.src_op) ==
+              predecessors.end()) {
+            predecessors.push_back(dependency.src_op);
+          }
         }
       }
+      // Workspace initialization also uses the default stream. Complete it
+      // before nonblocking consumer streams can use split-K semaphores.
+      for (std::size_t rank = 0; rank < world_size; ++rank) {
+        EDMIR_CUDA(cudaSetDevice(device_id(rank)));
+        EDMIR_CUDA(cudaStreamSynchronize(nullptr));
+      }
+      uploaded_.assign(program_.buffers.size(), false);
+      missing_uploads_ = std::count_if(program_.buffers.begin(), program_.buffers.end(), [](const auto& b) {
+        return b.role == BufferRole::kInput || b.role == BufferRole::kWeight;
+      });
       prepared_ = true;
     } catch (...) {
       release();
@@ -219,6 +237,12 @@ class CudaBackend::Impl {
 
   void execute() {
     require_prepared();
+    if (restricted_policy()) {
+      require_idle();
+      if (missing_uploads_ != 0)
+        throw std::logic_error("uniform peer input must be fully uploaded before execute");
+    }
+    in_flight_ = true;
     const auto iteration = execution_count_++;
     const NvtxRange execution_range(
         options_.enable_nvtx, "edm.phase:", "runtime.execute", iteration);
@@ -252,6 +276,7 @@ class CudaBackend::Impl {
       EDMIR_CUDA(cudaStreamSynchronize(ranks_[rank].compute));
       EDMIR_CUDA(cudaStreamSynchronize(ranks_[rank].control));
     }
+    in_flight_ = false;
   }
 
   std::size_t find_buffer(std::string_view name) const {
@@ -265,6 +290,8 @@ class CudaBackend::Impl {
 
   void* buffer_data(std::size_t buffer) {
     require_buffer(buffer);
+    if (restricted_policy())
+      throw std::logic_error("uniform peer policy requires copy_from_host; raw mutable buffers are disabled");
     return buffers_[buffer];
   }
 
@@ -276,18 +303,36 @@ class CudaBackend::Impl {
   void copy_from_host(std::size_t buffer, const void* source, std::size_t size_bytes) {
     require_prepared();
     require_copy(buffer, size_bytes);
+    if (restricted_policy()) {
+      require_idle();
+      const auto& b = program_.buffers[buffer];
+      if ((b.role != BufferRole::kInput && b.role != BufferRole::kWeight) || size_bytes != b.size_bytes)
+        throw std::invalid_argument("uniform peer upload requires a complete external matrix");
+    }
     EDMIR_CUDA(cudaSetDevice(device_id(program_.buffers[buffer].rank)));
     EDMIR_CUDA(cudaMemcpy(buffers_[buffer], source, size_bytes, cudaMemcpyHostToDevice));
+    // Pageable H2D may return before DMA completes. A synchronous upload
+    // contract keeps the host allocation and every peer consumer safe.
+    EDMIR_CUDA(cudaStreamSynchronize(nullptr));
+    if (restricted_policy() && !uploaded_[buffer]) --missing_uploads_;
+    uploaded_[buffer] = true;
   }
 
   void copy_to_host(std::size_t buffer, void* destination, std::size_t size_bytes) const {
     require_prepared();
     require_copy(buffer, size_bytes);
+    if (restricted_policy()) require_idle();
     EDMIR_CUDA(cudaSetDevice(device_id(program_.buffers[buffer].rank)));
     EDMIR_CUDA(cudaMemcpy(destination, buffers_[buffer], size_bytes, cudaMemcpyDeviceToHost));
   }
 
  private:
+  bool restricted_policy() const {
+    return program_.dependency_policy == DependencyPolicy::kUniformImmutablePeerV1;
+  }
+  void require_idle() const {
+    if (in_flight_) throw std::logic_error("synchronize all ranks before execution or buffer reuse");
+  }
   struct RankState {
     cudaStream_t comm = nullptr;
     cudaStream_t compute = nullptr;
@@ -368,6 +413,14 @@ class CudaBackend::Impl {
   }
 
   void wait_for_dependencies(std::size_t current) {
+    if (options_.prepare_metadata) {
+      for (const auto& wait : prepared_execution_.ops[current].waits) {
+        EDMIR_CUDA(cudaSetDevice(device_id(wait.rank)));
+        EDMIR_CUDA(cudaStreamWaitEvent(
+            stream_for(program_.ops[current], wait.rank), events_[wait.predecessor][wait.event_rank], 0));
+      }
+      return;
+    }
     const auto current_devices = op_devices(program_.ops[current]);
     for (const auto predecessor : incoming_[current]) {
       const auto predecessor_devices = op_devices(program_.ops[predecessor]);
@@ -491,23 +544,28 @@ class CudaBackend::Impl {
 
   void launch_transfer(std::size_t op_index) {
     const auto& op = program_.ops[op_index];
-    const auto reads = accesses(op_index, false);
-    const auto writes = accesses(op_index, true);
-    if (reads.size() != 1 || writes.size() != 1) {
-      throw std::logic_error("transfer access arity changed after validation");
+    std::size_t source, destination, size_bytes, count;
+    if (options_.prepare_metadata) {
+      const auto& bindings = prepared_execution_.ops[op_index].operands;
+      source = bindings.input;
+      destination = bindings.output;
+      size_bytes = bindings.transfer_bytes;
+      count = bindings.transfer_elements;
+    } else {
+      const auto reads = accesses(op_index, false);
+      const auto writes = accesses(op_index, true);
+      if (reads.size() != 1 || writes.size() != 1)
+        throw std::logic_error("transfer access arity changed after validation");
+      source = reads[0];
+      destination = writes[0];
+      size_bytes = static_cast<std::size_t>(op.rows) *
+                   static_cast<std::size_t>(program_.problem.k) * dtype_size(program_.problem.dtype);
+      if (program_.buffers[source].size_bytes < size_bytes)
+        throw std::logic_error("transfer source buffer is too small");
+      if (program_.buffers[destination].size_bytes < size_bytes)
+        throw std::logic_error("transfer destination buffer is too small");
+      count = size_bytes / dtype_size(program_.problem.dtype);
     }
-    const auto source = reads[0];
-    const auto destination = writes[0];
-    const auto size_bytes = static_cast<std::size_t>(op.rows) *
-                            static_cast<std::size_t>(program_.problem.k) *
-                            dtype_size(program_.problem.dtype);
-    if (program_.buffers[source].size_bytes < size_bytes) {
-      throw std::logic_error("transfer source buffer is too small");
-    }
-    if (program_.buffers[destination].size_bytes < size_bytes) {
-      throw std::logic_error("transfer destination buffer is too small");
-    }
-    const auto count = size_bytes / dtype_size(program_.problem.dtype);
 
     if (op.peer_rank == op.rank) {
       EDMIR_CUDA(cudaSetDevice(device_id(op.rank)));
@@ -531,11 +589,19 @@ class CudaBackend::Impl {
 
   void launch_gemm(std::size_t op_index) {
     const auto& op = program_.ops[op_index];
-    const auto reads = accesses(op_index, false);
-    const auto writes = accesses(op_index, true);
-    const auto activation = find_access_by_role(reads, BufferRole::kStaging);
-    const auto weight = find_access_by_role(reads, BufferRole::kWeight);
-    const auto output = find_access_by_role(writes, BufferRole::kOutput);
+    std::size_t activation, weight, output;
+    if (options_.prepare_metadata) {
+      const auto& bindings = prepared_execution_.ops[op_index].operands;
+      activation = bindings.input;
+      weight = bindings.weight;
+      output = bindings.output;
+    } else {
+      const auto reads = accesses(op_index, false);
+      const auto writes = accesses(op_index, true);
+      activation = find_access_by_role(reads, BufferRole::kStaging);
+      weight = find_access_by_role(reads, BufferRole::kWeight);
+      output = find_access_by_role(writes, BufferRole::kOutput);
+    }
     const auto m = op.rows;
     const auto n = program_.problem.n;
     const auto k = program_.problem.k;
@@ -563,10 +629,17 @@ class CudaBackend::Impl {
   void launch_fused_transfer_gemm(std::size_t op_index) {
 #if defined(EDMIR_HAS_NCCL_DEVICE)
     const auto& op = program_.ops[op_index];
-    const auto reads = accesses(op_index, false);
-    const auto writes = accesses(op_index, true);
-    const auto weight = find_access_by_role(reads, BufferRole::kWeight);
-    const auto output = find_access_by_role(writes, BufferRole::kOutput);
+    std::size_t weight, output;
+    if (options_.prepare_metadata) {
+      const auto& bindings = prepared_execution_.ops[op_index].operands;
+      weight = bindings.weight;
+      output = bindings.output;
+    } else {
+      const auto reads = accesses(op_index, false);
+      const auto writes = accesses(op_index, true);
+      weight = find_access_by_role(reads, BufferRole::kWeight);
+      output = find_access_by_role(writes, BufferRole::kOutput);
+    }
     if (op_index >= fused_windows_.size() ||
         fused_windows_[op_index].windows.size() <= static_cast<std::size_t>(op.rank)) {
       throw std::logic_error("fused op is missing its symmetric input window");
@@ -607,6 +680,13 @@ class CudaBackend::Impl {
             ranks_[op.peer_rank].comm, events_[op_index][op.rank], 0));
         EDMIR_CUDA(cudaEventRecord(
             events_[op_index][op.peer_rank], ranks_[op.peer_rank].comm));
+      }
+      return;
+    }
+    if (options_.prepare_metadata) {
+      for (const auto rank : prepared_execution_.ops[op_index].devices) {
+        EDMIR_CUDA(cudaSetDevice(device_id(rank)));
+        EDMIR_CUDA(cudaEventRecord(events_[op_index][rank], stream_for(op, rank)));
       }
       return;
     }
@@ -661,6 +741,9 @@ class CudaBackend::Impl {
   ProgramView program_;
   CudaBackendOptions options_;
   bool prepared_ = false;
+  bool in_flight_ = false;
+  std::vector<bool> uploaded_;
+  std::size_t missing_uploads_ = 0;
   std::vector<RankState> ranks_;
   std::vector<void*> buffers_;
   std::vector<bool> nccl_allocated_;
@@ -673,6 +756,7 @@ class CudaBackend::Impl {
   std::vector<std::vector<cudaEvent_t>> events_;
   std::vector<std::size_t> order_;
   std::vector<std::vector<std::size_t>> incoming_;
+  PreparedExecution prepared_execution_;
   std::size_t execution_count_ = 0;
 };
 
@@ -690,7 +774,7 @@ std::size_t CudaBackend::find_buffer(std::string_view name) const {
 }
 void* CudaBackend::buffer_data(std::size_t buffer) { return impl_->buffer_data(buffer); }
 const void* CudaBackend::buffer_data(std::size_t buffer) const {
-  return impl_->buffer_data(buffer);
+  return std::as_const(*impl_).buffer_data(buffer);
 }
 void CudaBackend::copy_from_host(
     std::size_t buffer, const void* source, std::size_t size_bytes) {

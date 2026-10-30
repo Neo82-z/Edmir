@@ -1,0 +1,1857 @@
+{
+  "axis": "M",
+  "held_out": 512,
+  "model": {
+    "schema": "edmir.retained-regime.v1",
+    "variant": "retained_1",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "models": {
+      "fused": {
+        "coefficients_us": [
+          186.5934726318501,
+          127.35669026012327,
+          0.0,
+          0.0,
+          31.409949892086832,
+          22.866979525602407,
+          333.22038518810245,
+          26.741440743071017
+        ],
+        "training_scales": [
+          1.0,
+          0.6467639224853002,
+          0.7171371656006361,
+          0.7498644465652536,
+          3.1847852585154217,
+          1.392742669288603,
+          0.9136856289618595,
+          7.056658456481267
+        ],
+        "objective_us2": 18209.21580293583,
+        "kkt_relative_violation": 4.206457622518686e-16,
+        "unregularized_rank": 8,
+        "feature_count": 8,
+        "ridge": 1e-06,
+        "names": [
+          "fixed",
+          "grouped_partition_depth_64",
+          "dynamic_smem_optins_over_16",
+          "SM_spread_deficit",
+          "ordered_epilogue_boundaries",
+          "extra_serial_output_MiB",
+          "latency_depth_64",
+          "throughput_logical_A_MiB"
+        ],
+        "training_shapes": [
+          [
+            4,
+            64,
+            1024,
+            512
+          ],
+          [
+            4,
+            64,
+            3072,
+            512
+          ],
+          [
+            4,
+            64,
+            3072,
+            1536
+          ],
+          [
+            4,
+            64,
+            4096,
+            2048
+          ],
+          [
+            4,
+            64,
+            8192,
+            512
+          ],
+          [
+            4,
+            192,
+            3072,
+            512
+          ],
+          [
+            4,
+            192,
+            3072,
+            1536
+          ],
+          [
+            4,
+            256,
+            8192,
+            512
+          ]
+        ],
+        "config_ids": [
+          "0584b8531e9e8d64206b099aa1aa694fdd9083561f040d40344565a0d4ab02eb",
+          "05a18b400fc2bbc92ef7020723561b4f865d9e87bebcab90420fdbc13b0570c8",
+          "0c5f0fed104b013aa919794eb322cc35116c914a2bad733964faa2ca0f2889a8",
+          "0c9404ea9dd0ac03d93b3fb9a172913d4d6460a92e49bfebb999a433d9fdbcee",
+          "0e00ffbbc35335459f11a56852092d427f69f22b65caa1902218e59f16012cd9",
+          "16e87d4223ca0a53fe8ade581c0fa2e7f0a67daf798d5e3a4677189f72ace842",
+          "20dfbb56745f2f06896db0b68c936ba1c20c795e7ffc9483d811e11e40eed9dc",
+          "24bb96d632ffc02ae4927433266e119096930613c09e90b31506a75ffb8c5a8a",
+          "357279e5d20c7de901ef736f231e29d521af2c4a993c80525a7958f56442cff8",
+          "385f868ef19039f6b49d3cd0f4d109fe7905ec01167e46dc602f83b12d78f31e",
+          "3ba6e3f9962dbe04d02ac9cf63f31fb57f70ffe82f89ce225d0c01179708ff49",
+          "42f29d0dcd3544c980a25a350f4a02afe5900ca9a5bf6ddd452088da256720f9",
+          "44d43f75c58a2e949c3aeb5a94aed3fbadb2d0c89f26ea79d66a3868846daaa3",
+          "51164340d38dd7b02978798df84ec4a6c88ba2f5430e4bf0909f1cce951bc6f3",
+          "57ec2cc034c7f7ed12d3fb400147e778ae06cf94aa116639be402129cedc8c25",
+          "57f7c9110dc0100ab17040e1ded9e8c832a5872c21dd35cb990d0965e0c90f7b",
+          "615f899c90116440ee674f7c978f050b6d04c53cc1c892a05d9d4a4139fb285a",
+          "6187d0570cd833960e6b65f1512a51fb2d6d9a9303e2598422586ac09784ecf1",
+          "6be5898c07de5a61f8de8d1c9e401edfb93a001055f62ee0e58a52efe06829f8",
+          "6bede1b9a83cd7492a88773132cccbcb3a7d47edf4260fd07d6f0d23f4709c2d",
+          "7243723b0fd38c2bee898d3744092ac18cf78a9ba62892db8d1df7b6d9795d6d",
+          "8bb5966bb9709a393a5b45e327e8b34276bc1a45b57773a1662f5387d2a699a5",
+          "9137b6dfb622aafe6157abe64831f3e51ea8b5051d2b98ed5ebe1a8f5b18bae0",
+          "9772bec9ff8bb5c85a7ff059ceaaa5c3f381e758bb65f2aa1da08b6e6ee8f667",
+          "9ab58cd593577addd1ff4b5c00a1cc6fe01bfefe44d8527ecf56d90b5a7b0724",
+          "9e08915e02bf94f98423f0414ae5ff7f6c0417236810a55d8f5fffe7e9244890",
+          "b51e85d04e1c453433d9056e7f3763534e3e854f3d107d02feb015db560ccb1a",
+          "b53794a42545d3ab62858b6ac2f9e628831f9a69ec614aedea4658acb4669284",
+          "c9d7ff01e98490c1d12ab2f064633f1e79001d15d03ba9bd67d1ec3c100fe15f",
+          "d1979f4cb6922f6376773ce9f2271eb9ef411b441d79a4cda47d01f2cafc95ec",
+          "d26dfdf2c04c9d494f3246ab1122d3ec152b690177d217b403bb6b3c8f4e625d",
+          "eb38ea8ac3a18cc877a2ce4884cad135b4c18deefe022b5a2add8a1dfd3d1941",
+          "f0e6afc0312485d7c503c3c9d2b82b2b28c2a896a2da6a7d0ad1163274db3d8d",
+          "f64be5045b327833707bb444def427095681f8c1785da4d6b5d45c0c50b93674",
+          "fba81d6bcc508535e94f551e94665e76efe8f0ecc4ff573be949b70059c742b7"
+        ],
+        "families": [
+          "splitk2",
+          "splitk2_groupedn2",
+          "splitk4",
+          "splitk4_groupedn2",
+          "splitk8",
+          "splitk8_groupedn2"
+        ],
+        "family_shapes": {
+          "splitk2": [
+            [
+              4,
+              64,
+              3072,
+              512
+            ],
+            [
+              4,
+              64,
+              3072,
+              1536
+            ],
+            [
+              4,
+              64,
+              4096,
+              2048
+            ],
+            [
+              4,
+              64,
+              8192,
+              512
+            ],
+            [
+              4,
+              192,
+              3072,
+              512
+            ],
+            [
+              4,
+              192,
+              3072,
+              1536
+            ],
+            [
+              4,
+              256,
+              8192,
+              512
+            ]
+          ],
+          "splitk2_groupedn2": [
+            [
+              4,
+              64,
+              1024,
+              512
+            ],
+            [
+              4,
+              64,
+              3072,
+              512
+            ],
+            [
+              4,
+              64,
+              3072,
+              1536
+            ],
+            [
+              4,
+              64,
+              4096,
+              2048
+            ],
+            [
+              4,
+              64,
+              8192,
+              512
+            ],
+            [
+              4,
+              192,
+              3072,
+              512
+            ],
+            [
+              4,
+              192,
+              3072,
+              1536
+            ],
+            [
+              4,
+              256,
+              8192,
+              512
+            ]
+          ],
+          "splitk4": [
+            [
+              4,
+              64,
+              1024,
+              512
+            ],
+            [
+              4,
+              64,
+              3072,
+              512
+            ],
+            [
+              4,
+              64,
+              3072,
+              1536
+            ],
+            [
+              4,
+              64,
+              4096,
+              2048
+            ],
+            [
+              4,
+              64,
+              8192,
+              512
+            ],
+            [
+              4,
+              192,
+              3072,
+              512
+            ],
+            [
+              4,
+              192,
+              3072,
+              1536
+            ],
+            [
+              4,
+              256,
+              8192,
+              512
+            ]
+          ],
+          "splitk4_groupedn2": [
+            [
+              4,
+              64,
+              1024,
+              512
+            ],
+            [
+              4,
+              64,
+              3072,
+              512
+            ],
+            [
+              4,
+              64,
+              3072,
+              1536
+            ],
+            [
+              4,
+              64,
+              4096,
+              2048
+            ],
+            [
+              4,
+              64,
+              8192,
+              512
+            ],
+            [
+              4,
+              192,
+              3072,
+              512
+            ],
+            [
+              4,
+              192,
+              3072,
+              1536
+            ],
+            [
+              4,
+              256,
+              8192,
+              512
+            ]
+          ],
+          "splitk8": [
+            [
+              4,
+              64,
+              8192,
+              512
+            ],
+            [
+              4,
+              256,
+              8192,
+              512
+            ]
+          ],
+          "splitk8_groupedn2": [
+            [
+              4,
+              64,
+              8192,
+              512
+            ],
+            [
+              4,
+              256,
+              8192,
+              512
+            ]
+          ]
+        },
+        "feature_bounds": [
+          [
+            1.0,
+            1.0
+          ],
+          [
+            0.0,
+            2.0
+          ],
+          [
+            0.0,
+            1.0
+          ],
+          [
+            0.0,
+            0.962962962962963
+          ],
+          [
+            1.0,
+            7.0
+          ],
+          [
+            0.125,
+            3.5
+          ],
+          [
+            0.125,
+            2.0
+          ],
+          [
+            0.25,
+            16.0
+          ]
+        ],
+        "selected_interval": 11,
+        "interval_count": 16,
+        "interval_certificates": [
+          {
+            "interval": 0,
+            "normalized_ratio_lower": 0.0,
+            "normalized_ratio_upper": 0.12947851091229653,
+            "objective_us2": 62636.11702177484,
+            "kkt_relative_violation": 0.0,
+            "visited_faces": 102,
+            "branch_feasibility_error_us": 2.2737367544323206e-13
+          },
+          {
+            "interval": 1,
+            "normalized_ratio_lower": 0.12947851091229653,
+            "normalized_ratio_upper": 0.12947851091229656,
+            "objective_us2": 62636.11702177483,
+            "kkt_relative_violation": 1.6464528485531515e-16,
+            "visited_faces": 102,
+            "branch_feasibility_error_us": 1.1368683772161603e-13
+          },
+          {
+            "interval": 2,
+            "normalized_ratio_lower": 0.12947851091229656,
+            "normalized_ratio_upper": 0.25895702182459307,
+            "objective_us2": 49311.76694007067,
+            "kkt_relative_violation": 7.805662151641609e-17,
+            "visited_faces": 102,
+            "branch_feasibility_error_us": 2.2737367544323206e-13
+          },
+          {
+            "interval": 3,
+            "normalized_ratio_lower": 0.25895702182459307,
+            "normalized_ratio_upper": 0.2589570218245931,
+            "objective_us2": 49311.76694007066,
+            "kkt_relative_violation": 7.805662151641607e-17,
+            "visited_faces": 102,
+            "branch_feasibility_error_us": 1.1368683772161603e-13
+          },
+          {
+            "interval": 4,
+            "normalized_ratio_lower": 0.2589570218245931,
+            "normalized_ratio_upper": 0.3884355327368897,
+            "objective_us2": 40065.39925212264,
+            "kkt_relative_violation": 1.464707665816903e-16,
+            "visited_faces": 101,
+            "branch_feasibility_error_us": 2.2737367544323206e-13
+          },
+          {
+            "interval": 5,
+            "normalized_ratio_lower": 0.3884355327368897,
+            "normalized_ratio_upper": 0.5179140436491861,
+            "objective_us2": 33488.867642033656,
+            "kkt_relative_violation": 4.206457622518686e-16,
+            "visited_faces": 101,
+            "branch_feasibility_error_us": 2.2737367544323206e-13
+          },
+          {
+            "interval": 6,
+            "normalized_ratio_lower": 0.5179140436491861,
+            "normalized_ratio_upper": 0.5179140436491863,
+            "objective_us2": 33488.867642033685,
+            "kkt_relative_violation": 2.804305081679124e-16,
+            "visited_faces": 101,
+            "branch_feasibility_error_us": 2.2737367544323206e-13
+          },
+          {
+            "interval": 7,
+            "normalized_ratio_lower": 0.5179140436491863,
+            "normalized_ratio_upper": 0.7768710654737794,
+            "objective_us2": 25288.23372172418,
+            "kkt_relative_violation": 2.681033385124074e-16,
+            "visited_faces": 101,
+            "branch_feasibility_error_us": 2.2737367544323206e-13
+          },
+          {
+            "interval": 8,
+            "normalized_ratio_lower": 0.7768710654737794,
+            "normalized_ratio_upper": 1.0358280872983723,
+            "objective_us2": 20825.878266260253,
+            "kkt_relative_violation": 1.3256160220081694e-16,
+            "visited_faces": 101,
+            "branch_feasibility_error_us": 2.2737367544323206e-13
+          },
+          {
+            "interval": 9,
+            "normalized_ratio_lower": 1.0358280872983723,
+            "normalized_ratio_upper": 1.165306598210669,
+            "objective_us2": 19577.960314980555,
+            "kkt_relative_violation": 2.651232044016339e-16,
+            "visited_faces": 77,
+            "branch_feasibility_error_us": 1.1368683772161603e-13
+          },
+          {
+            "interval": 10,
+            "normalized_ratio_lower": 1.165306598210669,
+            "normalized_ratio_upper": 1.5537421309475588,
+            "objective_us2": 18226.830904233822,
+            "kkt_relative_violation": 2.6547189247370486e-16,
+            "visited_faces": 77,
+            "branch_feasibility_error_us": 2.2737367544323206e-13
+          },
+          {
+            "interval": 11,
+            "normalized_ratio_lower": 1.5537421309475588,
+            "normalized_ratio_upper": 2.0716561745967446,
+            "objective_us2": 18209.21580293583,
+            "kkt_relative_violation": 2.6992630012502613e-16,
+            "visited_faces": 13,
+            "branch_feasibility_error_us": 2.2737367544323206e-13
+          },
+          {
+            "interval": 12,
+            "normalized_ratio_lower": 2.0716561745967446,
+            "normalized_ratio_upper": 2.330613196421338,
+            "objective_us2": 18929.513325752938,
+            "kkt_relative_violation": 0.0,
+            "visited_faces": 141,
+            "branch_feasibility_error_us": 2.2737367544323206e-13
+          },
+          {
+            "interval": 13,
+            "normalized_ratio_lower": 2.330613196421338,
+            "normalized_ratio_upper": 4.143312349193489,
+            "objective_us2": 19709.25879522018,
+            "kkt_relative_violation": 0.0,
+            "visited_faces": 141,
+            "branch_feasibility_error_us": 1.1368683772161603e-13
+          },
+          {
+            "interval": 14,
+            "normalized_ratio_lower": 4.143312349193489,
+            "normalized_ratio_upper": 4.661226392842676,
+            "objective_us2": 25948.746370138237,
+            "kkt_relative_violation": 1.5310943118901241e-16,
+            "visited_faces": 141,
+            "branch_feasibility_error_us": 1.1368683772161603e-13
+          },
+          {
+            "interval": 15,
+            "normalized_ratio_lower": 4.661226392842676,
+            "normalized_ratio_upper": null,
+            "objective_us2": 27449.69166127435,
+            "kkt_relative_violation": 0.0,
+            "visited_faces": 141,
+            "branch_feasibility_error_us": 2.2737367544323206e-13
+          }
+        ],
+        "training_branch_counts": {
+          "latency": 28,
+          "throughput": 7
+        },
+        "crossover_W_over_L": 12.460823946983608,
+        "crossover_note": "Null means zero throughput coefficient; no finite crossover. A finite ratio alone does not establish branch identification.",
+        "optimality_scope": "All training-ratio cones enumerated, each numerically KKT-certified, fixed basis/weights/ridge only; no physical identification.",
+        "max_faces_per_interval": 256
+      }
+    },
+    "training_config_ids": [
+      "0584b8531e9e8d64206b099aa1aa694fdd9083561f040d40344565a0d4ab02eb",
+      "05a18b400fc2bbc92ef7020723561b4f865d9e87bebcab90420fdbc13b0570c8",
+      "0c5f0fed104b013aa919794eb322cc35116c914a2bad733964faa2ca0f2889a8",
+      "0c9404ea9dd0ac03d93b3fb9a172913d4d6460a92e49bfebb999a433d9fdbcee",
+      "0e00ffbbc35335459f11a56852092d427f69f22b65caa1902218e59f16012cd9",
+      "16e87d4223ca0a53fe8ade581c0fa2e7f0a67daf798d5e3a4677189f72ace842",
+      "20dfbb56745f2f06896db0b68c936ba1c20c795e7ffc9483d811e11e40eed9dc",
+      "24bb96d632ffc02ae4927433266e119096930613c09e90b31506a75ffb8c5a8a",
+      "357279e5d20c7de901ef736f231e29d521af2c4a993c80525a7958f56442cff8",
+      "385f868ef19039f6b49d3cd0f4d109fe7905ec01167e46dc602f83b12d78f31e",
+      "3ba6e3f9962dbe04d02ac9cf63f31fb57f70ffe82f89ce225d0c01179708ff49",
+      "42f29d0dcd3544c980a25a350f4a02afe5900ca9a5bf6ddd452088da256720f9",
+      "44d43f75c58a2e949c3aeb5a94aed3fbadb2d0c89f26ea79d66a3868846daaa3",
+      "51164340d38dd7b02978798df84ec4a6c88ba2f5430e4bf0909f1cce951bc6f3",
+      "57ec2cc034c7f7ed12d3fb400147e778ae06cf94aa116639be402129cedc8c25",
+      "57f7c9110dc0100ab17040e1ded9e8c832a5872c21dd35cb990d0965e0c90f7b",
+      "615f899c90116440ee674f7c978f050b6d04c53cc1c892a05d9d4a4139fb285a",
+      "6187d0570cd833960e6b65f1512a51fb2d6d9a9303e2598422586ac09784ecf1",
+      "6be5898c07de5a61f8de8d1c9e401edfb93a001055f62ee0e58a52efe06829f8",
+      "6bede1b9a83cd7492a88773132cccbcb3a7d47edf4260fd07d6f0d23f4709c2d",
+      "7243723b0fd38c2bee898d3744092ac18cf78a9ba62892db8d1df7b6d9795d6d",
+      "8bb5966bb9709a393a5b45e327e8b34276bc1a45b57773a1662f5387d2a699a5",
+      "9137b6dfb622aafe6157abe64831f3e51ea8b5051d2b98ed5ebe1a8f5b18bae0",
+      "9772bec9ff8bb5c85a7ff059ceaaa5c3f381e758bb65f2aa1da08b6e6ee8f667",
+      "9ab58cd593577addd1ff4b5c00a1cc6fe01bfefe44d8527ecf56d90b5a7b0724",
+      "9e08915e02bf94f98423f0414ae5ff7f6c0417236810a55d8f5fffe7e9244890",
+      "b51e85d04e1c453433d9056e7f3763534e3e854f3d107d02feb015db560ccb1a",
+      "b53794a42545d3ab62858b6ac2f9e628831f9a69ec614aedea4658acb4669284",
+      "c9d7ff01e98490c1d12ab2f064633f1e79001d15d03ba9bd67d1ec3c100fe15f",
+      "d1979f4cb6922f6376773ce9f2271eb9ef411b441d79a4cda47d01f2cafc95ec",
+      "d26dfdf2c04c9d494f3246ab1122d3ec152b690177d217b403bb6b3c8f4e625d",
+      "eb38ea8ac3a18cc877a2ce4884cad135b4c18deefe022b5a2add8a1dfd3d1941",
+      "f0e6afc0312485d7c503c3c9d2b82b2b28c2a896a2da6a7d0ad1163274db3d8d",
+      "f64be5045b327833707bb444def427095681f8c1785da4d6b5d45c0c50b93674",
+      "fba81d6bcc508535e94f551e94665e76efe8f0ecc4ff573be949b70059c742b7"
+    ],
+    "training_shapes": [
+      [
+        4,
+        64,
+        1024,
+        512
+      ],
+      [
+        4,
+        64,
+        3072,
+        512
+      ],
+      [
+        4,
+        64,
+        3072,
+        1536
+      ],
+      [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      [
+        4,
+        64,
+        8192,
+        512
+      ],
+      [
+        4,
+        192,
+        3072,
+        512
+      ],
+      [
+        4,
+        192,
+        3072,
+        1536
+      ],
+      [
+        4,
+        256,
+        8192,
+        512
+      ]
+    ],
+    "quality_mode": "stable_only",
+    "compiler_admission": false,
+    "retained_fraction": 1.0,
+    "retained_fraction_selection": "fixed declared grid; development evidence only"
+  },
+  "predictions": [
+    {
+      "predicted_us": 1001.953839126778,
+      "contributions_us": {
+        "fixed": 186.5934726318501,
+        "grouped_partition_depth_64": 0.0,
+        "dynamic_smem_optins_over_16": 0.0,
+        "SM_spread_deficit": 0.0,
+        "ordered_epilogue_boundaries": 31.409949892086832,
+        "extra_serial_output_MiB": 22.866979525602407,
+        "latency_depth_64": 333.22038518810245,
+        "throughput_logical_A_MiB": 427.8630518891363
+      },
+      "geometry": {
+        "kind": "fused",
+        "q": 2,
+        "g": 1,
+        "tile": [
+          64,
+          128,
+          32
+        ],
+        "partition_iterations": 64,
+        "ctas": 64,
+        "unique_A_bytes": 4194304,
+        "logical_A_replay_bytes": 16777216,
+        "extra_serial_output_bytes": 1048576,
+        "threads_per_cta": 128,
+        "shared_storage_bytes": 36864,
+        "gemm_count": 16,
+        "queue_edges": 31,
+        "unit_duration_chain": 11,
+        "counter_scope": "Per GEMM, except graph counts. Logical bytes, not measured traffic."
+      },
+      "execution_detail": {
+        "m_tiles": 8,
+        "n_tiles": 4,
+        "output_tiles": 32,
+        "partition_k_elements": 2048,
+        "partition_A_bytes": 2097152,
+        "partition_B_bytes": 2097152,
+        "max_valid_A_bytes_per_CTA": 262144,
+        "max_valid_B_bytes_per_CTA": 524288,
+        "logical_B_replay_bytes": 33554432,
+        "semaphore_slots": 32,
+        "ordered_boundaries_per_output_tile": 1,
+        "registers_per_thread": 140,
+        "warps_per_CTA": 4,
+        "raw_registers_per_CTA": 17920,
+        "register_only_resident_block_upper_bound": 3,
+        "maximum_smem_resident_block_upper_bound": 4,
+        "combined_resident_block_upper_bound": 3,
+        "possible_active_SM_upper_bound": 64,
+        "SM_spread_deficit_proxy": 0.40740740740740744,
+        "grid_warps": 256,
+        "resource_capacity_round_lower_bound": 1,
+        "dynamic_smem_optin_calls_per_execution": 0,
+        "cudaGetLastError_calls_per_execution": 16,
+        "achieved_occupancy": null,
+        "actual_smem_carveout": null,
+        "scope": "Per GEMM unless named per_execution; optimistic resource bounds only."
+      },
+      "feature_extrapolation": [],
+      "family_seen": true,
+      "shape_seen": false,
+      "coefficient_identification": "full_column_rank_not_causal_identification",
+      "training_shape_count_for_implementation": 8,
+      "training_shapes_for_exact_candidate_family": [
+        [
+          4,
+          64,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ]
+      ],
+      "library_algorithm_prediction": "fixed audited kernel family",
+      "compiler_admission": false,
+      "physical_bandwidth_or_stall_attribution": null,
+      "regime": {
+        "composition": "common_plus_max_plus_retained_min",
+        "retained_fraction": 1.0,
+        "latency_proxy_us": 333.22038518810245,
+        "throughput_proxy_us": 427.8630518891363,
+        "retained_smaller_proxy_us": 333.22038518810245,
+        "dominant_proxy": "throughput",
+        "branch_margin_us": 94.64266670103382,
+        "W_over_L": 16.0,
+        "physical_bottleneck_identified": false,
+        "physical_overlap_fraction_identified": false
+      },
+      "config_id": "276e1fcae0d09fb00de2dc2a05edbd10d98d2be7ab0017bb633a65e45e3ded7c",
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ],
+      "candidate_id": "splitk2@prepared",
+      "family": "splitk2",
+      "observed_us": 1006.0514999999999,
+      "process_medians_us": [
+        1009.4759999999998,
+        1006.0514999999999,
+        1005.7770000000002
+      ],
+      "error_us": -4.097660873221912,
+      "absolute_percentage_error": 0.004073013034841533,
+      "quality_flags": [],
+      "eligible_for_calibration": true,
+      "scope": "development_leave_M_out"
+    },
+    {
+      "predicted_us": 915.3790034423332,
+      "contributions_us": {
+        "fixed": 186.5934726318501,
+        "grouped_partition_depth_64": 127.35669026012327,
+        "dynamic_smem_optins_over_16": 0.0,
+        "SM_spread_deficit": 0.0,
+        "ordered_epilogue_boundaries": 31.409949892086832,
+        "extra_serial_output_MiB": 22.866979525602407,
+        "latency_depth_64": 333.22038518810245,
+        "throughput_logical_A_MiB": 213.93152594456814
+      },
+      "geometry": {
+        "kind": "fused",
+        "q": 2,
+        "g": 2,
+        "tile": [
+          64,
+          256,
+          32
+        ],
+        "partition_iterations": 64,
+        "ctas": 32,
+        "unique_A_bytes": 4194304,
+        "logical_A_replay_bytes": 8388608,
+        "extra_serial_output_bytes": 1048576,
+        "threads_per_cta": 256,
+        "shared_storage_bytes": 61440,
+        "gemm_count": 16,
+        "queue_edges": 31,
+        "unit_duration_chain": 11,
+        "counter_scope": "Per GEMM, except graph counts. Logical bytes, not measured traffic."
+      },
+      "execution_detail": {
+        "m_tiles": 8,
+        "n_tiles": 2,
+        "output_tiles": 16,
+        "partition_k_elements": 2048,
+        "partition_A_bytes": 2097152,
+        "partition_B_bytes": 2097152,
+        "max_valid_A_bytes_per_CTA": 262144,
+        "max_valid_B_bytes_per_CTA": 1048576,
+        "logical_B_replay_bytes": 33554432,
+        "semaphore_slots": 16,
+        "ordered_boundaries_per_output_tile": 1,
+        "registers_per_thread": 134,
+        "warps_per_CTA": 8,
+        "raw_registers_per_CTA": 34304,
+        "register_only_resident_block_upper_bound": 1,
+        "maximum_smem_resident_block_upper_bound": 2,
+        "combined_resident_block_upper_bound": 1,
+        "possible_active_SM_upper_bound": 32,
+        "SM_spread_deficit_proxy": 0.7037037037037037,
+        "grid_warps": 256,
+        "resource_capacity_round_lower_bound": 1,
+        "dynamic_smem_optin_calls_per_execution": 16,
+        "cudaGetLastError_calls_per_execution": 16,
+        "achieved_occupancy": null,
+        "actual_smem_carveout": null,
+        "scope": "Per GEMM unless named per_execution; optimistic resource bounds only."
+      },
+      "feature_extrapolation": [],
+      "family_seen": true,
+      "shape_seen": false,
+      "coefficient_identification": "full_column_rank_not_causal_identification",
+      "training_shape_count_for_implementation": 8,
+      "training_shapes_for_exact_candidate_family": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ]
+      ],
+      "library_algorithm_prediction": "fixed audited kernel family",
+      "compiler_admission": false,
+      "physical_bandwidth_or_stall_attribution": null,
+      "regime": {
+        "composition": "common_plus_max_plus_retained_min",
+        "retained_fraction": 1.0,
+        "latency_proxy_us": 333.22038518810245,
+        "throughput_proxy_us": 213.93152594456814,
+        "retained_smaller_proxy_us": 213.93152594456814,
+        "dominant_proxy": "latency",
+        "branch_margin_us": 119.28885924353432,
+        "W_over_L": 8.0,
+        "physical_bottleneck_identified": false,
+        "physical_overlap_fraction_identified": false
+      },
+      "config_id": "3418a67557dc54577fe771aba445c1398564c41930507e3bf46c785e07144a24",
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ],
+      "candidate_id": "splitk2_groupedn2@prepared",
+      "family": "splitk2_groupedn2",
+      "observed_us": 776.282,
+      "process_medians_us": [
+        776.282,
+        770.4169999999999,
+        777.7825
+      ],
+      "error_us": 139.09700344233318,
+      "absolute_percentage_error": 0.17918360008648038,
+      "quality_flags": [],
+      "eligible_for_calibration": true,
+      "scope": "development_leave_M_out"
+    },
+    {
+      "predicted_us": 811.6829798574684,
+      "contributions_us": {
+        "fixed": 186.5934726318501,
+        "grouped_partition_depth_64": 0.0,
+        "dynamic_smem_optins_over_16": 0.0,
+        "SM_spread_deficit": 0.0,
+        "ordered_epilogue_boundaries": 31.409949892086832,
+        "extra_serial_output_MiB": 22.866979525602407,
+        "latency_depth_64": 249.91528889107684,
+        "throughput_logical_A_MiB": 320.8972889168522
+      },
+      "geometry": {
+        "kind": "fused",
+        "q": 2,
+        "g": 1,
+        "tile": [
+          64,
+          128,
+          32
+        ],
+        "partition_iterations": 48,
+        "ctas": 64,
+        "unique_A_bytes": 3145728,
+        "logical_A_replay_bytes": 12582912,
+        "extra_serial_output_bytes": 1048576,
+        "threads_per_cta": 128,
+        "shared_storage_bytes": 36864,
+        "gemm_count": 16,
+        "queue_edges": 31,
+        "unit_duration_chain": 11,
+        "counter_scope": "Per GEMM, except graph counts. Logical bytes, not measured traffic."
+      },
+      "execution_detail": {
+        "m_tiles": 8,
+        "n_tiles": 4,
+        "output_tiles": 32,
+        "partition_k_elements": 1536,
+        "partition_A_bytes": 1572864,
+        "partition_B_bytes": 1572864,
+        "max_valid_A_bytes_per_CTA": 196608,
+        "max_valid_B_bytes_per_CTA": 393216,
+        "logical_B_replay_bytes": 25165824,
+        "semaphore_slots": 32,
+        "ordered_boundaries_per_output_tile": 1,
+        "registers_per_thread": 140,
+        "warps_per_CTA": 4,
+        "raw_registers_per_CTA": 17920,
+        "register_only_resident_block_upper_bound": 3,
+        "maximum_smem_resident_block_upper_bound": 4,
+        "combined_resident_block_upper_bound": 3,
+        "possible_active_SM_upper_bound": 64,
+        "SM_spread_deficit_proxy": 0.40740740740740744,
+        "grid_warps": 256,
+        "resource_capacity_round_lower_bound": 1,
+        "dynamic_smem_optin_calls_per_execution": 0,
+        "cudaGetLastError_calls_per_execution": 16,
+        "achieved_occupancy": null,
+        "actual_smem_carveout": null,
+        "scope": "Per GEMM unless named per_execution; optimistic resource bounds only."
+      },
+      "feature_extrapolation": [],
+      "family_seen": true,
+      "shape_seen": false,
+      "coefficient_identification": "full_column_rank_not_causal_identification",
+      "training_shape_count_for_implementation": 8,
+      "training_shapes_for_exact_candidate_family": [
+        [
+          4,
+          64,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ]
+      ],
+      "library_algorithm_prediction": "fixed audited kernel family",
+      "compiler_admission": false,
+      "physical_bandwidth_or_stall_attribution": null,
+      "regime": {
+        "composition": "common_plus_max_plus_retained_min",
+        "retained_fraction": 1.0,
+        "latency_proxy_us": 249.91528889107684,
+        "throughput_proxy_us": 320.8972889168522,
+        "retained_smaller_proxy_us": 249.91528889107684,
+        "dominant_proxy": "throughput",
+        "branch_margin_us": 70.98200002577533,
+        "W_over_L": 16.0,
+        "physical_bottleneck_identified": false,
+        "physical_overlap_fraction_identified": false
+      },
+      "config_id": "379959166e1e1b1e9f3b9b3e5ec2938ab7c4b977d3c7601fcc9d0051d062b7fd",
+      "shape": [
+        4,
+        512,
+        3072,
+        512
+      ],
+      "candidate_id": "splitk2@prepared",
+      "family": "splitk2",
+      "observed_us": 832.982,
+      "process_medians_us": [
+        832.897,
+        835.3975,
+        832.982
+      ],
+      "error_us": -21.299020142531617,
+      "absolute_percentage_error": 0.025569604316217687,
+      "quality_flags": [],
+      "eligible_for_calibration": true,
+      "scope": "development_leave_M_out"
+    },
+    {
+      "predicted_us": 746.7518530941347,
+      "contributions_us": {
+        "fixed": 186.5934726318501,
+        "grouped_partition_depth_64": 95.51751769509245,
+        "dynamic_smem_optins_over_16": 0.0,
+        "SM_spread_deficit": 0.0,
+        "ordered_epilogue_boundaries": 31.409949892086832,
+        "extra_serial_output_MiB": 22.866979525602407,
+        "latency_depth_64": 249.91528889107684,
+        "throughput_logical_A_MiB": 160.4486444584261
+      },
+      "geometry": {
+        "kind": "fused",
+        "q": 2,
+        "g": 2,
+        "tile": [
+          64,
+          256,
+          32
+        ],
+        "partition_iterations": 48,
+        "ctas": 32,
+        "unique_A_bytes": 3145728,
+        "logical_A_replay_bytes": 6291456,
+        "extra_serial_output_bytes": 1048576,
+        "threads_per_cta": 256,
+        "shared_storage_bytes": 61440,
+        "gemm_count": 16,
+        "queue_edges": 31,
+        "unit_duration_chain": 11,
+        "counter_scope": "Per GEMM, except graph counts. Logical bytes, not measured traffic."
+      },
+      "execution_detail": {
+        "m_tiles": 8,
+        "n_tiles": 2,
+        "output_tiles": 16,
+        "partition_k_elements": 1536,
+        "partition_A_bytes": 1572864,
+        "partition_B_bytes": 1572864,
+        "max_valid_A_bytes_per_CTA": 196608,
+        "max_valid_B_bytes_per_CTA": 786432,
+        "logical_B_replay_bytes": 25165824,
+        "semaphore_slots": 16,
+        "ordered_boundaries_per_output_tile": 1,
+        "registers_per_thread": 134,
+        "warps_per_CTA": 8,
+        "raw_registers_per_CTA": 34304,
+        "register_only_resident_block_upper_bound": 1,
+        "maximum_smem_resident_block_upper_bound": 2,
+        "combined_resident_block_upper_bound": 1,
+        "possible_active_SM_upper_bound": 32,
+        "SM_spread_deficit_proxy": 0.7037037037037037,
+        "grid_warps": 256,
+        "resource_capacity_round_lower_bound": 1,
+        "dynamic_smem_optin_calls_per_execution": 16,
+        "cudaGetLastError_calls_per_execution": 16,
+        "achieved_occupancy": null,
+        "actual_smem_carveout": null,
+        "scope": "Per GEMM unless named per_execution; optimistic resource bounds only."
+      },
+      "feature_extrapolation": [],
+      "family_seen": true,
+      "shape_seen": false,
+      "coefficient_identification": "full_column_rank_not_causal_identification",
+      "training_shape_count_for_implementation": 8,
+      "training_shapes_for_exact_candidate_family": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ]
+      ],
+      "library_algorithm_prediction": "fixed audited kernel family",
+      "compiler_admission": false,
+      "physical_bandwidth_or_stall_attribution": null,
+      "regime": {
+        "composition": "common_plus_max_plus_retained_min",
+        "retained_fraction": 1.0,
+        "latency_proxy_us": 249.91528889107684,
+        "throughput_proxy_us": 160.4486444584261,
+        "retained_smaller_proxy_us": 160.4486444584261,
+        "dominant_proxy": "latency",
+        "branch_margin_us": 89.46664443265075,
+        "W_over_L": 8.0,
+        "physical_bottleneck_identified": false,
+        "physical_overlap_fraction_identified": false
+      },
+      "config_id": "4721cadaecefe3f5b43fd60f64b91594d6b8ee3f5ed6c293155c4f553a42cec7",
+      "shape": [
+        4,
+        512,
+        3072,
+        512
+      ],
+      "candidate_id": "splitk2_groupedn2@prepared",
+      "family": "splitk2_groupedn2",
+      "observed_us": 649.5029999999999,
+      "process_medians_us": [
+        650.638,
+        649.5029999999999,
+        648.9275
+      ],
+      "error_us": 97.2488530941348,
+      "absolute_percentage_error": 0.1497281045570764,
+      "quality_flags": [],
+      "eligible_for_calibration": true,
+      "scope": "development_leave_M_out"
+    },
+    {
+      "predicted_us": 682.5893086364285,
+      "contributions_us": {
+        "fixed": 186.5934726318501,
+        "grouped_partition_depth_64": 47.758758847546225,
+        "dynamic_smem_optins_over_16": 0.0,
+        "SM_spread_deficit": 0.0,
+        "ordered_epilogue_boundaries": 94.2298496762605,
+        "extra_serial_output_MiB": 68.60093857680722,
+        "latency_depth_64": 124.95764444553842,
+        "throughput_logical_A_MiB": 160.4486444584261
+      },
+      "geometry": {
+        "kind": "fused",
+        "q": 4,
+        "g": 2,
+        "tile": [
+          64,
+          256,
+          32
+        ],
+        "partition_iterations": 24,
+        "ctas": 64,
+        "unique_A_bytes": 3145728,
+        "logical_A_replay_bytes": 6291456,
+        "extra_serial_output_bytes": 3145728,
+        "threads_per_cta": 256,
+        "shared_storage_bytes": 61440,
+        "gemm_count": 16,
+        "queue_edges": 31,
+        "unit_duration_chain": 11,
+        "counter_scope": "Per GEMM, except graph counts. Logical bytes, not measured traffic."
+      },
+      "execution_detail": {
+        "m_tiles": 8,
+        "n_tiles": 2,
+        "output_tiles": 16,
+        "partition_k_elements": 768,
+        "partition_A_bytes": 786432,
+        "partition_B_bytes": 786432,
+        "max_valid_A_bytes_per_CTA": 98304,
+        "max_valid_B_bytes_per_CTA": 393216,
+        "logical_B_replay_bytes": 25165824,
+        "semaphore_slots": 16,
+        "ordered_boundaries_per_output_tile": 3,
+        "registers_per_thread": 134,
+        "warps_per_CTA": 8,
+        "raw_registers_per_CTA": 34304,
+        "register_only_resident_block_upper_bound": 1,
+        "maximum_smem_resident_block_upper_bound": 2,
+        "combined_resident_block_upper_bound": 1,
+        "possible_active_SM_upper_bound": 64,
+        "SM_spread_deficit_proxy": 0.40740740740740744,
+        "grid_warps": 512,
+        "resource_capacity_round_lower_bound": 1,
+        "dynamic_smem_optin_calls_per_execution": 16,
+        "cudaGetLastError_calls_per_execution": 16,
+        "achieved_occupancy": null,
+        "actual_smem_carveout": null,
+        "scope": "Per GEMM unless named per_execution; optimistic resource bounds only."
+      },
+      "feature_extrapolation": [],
+      "family_seen": true,
+      "shape_seen": false,
+      "coefficient_identification": "full_column_rank_not_causal_identification",
+      "training_shape_count_for_implementation": 8,
+      "training_shapes_for_exact_candidate_family": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ]
+      ],
+      "library_algorithm_prediction": "fixed audited kernel family",
+      "compiler_admission": false,
+      "physical_bandwidth_or_stall_attribution": null,
+      "regime": {
+        "composition": "common_plus_max_plus_retained_min",
+        "retained_fraction": 1.0,
+        "latency_proxy_us": 124.95764444553842,
+        "throughput_proxy_us": 160.4486444584261,
+        "retained_smaller_proxy_us": 124.95764444553842,
+        "dominant_proxy": "throughput",
+        "branch_margin_us": 35.49100001288767,
+        "W_over_L": 16.0,
+        "physical_bottleneck_identified": false,
+        "physical_overlap_fraction_identified": false
+      },
+      "config_id": "6bd5510f13f3a9741d2ec21b708ac8ebeba6525c52a3af72713fe9aef9b39a6c",
+      "shape": [
+        4,
+        512,
+        3072,
+        512
+      ],
+      "candidate_id": "splitk4_groupedn2@prepared",
+      "family": "splitk4_groupedn2",
+      "observed_us": 628.6825,
+      "process_medians_us": [
+        629.4230000000001,
+        628.6825,
+        628.0980000000001
+      ],
+      "error_us": 53.906808636428536,
+      "absolute_percentage_error": 0.08574568027013396,
+      "quality_flags": [],
+      "eligible_for_calibration": true,
+      "scope": "development_leave_M_out"
+    },
+    {
+      "predicted_us": 793.6443245535988,
+      "contributions_us": {
+        "fixed": 186.5934726318501,
+        "grouped_partition_depth_64": 63.678345130061636,
+        "dynamic_smem_optins_over_16": 0.0,
+        "SM_spread_deficit": 0.0,
+        "ordered_epilogue_boundaries": 94.2298496762605,
+        "extra_serial_output_MiB": 68.60093857680722,
+        "latency_depth_64": 166.61019259405123,
+        "throughput_logical_A_MiB": 213.93152594456814
+      },
+      "geometry": {
+        "kind": "fused",
+        "q": 4,
+        "g": 2,
+        "tile": [
+          64,
+          256,
+          32
+        ],
+        "partition_iterations": 32,
+        "ctas": 64,
+        "unique_A_bytes": 4194304,
+        "logical_A_replay_bytes": 8388608,
+        "extra_serial_output_bytes": 3145728,
+        "threads_per_cta": 256,
+        "shared_storage_bytes": 61440,
+        "gemm_count": 16,
+        "queue_edges": 31,
+        "unit_duration_chain": 11,
+        "counter_scope": "Per GEMM, except graph counts. Logical bytes, not measured traffic."
+      },
+      "execution_detail": {
+        "m_tiles": 8,
+        "n_tiles": 2,
+        "output_tiles": 16,
+        "partition_k_elements": 1024,
+        "partition_A_bytes": 1048576,
+        "partition_B_bytes": 1048576,
+        "max_valid_A_bytes_per_CTA": 131072,
+        "max_valid_B_bytes_per_CTA": 524288,
+        "logical_B_replay_bytes": 33554432,
+        "semaphore_slots": 16,
+        "ordered_boundaries_per_output_tile": 3,
+        "registers_per_thread": 134,
+        "warps_per_CTA": 8,
+        "raw_registers_per_CTA": 34304,
+        "register_only_resident_block_upper_bound": 1,
+        "maximum_smem_resident_block_upper_bound": 2,
+        "combined_resident_block_upper_bound": 1,
+        "possible_active_SM_upper_bound": 64,
+        "SM_spread_deficit_proxy": 0.40740740740740744,
+        "grid_warps": 512,
+        "resource_capacity_round_lower_bound": 1,
+        "dynamic_smem_optin_calls_per_execution": 16,
+        "cudaGetLastError_calls_per_execution": 16,
+        "achieved_occupancy": null,
+        "actual_smem_carveout": null,
+        "scope": "Per GEMM unless named per_execution; optimistic resource bounds only."
+      },
+      "feature_extrapolation": [],
+      "family_seen": true,
+      "shape_seen": false,
+      "coefficient_identification": "full_column_rank_not_causal_identification",
+      "training_shape_count_for_implementation": 8,
+      "training_shapes_for_exact_candidate_family": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ]
+      ],
+      "library_algorithm_prediction": "fixed audited kernel family",
+      "compiler_admission": false,
+      "physical_bandwidth_or_stall_attribution": null,
+      "regime": {
+        "composition": "common_plus_max_plus_retained_min",
+        "retained_fraction": 1.0,
+        "latency_proxy_us": 166.61019259405123,
+        "throughput_proxy_us": 213.93152594456814,
+        "retained_smaller_proxy_us": 166.61019259405123,
+        "dominant_proxy": "throughput",
+        "branch_margin_us": 47.32133335051691,
+        "W_over_L": 16.0,
+        "physical_bottleneck_identified": false,
+        "physical_overlap_fraction_identified": false
+      },
+      "config_id": "7e485506859f4297b6efc92ec5b45115cbc0e1ee40c4bc789f5daf24a2b30be9",
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ],
+      "candidate_id": "splitk4_groupedn2@prepared",
+      "family": "splitk4_groupedn2",
+      "observed_us": 725.4024999999999,
+      "process_medians_us": [
+        722.893,
+        725.4024999999999,
+        726.2975
+      ],
+      "error_us": 68.24182455359892,
+      "absolute_percentage_error": 0.09407442702995783,
+      "quality_flags": [],
+      "eligible_for_calibration": true,
+      "scope": "development_leave_M_out"
+    },
+    {
+      "predicted_us": 795.2791942473084,
+      "contributions_us": {
+        "fixed": 186.5934726318501,
+        "grouped_partition_depth_64": 0.0,
+        "dynamic_smem_optins_over_16": 0.0,
+        "SM_spread_deficit": 0.0,
+        "ordered_epilogue_boundaries": 94.2298496762605,
+        "extra_serial_output_MiB": 68.60093857680722,
+        "latency_depth_64": 124.95764444553842,
+        "throughput_logical_A_MiB": 320.8972889168522
+      },
+      "geometry": {
+        "kind": "fused",
+        "q": 4,
+        "g": 1,
+        "tile": [
+          64,
+          128,
+          32
+        ],
+        "partition_iterations": 24,
+        "ctas": 128,
+        "unique_A_bytes": 3145728,
+        "logical_A_replay_bytes": 12582912,
+        "extra_serial_output_bytes": 3145728,
+        "threads_per_cta": 128,
+        "shared_storage_bytes": 36864,
+        "gemm_count": 16,
+        "queue_edges": 31,
+        "unit_duration_chain": 11,
+        "counter_scope": "Per GEMM, except graph counts. Logical bytes, not measured traffic."
+      },
+      "execution_detail": {
+        "m_tiles": 8,
+        "n_tiles": 4,
+        "output_tiles": 32,
+        "partition_k_elements": 768,
+        "partition_A_bytes": 786432,
+        "partition_B_bytes": 786432,
+        "max_valid_A_bytes_per_CTA": 98304,
+        "max_valid_B_bytes_per_CTA": 196608,
+        "logical_B_replay_bytes": 25165824,
+        "semaphore_slots": 32,
+        "ordered_boundaries_per_output_tile": 3,
+        "registers_per_thread": 140,
+        "warps_per_CTA": 4,
+        "raw_registers_per_CTA": 17920,
+        "register_only_resident_block_upper_bound": 3,
+        "maximum_smem_resident_block_upper_bound": 4,
+        "combined_resident_block_upper_bound": 3,
+        "possible_active_SM_upper_bound": 108,
+        "SM_spread_deficit_proxy": 0.0,
+        "grid_warps": 512,
+        "resource_capacity_round_lower_bound": 1,
+        "dynamic_smem_optin_calls_per_execution": 0,
+        "cudaGetLastError_calls_per_execution": 16,
+        "achieved_occupancy": null,
+        "actual_smem_carveout": null,
+        "scope": "Per GEMM unless named per_execution; optimistic resource bounds only."
+      },
+      "feature_extrapolation": [],
+      "family_seen": true,
+      "shape_seen": false,
+      "coefficient_identification": "full_column_rank_not_causal_identification",
+      "training_shape_count_for_implementation": 8,
+      "training_shapes_for_exact_candidate_family": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ]
+      ],
+      "library_algorithm_prediction": "fixed audited kernel family",
+      "compiler_admission": false,
+      "physical_bandwidth_or_stall_attribution": null,
+      "regime": {
+        "composition": "common_plus_max_plus_retained_min",
+        "retained_fraction": 1.0,
+        "latency_proxy_us": 124.95764444553842,
+        "throughput_proxy_us": 320.8972889168522,
+        "retained_smaller_proxy_us": 124.95764444553842,
+        "dominant_proxy": "throughput",
+        "branch_margin_us": 195.93964447131376,
+        "W_over_L": 32.0,
+        "physical_bottleneck_identified": false,
+        "physical_overlap_fraction_identified": false
+      },
+      "config_id": "97cf344f698a9d3e2e32e01bffbdb408f6a142dfc2a9d9c5bfdd8b03ef413727",
+      "shape": [
+        4,
+        512,
+        3072,
+        512
+      ],
+      "candidate_id": "splitk4@prepared",
+      "family": "splitk4",
+      "observed_us": 869.7825,
+      "process_medians_us": [
+        869.7825,
+        871.3919999999999,
+        863.3925
+      ],
+      "error_us": -74.50330575269163,
+      "absolute_percentage_error": 0.08565739797327676,
+      "quality_flags": [],
+      "eligible_for_calibration": true,
+      "scope": "development_leave_M_out"
+    },
+    {
+      "predicted_us": 943.8975053681053,
+      "contributions_us": {
+        "fixed": 186.5934726318501,
+        "grouped_partition_depth_64": 0.0,
+        "dynamic_smem_optins_over_16": 0.0,
+        "SM_spread_deficit": 0.0,
+        "ordered_epilogue_boundaries": 94.2298496762605,
+        "extra_serial_output_MiB": 68.60093857680722,
+        "latency_depth_64": 166.61019259405123,
+        "throughput_logical_A_MiB": 427.8630518891363
+      },
+      "geometry": {
+        "kind": "fused",
+        "q": 4,
+        "g": 1,
+        "tile": [
+          64,
+          128,
+          32
+        ],
+        "partition_iterations": 32,
+        "ctas": 128,
+        "unique_A_bytes": 4194304,
+        "logical_A_replay_bytes": 16777216,
+        "extra_serial_output_bytes": 3145728,
+        "threads_per_cta": 128,
+        "shared_storage_bytes": 36864,
+        "gemm_count": 16,
+        "queue_edges": 31,
+        "unit_duration_chain": 11,
+        "counter_scope": "Per GEMM, except graph counts. Logical bytes, not measured traffic."
+      },
+      "execution_detail": {
+        "m_tiles": 8,
+        "n_tiles": 4,
+        "output_tiles": 32,
+        "partition_k_elements": 1024,
+        "partition_A_bytes": 1048576,
+        "partition_B_bytes": 1048576,
+        "max_valid_A_bytes_per_CTA": 131072,
+        "max_valid_B_bytes_per_CTA": 262144,
+        "logical_B_replay_bytes": 33554432,
+        "semaphore_slots": 32,
+        "ordered_boundaries_per_output_tile": 3,
+        "registers_per_thread": 140,
+        "warps_per_CTA": 4,
+        "raw_registers_per_CTA": 17920,
+        "register_only_resident_block_upper_bound": 3,
+        "maximum_smem_resident_block_upper_bound": 4,
+        "combined_resident_block_upper_bound": 3,
+        "possible_active_SM_upper_bound": 108,
+        "SM_spread_deficit_proxy": 0.0,
+        "grid_warps": 512,
+        "resource_capacity_round_lower_bound": 1,
+        "dynamic_smem_optin_calls_per_execution": 0,
+        "cudaGetLastError_calls_per_execution": 16,
+        "achieved_occupancy": null,
+        "actual_smem_carveout": null,
+        "scope": "Per GEMM unless named per_execution; optimistic resource bounds only."
+      },
+      "feature_extrapolation": [],
+      "family_seen": true,
+      "shape_seen": false,
+      "coefficient_identification": "full_column_rank_not_causal_identification",
+      "training_shape_count_for_implementation": 8,
+      "training_shapes_for_exact_candidate_family": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ]
+      ],
+      "library_algorithm_prediction": "fixed audited kernel family",
+      "compiler_admission": false,
+      "physical_bandwidth_or_stall_attribution": null,
+      "regime": {
+        "composition": "common_plus_max_plus_retained_min",
+        "retained_fraction": 1.0,
+        "latency_proxy_us": 166.61019259405123,
+        "throughput_proxy_us": 427.8630518891363,
+        "retained_smaller_proxy_us": 166.61019259405123,
+        "dominant_proxy": "throughput",
+        "branch_margin_us": 261.25285929508505,
+        "W_over_L": 32.0,
+        "physical_bottleneck_identified": false,
+        "physical_overlap_fraction_identified": false
+      },
+      "config_id": "fb0d7621dfcbdc08dac73ec9f0e42fb96ceddb26e3ccd6e5141ea91af499cf90",
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ],
+      "candidate_id": "splitk4@prepared",
+      "family": "splitk4",
+      "observed_us": 1047.6464999999998,
+      "process_medians_us": [
+        1047.496,
+        1047.6464999999998,
+        1050.2715
+      ],
+      "error_us": -103.74899463189456,
+      "absolute_percentage_error": 0.09903053618934876,
+      "quality_flags": [],
+      "eligible_for_calibration": true,
+      "scope": "development_leave_M_out"
+    }
+  ],
+  "repeat_predictions": [],
+  "skipped": [],
+  "training_only_fixed_order": []
+}

@@ -1,0 +1,84 @@
+{
+  "review_date": "2026-10-28",
+  "sources": [
+    {
+      "id": "nccl-paper",
+      "kind": "paper",
+      "url": "https://arxiv.org/html/2507.04786v3",
+      "verified": "v3 launch/channel/protocol/chunk mechanisms; paper explicitly uses NCCL 2.19.1",
+      "code": "https://github.com/NVIDIA/nccl",
+      "limits": "No constants transferred to the current runtime; paper is not a benchmark of our host/fused candidates."
+    },
+    {
+      "id": "deep-ep",
+      "kind": "source-and-engineering-record",
+      "repository": "deepseek-ai/DeepEP",
+      "verified": "README, get_theoretical_num_sms, timing helpers; current EP v2.5 needs SMs",
+      "limits": "Balanced-routing model, incomplete options, Hopper+ implementation; no A100 labels.",
+      "sha": "f6aa38fe06cd4a0489e7730365d4e0114970a2f3",
+      "date": "2026-10-21T03:50:43Z",
+      "url": "https://github.com/deepseek-ai/DeepEP/tree/f6aa38fe06cd4a0489e7730365d4e0114970a2f3"
+    },
+    {
+      "id": "deepseek-traces",
+      "kind": "public-raw-traces",
+      "repository": "deepseek-ai/profile-data",
+      "verified": "Both inference traces parsed; 104839 events; classifications saved",
+      "limits": "2025 V3/R1 H800 balanced routing; GPU issuing-kernel lifetime is not network lifetime; no causal overlap speedup.",
+      "sha": "449602428a1b023acb8a505d4f34fef536535db6",
+      "date": "2025-03-21T02:23:50Z",
+      "url": "https://github.com/deepseek-ai/profile-data/tree/449602428a1b023acb8a505d4f34fef536535db6"
+    },
+    {
+      "id": "mega-moe",
+      "kind": "source-and-test",
+      "repository": "deepseek-ai/DeepGEMM",
+      "verified": "tests/test_mega_moe.py and README; optional legacy baseline and distinct timing paths",
+      "limits": "No execution here; SM90/SM100 not A100; FP8 formats do not establish FP16/BF16 equivalence.",
+      "sha": "5081f8513af57e61696de4f4f04b0e707ffb503e",
+      "date": "2026-10-20T05:07:07Z",
+      "url": "https://github.com/deepseek-ai/DeepGEMM/tree/5081f8513af57e61696de4f4f04b0e707ffb503e"
+    },
+    {
+      "id": "infersim",
+      "kind": "source-and-public-component-data",
+      "repository": "alibaba/InferSim",
+      "verified": "comm/comm.py, mfu/mfu.py and three GEMM/grouped-GEMM CSV files",
+      "limits": "Tech-report PDF could not be retrieved; missing complete precision/timing/revision identity in CSV; not A100 candidate-ranking labels.",
+      "sha": "d12ec47f83d5896efd77007ad5d5f2ad044c2876",
+      "date": "2026-10-19T02:32:09Z",
+      "url": "https://github.com/alibaba/InferSim/tree/d12ec47f83d5896efd77007ad5d5f2ad044c2876"
+    },
+    {
+      "id": "tccl",
+      "kind": "paper-and-artifact",
+      "url": "https://arxiv.org/html/2610.07098v1",
+      "code": "https://github.com/ooverlap/ooverlap/tree/9abd9cf93286fc8ca5a0a041db6234c4e86e1635",
+      "verified": "Paper evaluation/artifact and evalution/run_flashoverlap_sm90.sh; SC26 Workshops per arXiv comments",
+      "limits": "H100/GH200 TMA path, not A100; no All-to-All; best measured configuration is not predictive accuracy."
+    },
+    {
+      "id": "green-contexts",
+      "kind": "official-engineering-blog",
+      "url": "https://developer.nvidia.com/blog/control-how-your-gpu-shares-work-with-green-contexts",
+      "verified": "2026-10-06 article and inline CUDA example",
+      "limits": "Blackwell critical/bulk-kernel demonstration, not our communication-GEMM workload."
+    },
+    {
+      "id": "nccl-zero-cta",
+      "kind": "official-documentation",
+      "url": "https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/usage/bufferreg.html#zero-cta-optimization",
+      "verified": "2.32.3 documentation; hardware, buffer, collective and version requirements",
+      "limits": "Registered windows alone do not establish Zero-CTA execution; no measured runtime path here."
+    },
+    {
+      "id": "glm",
+      "kind": "engineering-blog-and-merged-pr",
+      "url": "https://z.ai/blog/glm-built-its-inference-infrastructure",
+      "code": "https://github.com/fla-org/flash-linear-attention/pull/1180",
+      "revision": "ef892a79739eace27232284af0781970a61e8f34",
+      "verified": "Blog indexed text and linked merged PR metadata/body",
+      "limits": "PR is opt-in precision repair, not evidence for separate blog speedup claims; no independent reproduction."
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "schema": "edmir.host-coverage-revision.v1",
+  "before": "run-02 primary whole-shape leave-out regime_max",
+  "change": "Add only previously missing merged host labels from adaptive extension; keep original primary labels for duplicate configurations.",
+  "expression": "unchanged cutlass_depth host basis, fixed nonnegative fit and ridge",
+  "fused_predictions": "reuse exactly from run-02; no refit",
+  "holdout": "exclude all primary and extension candidates with the target shape",
+  "repeat_used_for_fit": false,
+  "adaptive_extension_is_development_data": true,
+  "evaluation_scopes": [
+    "same original 57 configurations",
+    "expanded measured support including added host labels"
+  ],
+  "compiler_admission": false,
+  "independent_validation": false
+}

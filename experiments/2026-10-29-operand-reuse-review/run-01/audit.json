@@ -1,0 +1,224 @@
+{
+  "sources": {
+    "experiments/2026-10-28-paired-gpu-readiness/p4/generated/pair_p4_w000_splitk8/edmir_program.hpp": "0eb7f133378a46d2250a01c4e4a48ab49f519f80dc85b42ebb289f43383943a7",
+    "experiments/2026-10-28-shape-transfer-review/source-audit/cuda_backend.cpp": "a0fb4fae9998987671798eba2b26a3e0889b6affa9736eaef44c4864469d9ac5"
+  },
+  "destination_weight_sharing": [
+    {
+      "rank": 0,
+      "op_indices": [
+        0,
+        4,
+        8,
+        12
+      ],
+      "sources_in_header_order": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "weight_buffer_index": 1,
+      "weight_name": "weight.r0",
+      "weight_bytes": 16777216
+    },
+    {
+      "rank": 1,
+      "op_indices": [
+        1,
+        5,
+        9,
+        13
+      ],
+      "sources_in_header_order": [
+        1,
+        2,
+        3,
+        0
+      ],
+      "weight_buffer_index": 4,
+      "weight_name": "weight.r1",
+      "weight_bytes": 16777216
+    },
+    {
+      "rank": 2,
+      "op_indices": [
+        2,
+        6,
+        10,
+        14
+      ],
+      "sources_in_header_order": [
+        2,
+        3,
+        0,
+        1
+      ],
+      "weight_buffer_index": 7,
+      "weight_name": "weight.r2",
+      "weight_bytes": 16777216
+    },
+    {
+      "rank": 3,
+      "op_indices": [
+        3,
+        7,
+        11,
+        15
+      ],
+      "sources_in_header_order": [
+        3,
+        0,
+        1,
+        2
+      ],
+      "weight_buffer_index": 10,
+      "weight_name": "weight.r3",
+      "weight_bytes": 16777216
+    }
+  ],
+  "runtime_revision": "f584d7d (source snapshot)",
+  "generated_program_is_recent_readiness_packet": true,
+  "archived_executed_binary_verified": false,
+  "short_K_pairs": 80,
+  "all_short_K_warm_AB_read_miss_deltas_zero": true,
+  "all_short_K_C_read_miss_deltas_nonnegative_and_writes_increase": true,
+  "equal_work_collision_examples": [
+    {
+      "shape_P_M_K_N": [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      "capacity_bytes": 65536,
+      "warm_read_miss_bytes": {
+        "A_local": 8388608,
+        "A_remote": 25165824,
+        "B": 67108864,
+        "C": 1048576
+      }
+    },
+    {
+      "shape_P_M_K_N": [
+        4,
+        256,
+        4096,
+        512
+      ],
+      "capacity_bytes": 65536,
+      "warm_read_miss_bytes": {
+        "A_local": 8388608,
+        "A_remote": 25165824,
+        "B": 67108864,
+        "C": 1048576
+      }
+    },
+    {
+      "shape_P_M_K_N": [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      "capacity_bytes": 1048576,
+      "warm_read_miss_bytes": {
+        "A_local": 524288,
+        "A_remote": 1572864,
+        "B": 67108864,
+        "C": 1048576
+      }
+    },
+    {
+      "shape_P_M_K_N": [
+        4,
+        256,
+        4096,
+        512
+      ],
+      "capacity_bytes": 1048576,
+      "warm_read_miss_bytes": {
+        "A_local": 8388608,
+        "A_remote": 25165824,
+        "B": 16777216,
+        "C": 1048576
+      }
+    },
+    {
+      "shape_P_M_K_N": [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      "capacity_bytes": 8388608,
+      "warm_read_miss_bytes": {
+        "A_local": 524288,
+        "A_remote": 1572864,
+        "B": 67108864,
+        "C": 1048576
+      }
+    },
+    {
+      "shape_P_M_K_N": [
+        4,
+        256,
+        4096,
+        512
+      ],
+      "capacity_bytes": 8388608,
+      "warm_read_miss_bytes": {
+        "A_local": 2097152,
+        "A_remote": 6291456,
+        "B": 0,
+        "C": 0
+      }
+    },
+    {
+      "shape_P_M_K_N": [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      "capacity_bytes": 41943040,
+      "warm_read_miss_bytes": {
+        "A_local": 0,
+        "A_remote": 0,
+        "B": 0,
+        "C": 0
+      }
+    },
+    {
+      "shape_P_M_K_N": [
+        4,
+        256,
+        4096,
+        512
+      ],
+      "capacity_bytes": 41943040,
+      "warm_read_miss_bytes": {
+        "A_local": 0,
+        "A_remote": 0,
+        "B": 0,
+        "C": 0
+      }
+    }
+  ],
+  "interpretation": "Capacity/order scenarios distinguish some equal-work shapes, but provide no short-K q2 A/B miss reduction in this grid. Not proof of physical cache behavior or measured latency.",
+  "scoring_change_admitted": false,
+  "next_local_target": "Derive CTA/stage pipeline and semaphore dependency constraints from pinned source; retain unidentified service times as explicit variables, not fitted labels.",
+  "references": [
+    {
+      "url": "https://developer.nvidia.com/blog/nvidia-ampere-architecture-in-depth/",
+      "section": "A100 L2 cache; original technical body, not page AI summary",
+      "facts": [
+        "40 MB L2",
+        "two partitions",
+        "residency controls",
+        "data compression"
+      ],
+      "inference_limit": "Total capacity does not establish full residency, peer-read cache placement, or physical traffic in these runs."
+    }
+  ]
+}

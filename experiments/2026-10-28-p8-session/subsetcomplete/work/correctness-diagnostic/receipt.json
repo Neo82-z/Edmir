@@ -1,0 +1,91 @@
+{
+  "purpose": "Expose metrics missing from preserved numerical failure; no threshold/kernel/shape changes. Diagnostic is a separate binary and excluded from timing comparisons.",
+  "original_source_sha256": "134f0d39a7966bb8c36a5252a76c729e3db0beeec3ba0b7bc268617f6d7754fc",
+  "diagnostic_source_sha256": "f4cb201e4575bf49d97a1447d971336bcc21038563f76d60028932dc769372f1",
+  "compile": [
+    "/usr/bin/c++",
+    "-I/root/2026-10-25-p8-gpu-collection/bundle/generated/p8_w005_splitk16_immutable",
+    "-I/root/2026-10-25-p8-gpu-collection/dependencies/nccl/build/include",
+    "-I/root/2026-10-25-p8-gpu-collection/bundle/source/EDM-IR/runtime/include",
+    "-isystem",
+    "/usr/local/cuda/targets/x86_64-linux/include",
+    "-O3",
+    "-DNDEBUG",
+    "-std=gnu++20",
+    "-c",
+    "/root/2026-10-25-p8-gpu-collection/work/correctness-diagnostic/benchmark_selector_diagnostic.cpp",
+    "-o",
+    "/root/2026-10-25-p8-gpu-collection/work/correctness-diagnostic/diagnostic.o"
+  ],
+  "link": [
+    "/usr/bin/c++",
+    "-O3",
+    "-DNDEBUG",
+    "/root/2026-10-25-p8-gpu-collection/work/correctness-diagnostic/diagnostic.o",
+    "-o",
+    "/root/2026-10-25-p8-gpu-collection/work/correctness-diagnostic/diagnostic",
+    "-L/usr/local/cuda/targets/x86_64-linux/lib",
+    "-Wl,-rpath,/root/2026-10-25-p8-gpu-collection/dependencies/nccl/build/lib:/usr/local/cuda-12.8/targets/x86_64-linux/lib",
+    "libedmir_cuda_runtime.a",
+    "libedmir_runtime.a",
+    "/usr/local/cuda-12.8/targets/x86_64-linux/lib/libcudart.so",
+    "-ldl",
+    "/usr/lib/x86_64-linux-gnu/librt.a",
+    "/usr/local/cuda-12.8/targets/x86_64-linux/lib/libcublas.so",
+    "/usr/local/cuda-12.8/targets/x86_64-linux/lib/libculibos.a",
+    "/usr/local/cuda-12.8/targets/x86_64-linux/lib/libcublasLt.so",
+    "/root/2026-10-25-p8-gpu-collection/dependencies/nccl/build/lib/libnccl.so",
+    "-lcudadevrt",
+    "-lcudart_static",
+    "-lrt",
+    "-lpthread",
+    "-ldl"
+  ],
+  "created_epoch": 1793165074.899036,
+  "tests": [
+    {
+      "repetition": 0,
+      "args": [
+        "/root/2026-10-25-p8-gpu-collection/work/correctness-diagnostic/diagnostic",
+        "splitk16",
+        "/root/2026-10-25-p8-gpu-collection/bundle/data/w005/inputs.bin",
+        "/root/2026-10-25-p8-gpu-collection/bundle/data/w005/reference.bin",
+        "0",
+        "1",
+        "prepared"
+      ],
+      "elapsed_seconds": 0.11454582214355469,
+      "returncode": 1
+    },
+    {
+      "repetition": 1,
+      "args": [
+        "/root/2026-10-25-p8-gpu-collection/work/correctness-diagnostic/diagnostic",
+        "splitk16",
+        "/root/2026-10-25-p8-gpu-collection/bundle/data/w005/inputs.bin",
+        "/root/2026-10-25-p8-gpu-collection/bundle/data/w005/reference.bin",
+        "0",
+        "1",
+        "prepared"
+      ],
+      "elapsed_seconds": 0.11449265480041504,
+      "returncode": 1
+    },
+    {
+      "repetition": 2,
+      "args": [
+        "/root/2026-10-25-p8-gpu-collection/work/correctness-diagnostic/diagnostic",
+        "splitk16",
+        "/root/2026-10-25-p8-gpu-collection/bundle/data/w005/inputs.bin",
+        "/root/2026-10-25-p8-gpu-collection/bundle/data/w005/reference.bin",
+        "0",
+        "1",
+        "prepared"
+      ],
+      "elapsed_seconds": 0.11436223983764648,
+      "returncode": 1
+    }
+  ],
+  "executable_sha256": "49259e3aee989cddedcfb12e271e73140f33fd993c1ee348f56080a079dc4d7d",
+  "complete_epoch": 1793165077.17855
+}

@@ -1,0 +1,1883 @@
+{
+  "model": {
+    "schema": "edmir.path-aware-selection.v1",
+    "representation": "path_geometry",
+    "cross_path": true,
+    "balanced_training_classes": false,
+    "width": 0,
+    "features": [
+      "host",
+      "merged_host",
+      "geometry_unknown",
+      "uniform_dependencies",
+      "prepared",
+      "log_P",
+      "log_M",
+      "log_K",
+      "log_N",
+      "log_SM",
+      "log_q",
+      "log_group_N",
+      "log_gemms_per_destination",
+      "log_logical_flops",
+      "log_A_bytes",
+      "log_B_bytes",
+      "log_remote_input_bytes",
+      "log_m_tiles",
+      "log_n_tiles",
+      "log_output_tiles",
+      "log_ctas",
+      "log_K_iterations",
+      "valid_tile_fraction",
+      "last_M_fraction",
+      "last_N_fraction",
+      "reference_waves",
+      "last_wave_fraction",
+      "log_epilogue_edges",
+      "log_padded_work",
+      "group_x_K_depth",
+      "q_x_output_tiles",
+      "host_x_log_M",
+      "host_x_log_K",
+      "host_x_log_N",
+      "host_x_log_M_log_K",
+      "host_x_log_N_log_K",
+      "host_x_log_M_log_N"
+    ],
+    "means": [
+      0.5,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.609437912434108,
+      4.508076574699977,
+      7.80412532404052,
+      6.285448894782354,
+      4.691347882229126,
+      1.1897371205854335,
+      0.7454652590255167,
+      1.609437912434108,
+      19.273963548614603,
+      12.990924772555243,
+      14.77968739478295,
+      15.475826808145042,
+      0.9666149131494877,
+      1.630455536967659,
+      1.9883876413763633,
+      2.6096124778825063,
+      3.7074028833971706,
+      0.9395161290322619,
+      0.9516129032258108,
+      0.9879032258064558,
+      1.143548387096778,
+      0.1605286738351254,
+      1.2908818367739991,
+      19.357811995983205,
+      0.39450609122551256,
+      1.9342791190564834,
+      0.24193548387096775,
+      -0.3709677419354839,
+      0.03225806451612903,
+      0.016129032258064516,
+      -0.14516129032258066,
+      0.0
+    ],
+    "scales": [
+      0.5000000000000011,
+      0.1,
+      0.1,
+      0.1,
+      0.1,
+      0.1,
+      0.7579508720231467,
+      0.9137032429999421,
+      0.701055297765352,
+      0.1,
+      0.733492124940781,
+      0.13592635508511297,
+      0.1,
+      1.4240090042328566,
+      1.3404513376311524,
+      1.047325462115984,
+      1.340456292221531,
+      0.49122610917256054,
+      0.5633008087365694,
+      0.8349425318238152,
+      1.2361498570039446,
+      1.253972202648669,
+      0.16304489208996578,
+      0.147825022417931,
+      0.1,
+      0.5451016382710532,
+      0.16689158574509072,
+      1.7955820631788693,
+      1.3499686996812381,
+      1.1222068903822997,
+      3.1177351403329028,
+      0.8168682104581022,
+      1.0037650246775198,
+      0.7176966277834526,
+      0.8130376232986167,
+      1.2423543491388263,
+      0.1
+    ],
+    "theta": [
+      -0.16191453805607323,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -8.001806171315294e-10,
+      0.16019933692899788,
+      -0.5283771342242614,
+      0.28118659579219396,
+      1.8289840952785253e-09,
+      2.260315984546649,
+      0.1476206266254953,
+      -8.001806171315293e-10,
+      -0.2119202729261247,
+      -0.41874639596321706,
+      -0.416474828006357,
+      -0.4190316608678915,
+      0.6302451063078001,
+      0.2342465964928275,
+      0.31910641531496026,
+      -0.5180234842808362,
+      3.124927621431702,
+      0.06224018257883826,
+      0.056421766540602776,
+      -0.010506204287677809,
+      -0.06237770700784204,
+      -0.04044029264891891,
+      0.06119121137351271,
+      -0.2226490927493549,
+      0.011000728887515316,
+      0.38078175062405273,
+      0.03698289218004292,
+      -0.2526483799041611,
+      0.018698221756226287,
+      0.02801858032215228,
+      -0.0006883438088253951,
+      0.0,
+      6.526444772836675
+    ],
+    "execution_context": "a100-sxm4-80gb-p4-2026-08-29",
+    "world_size": 4,
+    "training_shapes": [
+      [
+        4,
+        32,
+        512,
+        512
+      ],
+      [
+        4,
+        32,
+        2048,
+        512
+      ],
+      [
+        4,
+        32,
+        4096,
+        512
+      ],
+      [
+        4,
+        64,
+        512,
+        128
+      ],
+      [
+        4,
+        64,
+        512,
+        512
+      ],
+      [
+        4,
+        64,
+        512,
+        1024
+      ],
+      [
+        4,
+        64,
+        512,
+        2048
+      ],
+      [
+        4,
+        64,
+        1024,
+        512
+      ],
+      [
+        4,
+        64,
+        1024,
+        1024
+      ],
+      [
+        4,
+        64,
+        2048,
+        256
+      ],
+      [
+        4,
+        64,
+        2048,
+        512
+      ],
+      [
+        4,
+        64,
+        2048,
+        1024
+      ],
+      [
+        4,
+        64,
+        2048,
+        2048
+      ],
+      [
+        4,
+        64,
+        4096,
+        128
+      ],
+      [
+        4,
+        64,
+        4096,
+        256
+      ],
+      [
+        4,
+        64,
+        4096,
+        512
+      ],
+      [
+        4,
+        64,
+        4096,
+        1024
+      ],
+      [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      [
+        4,
+        64,
+        8192,
+        128
+      ],
+      [
+        4,
+        64,
+        8192,
+        256
+      ],
+      [
+        4,
+        64,
+        8192,
+        512
+      ],
+      [
+        4,
+        64,
+        8192,
+        1024
+      ],
+      [
+        4,
+        128,
+        1024,
+        512
+      ],
+      [
+        4,
+        128,
+        2048,
+        512
+      ],
+      [
+        4,
+        128,
+        4096,
+        512
+      ],
+      [
+        4,
+        256,
+        2048,
+        512
+      ],
+      [
+        4,
+        256,
+        4096,
+        512
+      ],
+      [
+        4,
+        256,
+        8192,
+        512
+      ],
+      [
+        4,
+        512,
+        2048,
+        512
+      ],
+      [
+        4,
+        512,
+        4096,
+        512
+      ],
+      [
+        4,
+        512,
+        8192,
+        512
+      ]
+    ],
+    "training_sources": [
+      "bf237f25dc73e71721f02871e6639ef1eb0380d5b88534974014246dc57f6f72"
+    ],
+    "settings": {
+      "epochs": 1000,
+      "learning_rate": 0.003,
+      "weight_decay": 0.001,
+      "temperature": 0.05,
+      "gradient_clip": 10.0,
+      "seeds": [
+        0,
+        1
+      ],
+      "max_seconds": 10.0
+    },
+    "training_host_winners": 2,
+    "training_shape_count": 31,
+    "training_shape_weights": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "runs": [
+      {
+        "seed": 0,
+        "initial_loss": 0.1502284682588846,
+        "final_loss": 0.09196174659832992,
+        "gradient_norm": 0.010614037090181334,
+        "checkpoints": [
+          {
+            "epoch": 100,
+            "pre_update_loss": 0.11653153433656924,
+            "gradient_norm": 0.030721846230485905
+          },
+          {
+            "epoch": 500,
+            "pre_update_loss": 0.09777481599949098,
+            "gradient_norm": 0.010841943306078744
+          },
+          {
+            "epoch": 1000,
+            "pre_update_loss": 0.0919670477402168,
+            "gradient_norm": 0.007942327995322681
+          }
+        ],
+        "convergence_claim": false
+      }
+    ],
+    "selected_start": 0,
+    "seconds": 0.5984203750267625,
+    "compiler_admission": false
+  },
+  "train": {
+    "training_diagnostic": true,
+    "mean_regret": 0.01776847896259411,
+    "max_regret": 0.11715481171548126,
+    "host_errors": 1,
+    "fused_errors": 0,
+    "decisions": [
+      {
+        "shape": [
+          4,
+          32,
+          512,
+          512
+        ],
+        "chosen": "splitk2",
+        "measured_us": {
+          "direct": 312.40000000000003,
+          "host": 569.5,
+          "splitk16": 664.3,
+          "splitk2": 303.59999999999997,
+          "splitk4": 335.8,
+          "splitk8": 422.09999999999997
+        },
+        "predicted_us": {
+          "direct": 334.7734421293585,
+          "host": 546.1195490836254,
+          "splitk16": 890.7100782976684,
+          "splitk2": 238.44780418928667,
+          "splitk4": 251.6867760207636,
+          "splitk8": 394.0820470227554
+        },
+        "host_wins": false,
+        "host_error": false,
+        "fused_error": false,
+        "regret": 0.0,
+        "order_invariant": true
+      },
+      {
+        "shape": [
+          4,
+          32,
+          2048,
+          512
+        ],
+        "chosen": "splitk4",
+        "measured_us": {
+          "direct": 598.7,
+          "host": 587.7,
+          "splitk16": 701.5,
+          "splitk2": 437.90000000000003,
+          "splitk4": 380.90000000000003,
+          "splitk8": 465.4
+        },
+        "predicted_us": {
+          "direct": 666.6288233642829,
+          "host": 613.5689534017531,
+          "splitk16": 615.2198415398053,
+          "splitk2": 427.74902675543257,
+          "splitk4": 374.0558070502741,
+          "splitk8": 428.74799993296324
+        },
+        "host_wins": false,
+        "host_error": false,
+        "fused_error": false,
+        "regret": 0.0,
+        "order_invariant": true
+      },
+      {
+        "shape": [
+          4,
+          32,
+          4096,
+          512
+        ],
+        "chosen": "splitk4",
+        "measured_us": {
+          "direct": 1018.5999999999999,
+          "host": 634.6,
+          "splitk16": 723.0,
+          "splitk2": 641.8000000000001,
+          "splitk4": 492.5,
+          "splitk8": 518.0
+        },
+        "predicted_us": {
+          "direct": 975.856446605162,
+          "host": 674.6623982962424,
+          "splitk16": 706.0912242214794,
+          "splitk2": 614.5039456264792,
+          "splitk4": 518.1870801608557,
+          "splitk8": 554.8816534641244
+        },
+        "host_wins": false,
+        "host_error": false,
+        "fused_error": false,
+        "regret": 0.0,
+        "order_invariant": true
+      },
+      {
+        "shape": [
+          4,
+          64,
+          512,
+          128
+        ],
+        "chosen": "splitk4",
+        "measured_us": {
+          "direct": 304.0,
+          "direct_groupedn2": 327.29999999999995,
+          "host": 571.0,
+          "splitk16": 702.4,
+          "splitk16_groupedn2": 730.9,
+          "splitk2": 312.0,
+          "splitk2_groupedn2": 316.40000000000003,
+          "splitk4": 331.9,
+          "splitk4_groupedn2": 338.9,
+          "splitk8": 429.8,
+          "splitk8_groupedn2": 461.4
+        },
+        "predicted_us": {
+          "direct": 362.8820908832155,
+          "direct_groupedn2": 450.1328653766153,
+          "host": 528.4353471514788,
+          "splitk16": 779.3119304410192,
+          "splitk16_groupedn2": 946.6199188218076,
+          "splitk2": 243.41626640890576,
+          "splitk2_groupedn2": 300.06628291372556,
+          "splitk4": 243.19646184156275,
+          "splitk4_groupedn2": 298.0728897070464,
+          "splitk8": 359.66673455928543,
+          "splitk8_groupedn2": 438.6223594411548
+        },
+        "host_wins": false,
+        "host_error": false,
+        "fused_error": false,
+        "regret": 0.09177631578947354,
+        "order_invariant": true
+      },
+      {
+        "shape": [
+          4,
+          64,
+          512,
+          512
+        ],
+        "chosen": "splitk2",
+        "measured_us": {
+          "direct": 314.8,
+          "direct_groupedn2": 346.1,
+          "host": 564.9,
+          "splitk16": 701.6,
+          "splitk16_groupedn2": 790.2,
+          "splitk2": 312.8,
+          "splitk2_groupedn2": 335.2,
+          "splitk4": 336.9,
+          "splitk4_groupedn2": 355.9,
+          "splitk8": 441.09999999999997,
+          "splitk8_groupedn2": 492.0
+        },
+        "predicted_us": {
+          "direct": 330.98558841821955,
+          "direct_groupedn2": 437.5078631321343,
+          "host": 509.4582571384531,
+          "splitk16": 880.6319805424558,
+          "splitk16_groupedn2": 995.6267269134703,
+          "splitk2": 235.74984405760358,
+          "splitk2_groupedn2": 296.6336540670224,
+          "splitk4": 248.83902118534152,
+          "splitk4_groupedn2": 300.02570813207944,
+          "splitk8": 389.62313554275937,
+          "splitk8_groupedn2": 451.63166105784126
+        },
+        "host_wins": false,
+        "host_error": false,
+        "fused_error": false,
+        "regret": 0.0,
+        "order_invariant": true
+      },
+      {
+        "shape": [
+          4,
+          64,
+          512,
+          1024
+        ],
+        "chosen": "splitk2",
+        "measured_us": {
+          "direct": 312.09999999999997,
+          "direct_groupedn2": 340.4,
+          "host": 574.3000000000001,
+          "splitk16": 749.3,
+          "splitk16_groupedn2": 817.8,
+          "splitk2": 313.90000000000003,
+          "splitk2_groupedn2": 332.6,
+          "splitk4": 349.5,
+          "splitk4_groupedn2": 364.5,
+          "splitk8": 479.4,
+          "splitk8_groupedn2": 504.2
+        },
+        "predicted_us": {
+          "direct": 330.4225512099111,
+          "direct_groupedn2": 426.11668343423054,
+          "host": 522.8845377272827,
+          "splitk16": 1143.4202194205327,
+          "splitk16_groupedn2": 1110.2046262737454,
+          "splitk2": 250.5639704177258,
+          "splitk2_groupedn2": 301.62218500039904,
+          "splitk4": 276.552318343117,
+          "splitk4_groupedn2": 316.53954657793514,
+          "splitk8": 446.43587551591014,
+          "splitk8_groupedn2": 493.15052269669246
+        },
+        "host_wins": false,
+        "host_error": false,
+        "fused_error": false,
+        "regret": 0.005767382249279196,
+        "order_invariant": true
+      },
+      {
+        "shape": [
+          4,
+          64,
+          512,
+          2048
+        ],
+        "chosen": "splitk2",
+        "measured_us": {
+          "direct": 325.6,
+          "host": 578.7,
+          "splitk16": 804.0,
+          "splitk2": 327.5,
+          "splitk4": 367.9,
+          "splitk8": 513.5999999999999
+        },
+        "predicted_us": {
+          "direct": 333.0050645896613,
+          "host": 541.7807327152017,
+          "splitk16": 1366.5795950826366,
+          "splitk2": 270.8208047459293,
+          "splitk4": 310.15362338089966,
+          "splitk8": 570.7494057215953
+        },
+        "host_wins": false,
+        "host_error": false,
+        "fused_error": false,
+        "regret": 0.005835380835380821,
+        "order_invariant": true
+      },
+      {
+        "shape": [
+          4,
+          64,
+          1024,
+          512
+        ],
+        "chosen": "splitk4",
+        "measured_us": {
+          "direct": 403.7,
+          "direct_groupedn2": 468.9,
+          "host": 581.0999999999999,
+          "splitk16": 715.5,
+          "splitk16_groupedn2": 801.5,
+          "splitk2": 342.6,
+          "splitk2_groupedn2": 370.59999999999997,
+          "splitk4": 349.2,
+          "splitk4_groupedn2": 387.40000000000003,
+          "splitk8": 458.1,
+          "splitk8_groupedn2": 509.8
+        },
+        "predicted_us": {
+          "direct": 458.7156491254379,
+          "direct_groupedn2": 610.3011215830779,
+          "host": 548.9475404032554,
+          "splitk16": 641.9300945982494,
+          "splitk16_groupedn2": 728.6450366100669,
+          "splitk2": 305.234743119007,
+          "splitk2_groupedn2": 386.4653476050696,
+          "splitk4": 285.7151421185354,
+          "splitk4_groupedn2": 346.4779638675887,
+          "splitk8": 369.28931444999,
+          "splitk8_groupedn2": 430.2106082083719
+        },
+        "host_wins": false,
+        "host_error": false,
+        "fused_error": false,
+        "regret": 0.01926444833625207,
+        "order_invariant": true
+      },
+      {
+        "shape": [
+          4,
+          64,
+          1024,
+          1024
+        ],
+        "chosen": "splitk4",
+        "measured_us": {
+          "direct": 409.4,
+          "direct_groupedn2": 467.4,
+          "host": 570.3000000000001,
+          "splitk16": 779.3,
+          "splitk16_groupedn2": 838.3000000000001,
+          "splitk2": 348.5,
+          "splitk2_groupedn2": 381.7,
+          "splitk4": 366.9,
+          "splitk4_groupedn2": 395.1,
+          "splitk8": 492.59999999999997,
+          "splitk8_groupedn2": 527.3
+        },
+        "predicted_us": {
+          "direct": 457.9352433252498,
+          "direct_groupedn2": 594.4108936554873,
+          "host": 563.1023336091794,
+          "splitk16": 833.4874555344852,
+          "splitk16_groupedn2": 812.4982118382188,
+          "splitk2": 324.41512218278774,
+          "splitk2_groupedn2": 392.9645156507255,
+          "splitk4": 317.53528604530703,
+          "splitk4_groupedn2": 365.5485298654352,
+          "splitk8": 423.1370052991373,
+          "splitk8_groupedn2": 469.760125067335
+        },
+        "host_wins": false,
+        "host_error": false,
+        "fused_error": false,
+        "regret": 0.052797704447632654,
+        "order_invariant": true
+      },
+      {
+        "shape": [
+          4,
+          64,
+          2048,
+          256
+        ],
+        "chosen": "splitk4",
+        "measured_us": {
+          "direct": 609.9,
+          "direct_groupedn2": 726.9,
+          "host": 574.2,
+          "splitk16": 710.9,
+          "splitk16_groupedn2": 809.3000000000001,
+          "splitk2": 450.1,
+          "splitk2_groupedn2": 510.90000000000003,
+          "splitk4": 390.2,
+          "splitk4_groupedn2": 442.3,
+          "splitk8": 477.0,
+          "splitk8_groupedn2": 540.9000000000001
+        },
+        "predicted_us": {
+          "direct": 676.9666319316848,
+          "direct_groupedn2": 941.4999353238555,
+          "host": 613.3197802648781,
+          "splitk16": 545.6946520531774,
+          "splitk16_groupedn2": 683.9230457418514,
+          "splitk2": 416.075381803957,
+          "splitk2_groupedn2": 565.1725248125931,
+          "splitk4": 350.6652618754768,
+          "splitk4_groupedn2": 464.77757347217226,
+          "splitk8": 388.3585221009206,
+          "splitk8_groupedn2": 500.0576214118287
+        },
+        "host_wins": false,
+        "host_error": false,
+        "fused_error": false,
+        "regret": 0.0,
+        "order_invariant": true
+      },
+      {
+        "shape": [
+          4,
+          64,
+          2048,
+          512
+        ],
+        "chosen": "splitk4",
+        "measured_us": {
+          "direct": 607.9,
+          "direct_groupedn2": 736.7,
+          "host": 582.6,
+          "splitk16": 744.8000000000001,
+          "splitk16_groupedn2": 817.0,
+          "splitk2": 443.3,
+          "splitk2_groupedn2": 505.4,
+          "splitk4": 400.3,
+          "splitk4_groupedn2": 452.2,
+          "splitk8": 484.4,
+          "splitk8_groupedn2": 549.5
+        },
+        "predicted_us": {
+          "direct": 659.0835779920117,
+          "direct_groupedn2": 882.728259648344,
+          "host": 613.2189170900809,
+          "splitk16": 608.2564692708409,
+          "splitk16_groupedn2": 693.8885831999609,
+          "splitk2": 422.90754488200923,
+          "splitk2_groupedn2": 538.9467535307762,
+          "splitk4": 369.82205245071526,
+          "splitk4_groupedn2": 451.27653468579183,
+          "splitk8": 423.8952111710878,
+          "splitk8_groupedn2": 496.67838474557146
+        },
+        "host_wins": false,
+        "host_error": false,
+        "fused_error": false,
+        "regret": 0.0,
+        "order_invariant": true
+      },
+      {
+        "shape": [
+          4,
+          64,
+          2048,
+          1024
+        ],
+        "chosen": "splitk4",
+        "measured_us": {
+          "direct": 612.4000000000001,
+          "direct_groupedn2": 732.9,
+          "host": 588.5,
+          "splitk16": 824.7,
+          "splitk16_groupedn2": 866.0,
+          "splitk2": 463.6,
+          "splitk2_groupedn2": 506.29999999999995,
+          "splitk4": 418.5,
+          "splitk4_groupedn2": 457.1,
+          "splitk8": 549.3,
+          "splitk8_groupedn2": 564.6999999999999
+        },
+        "predicted_us": {
+          "direct": 657.9622262010796,
+          "direct_groupedn2": 859.7448452199138,
+          "host": 628.6824817071813,
+          "splitk16": 789.7652602567015,
+          "splitk16_groupedn2": 773.7418779074271,
+          "splitk2": 449.48221907880674,
+          "splitk2_groupedn2": 548.0101410087204,
+          "splitk4": 411.0091578252176,
+          "splitk4_groupedn2": 476.11529501909047,
+          "splitk8": 485.7051801450131,
+          "splitk8_groupedn2": 542.3382717470033
+        },
+        "host_wins": false,
+        "host_error": false,
+        "fused_error": false,
+        "regret": 0.0,
+        "order_invariant": true
+      },
+      {
+        "shape": [
+          4,
+          64,
+          2048,
+          2048
+        ],
+        "chosen": "splitk4",
+        "measured_us": {
+          "direct": 620.8000000000001,
+          "host": 594.9,
+          "splitk16": 951.0999999999999,
+          "splitk2": 471.9,
+          "splitk4": 498.7,
+          "splitk8": 652.5999999999999
+        },
+        "predicted_us": {
+          "direct": 663.1046255401186,
+          "host": 650.68051124959,
+          "splitk16": 943.9022643310595,
+          "splitk2": 485.82052145061914,
+          "splitk4": 460.9469989395794,
+          "splitk8": 620.9534632352239
+        },
+        "host_wins": false,
+        "host_error": false,
+        "fused_error": false,
+        "regret": 0.056791693155329614,
+        "order_invariant": true
+      },
+      {
+        "shape": [
+          4,
+          64,
+          4096,
+          128
+        ],
+        "chosen": "splitk4",
+        "measured_us": {
+          "direct": 1036.5,
+          "direct_groupedn2": 1170.3,
+          "host": 638.3,
+          "splitk16": 752.6,
+          "splitk16_groupedn2": 796.5,
+          "splitk2": 660.9000000000001,
+          "splitk2_groupedn2": 737.3,
+          "splitk4": 504.49999999999994,
+          "splitk4_groupedn2": 560.0,
+          "splitk8": 519.7,
+          "splitk8_groupedn2": 571.3000000000001
+        },
+        "predicted_us": {
+          "direct": 1057.7898226635261,
+          "direct_groupedn2": 1338.4507038600916,
+          "host": 726.3279698782269,
+          "splitk16": 617.7811938303536,
+          "splitk16_groupedn2": 761.5567670433601,
+          "splitk2": 627.306599262549,
+          "splitk2_groupedn2": 788.4330148090779,
+          "splitk4": 500.7054821490929,
+          "splitk4_groupedn2": 625.1458663421257,
+          "splitk8": 506.4223898492278,
+          "splitk8_groupedn2": 628.1857528930602
+        },
+        "host_wins": false,
+        "host_error": false,
+        "fused_error": false,
+        "regret": 0.0,
+        "order_invariant": true
+      },
+      {
+        "shape": [
+          4,
+          64,
+          4096,
+          256
+        ],
+        "chosen": "splitk4",
+        "measured_us": {
+          "direct": 1037.4,
+          "direct_groupedn2": 1266.5,
+          "host": 641.7,
+          "splitk16": 743.5,
+          "splitk16_groupedn2": 851.9,
+          "splitk2": 657.4,
+          "splitk2_groupedn2": 778.2,
+          "splitk4": 498.59999999999997,
+          "splitk4_groupedn2": 589.5,
+          "splitk8": 524.8000000000001,
+          "splitk8_groupedn2": 605.5
+        },
+        "predicted_us": {
+          "direct": 990.9890861981291,
+          "direct_groupedn2": 1387.5222447854771,
+          "host": 698.420492105225,
+          "splitk16": 626.296434126687,
+          "splitk16_groupedn2": 789.4776788507185,
+          "splitk2": 597.7332668329464,
+          "splitk2_groupedn2": 817.3392889374772,
+          "splitk4": 485.7834172909023,
+          "splitk4_groupedn2": 648.0655531681487,
+          "splitk8": 502.60969233983457,
+          "splitk8_groupedn2": 651.2168909042948
+        },
+        "host_wins": false,
+        "host_error": false,
+        "fused_error": false,
+        "regret": 0.0,
+        "order_invariant": true
+      },
+      {
+        "shape": [
+          4,
+          64,
+          4096,
+          512
+        ],
+        "chosen": "splitk4",
+        "measured_us": {
+          "direct": 1033.4,
+          "direct_groupedn2": 1263.0,
+          "host": 637.0,
+          "splitk16": 785.1,
+          "splitk16_groupedn2": 864.7,
+          "splitk2": 648.2,
+          "splitk2_groupedn2": 770.5999999999999,
+          "splitk4": 507.90000000000003,
+          "splitk4_groupedn2": 585.0,
+          "splitk8": 546.6999999999999,
+          "splitk8_groupedn2": 605.9
+        },
+        "predicted_us": {
+          "direct": 964.8105817738872,
+          "direct_groupedn2": 1300.9081921903742,
+          "host": 697.9187679135598,
+          "splitk16": 698.0988722229528,
+          "splitk16_groupedn2": 800.9811906166932,
+          "splitk2": 607.5482837099253,
+          "splitk2_groupedn2": 779.4121169883488,
+          "splitk4": 512.3216432262716,
+          "splitk4_groupedn2": 629.2402338368996,
+          "splitk8": 548.6008651751898,
+          "splitk8_groupedn2": 646.8161039858009
+        },
+        "host_wins": false,
+        "host_error": false,
+        "fused_error": false,
+        "regret": 0.0,
+        "order_invariant": true
+      },
+      {
+        "shape": [
+          4,
+          64,
+          4096,
+          1024
+        ],
+        "chosen": "splitk4",
+        "measured_us": {
+          "direct": 1055.6000000000001,
+          "direct_groupedn2": 1255.2,
+          "host": 647.0,
+          "splitk16": 913.5,
+          "splitk16_groupedn2": 911.1,
+          "splitk2": 664.8,
+          "splitk2_groupedn2": 767.4,
+          "splitk4": 536.2,
+          "splitk4_groupedn2": 587.9,
+          "splitk8": 631.1999999999999,
+          "splitk8_groupedn2": 625.0
+        },
+        "predicted_us": {
+          "direct": 963.1690258718561,
+          "direct_groupedn2": 1267.0366519281538,
+          "host": 715.121844484566,
+          "splitk16": 906.4173402203611,
+          "splitk16_groupedn2": 893.1587517943296,
+          "splitk2": 645.7253859843348,
+          "splitk2_groupedn2": 792.5193367235412,
+          "splitk4": 569.3789097155407,
+          "splitk4_groupedn2": 663.8742814376076,
+          "splitk8": 628.5946673578161,
+          "splitk8_groupedn2": 706.2781911063221
+        },
+        "host_wins": false,
+        "host_error": false,
+        "fused_error": false,
+        "regret": 0.0,
+        "order_invariant": true
+      },
+      {
+        "shape": [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        "chosen": "splitk4",
+        "measured_us": {
+          "direct": 1068.1000000000001,
+          "host": 645.3,
+          "splitk16": 1148.1,
+          "splitk2": 724.8,
+          "splitk4": 720.9,
+          "splitk8": 825.2
+        },
+        "predicted_us": {
+          "direct": 970.6967899897011,
+          "host": 739.7344548358762,
+          "splitk16": 1083.3210858832206,
+          "splitk2": 697.9289121793604,
+          "splitk4": 638.558748384593,
+          "splitk8": 803.6315902268923
+        },
+        "host_wins": true,
+        "host_error": true,
+        "fused_error": false,
+        "regret": 0.11715481171548126,
+        "order_invariant": true
+      },
+      {
+        "shape": [
+          4,
+          64,
+          8192,
+          128
+        ],
+        "chosen": "splitk8",
+        "measured_us": {
+          "direct": 1885.1,
+          "direct_groupedn2": 2135.0,
+          "host": 822.2,
+          "splitk16": 810.2,
+          "splitk16_groupedn2": 865.1999999999999,
+          "splitk2": 1080.8999999999999,
+          "splitk2_groupedn2": 1223.6,
+          "splitk4": 720.3000000000001,
+          "splitk4_groupedn2": 801.3000000000001,
+          "splitk8": 642.0,
+          "splitk8_groupedn2": 701.0999999999999
+        },
+        "predicted_us": {
+          "direct": 1563.2360543225575,
+          "direct_groupedn2": 1991.41581448698,
+          "host": 835.4625115605066,
+          "splitk16": 799.4695416964469,
+          "splitk16_groupedn2": 991.6926773451047,
+          "splitk2": 918.2283234131912,
+          "splitk2_groupedn2": 1161.85968014601,
+          "splitk4": 719.2617620883198,
+          "splitk4_groupedn2": 904.0072587127574,
+          "splitk8": 701.5070793729096,
+          "splitk8_groupedn2": 875.8527043242633
+        },
+        "host_wins": false,
+        "host_error": false,
+        "fused_error": false,
+        "regret": 0.0,
+        "order_invariant": true
+      },
+      {
+        "shape": [
+          4,
+          64,
+          8192,
+          256
+        ],
+        "chosen": "splitk8",
+        "measured_us": {
+          "direct": 1883.6,
+          "direct_groupedn2": 2315.6,
+          "host": 817.8,
+          "splitk16": 792.0,
+          "splitk16_groupedn2": 922.0,
+          "splitk2": 1078.6,
+          "splitk2_groupedn2": 1305.5,
+          "splitk4": 721.7,
+          "splitk4_groupedn2": 849.9,
+          "splitk8": 636.7,
+          "splitk8_groupedn2": 742.6
+        },
+        "predicted_us": {
+          "direct": 1464.5156222067542,
+          "direct_groupedn2": 2064.4267807169194,
+          "host": 802.9167230075424,
+          "splitk16": 810.4890211964479,
+          "splitk16_groupedn2": 1028.0509507149363,
+          "splitk2": 874.9398833360245,
+          "splitk2_groupedn2": 1204.4567596981396,
+          "splitk4": 697.8261985055542,
+          "splitk4_groupedn2": 937.1507353073232,
+          "splitk8": 696.2255827645452,
+          "splitk8_groupedn2": 907.9639548991692
+        },
+        "host_wins": false,
+        "host_error": false,
+        "fused_error": false,
+        "regret": 0.0,
+        "order_invariant": true
+      },
+      {
+        "shape": [
+          4,
+          64,
+          8192,
+          512
+        ],
+        "chosen": "splitk4",
+        "measured_us": {
+          "direct": 1888.6000000000001,
+          "direct_groupedn2": 2319.3,
+          "host": 842.7,
+          "splitk16": 874.1999999999999,
+          "splitk16_groupedn2": 921.4,
+          "splitk2": 1086.3,
+          "splitk2_groupedn2": 1293.9,
+          "splitk4": 721.4000000000001,
+          "splitk4_groupedn2": 848.1999999999999,
+          "splitk8": 655.5999999999999,
+          "splitk8_groupedn2": 740.0
+        },
+        "predicted_us": {
+          "direct": 1425.8281159201192,
+          "direct_groupedn2": 1935.5578567660384,
+          "host": 801.8954688636131,
+          "splitk16": 903.4083760723499,
+          "splitk16_groupedn2": 1043.0306733951086,
+          "splitk2": 889.3066999222268,
+          "splitk2_groupedn2": 1148.5660368381937,
+          "splitk4": 735.9482329429496,
+          "splitk4_groupedn2": 909.9278871463944,
+          "splitk8": 759.9334922380046,
+          "splitk8_groupedn2": 901.8280819910436
+        },
+        "host_wins": false,
+        "host_error": false,
+        "fused_error": false,
+        "regret": 0.1003660768761443,
+        "order_invariant": true
+      },
+      {
+        "shape": [
+          4,
+          64,
+          8192,
+          1024
+        ],
+        "chosen": "splitk4",
+        "measured_us": {
+          "direct": 1918.7,
+          "direct_groupedn2": 2302.1,
+          "host": 944.1,
+          "splitk16": 1095.2,
+          "splitk16_groupedn2": 999.7,
+          "splitk2": 1106.9,
+          "splitk2_groupedn2": 1286.8999999999999,
+          "splitk4": 764.0,
+          "splitk4_groupedn2": 844.1999999999999,
+          "splitk8": 850.8,
+          "splitk8_groupedn2": 759.9
+        },
+        "predicted_us": {
+          "direct": 1423.4021376453145,
+          "direct_groupedn2": 1885.1619986162632,
+          "host": 821.206331941199,
+          "splitk16": 1172.992867209029,
+          "splitk16_groupedn2": 1163.063456287419,
+          "splitk2": 945.1889070947097,
+          "splitk2_groupedn2": 1167.881217159364,
+          "splitk4": 817.9107753225379,
+          "splitk4_groupedn2": 960.0112568477326,
+          "splitk8": 870.7425737526316,
+          "splitk8_groupedn2": 984.7335080706753
+        },
+        "host_wins": false,
+        "host_error": false,
+        "fused_error": false,
+        "regret": 0.005395446769311807,
+        "order_invariant": true
+      },
+      {
+        "shape": [
+          4,
+          128,
+          1024,
+          512
+        ],
+        "chosen": "splitk4",
+        "measured_us": {
+          "direct": 402.0,
+          "host": 569.1,
+          "splitk16": 751.3,
+          "splitk2": 353.8,
+          "splitk4": 359.70000000000005,
+          "splitk8": 481.3
+        },
+        "predicted_us": {
+          "direct": 451.3214681780016,
+          "host": 527.4758244657327,
+          "splitk16": 821.4497303335842,
+          "splitk2": 319.72972462110624,
+          "splitk4": 312.9492511990459,
+          "splitk8": 417.0258071541619
+        },
+        "host_wins": false,
+        "host_error": false,
+        "fused_error": false,
+        "regret": 0.01667608818541555,
+        "order_invariant": true
+      },
+      {
+        "shape": [
+          4,
+          128,
+          2048,
+          512
+        ],
+        "chosen": "splitk4",
+        "measured_us": {
+          "direct": 609.1999999999999,
+          "host": 576.2,
+          "splitk16": 792.6,
+          "splitk2": 447.90000000000003,
+          "splitk4": 415.5,
+          "splitk8": 535.5
+        },
+        "predicted_us": {
+          "direct": 648.4591844090654,
+          "host": 609.8927396357105,
+          "splitk16": 778.3585685421428,
+          "splitk2": 442.99028361111954,
+          "splitk4": 405.07289424020075,
+          "splitk8": 478.69007131093133
+        },
+        "host_wins": false,
+        "host_error": false,
+        "fused_error": false,
+        "regret": 0.0,
+        "order_invariant": true
+      },
+      {
+        "shape": [
+          4,
+          128,
+          4096,
+          512
+        ],
+        "chosen": "splitk4",
+        "measured_us": {
+          "direct": 1053.5,
+          "host": 666.1,
+          "splitk16": 887.4,
+          "splitk2": 669.6999999999999,
+          "splitk4": 518.9,
+          "splitk8": 611.4000000000001
+        },
+        "predicted_us": {
+          "direct": 949.2575775800533,
+          "host": 718.4708303216815,
+          "splitk16": 893.3255799783258,
+          "splitk2": 636.398907374109,
+          "splitk4": 561.1551348139534,
+          "splitk8": 619.5156147963654
+        },
+        "host_wins": false,
+        "host_error": false,
+        "fused_error": false,
+        "regret": 0.0,
+        "order_invariant": true
+      },
+      {
+        "shape": [
+          4,
+          256,
+          2048,
+          512
+        ],
+        "chosen": "splitk4",
+        "measured_us": {
+          "direct": 616.1,
+          "host": 594.6,
+          "splitk16": 929.1,
+          "splitk2": 456.8,
+          "splitk4": 488.59999999999997,
+          "splitk8": 629.8000000000001
+        },
+        "predicted_us": {
+          "direct": 723.1269445040938,
+          "host": 687.5133352360151,
+          "splitk16": 1029.341576014868,
+          "splitk2": 529.7955944249662,
+          "splitk4": 502.67059236694024,
+          "splitk8": 677.1603805097515
+        },
+        "host_wins": false,
+        "host_error": false,
+        "fused_error": false,
+        "regret": 0.06961471103327477,
+        "order_invariant": true
+      },
+      {
+        "shape": [
+          4,
+          256,
+          4096,
+          512
+        ],
+        "chosen": "splitk4",
+        "measured_us": {
+          "direct": 1059.1,
+          "host": 824.8,
+          "splitk16": 1098.3,
+          "splitk2": 682.1,
+          "splitk4": 688.5,
+          "splitk8": 816.2
+        },
+        "predicted_us": {
+          "direct": 1058.5610276613274,
+          "host": 838.3072412805321,
+          "splitk16": 1181.3796993929425,
+          "splitk2": 761.1031108065922,
+          "splitk4": 696.3589576919252,
+          "splitk8": 876.3736429175892
+        },
+        "host_wins": false,
+        "host_error": false,
+        "fused_error": false,
+        "regret": 0.009382788447441781,
+        "order_invariant": true
+      },
+      {
+        "shape": [
+          4,
+          256,
+          8192,
+          512
+        ],
+        "chosen": "splitk4",
+        "measured_us": {
+          "direct": 2139.1,
+          "host": 1268.8,
+          "splitk16": 1490.3,
+          "splitk2": 1233.5,
+          "splitk4": 1074.1000000000001,
+          "splitk8": 1180.8000000000002
+        },
+        "predicted_us": {
+          "direct": 1564.3751614477583,
+          "host": 1031.9269700606583,
+          "splitk16": 1528.8207722365923,
+          "splitk2": 1114.0743045053678,
+          "splitk4": 1000.3169432725175,
+          "splitk8": 1213.970964567018
+        },
+        "host_wins": false,
+        "host_error": false,
+        "fused_error": false,
+        "regret": 0.0,
+        "order_invariant": true
+      },
+      {
+        "shape": [
+          4,
+          512,
+          2048,
+          512
+        ],
+        "chosen": "splitk2",
+        "measured_us": {
+          "direct": 636.9,
+          "host": 727.9,
+          "splitk16": 1089.6,
+          "splitk2": 627.1,
+          "splitk4": 673.6,
+          "splitk8": 848.3000000000001
+        },
+        "predicted_us": {
+          "direct": 873.7242557080107,
+          "host": 839.7243350518412,
+          "splitk16": 1311.6492979694003,
+          "splitk2": 680.8048343432596,
+          "splitk4": 739.0168810590361,
+          "splitk8": 933.8357479573367
+        },
+        "host_wins": false,
+        "host_error": false,
+        "fused_error": false,
+        "regret": 0.0,
+        "order_invariant": true
+      },
+      {
+        "shape": [
+          4,
+          512,
+          4096,
+          512
+        ],
+        "chosen": "splitk2",
+        "measured_us": {
+          "direct": 1090.7,
+          "host": 1079.9,
+          "splitk16": 1346.7,
+          "splitk2": 1005.9,
+          "splitk4": 1049.8,
+          "splitk8": 1249.9
+        },
+        "predicted_us": {
+          "direct": 1279.0152244760075,
+          "host": 1059.8033296522815,
+          "splitk16": 1505.3853494209422,
+          "splitk2": 978.0425523291228,
+          "splitk4": 1023.7738018199744,
+          "splitk8": 1208.5600305674793
+        },
+        "host_wins": false,
+        "host_error": false,
+        "fused_error": false,
+        "regret": 0.0,
+        "order_invariant": true
+      },
+      {
+        "shape": [
+          4,
+          512,
+          8192,
+          512
+        ],
+        "chosen": "host",
+        "measured_us": {
+          "direct": 2336.9,
+          "host": 1529.8,
+          "splitk16": 2010.6000000000001,
+          "splitk2": 1830.0,
+          "splitk4": 1807.9,
+          "splitk8": 2022.8999999999999
+        },
+        "predicted_us": {
+          "direct": 1890.1693101554329,
+          "host": 1350.3224617777507,
+          "splitk16": 1948.1156655868044,
+          "splitk2": 1431.6220979145571,
+          "splitk4": 1470.6470381897307,
+          "splitk8": 1674.1223775973647
+        },
+        "host_wins": true,
+        "host_error": false,
+        "fused_error": false,
+        "regret": 0.0,
+        "order_invariant": true
+      }
+    ]
+  },
+  "evaluation": {
+    "training_diagnostic": false,
+    "mean_regret": 0.024453506110037916,
+    "max_regret": 0.1374492282696993,
+    "host_errors": 0,
+    "fused_errors": 0,
+    "decisions": [
+      {
+        "shape": [
+          4,
+          32,
+          1024,
+          512
+        ],
+        "chosen": "splitk4",
+        "measured_us": {
+          "direct": 399.5,
+          "host": 572.6999999999999,
+          "splitk16": 673.5,
+          "splitk2": 336.4,
+          "splitk4": 345.9,
+          "splitk8": 439.2
+        },
+        "predicted_us": {
+          "direct": 463.9664657381318,
+          "host": 568.5184966993652,
+          "splitk16": 649.2781264592312,
+          "splitk2": 308.7286977355463,
+          "splitk4": 288.9856601782405,
+          "splitk8": 373.51648758197547
+        },
+        "host_wins": false,
+        "host_error": false,
+        "fused_error": false,
+        "regret": 0.0282401902497027,
+        "order_invariant": true
+      },
+      {
+        "shape": [
+          4,
+          32,
+          8192,
+          512
+        ],
+        "chosen": "splitk4",
+        "measured_us": {
+          "direct": 1834.2,
+          "host": 795.5,
+          "splitk16": 771.8000000000001,
+          "splitk2": 1054.8999999999999,
+          "splitk4": 700.0999999999999,
+          "splitk8": 615.5
+        },
+        "predicted_us": {
+          "direct": 1442.1525161882446,
+          "host": 748.915887989995,
+          "splitk16": 913.7515582356951,
+          "splitk2": 899.4884310639835,
+          "splitk4": 744.3741528676858,
+          "splitk8": 768.6340209805193
+        },
+        "host_wins": false,
+        "host_error": false,
+        "fused_error": false,
+        "regret": 0.1374492282696993,
+        "order_invariant": true
+      },
+      {
+        "shape": [
+          4,
+          64,
+          512,
+          256
+        ],
+        "chosen": "splitk2",
+        "measured_us": {
+          "direct": 309.3,
+          "direct_groupedn2": 334.5,
+          "host": 561.9,
+          "splitk16": 681.5,
+          "splitk16_groupedn2": 784.8000000000001,
+          "splitk2": 312.8,
+          "splitk2_groupedn2": 328.40000000000003,
+          "splitk4": 333.6,
+          "splitk4_groupedn2": 345.5,
+          "splitk8": 429.70000000000005,
+          "splitk8_groupedn2": 479.6
+        },
+        "predicted_us": {
+          "direct": 339.9660945292496,
+          "direct_groupedn2": 466.6366836397354,
+          "host": 508.9774354247337,
+          "splitk16": 790.0547051333319,
+          "splitk16_groupedn2": 981.327100425651,
+          "splitk2": 231.94112064794396,
+          "splitk2_groupedn2": 311.0680110278343,
+          "splitk4": 235.9490184572172,
+          "splitk4_groupedn2": 309.00153140214314,
+          "splitk8": 356.95939461566604,
+          "splitk8_groupedn2": 454.70415275855953
+        },
+        "host_wins": false,
+        "host_error": false,
+        "fused_error": false,
+        "regret": 0.011315874555447802,
+        "order_invariant": true
+      },
+      {
+        "shape": [
+          4,
+          64,
+          1024,
+          128
+        ],
+        "chosen": "splitk4",
+        "measured_us": {
+          "direct": 398.0,
+          "direct_groupedn2": 435.40000000000003,
+          "host": 571.0,
+          "splitk16": 703.0999999999999,
+          "splitk16_groupedn2": 740.8000000000001,
+          "splitk2": 338.1,
+          "splitk2_groupedn2": 351.9,
+          "splitk4": 345.2,
+          "splitk4_groupedn2": 360.59999999999997,
+          "splitk8": 439.59999999999997,
+          "splitk8_groupedn2": 475.4
+        },
+        "predicted_us": {
+          "direct": 502.9218534436913,
+          "direct_groupedn2": 627.9130749338298,
+          "host": 570.0275578037316,
+          "splitk16": 568.0742562689724,
+          "splitk16_groupedn2": 692.7804143551294,
+          "splitk2": 315.16112944665866,
+          "splitk2_groupedn2": 390.9379523540853,
+          "splitk4": 279.2367183971211,
+          "splitk4_groupedn2": 344.2231900387795,
+          "splitk8": 340.8966837236979,
+          "splitk8_groupedn2": 417.81882162339696
+        },
+        "host_wins": false,
+        "host_error": false,
+        "fused_error": false,
+        "regret": 0.0209997042295178,
+        "order_invariant": true
+      },
+      {
+        "shape": [
+          4,
+          64,
+          1024,
+          256
+        ],
+        "chosen": "splitk4",
+        "measured_us": {
+          "direct": 403.3,
+          "direct_groupedn2": 460.6,
+          "host": 571.8,
+          "splitk16": 691.6999999999999,
+          "splitk16_groupedn2": 793.6999999999999,
+          "splitk2": 341.7,
+          "splitk2_groupedn2": 368.9,
+          "splitk4": 352.2,
+          "splitk4_groupedn2": 381.79999999999995,
+          "splitk8": 444.29999999999995,
+          "splitk8_groupedn2": 496.59999999999997
+        },
+        "predicted_us": {
+          "direct": 471.1619872860053,
+          "direct_groupedn2": 650.9345882173195,
+          "host": 548.7336089588263,
+          "splitk16": 575.9046883513823,
+          "splitk16_groupedn2": 718.1801936371571,
+          "splitk2": 300.30355202152475,
+          "splitk2_groupedn2": 405.27111982967625,
+          "splitk4": 270.9150393733732,
+          "splitk4_groupedn2": 356.8436291701004,
+          "splitk8": 338.3303728811294,
+          "splitk8_groupedn2": 433.13753680241945
+        },
+        "host_wins": false,
+        "host_error": false,
+        "fused_error": false,
+        "regret": 0.030728709394205467,
+        "order_invariant": true
+      },
+      {
+        "shape": [
+          4,
+          64,
+          1024,
+          2048
+        ],
+        "chosen": "splitk2",
+        "measured_us": {
+          "direct": 417.3,
+          "host": 572.0,
+          "splitk16": 856.9,
+          "splitk2": 355.0,
+          "splitk4": 413.4,
+          "splitk8": 565.6999999999999
+        },
+        "predicted_us": {
+          "direct": 461.5143248758279,
+          "host": 583.1286980579565,
+          "splitk16": 996.1576862331702,
+          "splitk2": 350.64241631556683,
+          "splitk4": 356.1160168752137,
+          "splitk8": 540.9627325653946
+        },
+        "host_wins": false,
+        "host_error": false,
+        "fused_error": false,
+        "regret": 0.0,
+        "order_invariant": true
+      },
+      {
+        "shape": [
+          4,
+          64,
+          2048,
+          128
+        ],
+        "chosen": "splitk4",
+        "measured_us": {
+          "direct": 603.9,
+          "direct_groupedn2": 679.6,
+          "host": 580.2,
+          "splitk16": 720.8,
+          "splitk16_groupedn2": 764.5,
+          "splitk2": 449.7,
+          "splitk2_groupedn2": 489.70000000000005,
+          "splitk4": 383.7,
+          "splitk4_groupedn2": 423.3,
+          "splitk8": 469.4,
+          "splitk8_groupedn2": 495.5
+        },
+        "predicted_us": {
+          "direct": 722.5995584181757,
+          "direct_groupedn2": 908.2023841502532,
+          "host": 637.4733834529603,
+          "splitk16": 538.2751849302348,
+          "splitk16_groupedn2": 659.7350859130896,
+          "splitk2": 436.66096096322593,
+          "splitk2_groupedn2": 545.1843544890465,
+          "splitk4": 361.4367618725091,
+          "splitk4_groupedn2": 448.34002052458874,
+          "splitk8": 391.30445776481184,
+          "splitk8_groupedn2": 482.3723368844513
+        },
+        "host_wins": false,
+        "host_error": false,
+        "fused_error": false,
+        "regret": 0.0,
+        "order_invariant": true
+      },
+      {
+        "shape": [
+          4,
+          64,
+          8192,
+          2048
+        ],
+        "chosen": "host",
+        "measured_us": {
+          "direct": 2321.2999999999997,
+          "host": 1047.1,
+          "splitk16": 1536.3,
+          "splitk2": 1342.5,
+          "splitk4": 1193.7,
+          "splitk8": 1251.0
+        },
+        "predicted_us": {
+          "direct": 1434.5268921513596,
+          "host": 848.9995503280119,
+          "splitk16": 1401.9236338573373,
+          "splitk2": 1021.6024832488001,
+          "splitk4": 917.2873561039296,
+          "splitk8": 1113.2073928805269
+        },
+        "host_wins": true,
+        "host_error": false,
+        "fused_error": false,
+        "regret": 0.0,
+        "order_invariant": true
+      },
+      {
+        "shape": [
+          4,
+          128,
+          512,
+          512
+        ],
+        "chosen": "splitk2",
+        "measured_us": {
+          "direct": 310.09999999999997,
+          "host": 563.1,
+          "splitk16": 721.4000000000001,
+          "splitk2": 315.0,
+          "splitk4": 340.4,
+          "splitk8": 456.0
+        },
+        "predicted_us": {
+          "direct": 325.650749436434,
+          "host": 472.9490952875993,
+          "splitk16": 1126.9075007489967,
+          "splitk2": 246.94544742638996,
+          "splitk4": 272.55848427127006,
+          "splitk8": 439.9886657394283
+        },
+        "host_wins": false,
+        "host_error": false,
+        "fused_error": false,
+        "regret": 0.015801354401806078,
+        "order_invariant": true
+      },
+      {
+        "shape": [
+          4,
+          128,
+          8192,
+          512
+        ],
+        "chosen": "splitk4",
+        "measured_us": {
+          "direct": 1911.8,
+          "host": 1036.0,
+          "splitk16": 1063.6000000000001,
+          "splitk2": 1099.5,
+          "splitk4": 742.3,
+          "splitk8": 814.6
+        },
+        "predicted_us": {
+          "direct": 1402.8431591758183,
+          "host": 854.4535076998775,
+          "splitk16": 1156.0506872979329,
+          "splitk2": 931.5370248355507,
+          "splitk4": 806.0972409915842,
+          "splitk8": 858.1659607542339
+        },
+        "host_wins": false,
+        "host_error": false,
+        "fused_error": false,
+        "regret": 0.0,
+        "order_invariant": true
+      }
+    ]
+  }
+}

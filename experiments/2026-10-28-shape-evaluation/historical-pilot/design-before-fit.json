@@ -1,0 +1,440 @@
+{
+  "purpose": "retrospective_development_only",
+  "settings": {
+    "epochs": 100,
+    "learning_rate": 0.003,
+    "weight_decay": 0.001,
+    "temperature": 0.05,
+    "seeds": [
+      0,
+      1
+    ],
+    "gradient_clip": 10.0,
+    "batching": "all training shapes; equal shape mass",
+    "max_seconds": 10.0
+  },
+  "variants": {
+    "linear_latency": [
+      0,
+      0.0,
+      0.0
+    ],
+    "linear_decision": [
+      0,
+      1.0,
+      1.0
+    ],
+    "mlp_decision": [
+      8,
+      1.0,
+      1.0
+    ]
+  },
+  "features": [
+    "host",
+    "merged_host",
+    "geometry_unknown",
+    "uniform_dependencies",
+    "prepared",
+    "log_P",
+    "log_M",
+    "log_K",
+    "log_N",
+    "log_SM",
+    "log_q",
+    "log_group_N",
+    "log_gemms_per_destination",
+    "log_logical_flops",
+    "log_A_bytes",
+    "log_B_bytes",
+    "log_remote_input_bytes",
+    "log_m_tiles",
+    "log_n_tiles",
+    "log_output_tiles",
+    "log_ctas",
+    "log_K_iterations",
+    "valid_tile_fraction",
+    "last_M_fraction",
+    "last_N_fraction",
+    "reference_waves",
+    "last_wave_fraction",
+    "log_epilogue_edges",
+    "log_padded_work",
+    "group_x_K_depth",
+    "q_x_output_tiles"
+  ],
+  "shape_folds": [
+    {
+      "shape": [
+        4,
+        32,
+        512,
+        512
+      ],
+      "fold": 3
+    },
+    {
+      "shape": [
+        4,
+        32,
+        1024,
+        512
+      ],
+      "fold": 2
+    },
+    {
+      "shape": [
+        4,
+        32,
+        2048,
+        512
+      ],
+      "fold": 3
+    },
+    {
+      "shape": [
+        4,
+        32,
+        4096,
+        512
+      ],
+      "fold": 1
+    },
+    {
+      "shape": [
+        4,
+        32,
+        8192,
+        512
+      ],
+      "fold": 2
+    },
+    {
+      "shape": [
+        4,
+        64,
+        512,
+        128
+      ],
+      "fold": 0
+    },
+    {
+      "shape": [
+        4,
+        64,
+        512,
+        256
+      ],
+      "fold": 2
+    },
+    {
+      "shape": [
+        4,
+        64,
+        512,
+        512
+      ],
+      "fold": 3
+    },
+    {
+      "shape": [
+        4,
+        64,
+        512,
+        1024
+      ],
+      "fold": 1
+    },
+    {
+      "shape": [
+        4,
+        64,
+        512,
+        2048
+      ],
+      "fold": 0
+    },
+    {
+      "shape": [
+        4,
+        64,
+        1024,
+        128
+      ],
+      "fold": 2
+    },
+    {
+      "shape": [
+        4,
+        64,
+        1024,
+        256
+      ],
+      "fold": 2
+    },
+    {
+      "shape": [
+        4,
+        64,
+        1024,
+        512
+      ],
+      "fold": 0
+    },
+    {
+      "shape": [
+        4,
+        64,
+        1024,
+        1024
+      ],
+      "fold": 0
+    },
+    {
+      "shape": [
+        4,
+        64,
+        1024,
+        2048
+      ],
+      "fold": 2
+    },
+    {
+      "shape": [
+        4,
+        64,
+        2048,
+        128
+      ],
+      "fold": 2
+    },
+    {
+      "shape": [
+        4,
+        64,
+        2048,
+        256
+      ],
+      "fold": 0
+    },
+    {
+      "shape": [
+        4,
+        64,
+        2048,
+        512
+      ],
+      "fold": 1
+    },
+    {
+      "shape": [
+        4,
+        64,
+        2048,
+        1024
+      ],
+      "fold": 0
+    },
+    {
+      "shape": [
+        4,
+        64,
+        2048,
+        2048
+      ],
+      "fold": 3
+    },
+    {
+      "shape": [
+        4,
+        64,
+        4096,
+        128
+      ],
+      "fold": 0
+    },
+    {
+      "shape": [
+        4,
+        64,
+        4096,
+        256
+      ],
+      "fold": 1
+    },
+    {
+      "shape": [
+        4,
+        64,
+        4096,
+        512
+      ],
+      "fold": 1
+    },
+    {
+      "shape": [
+        4,
+        64,
+        4096,
+        1024
+      ],
+      "fold": 1
+    },
+    {
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      "fold": 3
+    },
+    {
+      "shape": [
+        4,
+        64,
+        8192,
+        128
+      ],
+      "fold": 0
+    },
+    {
+      "shape": [
+        4,
+        64,
+        8192,
+        256
+      ],
+      "fold": 3
+    },
+    {
+      "shape": [
+        4,
+        64,
+        8192,
+        512
+      ],
+      "fold": 0
+    },
+    {
+      "shape": [
+        4,
+        64,
+        8192,
+        1024
+      ],
+      "fold": 3
+    },
+    {
+      "shape": [
+        4,
+        64,
+        8192,
+        2048
+      ],
+      "fold": 2
+    },
+    {
+      "shape": [
+        4,
+        128,
+        512,
+        512
+      ],
+      "fold": 2
+    },
+    {
+      "shape": [
+        4,
+        128,
+        1024,
+        512
+      ],
+      "fold": 1
+    },
+    {
+      "shape": [
+        4,
+        128,
+        2048,
+        512
+      ],
+      "fold": 1
+    },
+    {
+      "shape": [
+        4,
+        128,
+        4096,
+        512
+      ],
+      "fold": 0
+    },
+    {
+      "shape": [
+        4,
+        128,
+        8192,
+        512
+      ],
+      "fold": 2
+    },
+    {
+      "shape": [
+        4,
+        256,
+        2048,
+        512
+      ],
+      "fold": 1
+    },
+    {
+      "shape": [
+        4,
+        256,
+        4096,
+        512
+      ],
+      "fold": 1
+    },
+    {
+      "shape": [
+        4,
+        256,
+        8192,
+        512
+      ],
+      "fold": 3
+    },
+    {
+      "shape": [
+        4,
+        512,
+        2048,
+        512
+      ],
+      "fold": 3
+    },
+    {
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ],
+      "fold": 0
+    },
+    {
+      "shape": [
+        4,
+        512,
+        8192,
+        512
+      ],
+      "fold": 3
+    }
+  ],
+  "dataset_manifest_sha256": "bf237f25dc73e71721f02871e6639ef1eb0380d5b88534974014246dc57f6f72",
+  "compiler_admission": false,
+  "feature_provenance": "legacy 64x128x32 geometry; current ledger service/identity claims are not transferred"
+}

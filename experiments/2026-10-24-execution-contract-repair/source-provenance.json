@@ -1,0 +1,191 @@
+{
+  "project": {
+    "model": {
+      "path": "EDM-IR/edmir/compiler/model.py",
+      "symbols": [
+        "Op.resources",
+        "Program"
+      ],
+      "sha256": "6da0b9dfb88160c373c1e688eeb7c55b5efeddc4bf8325da71337a9f5a96b0e9"
+    },
+    "policy": {
+      "path": "EDM-IR/edmir/compiler/execution_policy.py",
+      "symbols": [
+        "dependency_policy"
+      ],
+      "sha256": "18b2901a2d05907d7de831472160600e4258016d5fffc18f2299049559b8a9b3"
+    },
+    "publication": {
+      "path": "EDM-IR/edmir/compiler/remote_publication.py",
+      "symbols": [
+        "validate_remote_publication"
+      ],
+      "sha256": "82fa8c42b951bf525a78269a538ab1fb0f0c618bf70fe5d49cdc51bc29d169cf"
+    },
+    "target": {
+      "path": "EDM-IR/edmir/compiler/target.py",
+      "symbols": [
+        "Target"
+      ],
+      "sha256": "e611a335fc37c36f9fa4fcc5cd73abcf2856194b4569d0f84dbbc4d8cac205a4"
+    },
+    "codegen": {
+      "path": "EDM-IR/edmir/compiler/backends/cpp_backend.py",
+      "symbols": [
+        "CppManifestBackend.emit"
+      ],
+      "sha256": "b0e150bcc069d5fd39b27159f242cf720889f2f29c13040a88b810aad5d6eaa7"
+    },
+    "program_types": {
+      "path": "EDM-IR/runtime/include/edmir/runtime/program.hpp",
+      "symbols": [
+        "ProgramView",
+        "DependencyPolicy"
+      ],
+      "sha256": "cc02aa0f96c8930861e46ece2555a31c1461f9f13cb4a910c2070020c60ecec6"
+    },
+    "runtime_validation": {
+      "path": "EDM-IR/runtime/src/validate.cpp",
+      "symbols": [
+        "validate_program"
+      ],
+      "sha256": "9dccf171bc695b57f548d16233f8ed26889a3fb1e21e4953ffb77f25c830d8c4"
+    },
+    "uniform_adapter": {
+      "path": "EDM-IR/runtime/src/uniform_workload.cpp",
+      "symbols": [
+        "uniform_workload",
+        "validate_uniform_peer_policy"
+      ],
+      "sha256": "20b5e7d41ad10fd6b5d8dd364fc23505426f10e543333f4d8cd13d3c2625507d"
+    },
+    "merged_runtime": {
+      "path": "EDM-IR/runtime/src/merged_host_backend.cpp",
+      "symbols": [
+        "execute",
+        "copy_from_host",
+        "prepare_lt"
+      ],
+      "sha256": "29c285572c07847b0ff6a83dca1003950fa34def6e60f25d8443fd7d0ecc48d4"
+    },
+    "host_registry": {
+      "path": "EDM-IR/edmir/compiler/host_baseline.py",
+      "symbols": [
+        "HOST_BASELINES"
+      ],
+      "sha256": "51bd1652d6b0bea770b2b09931e80b66466ba0bb127010a9da2029c9975ddf9d"
+    },
+    "runtime_header": {
+      "path": "EDM-IR/runtime/include/edmir/runtime/cuda_backend.hpp",
+      "symbols": [
+        "CudaBackendOptions",
+        "CudaBackend"
+      ],
+      "sha256": "9b9fa7f86706897fae126ac7b8dce6ea1992f6b154200d130e923201294b5fcb"
+    },
+    "prepared_header": {
+      "path": "EDM-IR/runtime/include/edmir/runtime/prepared_execution.hpp",
+      "symbols": [
+        "PreparedExecution"
+      ],
+      "sha256": "f8849e43a0ddf7f2e96d2f56b7bb38a971e088c471af862e89aedf426e1278f0"
+    },
+    "merged_header": {
+      "path": "EDM-IR/runtime/include/edmir/runtime/merged_host_backend.hpp",
+      "symbols": [
+        "MergedHostBackend"
+      ],
+      "sha256": "4cfac502042b97f1868a5a7ae5034cb6b3a06836b910ec1c7345498028c452b4"
+    },
+    "uniform_header": {
+      "path": "EDM-IR/runtime/include/edmir/runtime/uniform_workload.hpp",
+      "symbols": [
+        "UniformWorkload"
+      ],
+      "sha256": "ea373addde9c7b225a997f5542389c4163f50ab10aa31557d838e060adbe9a32"
+    },
+    "family_parser": {
+      "path": "EDM-IR/edmir/compiler/two_stage_selection.py",
+      "symbols": [
+        "parse_schedule_family"
+      ],
+      "sha256": "4d875a82ca57fbd07ce538a4fecf4db0d306c963945c010bcbe6cc05a2e8a8d2"
+    },
+    "lowering": {
+      "path": "EDM-IR/edmir/compiler/schedule.py",
+      "symbols": [
+        "build_sequential_program",
+        "build_fused_program"
+      ],
+      "sha256": "c7dcbe3f7fd818c1f036afa2161449da8f18d56290db715bbd6331e55d8bfc97"
+    },
+    "dependencies": {
+      "path": "EDM-IR/edmir/compiler/dependence.py",
+      "symbols": [
+        "derive_dependencies"
+      ],
+      "sha256": "ac05505b8202ab55cc4a1b0a196d63ece8760ed7043226c5f3f403a0144677cd"
+    },
+    "kernel_type": {
+      "path": "EDM-IR/runtime/src/cutlass_sm80_gemm.cuh",
+      "symbols": [
+        "Sm80Gemm",
+        "Sm80Epilogue"
+      ],
+      "sha256": "3dfe30701dc6b0de406ea224aa49de5e571bba58e7a20fd6c875f7fd9f64f6e0"
+    },
+    "fused_launcher": {
+      "path": "EDM-IR/runtime/src/nccl_device_fused_cutlass.cu",
+      "symbols": [
+        "launch_lsa_cutlass_gemm_f16_sm80",
+        "lsa_cutlass_workspace_size",
+        "lsa_cutlass_gemm"
+      ],
+      "sha256": "0301fad59dfa9c8d2b7ddb8c9622cc75b6fccdaa9c6450a2d51fdbaf59a3f47a"
+    },
+    "host_launcher": {
+      "path": "EDM-IR/runtime/src/cutlass_gemm.cu",
+      "symbols": [
+        "launch_cutlass_gemm_f16_sm80"
+      ],
+      "sha256": "5cd55bea876b7b7b6cc55fba13b94ac60f20011a59e6c5d3a9866f97417b7f98"
+    },
+    "runtime": {
+      "path": "EDM-IR/runtime/src/cuda_backend.cpp",
+      "symbols": [
+        "execute",
+        "synchronize",
+        "prepare_fused_cutlass_workspaces",
+        "record_completion"
+      ],
+      "sha256": "93459b8be9717f0983f6633790353d2aeede02044fff514ea5eedcbcb26e0a43"
+    },
+    "prepared_runtime": {
+      "path": "EDM-IR/runtime/src/prepared_execution.cpp",
+      "symbols": [
+        "prepare_execution"
+      ],
+      "sha256": "491c6ceb9349fc919dced43cd36d5d963eb173616ad8b009cb9ad34f712ba35f"
+    },
+    "timer": {
+      "path": "EDM-IR/runtime/tools/benchmark_selector.cpp",
+      "symbols": [
+        "measure"
+      ],
+      "sha256": "134f0d39a7966bb8c36a5252a76c729e3db0beeec3ba0b7bc268617f6d7754fc"
+    },
+    "ledger": {
+      "path": "EDM-IR/edmir/compiler/execution_ledger.py",
+      "symbols": [
+        "execution_ledger"
+      ],
+      "sha256": "dd02fcc474d321f497a9a03516dd5b80a7a20969a9311a0ddb5f8741db75001b"
+    }
+  },
+  "cutlass": {
+    "revision": "dcf215af68a2d08d305076c152a06f201728cd53",
+    "path": "include/cutlass/gemm/kernel/gemm.h",
+    "url": "https://github.com/NVIDIA/cutlass/blob/dcf215af68a2d08d305076c152a06f201728cd53/include/cutlass/gemm/kernel/gemm.h",
+    "status": "pinned_source_semantics_not_a_verified_runtime_build"
+  }
+}

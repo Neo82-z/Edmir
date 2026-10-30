@@ -1,0 +1,25 @@
+{
+  "schema": "edmir.splitk-controlled-design.v1",
+  "status": "development_only",
+  "selection_data": "P4 leave-group-out only; all historical P8 outcomes are diagnostic",
+  "variants": [
+    {"basis": "original", "loss": "reference"},
+    {"basis": "original", "loss": "pairwise"},
+    {"basis": "waves", "loss": "reference"},
+    {"basis": "waves", "loss": "pairwise"}
+  ],
+  "ridge": 1.0,
+  "sm_count": 108,
+  "hyperparameter_search": false,
+  "unchanged": ["host/direct gate", "grouped/plain model", "grouped support", "direct-only calibration offset"],
+  "local_gate": {
+    "q_only": ["mean regret <= train-best-fixed q", "max regret <= train-best-fixed q"],
+    "full_surface": [
+      "mean regret <= original relative with the same support restrictions",
+      "max regret <= original relative with the same support restrictions",
+      "host regression count <= original relative with the same support restrictions"
+    ],
+    "on_failure": "do not promote the split-K revision; retain all diagnostic results"
+  },
+  "independent_validation": "new GPU labels are required regardless of local gate outcome"
+}

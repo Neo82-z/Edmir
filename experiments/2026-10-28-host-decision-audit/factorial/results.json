@@ -1,0 +1,604 @@
+{
+  "design": {
+    "variants": [
+      {
+        "representation": "original",
+        "cross_path": false,
+        "balanced": false,
+        "width": 8
+      },
+      {
+        "representation": "original",
+        "cross_path": false,
+        "balanced": true,
+        "width": 8
+      },
+      {
+        "representation": "original",
+        "cross_path": true,
+        "balanced": false,
+        "width": 8
+      },
+      {
+        "representation": "original",
+        "cross_path": true,
+        "balanced": true,
+        "width": 8
+      },
+      {
+        "representation": "path_geometry",
+        "cross_path": false,
+        "balanced": false,
+        "width": 8
+      },
+      {
+        "representation": "path_geometry",
+        "cross_path": false,
+        "balanced": true,
+        "width": 8
+      },
+      {
+        "representation": "path_geometry",
+        "cross_path": true,
+        "balanced": false,
+        "width": 8
+      },
+      {
+        "representation": "path_geometry",
+        "cross_path": true,
+        "balanced": true,
+        "width": 8
+      },
+      {
+        "representation": "path_geometry",
+        "cross_path": true,
+        "balanced": false,
+        "width": 0
+      }
+    ],
+    "settings": {
+      "epochs": 1000,
+      "learning_rate": 0.003,
+      "weight_decay": 0.001,
+      "temperature": 0.05,
+      "gradient_clip": 10.0,
+      "seeds": [
+        0,
+        1
+      ],
+      "max_seconds": 10.0
+    },
+    "data": "same original P4 measurements and same four folds",
+    "weighting": "balanced uses training-fold measured winner counts only; evaluation remains shape-uniform",
+    "initialization_and_scaler": "same within a feature representation; not changed by loss or weighting",
+    "total_seconds_cap": 180,
+    "new_GPU_data": 0,
+    "new_boundary_shapes_used": false
+  },
+  "variants": [
+    {
+      "variant": 0,
+      "config": {
+        "representation": "original",
+        "cross_path": false,
+        "balanced": false,
+        "width": 8
+      },
+      "train_host_errors_per_fold": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "mean_regret": 0.008366602529142338,
+      "max_regret": 0.18178846908092572,
+      "host_errors": 1,
+      "fused_errors": 0,
+      "host_winning_choices": [
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            2048
+          ],
+          "chosen": "host",
+          "regret": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            2048
+          ],
+          "chosen": "host",
+          "regret": 0.0
+        },
+        {
+          "shape": [
+            4,
+            512,
+            8192,
+            512
+          ],
+          "chosen": "splitk4",
+          "regret": 0.18178846908092572
+        }
+      ],
+      "all_order_invariant": true,
+      "files": [
+        "variant-0-fold-0.json",
+        "variant-0-fold-1.json",
+        "variant-0-fold-2.json",
+        "variant-0-fold-3.json"
+      ]
+    },
+    {
+      "variant": 1,
+      "config": {
+        "representation": "original",
+        "cross_path": false,
+        "balanced": true,
+        "width": 8
+      },
+      "train_host_errors_per_fold": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "mean_regret": 0.02378620316660146,
+      "max_regret": 0.1962348019348934,
+      "host_errors": 2,
+      "fused_errors": 2,
+      "host_winning_choices": [
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            2048
+          ],
+          "chosen": "host",
+          "regret": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            2048
+          ],
+          "chosen": "splitk4",
+          "regret": 0.11715481171548126
+        },
+        {
+          "shape": [
+            4,
+            512,
+            8192,
+            512
+          ],
+          "chosen": "splitk2",
+          "regret": 0.1962348019348934
+        }
+      ],
+      "all_order_invariant": true,
+      "files": [
+        "variant-1-fold-0.json",
+        "variant-1-fold-1.json",
+        "variant-1-fold-2.json",
+        "variant-1-fold-3.json"
+      ]
+    },
+    {
+      "variant": 2,
+      "config": {
+        "representation": "original",
+        "cross_path": true,
+        "balanced": false,
+        "width": 8
+      },
+      "train_host_errors_per_fold": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "mean_regret": 0.011812244144962954,
+      "max_regret": 0.1962348019348934,
+      "host_errors": 1,
+      "fused_errors": 0,
+      "host_winning_choices": [
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            2048
+          ],
+          "chosen": "host",
+          "regret": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            2048
+          ],
+          "chosen": "host",
+          "regret": 0.0
+        },
+        {
+          "shape": [
+            4,
+            512,
+            8192,
+            512
+          ],
+          "chosen": "splitk2",
+          "regret": 0.1962348019348934
+        }
+      ],
+      "all_order_invariant": true,
+      "files": [
+        "variant-2-fold-0.json",
+        "variant-2-fold-1.json",
+        "variant-2-fold-2.json",
+        "variant-2-fold-3.json"
+      ]
+    },
+    {
+      "variant": 3,
+      "config": {
+        "representation": "original",
+        "cross_path": true,
+        "balanced": true,
+        "width": 8
+      },
+      "train_host_errors_per_fold": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "mean_regret": 0.018785467880637417,
+      "max_regret": 0.1962348019348934,
+      "host_errors": 3,
+      "fused_errors": 1,
+      "host_winning_choices": [
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            2048
+          ],
+          "chosen": "splitk4",
+          "regret": 0.14000573011173723
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            2048
+          ],
+          "chosen": "splitk2",
+          "regret": 0.12319851231985135
+        },
+        {
+          "shape": [
+            4,
+            512,
+            8192,
+            512
+          ],
+          "chosen": "splitk2",
+          "regret": 0.1962348019348934
+        }
+      ],
+      "all_order_invariant": true,
+      "files": [
+        "variant-3-fold-0.json",
+        "variant-3-fold-1.json",
+        "variant-3-fold-2.json",
+        "variant-3-fold-3.json"
+      ]
+    },
+    {
+      "variant": 4,
+      "config": {
+        "representation": "path_geometry",
+        "cross_path": false,
+        "balanced": false,
+        "width": 8
+      },
+      "train_host_errors_per_fold": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "mean_regret": 0.03243729811415751,
+      "max_regret": 0.815865849725895,
+      "host_errors": 1,
+      "fused_errors": 2,
+      "host_winning_choices": [
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            2048
+          ],
+          "chosen": "host",
+          "regret": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            2048
+          ],
+          "chosen": "host",
+          "regret": 0.0
+        },
+        {
+          "shape": [
+            4,
+            512,
+            8192,
+            512
+          ],
+          "chosen": "splitk4",
+          "regret": 0.18178846908092572
+        }
+      ],
+      "all_order_invariant": true,
+      "files": [
+        "variant-4-fold-0.json",
+        "variant-4-fold-1.json",
+        "variant-4-fold-2.json",
+        "variant-4-fold-3.json"
+      ]
+    },
+    {
+      "variant": 5,
+      "config": {
+        "representation": "path_geometry",
+        "cross_path": false,
+        "balanced": true,
+        "width": 8
+      },
+      "train_host_errors_per_fold": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "mean_regret": 0.017036014822051384,
+      "max_regret": 0.18178846908092572,
+      "host_errors": 1,
+      "fused_errors": 1,
+      "host_winning_choices": [
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            2048
+          ],
+          "chosen": "host",
+          "regret": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            2048
+          ],
+          "chosen": "host",
+          "regret": 0.0
+        },
+        {
+          "shape": [
+            4,
+            512,
+            8192,
+            512
+          ],
+          "chosen": "splitk4",
+          "regret": 0.18178846908092572
+        }
+      ],
+      "all_order_invariant": true,
+      "files": [
+        "variant-5-fold-0.json",
+        "variant-5-fold-1.json",
+        "variant-5-fold-2.json",
+        "variant-5-fold-3.json"
+      ]
+    },
+    {
+      "variant": 6,
+      "config": {
+        "representation": "path_geometry",
+        "cross_path": true,
+        "balanced": false,
+        "width": 8
+      },
+      "train_host_errors_per_fold": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "mean_regret": 0.022013044888297785,
+      "max_regret": 0.18178846908092572,
+      "host_errors": 2,
+      "fused_errors": 0,
+      "host_winning_choices": [
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            2048
+          ],
+          "chosen": "host",
+          "regret": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            2048
+          ],
+          "chosen": "splitk4",
+          "regret": 0.11715481171548126
+        },
+        {
+          "shape": [
+            4,
+            512,
+            8192,
+            512
+          ],
+          "chosen": "splitk4",
+          "regret": 0.18178846908092572
+        }
+      ],
+      "all_order_invariant": true,
+      "files": [
+        "variant-6-fold-0.json",
+        "variant-6-fold-1.json",
+        "variant-6-fold-2.json",
+        "variant-6-fold-3.json"
+      ]
+    },
+    {
+      "variant": 7,
+      "config": {
+        "representation": "path_geometry",
+        "cross_path": true,
+        "balanced": true,
+        "width": 8
+      },
+      "train_host_errors_per_fold": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "mean_regret": 0.024614634488799875,
+      "max_regret": 0.1962348019348934,
+      "host_errors": 2,
+      "fused_errors": 1,
+      "host_winning_choices": [
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            2048
+          ],
+          "chosen": "host",
+          "regret": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            2048
+          ],
+          "chosen": "splitk4",
+          "regret": 0.11715481171548126
+        },
+        {
+          "shape": [
+            4,
+            512,
+            8192,
+            512
+          ],
+          "chosen": "splitk2",
+          "regret": 0.1962348019348934
+        }
+      ],
+      "all_order_invariant": true,
+      "files": [
+        "variant-7-fold-0.json",
+        "variant-7-fold-1.json",
+        "variant-7-fold-2.json",
+        "variant-7-fold-3.json"
+      ]
+    },
+    {
+      "variant": 8,
+      "config": {
+        "representation": "path_geometry",
+        "cross_path": true,
+        "balanced": false,
+        "width": 0
+      },
+      "train_host_errors_per_fold": [
+        1,
+        1,
+        1,
+        0
+      ],
+      "mean_regret": 0.030275614280267156,
+      "max_regret": 0.18178846908092572,
+      "host_errors": 2,
+      "fused_errors": 0,
+      "host_winning_choices": [
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            2048
+          ],
+          "chosen": "host",
+          "regret": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            2048
+          ],
+          "chosen": "splitk4",
+          "regret": 0.11715481171548126
+        },
+        {
+          "shape": [
+            4,
+            512,
+            8192,
+            512
+          ],
+          "chosen": "splitk4",
+          "regret": 0.18178846908092572
+        }
+      ],
+      "all_order_invariant": true,
+      "files": [
+        "variant-8-fold-0.json",
+        "variant-8-fold-1.json",
+        "variant-8-fold-2.json",
+        "variant-8-fold-3.json"
+      ]
+    }
+  ],
+  "seconds": 35.88030408404302,
+  "compiler_admission": false
+}

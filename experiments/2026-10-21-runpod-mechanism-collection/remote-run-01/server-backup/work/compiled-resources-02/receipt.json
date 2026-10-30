@@ -1,0 +1,23 @@
+{
+  "command": [
+    "nvcc",
+    "-O3",
+    "-std=c++20",
+    "--expt-relaxed-constexpr",
+    "-arch=sm_80",
+    "-I",
+    "/workspace/runpod-mechanism-collection/bundle-r01/source/EDM-IR/runtime/src",
+    "-I",
+    "/workspace/runpod-mechanism-collection/dependencies/cutlass/include",
+    "/workspace/runpod-mechanism-collection/kernel_type_sizes.cu",
+    "-o",
+    "/workspace/runpod-mechanism-collection/work/compiled-resources-02/kernel_type_sizes"
+  ],
+  "benchmark_binary": "/workspace/runpod-mechanism-collection/work/build/mechanism_w004_splitk2",
+  "benchmark_sha256": "71a397efc5d31e9e2d54d4407cffbc1067df953b4ecad1057e636c1aa2a4a13e",
+  "introspection_source_sha256": "816798c3048d525d88c6c5e24036d7d2d39af1209815a5e3c7c2efea2f87c3ee",
+  "introspection_binary_sha256": "5107129d47a4a7f9892c32e409bf2786b741cdc6a599f10f53f8babd111fb916",
+  "scope": "Static compiled resources, not achieved occupancy or memory traffic",
+  "primary_dataset": false,
+  "compiler_admission": false
+}

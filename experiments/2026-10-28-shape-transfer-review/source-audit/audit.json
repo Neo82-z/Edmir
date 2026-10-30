@@ -1,0 +1,701 @@
+{
+  "sources": {
+    "EDM-IR/runtime/src/cuda_backend.cpp": {
+      "revision": "f584d7d",
+      "snapshot": "experiments/2026-10-28-shape-transfer-review/source-audit/cuda_backend.cpp",
+      "sha256": "a0fb4fae9998987671798eba2b26a3e0889b6affa9736eaef44c4864469d9ac5"
+    },
+    "EDM-IR/runtime/src/cutlass_sm80_gemm.cuh": {
+      "revision": "f584d7d",
+      "snapshot": "experiments/2026-10-28-shape-transfer-review/source-audit/cutlass_sm80_gemm.cuh",
+      "sha256": "3dfe30701dc6b0de406ea224aa49de5e571bba58e7a20fd6c875f7fd9f64f6e0"
+    },
+    "EDM-IR/runtime/src/nccl_device_fused_cutlass.cu": {
+      "revision": "f584d7d",
+      "snapshot": "experiments/2026-10-28-shape-transfer-review/source-audit/nccl_device_fused_cutlass.cu",
+      "sha256": "0301fad59dfa9c8d2b7ddb8c9622cc75b6fccdaa9c6450a2d51fdbaf59a3f47a"
+    },
+    "experiments/2026-10-28-paired-gpu-readiness/dependencies/cutlass/include/cutlass/gemm/threadblock/threadblock_swizzle.h": {
+      "sha256": "a8c1731909ecb877be8933bedfd645c5ebb792bd5d45d542d1aa04d7692ff4fe",
+      "reviewed_dependency": "dcf215af68a2d08d305076c152a06f201728cd53",
+      "archived_binary_dependency_verified": false
+    },
+    "experiments/2026-10-28-paired-gpu-readiness/dependencies/cutlass/include/cutlass/gemm/kernel/gemm.h": {
+      "sha256": "8e293ca5a8b3cf3e891d83a404e16de654998a2a497f8156114c4c7d14a4e237",
+      "reviewed_dependency": "dcf215af68a2d08d305076c152a06f201728cd53",
+      "archived_binary_dependency_verified": false
+    }
+  },
+  "source_findings": {
+    "default_swizzle_N": 1,
+    "reviewed_default_swizzle_N_boundary_switch": false,
+    "short_K_q2_partition_iterations": 8,
+    "short_K_q1_partition_iterations": 16,
+    "short_K_partition_padding": false,
+    "workspace_memset_location": "construction/setup, not each measured iteration",
+    "last_partition_releases_zero_for_next_grid": true,
+    "source_is_proof_of_actual_archived_binary": false
+  },
+  "work_collision": [
+    {
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      "q2_us": 724.8,
+      "q4_us": 720.9,
+      "q4_minus_q2_us": -3.8999999999999773,
+      "q2_geometry": {
+        "shape": [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        "q": 2,
+        "group_n": 1,
+        "full_tiles": true,
+        "M_tiles": 1,
+        "N_tiles": 16,
+        "depth": 64,
+        "ctas": 32,
+        "chains": 16,
+        "logical_A_load_bytes": 8388608,
+        "logical_B_load_bytes": 16777216,
+        "output_write_bytes": 524288,
+        "extra_output_read_bytes": 262144,
+        "unique_A_bytes": 524288,
+        "unique_B_bytes": 16777216,
+        "A_row_stride_bytes": 8192,
+        "B_row_stride_bytes": 4096,
+        "A_reuse_across_N_tiles": 16,
+        "B_reuse_across_M_tiles": 1,
+        "per_destination_source_GEMMs": 4,
+        "per_destination_unique_weight_bytes": 16777216,
+        "per_destination_addressed_input_bytes": 2097152,
+        "per_destination_remote_input_bytes": 1572864,
+        "per_destination_logical_B_load_bytes": 67108864,
+        "weight_reuse_across_source_GEMMs": 4,
+        "program_locality_contract": "uniform per-source runtime, one weight.r buffer per destination",
+        "padded_flops": 1073741824,
+        "valid_flops": 1073741824,
+        "physical_cache_or_partition_mapping": null
+      },
+      "q4_geometry": {
+        "shape": [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        "q": 4,
+        "group_n": 1,
+        "full_tiles": true,
+        "M_tiles": 1,
+        "N_tiles": 16,
+        "depth": 32,
+        "ctas": 64,
+        "chains": 16,
+        "logical_A_load_bytes": 8388608,
+        "logical_B_load_bytes": 16777216,
+        "output_write_bytes": 1048576,
+        "extra_output_read_bytes": 786432,
+        "unique_A_bytes": 524288,
+        "unique_B_bytes": 16777216,
+        "A_row_stride_bytes": 8192,
+        "B_row_stride_bytes": 4096,
+        "A_reuse_across_N_tiles": 16,
+        "B_reuse_across_M_tiles": 1,
+        "per_destination_source_GEMMs": 4,
+        "per_destination_unique_weight_bytes": 16777216,
+        "per_destination_addressed_input_bytes": 2097152,
+        "per_destination_remote_input_bytes": 1572864,
+        "per_destination_logical_B_load_bytes": 67108864,
+        "weight_reuse_across_source_GEMMs": 4,
+        "program_locality_contract": "uniform per-source runtime, one weight.r buffer per destination",
+        "padded_flops": 1073741824,
+        "valid_flops": 1073741824,
+        "physical_cache_or_partition_mapping": null
+      }
+    },
+    {
+      "shape": [
+        4,
+        256,
+        4096,
+        512
+      ],
+      "q2_us": 682.1,
+      "q4_us": 688.5,
+      "q4_minus_q2_us": 6.399999999999977,
+      "q2_geometry": {
+        "shape": [
+          4,
+          256,
+          4096,
+          512
+        ],
+        "q": 2,
+        "group_n": 1,
+        "full_tiles": true,
+        "M_tiles": 4,
+        "N_tiles": 4,
+        "depth": 64,
+        "ctas": 32,
+        "chains": 16,
+        "logical_A_load_bytes": 8388608,
+        "logical_B_load_bytes": 16777216,
+        "output_write_bytes": 524288,
+        "extra_output_read_bytes": 262144,
+        "unique_A_bytes": 2097152,
+        "unique_B_bytes": 4194304,
+        "A_row_stride_bytes": 8192,
+        "B_row_stride_bytes": 1024,
+        "A_reuse_across_N_tiles": 4,
+        "B_reuse_across_M_tiles": 4,
+        "per_destination_source_GEMMs": 4,
+        "per_destination_unique_weight_bytes": 4194304,
+        "per_destination_addressed_input_bytes": 8388608,
+        "per_destination_remote_input_bytes": 6291456,
+        "per_destination_logical_B_load_bytes": 67108864,
+        "weight_reuse_across_source_GEMMs": 4,
+        "program_locality_contract": "uniform per-source runtime, one weight.r buffer per destination",
+        "padded_flops": 1073741824,
+        "valid_flops": 1073741824,
+        "physical_cache_or_partition_mapping": null
+      },
+      "q4_geometry": {
+        "shape": [
+          4,
+          256,
+          4096,
+          512
+        ],
+        "q": 4,
+        "group_n": 1,
+        "full_tiles": true,
+        "M_tiles": 4,
+        "N_tiles": 4,
+        "depth": 32,
+        "ctas": 64,
+        "chains": 16,
+        "logical_A_load_bytes": 8388608,
+        "logical_B_load_bytes": 16777216,
+        "output_write_bytes": 1048576,
+        "extra_output_read_bytes": 786432,
+        "unique_A_bytes": 2097152,
+        "unique_B_bytes": 4194304,
+        "A_row_stride_bytes": 8192,
+        "B_row_stride_bytes": 1024,
+        "A_reuse_across_N_tiles": 4,
+        "B_reuse_across_M_tiles": 4,
+        "per_destination_source_GEMMs": 4,
+        "per_destination_unique_weight_bytes": 4194304,
+        "per_destination_addressed_input_bytes": 8388608,
+        "per_destination_remote_input_bytes": 6291456,
+        "per_destination_logical_B_load_bytes": 67108864,
+        "weight_reuse_across_source_GEMMs": 4,
+        "program_locality_contract": "uniform per-source runtime, one weight.r buffer per destination",
+        "padded_flops": 1073741824,
+        "valid_flops": 1073741824,
+        "physical_cache_or_partition_mapping": null
+      }
+    }
+  ],
+  "minimum_max_gap_error_for_any_equal_work_only_function_us": 5.149999999999977,
+  "bound_scope": "one shared function restricted to this count-only representation; not a CV error lower bound and not a hardware-cause proof",
+  "M_extension_changes": [
+    {
+      "shape": [
+        4,
+        512,
+        2048,
+        512
+      ],
+      "candidate": "host",
+      "old_us": 740.4105775570068,
+      "new_us": 631.4000000000002,
+      "observed_us": 727.9,
+      "shape_mean_mape_contribution_change": 0.00046904851825103775,
+      "M_tile_counts": [
+        8,
+        2,
+        4
+      ],
+      "M_tail_fractions": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "extrapolation_weights": [
+        -2.0,
+        3.0
+      ]
+    },
+    {
+      "shape": [
+        4,
+        256,
+        8192,
+        512
+      ],
+      "candidate": "host",
+      "old_us": 1311.2956735796322,
+      "new_us": 1422.5999999999995,
+      "observed_us": 1268.8,
+      "shape_mean_mape_contribution_change": 0.0003566019951646501,
+      "M_tile_counts": [
+        4,
+        1,
+        2
+      ],
+      "M_tail_fractions": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "extrapolation_weights": [
+        -2.0,
+        3.0
+      ]
+    },
+    {
+      "shape": [
+        4,
+        256,
+        8192,
+        512
+      ],
+      "candidate": "splitk2",
+      "old_us": 1219.1119780619235,
+      "new_us": 1125.8999999999999,
+      "observed_us": 1233.5,
+      "shape_mean_mape_contribution_change": 0.00030718320221039203,
+      "M_tile_counts": [
+        4,
+        1,
+        2
+      ],
+      "M_tail_fractions": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "extrapolation_weights": [
+        -2.0,
+        3.0
+      ]
+    },
+    {
+      "shape": [
+        4,
+        128,
+        512,
+        512
+      ],
+      "candidate": "splitk16",
+      "old_us": 746.1419662221674,
+      "new_us": 797.0026858276785,
+      "observed_us": 721.4000000000001,
+      "shape_mean_mape_contribution_change": 0.00028659674619535645,
+      "M_tile_counts": [
+        2,
+        1,
+        1
+      ],
+      "M_tail_fractions": [
+        1.0,
+        0.5,
+        1.0
+      ],
+      "extrapolation_weights": [
+        -2.0,
+        3.0
+      ]
+    },
+    {
+      "shape": [
+        4,
+        128,
+        512,
+        512
+      ],
+      "candidate": "splitk8",
+      "old_us": 469.1375261526813,
+      "new_us": 494.68596662484305,
+      "observed_us": 456.0,
+      "shape_mean_mape_contribution_change": 0.00022775317779348263,
+      "M_tile_counts": [
+        2,
+        1,
+        1
+      ],
+      "M_tail_fractions": [
+        1.0,
+        0.5,
+        1.0
+      ],
+      "extrapolation_weights": [
+        -2.0,
+        3.0
+      ]
+    },
+    {
+      "shape": [
+        4,
+        256,
+        8192,
+        512
+      ],
+      "candidate": "direct",
+      "old_us": 2057.6612055516152,
+      "new_us": 1958.2000000000014,
+      "observed_us": 2139.1,
+      "shape_mean_mape_contribution_change": 0.00018901119335503117,
+      "M_tile_counts": [
+        4,
+        1,
+        2
+      ],
+      "M_tail_fractions": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "extrapolation_weights": [
+        -2.0,
+        3.0
+      ]
+    },
+    {
+      "shape": [
+        4,
+        512,
+        2048,
+        512
+      ],
+      "candidate": "splitk16",
+      "old_us": 1159.5541356736467,
+      "new_us": 1202.1000000000008,
+      "observed_us": 1089.6,
+      "shape_mean_mape_contribution_change": 0.0001587285866311583,
+      "M_tile_counts": [
+        8,
+        2,
+        4
+      ],
+      "M_tail_fractions": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "extrapolation_weights": [
+        -2.0,
+        3.0
+      ]
+    },
+    {
+      "shape": [
+        4,
+        256,
+        8192,
+        512
+      ],
+      "candidate": "splitk8",
+      "old_us": 1183.1283582880797,
+      "new_us": 1132.6000000000006,
+      "observed_us": 1180.8000000000002,
+      "shape_mean_mape_contribution_change": 0.00015791843517940187,
+      "M_tile_counts": [
+        4,
+        1,
+        2
+      ],
+      "M_tail_fractions": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "extrapolation_weights": [
+        -2.0,
+        3.0
+      ]
+    },
+    {
+      "shape": [
+        4,
+        512,
+        2048,
+        512
+      ],
+      "candidate": "splitk2",
+      "old_us": 642.9633225900168,
+      "new_us": 591.9782968699581,
+      "observed_us": 627.1,
+      "shape_mean_mape_contribution_change": 0.0001248383029121355,
+      "M_tile_counts": [
+        8,
+        2,
+        4
+      ],
+      "M_tail_fractions": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "extrapolation_weights": [
+        -2.0,
+        3.0
+      ]
+    },
+    {
+      "shape": [
+        4,
+        512,
+        2048,
+        512
+      ],
+      "candidate": "splitk4",
+      "old_us": 693.2005186916658,
+      "new_us": 634.8000000000002,
+      "observed_us": 673.6,
+      "shape_mean_mape_contribution_change": 0.00011586501185436167,
+      "M_tile_counts": [
+        8,
+        2,
+        4
+      ],
+      "M_tail_fractions": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "extrapolation_weights": [
+        -2.0,
+        3.0
+      ]
+    },
+    {
+      "shape": [
+        4,
+        512,
+        2048,
+        512
+      ],
+      "candidate": "splitk8",
+      "old_us": 840.5314922744903,
+      "new_us": 818.4000000000004,
+      "observed_us": 848.3000000000001,
+      "shape_mean_mape_contribution_change": 0.000106053773134456,
+      "M_tile_counts": [
+        8,
+        2,
+        4
+      ],
+      "M_tail_fractions": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "extrapolation_weights": [
+        -2.0,
+        3.0
+      ]
+    },
+    {
+      "shape": [
+        4,
+        256,
+        8192,
+        512
+      ],
+      "candidate": "splitk4",
+      "old_us": 1115.8359846567405,
+      "new_us": 1018.8565937399168,
+      "observed_us": 1074.1000000000001,
+      "shape_mean_mape_contribution_change": 5.112021031539724e-05,
+      "M_tile_counts": [
+        4,
+        1,
+        2
+      ],
+      "M_tail_fractions": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "extrapolation_weights": [
+        -2.0,
+        3.0
+      ]
+    },
+    {
+      "shape": [
+        4,
+        128,
+        512,
+        512
+      ],
+      "candidate": "splitk4",
+      "old_us": 337.79351779361036,
+      "new_us": 344.40327809709447,
+      "observed_us": 340.4,
+      "shape_mean_mape_contribution_change": 1.6680470258625348e-05,
+      "M_tile_counts": [
+        2,
+        1,
+        1
+      ],
+      "M_tail_fractions": [
+        1.0,
+        0.5,
+        1.0
+      ],
+      "extrapolation_weights": [
+        -2.0,
+        3.0
+      ]
+    },
+    {
+      "shape": [
+        4,
+        128,
+        512,
+        512
+      ],
+      "candidate": "host",
+      "old_us": 570.8298404756216,
+      "new_us": 555.6999999999999,
+      "observed_us": 563.1,
+      "shape_mean_mape_contribution_change": -2.3811311339914602e-06,
+      "M_tile_counts": [
+        2,
+        1,
+        1
+      ],
+      "M_tail_fractions": [
+        1.0,
+        0.5,
+        1.0
+      ],
+      "extrapolation_weights": [
+        -2.0,
+        3.0
+      ]
+    },
+    {
+      "shape": [
+        4,
+        256,
+        8192,
+        512
+      ],
+      "candidate": "splitk16",
+      "old_us": 1438.2409946538417,
+      "new_us": 1442.400000000003,
+      "observed_us": 1490.3,
+      "shape_mean_mape_contribution_change": -1.134437750614228e-05,
+      "M_tile_counts": [
+        4,
+        1,
+        2
+      ],
+      "M_tail_fractions": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "extrapolation_weights": [
+        -2.0,
+        3.0
+      ]
+    },
+    {
+      "shape": [
+        4,
+        128,
+        512,
+        512
+      ],
+      "candidate": "direct",
+      "old_us": 293.71755733166134,
+      "new_us": 322.9470083960312,
+      "observed_us": 310.09999999999997,
+      "shape_mean_mape_contribution_change": -4.634532097313744e-05,
+      "M_tile_counts": [
+        2,
+        1,
+        1
+      ],
+      "M_tail_fractions": [
+        1.0,
+        0.5,
+        1.0
+      ],
+      "extrapolation_weights": [
+        -2.0,
+        3.0
+      ]
+    },
+    {
+      "shape": [
+        4,
+        128,
+        512,
+        512
+      ],
+      "candidate": "splitk2",
+      "old_us": 289.34672244977264,
+      "new_us": 335.19909829638584,
+      "observed_us": 315.0,
+      "shape_mean_mape_contribution_change": -7.038558851260162e-05,
+      "M_tile_counts": [
+        2,
+        1,
+        1
+      ],
+      "M_tail_fractions": [
+        1.0,
+        0.5,
+        1.0
+      ],
+      "extrapolation_weights": [
+        -2.0,
+        3.0
+      ]
+    },
+    {
+      "shape": [
+        4,
+        512,
+        2048,
+        512
+      ],
+      "candidate": "direct",
+      "old_us": 678.1086690907348,
+      "new_us": 629.9000000000005,
+      "observed_us": 636.9,
+      "shape_mean_mape_contribution_change": -0.0002183382484693733,
+      "M_tile_counts": [
+        8,
+        2,
+        4
+      ],
+      "M_tail_fractions": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "extrapolation_weights": [
+        -2.0,
+        3.0
+      ]
+    }
+  ],
+  "total_shape_mean_mape_change": 0.00221860495666024,
+  "GPU_started": false,
+  "new_training": false,
+  "frozen_six_parsed_or_scored": false
+}

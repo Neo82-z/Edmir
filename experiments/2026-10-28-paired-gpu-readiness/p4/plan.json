@@ -1,0 +1,1627 @@
+{
+  "schema": "edmir.paired-diagnosis-plan.v1",
+  "profile": "p4",
+  "world_size": 4,
+  "workloads": [
+    {
+      "id": "w000",
+      "shape": [
+        4,
+        64,
+        8192,
+        1024
+      ],
+      "families": [
+        "host",
+        "splitk4",
+        "splitk8",
+        "splitk4_groupedn2",
+        "splitk8_groupedn2"
+      ],
+      "blocks": 5
+    },
+    {
+      "id": "w001",
+      "shape": [
+        4,
+        64,
+        512,
+        256
+      ],
+      "families": [
+        "host",
+        "direct",
+        "splitk2"
+      ],
+      "blocks": 3
+    },
+    {
+      "id": "w002",
+      "shape": [
+        4,
+        64,
+        512,
+        1024
+      ],
+      "families": [
+        "host",
+        "direct",
+        "splitk2"
+      ],
+      "blocks": 3
+    },
+    {
+      "id": "w003",
+      "shape": [
+        4,
+        128,
+        512,
+        512
+      ],
+      "families": [
+        "host",
+        "direct",
+        "splitk2"
+      ],
+      "blocks": 3
+    },
+    {
+      "id": "w004",
+      "shape": [
+        4,
+        64,
+        512,
+        512
+      ],
+      "families": [
+        "host",
+        "direct",
+        "splitk2"
+      ],
+      "blocks": 3
+    },
+    {
+      "id": "w005",
+      "shape": [
+        4,
+        64,
+        512,
+        128
+      ],
+      "families": [
+        "host",
+        "direct",
+        "splitk2"
+      ],
+      "blocks": 3
+    }
+  ],
+  "programs": {
+    "pair_p4_w000_host": {
+      "shape": [
+        4,
+        64,
+        8192,
+        1024
+      ],
+      "compiled_family": "host",
+      "dependency_policy": "resource_queues_v1",
+      "header": "generated/pair_p4_w000_host/edmir_program.hpp"
+    },
+    "pair_p4_w000_splitk4": {
+      "shape": [
+        4,
+        64,
+        8192,
+        1024
+      ],
+      "compiled_family": "splitk4",
+      "dependency_policy": "resource_queues_v1",
+      "header": "generated/pair_p4_w000_splitk4/edmir_program.hpp"
+    },
+    "pair_p4_w000_splitk8": {
+      "shape": [
+        4,
+        64,
+        8192,
+        1024
+      ],
+      "compiled_family": "splitk8",
+      "dependency_policy": "resource_queues_v1",
+      "header": "generated/pair_p4_w000_splitk8/edmir_program.hpp"
+    },
+    "pair_p4_w000_splitk4_groupedn2": {
+      "shape": [
+        4,
+        64,
+        8192,
+        1024
+      ],
+      "compiled_family": "splitk4_groupedn2",
+      "dependency_policy": "resource_queues_v1",
+      "header": "generated/pair_p4_w000_splitk4_groupedn2/edmir_program.hpp"
+    },
+    "pair_p4_w000_splitk8_groupedn2": {
+      "shape": [
+        4,
+        64,
+        8192,
+        1024
+      ],
+      "compiled_family": "splitk8_groupedn2",
+      "dependency_policy": "resource_queues_v1",
+      "header": "generated/pair_p4_w000_splitk8_groupedn2/edmir_program.hpp"
+    },
+    "pair_p4_w001_host": {
+      "shape": [
+        4,
+        64,
+        512,
+        256
+      ],
+      "compiled_family": "host",
+      "dependency_policy": "resource_queues_v1",
+      "header": "generated/pair_p4_w001_host/edmir_program.hpp"
+    },
+    "pair_p4_w001_direct": {
+      "shape": [
+        4,
+        64,
+        512,
+        256
+      ],
+      "compiled_family": "direct",
+      "dependency_policy": "resource_queues_v1",
+      "header": "generated/pair_p4_w001_direct/edmir_program.hpp"
+    },
+    "pair_p4_w001_splitk2": {
+      "shape": [
+        4,
+        64,
+        512,
+        256
+      ],
+      "compiled_family": "splitk2",
+      "dependency_policy": "resource_queues_v1",
+      "header": "generated/pair_p4_w001_splitk2/edmir_program.hpp"
+    },
+    "pair_p4_w002_host": {
+      "shape": [
+        4,
+        64,
+        512,
+        1024
+      ],
+      "compiled_family": "host",
+      "dependency_policy": "resource_queues_v1",
+      "header": "generated/pair_p4_w002_host/edmir_program.hpp"
+    },
+    "pair_p4_w002_direct": {
+      "shape": [
+        4,
+        64,
+        512,
+        1024
+      ],
+      "compiled_family": "direct",
+      "dependency_policy": "resource_queues_v1",
+      "header": "generated/pair_p4_w002_direct/edmir_program.hpp"
+    },
+    "pair_p4_w002_splitk2": {
+      "shape": [
+        4,
+        64,
+        512,
+        1024
+      ],
+      "compiled_family": "splitk2",
+      "dependency_policy": "resource_queues_v1",
+      "header": "generated/pair_p4_w002_splitk2/edmir_program.hpp"
+    },
+    "pair_p4_w003_host": {
+      "shape": [
+        4,
+        128,
+        512,
+        512
+      ],
+      "compiled_family": "host",
+      "dependency_policy": "resource_queues_v1",
+      "header": "generated/pair_p4_w003_host/edmir_program.hpp"
+    },
+    "pair_p4_w003_direct": {
+      "shape": [
+        4,
+        128,
+        512,
+        512
+      ],
+      "compiled_family": "direct",
+      "dependency_policy": "resource_queues_v1",
+      "header": "generated/pair_p4_w003_direct/edmir_program.hpp"
+    },
+    "pair_p4_w003_splitk2": {
+      "shape": [
+        4,
+        128,
+        512,
+        512
+      ],
+      "compiled_family": "splitk2",
+      "dependency_policy": "resource_queues_v1",
+      "header": "generated/pair_p4_w003_splitk2/edmir_program.hpp"
+    },
+    "pair_p4_w004_host": {
+      "shape": [
+        4,
+        64,
+        512,
+        512
+      ],
+      "compiled_family": "host",
+      "dependency_policy": "resource_queues_v1",
+      "header": "generated/pair_p4_w004_host/edmir_program.hpp"
+    },
+    "pair_p4_w004_direct": {
+      "shape": [
+        4,
+        64,
+        512,
+        512
+      ],
+      "compiled_family": "direct",
+      "dependency_policy": "resource_queues_v1",
+      "header": "generated/pair_p4_w004_direct/edmir_program.hpp"
+    },
+    "pair_p4_w004_splitk2": {
+      "shape": [
+        4,
+        64,
+        512,
+        512
+      ],
+      "compiled_family": "splitk2",
+      "dependency_policy": "resource_queues_v1",
+      "header": "generated/pair_p4_w004_splitk2/edmir_program.hpp"
+    },
+    "pair_p4_w005_host": {
+      "shape": [
+        4,
+        64,
+        512,
+        128
+      ],
+      "compiled_family": "host",
+      "dependency_policy": "resource_queues_v1",
+      "header": "generated/pair_p4_w005_host/edmir_program.hpp"
+    },
+    "pair_p4_w005_direct": {
+      "shape": [
+        4,
+        64,
+        512,
+        128
+      ],
+      "compiled_family": "direct",
+      "dependency_policy": "resource_queues_v1",
+      "header": "generated/pair_p4_w005_direct/edmir_program.hpp"
+    },
+    "pair_p4_w005_splitk2": {
+      "shape": [
+        4,
+        64,
+        512,
+        128
+      ],
+      "compiled_family": "splitk2",
+      "dependency_policy": "resource_queues_v1",
+      "header": "generated/pair_p4_w005_splitk2/edmir_program.hpp"
+    }
+  },
+  "jobs": [
+    {
+      "workload_id": "w000",
+      "shape": [
+        4,
+        64,
+        8192,
+        1024
+      ],
+      "family": "host",
+      "repetition": 0,
+      "trial_order": 0,
+      "ordinal": 0,
+      "candidate_id": "host@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+      "executable": "pair_p4_w000_host"
+    },
+    {
+      "workload_id": "w000",
+      "shape": [
+        4,
+        64,
+        8192,
+        1024
+      ],
+      "family": "splitk4",
+      "repetition": 0,
+      "trial_order": 1,
+      "ordinal": 1,
+      "candidate_id": "splitk4@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q4_g1_prepared_metadata_v2",
+      "executable": "pair_p4_w000_splitk4"
+    },
+    {
+      "workload_id": "w000",
+      "shape": [
+        4,
+        64,
+        8192,
+        1024
+      ],
+      "family": "splitk8",
+      "repetition": 0,
+      "trial_order": 2,
+      "ordinal": 2,
+      "candidate_id": "splitk8@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q8_g1_prepared_metadata_v2",
+      "executable": "pair_p4_w000_splitk8"
+    },
+    {
+      "workload_id": "w000",
+      "shape": [
+        4,
+        64,
+        8192,
+        1024
+      ],
+      "family": "splitk4_groupedn2",
+      "repetition": 0,
+      "trial_order": 3,
+      "ordinal": 3,
+      "candidate_id": "splitk4_groupedn2@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q4_g2_prepared_metadata_v2",
+      "executable": "pair_p4_w000_splitk4_groupedn2"
+    },
+    {
+      "workload_id": "w000",
+      "shape": [
+        4,
+        64,
+        8192,
+        1024
+      ],
+      "family": "splitk8_groupedn2",
+      "repetition": 0,
+      "trial_order": 4,
+      "ordinal": 4,
+      "candidate_id": "splitk8_groupedn2@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q8_g2_prepared_metadata_v2",
+      "executable": "pair_p4_w000_splitk8_groupedn2"
+    },
+    {
+      "workload_id": "w000",
+      "shape": [
+        4,
+        64,
+        8192,
+        1024
+      ],
+      "family": "splitk4",
+      "repetition": 1,
+      "trial_order": 5,
+      "ordinal": 5,
+      "candidate_id": "splitk4@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q4_g1_prepared_metadata_v2",
+      "executable": "pair_p4_w000_splitk4"
+    },
+    {
+      "workload_id": "w000",
+      "shape": [
+        4,
+        64,
+        8192,
+        1024
+      ],
+      "family": "splitk8",
+      "repetition": 1,
+      "trial_order": 6,
+      "ordinal": 6,
+      "candidate_id": "splitk8@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q8_g1_prepared_metadata_v2",
+      "executable": "pair_p4_w000_splitk8"
+    },
+    {
+      "workload_id": "w000",
+      "shape": [
+        4,
+        64,
+        8192,
+        1024
+      ],
+      "family": "splitk4_groupedn2",
+      "repetition": 1,
+      "trial_order": 7,
+      "ordinal": 7,
+      "candidate_id": "splitk4_groupedn2@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q4_g2_prepared_metadata_v2",
+      "executable": "pair_p4_w000_splitk4_groupedn2"
+    },
+    {
+      "workload_id": "w000",
+      "shape": [
+        4,
+        64,
+        8192,
+        1024
+      ],
+      "family": "splitk8_groupedn2",
+      "repetition": 1,
+      "trial_order": 8,
+      "ordinal": 8,
+      "candidate_id": "splitk8_groupedn2@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q8_g2_prepared_metadata_v2",
+      "executable": "pair_p4_w000_splitk8_groupedn2"
+    },
+    {
+      "workload_id": "w000",
+      "shape": [
+        4,
+        64,
+        8192,
+        1024
+      ],
+      "family": "host",
+      "repetition": 1,
+      "trial_order": 9,
+      "ordinal": 9,
+      "candidate_id": "host@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+      "executable": "pair_p4_w000_host"
+    },
+    {
+      "workload_id": "w000",
+      "shape": [
+        4,
+        64,
+        8192,
+        1024
+      ],
+      "family": "splitk8",
+      "repetition": 2,
+      "trial_order": 10,
+      "ordinal": 10,
+      "candidate_id": "splitk8@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q8_g1_prepared_metadata_v2",
+      "executable": "pair_p4_w000_splitk8"
+    },
+    {
+      "workload_id": "w000",
+      "shape": [
+        4,
+        64,
+        8192,
+        1024
+      ],
+      "family": "splitk4_groupedn2",
+      "repetition": 2,
+      "trial_order": 11,
+      "ordinal": 11,
+      "candidate_id": "splitk4_groupedn2@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q4_g2_prepared_metadata_v2",
+      "executable": "pair_p4_w000_splitk4_groupedn2"
+    },
+    {
+      "workload_id": "w000",
+      "shape": [
+        4,
+        64,
+        8192,
+        1024
+      ],
+      "family": "splitk8_groupedn2",
+      "repetition": 2,
+      "trial_order": 12,
+      "ordinal": 12,
+      "candidate_id": "splitk8_groupedn2@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q8_g2_prepared_metadata_v2",
+      "executable": "pair_p4_w000_splitk8_groupedn2"
+    },
+    {
+      "workload_id": "w000",
+      "shape": [
+        4,
+        64,
+        8192,
+        1024
+      ],
+      "family": "host",
+      "repetition": 2,
+      "trial_order": 13,
+      "ordinal": 13,
+      "candidate_id": "host@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+      "executable": "pair_p4_w000_host"
+    },
+    {
+      "workload_id": "w000",
+      "shape": [
+        4,
+        64,
+        8192,
+        1024
+      ],
+      "family": "splitk4",
+      "repetition": 2,
+      "trial_order": 14,
+      "ordinal": 14,
+      "candidate_id": "splitk4@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q4_g1_prepared_metadata_v2",
+      "executable": "pair_p4_w000_splitk4"
+    },
+    {
+      "workload_id": "w000",
+      "shape": [
+        4,
+        64,
+        8192,
+        1024
+      ],
+      "family": "splitk4_groupedn2",
+      "repetition": 3,
+      "trial_order": 15,
+      "ordinal": 15,
+      "candidate_id": "splitk4_groupedn2@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q4_g2_prepared_metadata_v2",
+      "executable": "pair_p4_w000_splitk4_groupedn2"
+    },
+    {
+      "workload_id": "w000",
+      "shape": [
+        4,
+        64,
+        8192,
+        1024
+      ],
+      "family": "splitk8_groupedn2",
+      "repetition": 3,
+      "trial_order": 16,
+      "ordinal": 16,
+      "candidate_id": "splitk8_groupedn2@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q8_g2_prepared_metadata_v2",
+      "executable": "pair_p4_w000_splitk8_groupedn2"
+    },
+    {
+      "workload_id": "w000",
+      "shape": [
+        4,
+        64,
+        8192,
+        1024
+      ],
+      "family": "host",
+      "repetition": 3,
+      "trial_order": 17,
+      "ordinal": 17,
+      "candidate_id": "host@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+      "executable": "pair_p4_w000_host"
+    },
+    {
+      "workload_id": "w000",
+      "shape": [
+        4,
+        64,
+        8192,
+        1024
+      ],
+      "family": "splitk4",
+      "repetition": 3,
+      "trial_order": 18,
+      "ordinal": 18,
+      "candidate_id": "splitk4@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q4_g1_prepared_metadata_v2",
+      "executable": "pair_p4_w000_splitk4"
+    },
+    {
+      "workload_id": "w000",
+      "shape": [
+        4,
+        64,
+        8192,
+        1024
+      ],
+      "family": "splitk8",
+      "repetition": 3,
+      "trial_order": 19,
+      "ordinal": 19,
+      "candidate_id": "splitk8@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q8_g1_prepared_metadata_v2",
+      "executable": "pair_p4_w000_splitk8"
+    },
+    {
+      "workload_id": "w000",
+      "shape": [
+        4,
+        64,
+        8192,
+        1024
+      ],
+      "family": "splitk8_groupedn2",
+      "repetition": 4,
+      "trial_order": 20,
+      "ordinal": 20,
+      "candidate_id": "splitk8_groupedn2@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q8_g2_prepared_metadata_v2",
+      "executable": "pair_p4_w000_splitk8_groupedn2"
+    },
+    {
+      "workload_id": "w000",
+      "shape": [
+        4,
+        64,
+        8192,
+        1024
+      ],
+      "family": "host",
+      "repetition": 4,
+      "trial_order": 21,
+      "ordinal": 21,
+      "candidate_id": "host@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+      "executable": "pair_p4_w000_host"
+    },
+    {
+      "workload_id": "w000",
+      "shape": [
+        4,
+        64,
+        8192,
+        1024
+      ],
+      "family": "splitk4",
+      "repetition": 4,
+      "trial_order": 22,
+      "ordinal": 22,
+      "candidate_id": "splitk4@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q4_g1_prepared_metadata_v2",
+      "executable": "pair_p4_w000_splitk4"
+    },
+    {
+      "workload_id": "w000",
+      "shape": [
+        4,
+        64,
+        8192,
+        1024
+      ],
+      "family": "splitk8",
+      "repetition": 4,
+      "trial_order": 23,
+      "ordinal": 23,
+      "candidate_id": "splitk8@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q8_g1_prepared_metadata_v2",
+      "executable": "pair_p4_w000_splitk8"
+    },
+    {
+      "workload_id": "w000",
+      "shape": [
+        4,
+        64,
+        8192,
+        1024
+      ],
+      "family": "splitk4_groupedn2",
+      "repetition": 4,
+      "trial_order": 24,
+      "ordinal": 24,
+      "candidate_id": "splitk4_groupedn2@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q4_g2_prepared_metadata_v2",
+      "executable": "pair_p4_w000_splitk4_groupedn2"
+    },
+    {
+      "workload_id": "w001",
+      "shape": [
+        4,
+        64,
+        512,
+        256
+      ],
+      "family": "host",
+      "repetition": 0,
+      "trial_order": 25,
+      "ordinal": 25,
+      "candidate_id": "host@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+      "executable": "pair_p4_w001_host"
+    },
+    {
+      "workload_id": "w001",
+      "shape": [
+        4,
+        64,
+        512,
+        256
+      ],
+      "family": "direct",
+      "repetition": 0,
+      "trial_order": 26,
+      "ordinal": 26,
+      "candidate_id": "direct@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q1_g1_prepared_metadata_v2",
+      "executable": "pair_p4_w001_direct"
+    },
+    {
+      "workload_id": "w001",
+      "shape": [
+        4,
+        64,
+        512,
+        256
+      ],
+      "family": "splitk2",
+      "repetition": 0,
+      "trial_order": 27,
+      "ordinal": 27,
+      "candidate_id": "splitk2@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q2_g1_prepared_metadata_v2",
+      "executable": "pair_p4_w001_splitk2"
+    },
+    {
+      "workload_id": "w001",
+      "shape": [
+        4,
+        64,
+        512,
+        256
+      ],
+      "family": "direct",
+      "repetition": 1,
+      "trial_order": 28,
+      "ordinal": 28,
+      "candidate_id": "direct@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q1_g1_prepared_metadata_v2",
+      "executable": "pair_p4_w001_direct"
+    },
+    {
+      "workload_id": "w001",
+      "shape": [
+        4,
+        64,
+        512,
+        256
+      ],
+      "family": "splitk2",
+      "repetition": 1,
+      "trial_order": 29,
+      "ordinal": 29,
+      "candidate_id": "splitk2@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q2_g1_prepared_metadata_v2",
+      "executable": "pair_p4_w001_splitk2"
+    },
+    {
+      "workload_id": "w001",
+      "shape": [
+        4,
+        64,
+        512,
+        256
+      ],
+      "family": "host",
+      "repetition": 1,
+      "trial_order": 30,
+      "ordinal": 30,
+      "candidate_id": "host@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+      "executable": "pair_p4_w001_host"
+    },
+    {
+      "workload_id": "w001",
+      "shape": [
+        4,
+        64,
+        512,
+        256
+      ],
+      "family": "splitk2",
+      "repetition": 2,
+      "trial_order": 31,
+      "ordinal": 31,
+      "candidate_id": "splitk2@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q2_g1_prepared_metadata_v2",
+      "executable": "pair_p4_w001_splitk2"
+    },
+    {
+      "workload_id": "w001",
+      "shape": [
+        4,
+        64,
+        512,
+        256
+      ],
+      "family": "host",
+      "repetition": 2,
+      "trial_order": 32,
+      "ordinal": 32,
+      "candidate_id": "host@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+      "executable": "pair_p4_w001_host"
+    },
+    {
+      "workload_id": "w001",
+      "shape": [
+        4,
+        64,
+        512,
+        256
+      ],
+      "family": "direct",
+      "repetition": 2,
+      "trial_order": 33,
+      "ordinal": 33,
+      "candidate_id": "direct@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q1_g1_prepared_metadata_v2",
+      "executable": "pair_p4_w001_direct"
+    },
+    {
+      "workload_id": "w002",
+      "shape": [
+        4,
+        64,
+        512,
+        1024
+      ],
+      "family": "host",
+      "repetition": 0,
+      "trial_order": 34,
+      "ordinal": 34,
+      "candidate_id": "host@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+      "executable": "pair_p4_w002_host"
+    },
+    {
+      "workload_id": "w002",
+      "shape": [
+        4,
+        64,
+        512,
+        1024
+      ],
+      "family": "direct",
+      "repetition": 0,
+      "trial_order": 35,
+      "ordinal": 35,
+      "candidate_id": "direct@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q1_g1_prepared_metadata_v2",
+      "executable": "pair_p4_w002_direct"
+    },
+    {
+      "workload_id": "w002",
+      "shape": [
+        4,
+        64,
+        512,
+        1024
+      ],
+      "family": "splitk2",
+      "repetition": 0,
+      "trial_order": 36,
+      "ordinal": 36,
+      "candidate_id": "splitk2@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q2_g1_prepared_metadata_v2",
+      "executable": "pair_p4_w002_splitk2"
+    },
+    {
+      "workload_id": "w002",
+      "shape": [
+        4,
+        64,
+        512,
+        1024
+      ],
+      "family": "direct",
+      "repetition": 1,
+      "trial_order": 37,
+      "ordinal": 37,
+      "candidate_id": "direct@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q1_g1_prepared_metadata_v2",
+      "executable": "pair_p4_w002_direct"
+    },
+    {
+      "workload_id": "w002",
+      "shape": [
+        4,
+        64,
+        512,
+        1024
+      ],
+      "family": "splitk2",
+      "repetition": 1,
+      "trial_order": 38,
+      "ordinal": 38,
+      "candidate_id": "splitk2@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q2_g1_prepared_metadata_v2",
+      "executable": "pair_p4_w002_splitk2"
+    },
+    {
+      "workload_id": "w002",
+      "shape": [
+        4,
+        64,
+        512,
+        1024
+      ],
+      "family": "host",
+      "repetition": 1,
+      "trial_order": 39,
+      "ordinal": 39,
+      "candidate_id": "host@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+      "executable": "pair_p4_w002_host"
+    },
+    {
+      "workload_id": "w002",
+      "shape": [
+        4,
+        64,
+        512,
+        1024
+      ],
+      "family": "splitk2",
+      "repetition": 2,
+      "trial_order": 40,
+      "ordinal": 40,
+      "candidate_id": "splitk2@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q2_g1_prepared_metadata_v2",
+      "executable": "pair_p4_w002_splitk2"
+    },
+    {
+      "workload_id": "w002",
+      "shape": [
+        4,
+        64,
+        512,
+        1024
+      ],
+      "family": "host",
+      "repetition": 2,
+      "trial_order": 41,
+      "ordinal": 41,
+      "candidate_id": "host@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+      "executable": "pair_p4_w002_host"
+    },
+    {
+      "workload_id": "w002",
+      "shape": [
+        4,
+        64,
+        512,
+        1024
+      ],
+      "family": "direct",
+      "repetition": 2,
+      "trial_order": 42,
+      "ordinal": 42,
+      "candidate_id": "direct@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q1_g1_prepared_metadata_v2",
+      "executable": "pair_p4_w002_direct"
+    },
+    {
+      "workload_id": "w003",
+      "shape": [
+        4,
+        128,
+        512,
+        512
+      ],
+      "family": "host",
+      "repetition": 0,
+      "trial_order": 43,
+      "ordinal": 43,
+      "candidate_id": "host@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+      "executable": "pair_p4_w003_host"
+    },
+    {
+      "workload_id": "w003",
+      "shape": [
+        4,
+        128,
+        512,
+        512
+      ],
+      "family": "direct",
+      "repetition": 0,
+      "trial_order": 44,
+      "ordinal": 44,
+      "candidate_id": "direct@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q1_g1_prepared_metadata_v2",
+      "executable": "pair_p4_w003_direct"
+    },
+    {
+      "workload_id": "w003",
+      "shape": [
+        4,
+        128,
+        512,
+        512
+      ],
+      "family": "splitk2",
+      "repetition": 0,
+      "trial_order": 45,
+      "ordinal": 45,
+      "candidate_id": "splitk2@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q2_g1_prepared_metadata_v2",
+      "executable": "pair_p4_w003_splitk2"
+    },
+    {
+      "workload_id": "w003",
+      "shape": [
+        4,
+        128,
+        512,
+        512
+      ],
+      "family": "direct",
+      "repetition": 1,
+      "trial_order": 46,
+      "ordinal": 46,
+      "candidate_id": "direct@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q1_g1_prepared_metadata_v2",
+      "executable": "pair_p4_w003_direct"
+    },
+    {
+      "workload_id": "w003",
+      "shape": [
+        4,
+        128,
+        512,
+        512
+      ],
+      "family": "splitk2",
+      "repetition": 1,
+      "trial_order": 47,
+      "ordinal": 47,
+      "candidate_id": "splitk2@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q2_g1_prepared_metadata_v2",
+      "executable": "pair_p4_w003_splitk2"
+    },
+    {
+      "workload_id": "w003",
+      "shape": [
+        4,
+        128,
+        512,
+        512
+      ],
+      "family": "host",
+      "repetition": 1,
+      "trial_order": 48,
+      "ordinal": 48,
+      "candidate_id": "host@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+      "executable": "pair_p4_w003_host"
+    },
+    {
+      "workload_id": "w003",
+      "shape": [
+        4,
+        128,
+        512,
+        512
+      ],
+      "family": "splitk2",
+      "repetition": 2,
+      "trial_order": 49,
+      "ordinal": 49,
+      "candidate_id": "splitk2@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q2_g1_prepared_metadata_v2",
+      "executable": "pair_p4_w003_splitk2"
+    },
+    {
+      "workload_id": "w003",
+      "shape": [
+        4,
+        128,
+        512,
+        512
+      ],
+      "family": "host",
+      "repetition": 2,
+      "trial_order": 50,
+      "ordinal": 50,
+      "candidate_id": "host@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+      "executable": "pair_p4_w003_host"
+    },
+    {
+      "workload_id": "w003",
+      "shape": [
+        4,
+        128,
+        512,
+        512
+      ],
+      "family": "direct",
+      "repetition": 2,
+      "trial_order": 51,
+      "ordinal": 51,
+      "candidate_id": "direct@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q1_g1_prepared_metadata_v2",
+      "executable": "pair_p4_w003_direct"
+    },
+    {
+      "workload_id": "w004",
+      "shape": [
+        4,
+        64,
+        512,
+        512
+      ],
+      "family": "host",
+      "repetition": 0,
+      "trial_order": 52,
+      "ordinal": 52,
+      "candidate_id": "host@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+      "executable": "pair_p4_w004_host"
+    },
+    {
+      "workload_id": "w004",
+      "shape": [
+        4,
+        64,
+        512,
+        512
+      ],
+      "family": "direct",
+      "repetition": 0,
+      "trial_order": 53,
+      "ordinal": 53,
+      "candidate_id": "direct@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q1_g1_prepared_metadata_v2",
+      "executable": "pair_p4_w004_direct"
+    },
+    {
+      "workload_id": "w004",
+      "shape": [
+        4,
+        64,
+        512,
+        512
+      ],
+      "family": "splitk2",
+      "repetition": 0,
+      "trial_order": 54,
+      "ordinal": 54,
+      "candidate_id": "splitk2@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q2_g1_prepared_metadata_v2",
+      "executable": "pair_p4_w004_splitk2"
+    },
+    {
+      "workload_id": "w004",
+      "shape": [
+        4,
+        64,
+        512,
+        512
+      ],
+      "family": "direct",
+      "repetition": 1,
+      "trial_order": 55,
+      "ordinal": 55,
+      "candidate_id": "direct@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q1_g1_prepared_metadata_v2",
+      "executable": "pair_p4_w004_direct"
+    },
+    {
+      "workload_id": "w004",
+      "shape": [
+        4,
+        64,
+        512,
+        512
+      ],
+      "family": "splitk2",
+      "repetition": 1,
+      "trial_order": 56,
+      "ordinal": 56,
+      "candidate_id": "splitk2@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q2_g1_prepared_metadata_v2",
+      "executable": "pair_p4_w004_splitk2"
+    },
+    {
+      "workload_id": "w004",
+      "shape": [
+        4,
+        64,
+        512,
+        512
+      ],
+      "family": "host",
+      "repetition": 1,
+      "trial_order": 57,
+      "ordinal": 57,
+      "candidate_id": "host@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+      "executable": "pair_p4_w004_host"
+    },
+    {
+      "workload_id": "w004",
+      "shape": [
+        4,
+        64,
+        512,
+        512
+      ],
+      "family": "splitk2",
+      "repetition": 2,
+      "trial_order": 58,
+      "ordinal": 58,
+      "candidate_id": "splitk2@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q2_g1_prepared_metadata_v2",
+      "executable": "pair_p4_w004_splitk2"
+    },
+    {
+      "workload_id": "w004",
+      "shape": [
+        4,
+        64,
+        512,
+        512
+      ],
+      "family": "host",
+      "repetition": 2,
+      "trial_order": 59,
+      "ordinal": 59,
+      "candidate_id": "host@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+      "executable": "pair_p4_w004_host"
+    },
+    {
+      "workload_id": "w004",
+      "shape": [
+        4,
+        64,
+        512,
+        512
+      ],
+      "family": "direct",
+      "repetition": 2,
+      "trial_order": 60,
+      "ordinal": 60,
+      "candidate_id": "direct@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q1_g1_prepared_metadata_v2",
+      "executable": "pair_p4_w004_direct"
+    },
+    {
+      "workload_id": "w005",
+      "shape": [
+        4,
+        64,
+        512,
+        128
+      ],
+      "family": "host",
+      "repetition": 0,
+      "trial_order": 61,
+      "ordinal": 61,
+      "candidate_id": "host@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+      "executable": "pair_p4_w005_host"
+    },
+    {
+      "workload_id": "w005",
+      "shape": [
+        4,
+        64,
+        512,
+        128
+      ],
+      "family": "direct",
+      "repetition": 0,
+      "trial_order": 62,
+      "ordinal": 62,
+      "candidate_id": "direct@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q1_g1_prepared_metadata_v2",
+      "executable": "pair_p4_w005_direct"
+    },
+    {
+      "workload_id": "w005",
+      "shape": [
+        4,
+        64,
+        512,
+        128
+      ],
+      "family": "splitk2",
+      "repetition": 0,
+      "trial_order": 63,
+      "ordinal": 63,
+      "candidate_id": "splitk2@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q2_g1_prepared_metadata_v2",
+      "executable": "pair_p4_w005_splitk2"
+    },
+    {
+      "workload_id": "w005",
+      "shape": [
+        4,
+        64,
+        512,
+        128
+      ],
+      "family": "direct",
+      "repetition": 1,
+      "trial_order": 64,
+      "ordinal": 64,
+      "candidate_id": "direct@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q1_g1_prepared_metadata_v2",
+      "executable": "pair_p4_w005_direct"
+    },
+    {
+      "workload_id": "w005",
+      "shape": [
+        4,
+        64,
+        512,
+        128
+      ],
+      "family": "splitk2",
+      "repetition": 1,
+      "trial_order": 65,
+      "ordinal": 65,
+      "candidate_id": "splitk2@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q2_g1_prepared_metadata_v2",
+      "executable": "pair_p4_w005_splitk2"
+    },
+    {
+      "workload_id": "w005",
+      "shape": [
+        4,
+        64,
+        512,
+        128
+      ],
+      "family": "host",
+      "repetition": 1,
+      "trial_order": 66,
+      "ordinal": 66,
+      "candidate_id": "host@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+      "executable": "pair_p4_w005_host"
+    },
+    {
+      "workload_id": "w005",
+      "shape": [
+        4,
+        64,
+        512,
+        128
+      ],
+      "family": "splitk2",
+      "repetition": 2,
+      "trial_order": 67,
+      "ordinal": 67,
+      "candidate_id": "splitk2@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q2_g1_prepared_metadata_v2",
+      "executable": "pair_p4_w005_splitk2"
+    },
+    {
+      "workload_id": "w005",
+      "shape": [
+        4,
+        64,
+        512,
+        128
+      ],
+      "family": "host",
+      "repetition": 2,
+      "trial_order": 68,
+      "ordinal": 68,
+      "candidate_id": "host@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+      "executable": "pair_p4_w005_host"
+    },
+    {
+      "workload_id": "w005",
+      "shape": [
+        4,
+        64,
+        512,
+        128
+      ],
+      "family": "direct",
+      "repetition": 2,
+      "trial_order": 69,
+      "ordinal": 69,
+      "candidate_id": "direct@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q1_g1_prepared_metadata_v2",
+      "executable": "pair_p4_w005_direct"
+    }
+  ],
+  "warmup": 30,
+  "iterations": 300,
+  "process_timeout_seconds": 90,
+  "collection_budget_seconds": 1200,
+  "cutlass_revision": "dcf215af68a2d08d305076c152a06f201728cd53",
+  "nccl_revision": "dbc86fd06e8b0c4517b95d8958a09ccacf9520c9",
+  "baseline_contracts": {
+    "host": {
+      "baseline_id": "host_nccl_cutlass_sm80_per_source_v1",
+      "gemm_provider": "cutlass",
+      "gemm_kernel": "sm80_64x128x32",
+      "partition": "P_sequential_M_gemms",
+      "communication": "host_nccl_send_recv_and_local_copy",
+      "schedule": "materialize_then_gemm",
+      "dtype": "float16",
+      "layout": "row_major",
+      "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()"
+    }
+  },
+  "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+  "measurement_policy": {
+    "profiler": false,
+    "nvtx": false,
+    "discarded_samples": 0
+  },
+  "precision": {
+    "input": "fp16",
+    "weight": "fp16",
+    "output": "fp16",
+    "accumulator": "fp32",
+    "split_partial": "fp16 output writeback, no separate FP32 reduction"
+  },
+  "new_training": false,
+  "independent_validation": false,
+  "compiler_admission": false,
+  "frozen_six_used": false,
+  "full_candidate_oracle": false,
+  "primary_objective": "median full-operator host wall time; retain mean and p95 as secondary",
+  "blocks_are_confidence_intervals": false,
+  "numerical_failure_labels_are_latency": false,
+  "identity_limit": "new source/input/runtime identity; do not pool with historical labels or immutable-peer P8 runs",
+  "prediction_claim": "historical directional hypotheses only; no cross-identity numeric latency forecast",
+  "scope": "P4 existing-development diagnosis",
+  "repetition_budget_change": "230-process preliminary specification reduced before measurement: one balanced positional cycle per shape; not a significance claim"
+}

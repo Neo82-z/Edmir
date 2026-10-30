@@ -1,0 +1,1520 @@
+{
+  "schema": "edmir.discriminating-measurement-plan.v1",
+  "execution_ready": false,
+  "purpose": "New observations for model identification. If used to revise the model, they become development data, not independent final validation.",
+  "hardware": "Four A100 GPUs with a recorded peer topology for the P4 full-operator path; no hardware rented or selected here.",
+  "baseline_id": "host_nccl_cutlass_sm80_per_source_v1",
+  "environment_id": null,
+  "environment_rule": "Assign a new environment identity and record source/build/library/topology/timing metadata. Never relabel it as the old archive.",
+  "frozen_before_observation": true,
+  "new_shapes": [
+    [
+      4,
+      64,
+      3072,
+      512
+    ],
+    [
+      4,
+      64,
+      3072,
+      1536
+    ],
+    [
+      4,
+      192,
+      3072,
+      512
+    ],
+    [
+      4,
+      192,
+      3072,
+      1536
+    ],
+    [
+      4,
+      512,
+      3072,
+      512
+    ]
+  ],
+  "anchor_shapes": [
+    [
+      4,
+      512,
+      4096,
+      512
+    ],
+    [
+      4,
+      64,
+      4096,
+      2048
+    ]
+  ],
+  "families": [
+    "host",
+    "direct",
+    "splitk2",
+    "splitk4",
+    "splitk8"
+  ],
+  "crossed_design_rank_before": 3,
+  "crossed_design_rank_after": 4,
+  "contrasts": [
+    {
+      "name": "same output grid, different A/B working sets",
+      "shapes": [
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ]
+      ]
+    },
+    {
+      "name": "M/N interaction at fixed K",
+      "formula": "t(192,1536)-t(192,512)-t(64,1536)+t(64,512), at K=3072, separately for each family",
+      "shapes": [
+        [
+          4,
+          64,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ]
+      ]
+    },
+    {
+      "name": "new K near the M512 host/split boundary",
+      "shapes": [
+        [
+          4,
+          512,
+          3072,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ]
+    }
+  ],
+  "timing": {
+    "warmup_iterations": 20,
+    "timed_iterations": 100,
+    "fresh_process_blocks": 3,
+    "primary": "unprofiled host steady_clock around execute plus synchronize, consistent across families",
+    "diagnostic_pass": "Separately record CPU submission and device stream timelines, and available memory/communication counters. Profiling results never replace the primary timing labels; overlapping phases must not be added.",
+    "process_timeout_seconds": 120,
+    "stop_on": "correctness failure, baseline mismatch, timeout, incomplete topology or metadata"
+  },
+  "unresolved_before_execution": [
+    "server and budget",
+    "frozen build/package for this plan",
+    "CPU reference outputs and execution preflight"
+  ],
+  "configurations": 35,
+  "process_runs": 105,
+  "run_order": [
+    {
+      "block": 0,
+      "ordinal": 0,
+      "shape": [
+        4,
+        192,
+        3072,
+        1536
+      ],
+      "family": "host",
+      "purpose": "model_identification",
+      "within_current_shape_domain": false
+    },
+    {
+      "block": 0,
+      "ordinal": 2,
+      "shape": [
+        4,
+        64,
+        3072,
+        1536
+      ],
+      "family": "direct",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 0,
+      "ordinal": 4,
+      "shape": [
+        4,
+        192,
+        3072,
+        512
+      ],
+      "family": "direct",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 0,
+      "ordinal": 6,
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      "family": "splitk8",
+      "purpose": "environment_anchor",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 0,
+      "ordinal": 8,
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      "family": "host",
+      "purpose": "environment_anchor",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 0,
+      "ordinal": 10,
+      "shape": [
+        4,
+        192,
+        3072,
+        1536
+      ],
+      "family": "splitk2",
+      "purpose": "model_identification",
+      "within_current_shape_domain": false
+    },
+    {
+      "block": 0,
+      "ordinal": 12,
+      "shape": [
+        4,
+        192,
+        3072,
+        512
+      ],
+      "family": "splitk4",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 0,
+      "ordinal": 14,
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      "family": "splitk4",
+      "purpose": "environment_anchor",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 0,
+      "ordinal": 16,
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ],
+      "family": "splitk2",
+      "purpose": "environment_anchor",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 0,
+      "ordinal": 18,
+      "shape": [
+        4,
+        64,
+        3072,
+        512
+      ],
+      "family": "direct",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 0,
+      "ordinal": 20,
+      "shape": [
+        4,
+        192,
+        3072,
+        1536
+      ],
+      "family": "splitk8",
+      "purpose": "model_identification",
+      "within_current_shape_domain": false
+    },
+    {
+      "block": 0,
+      "ordinal": 22,
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ],
+      "family": "splitk8",
+      "purpose": "environment_anchor",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 0,
+      "ordinal": 24,
+      "shape": [
+        4,
+        64,
+        3072,
+        512
+      ],
+      "family": "splitk4",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 0,
+      "ordinal": 26,
+      "shape": [
+        4,
+        64,
+        3072,
+        1536
+      ],
+      "family": "splitk2",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 0,
+      "ordinal": 28,
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      "family": "direct",
+      "purpose": "environment_anchor",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 0,
+      "ordinal": 30,
+      "shape": [
+        4,
+        64,
+        3072,
+        512
+      ],
+      "family": "splitk8",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 0,
+      "ordinal": 32,
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ],
+      "family": "splitk4",
+      "purpose": "environment_anchor",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 0,
+      "ordinal": 34,
+      "shape": [
+        4,
+        64,
+        3072,
+        1536
+      ],
+      "family": "splitk8",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 0,
+      "ordinal": 36,
+      "shape": [
+        4,
+        64,
+        3072,
+        1536
+      ],
+      "family": "splitk4",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 0,
+      "ordinal": 38,
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ],
+      "family": "direct",
+      "purpose": "environment_anchor",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 0,
+      "ordinal": 40,
+      "shape": [
+        4,
+        192,
+        3072,
+        512
+      ],
+      "family": "splitk2",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 0,
+      "ordinal": 42,
+      "shape": [
+        4,
+        192,
+        3072,
+        1536
+      ],
+      "family": "direct",
+      "purpose": "model_identification",
+      "within_current_shape_domain": false
+    },
+    {
+      "block": 0,
+      "ordinal": 44,
+      "shape": [
+        4,
+        512,
+        3072,
+        512
+      ],
+      "family": "splitk2",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 0,
+      "ordinal": 46,
+      "shape": [
+        4,
+        512,
+        3072,
+        512
+      ],
+      "family": "direct",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 0,
+      "ordinal": 48,
+      "shape": [
+        4,
+        512,
+        3072,
+        512
+      ],
+      "family": "host",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 0,
+      "ordinal": 50,
+      "shape": [
+        4,
+        64,
+        3072,
+        1536
+      ],
+      "family": "host",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 0,
+      "ordinal": 52,
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      "family": "splitk2",
+      "purpose": "environment_anchor",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 0,
+      "ordinal": 54,
+      "shape": [
+        4,
+        192,
+        3072,
+        1536
+      ],
+      "family": "splitk4",
+      "purpose": "model_identification",
+      "within_current_shape_domain": false
+    },
+    {
+      "block": 0,
+      "ordinal": 56,
+      "shape": [
+        4,
+        192,
+        3072,
+        512
+      ],
+      "family": "host",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 0,
+      "ordinal": 58,
+      "shape": [
+        4,
+        64,
+        3072,
+        512
+      ],
+      "family": "host",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 0,
+      "ordinal": 60,
+      "shape": [
+        4,
+        64,
+        3072,
+        512
+      ],
+      "family": "splitk2",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 0,
+      "ordinal": 62,
+      "shape": [
+        4,
+        512,
+        3072,
+        512
+      ],
+      "family": "splitk4",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 0,
+      "ordinal": 64,
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ],
+      "family": "host",
+      "purpose": "environment_anchor",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 0,
+      "ordinal": 66,
+      "shape": [
+        4,
+        192,
+        3072,
+        512
+      ],
+      "family": "splitk8",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 0,
+      "ordinal": 68,
+      "shape": [
+        4,
+        512,
+        3072,
+        512
+      ],
+      "family": "splitk8",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 1,
+      "ordinal": 35,
+      "shape": [
+        4,
+        64,
+        3072,
+        1536
+      ],
+      "family": "direct",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 1,
+      "ordinal": 37,
+      "shape": [
+        4,
+        64,
+        3072,
+        512
+      ],
+      "family": "host",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 1,
+      "ordinal": 39,
+      "shape": [
+        4,
+        512,
+        3072,
+        512
+      ],
+      "family": "splitk2",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 1,
+      "ordinal": 41,
+      "shape": [
+        4,
+        64,
+        3072,
+        512
+      ],
+      "family": "splitk2",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 1,
+      "ordinal": 43,
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ],
+      "family": "splitk2",
+      "purpose": "environment_anchor",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 1,
+      "ordinal": 45,
+      "shape": [
+        4,
+        64,
+        3072,
+        1536
+      ],
+      "family": "host",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 1,
+      "ordinal": 47,
+      "shape": [
+        4,
+        64,
+        3072,
+        512
+      ],
+      "family": "splitk8",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 1,
+      "ordinal": 49,
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      "family": "host",
+      "purpose": "environment_anchor",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 1,
+      "ordinal": 51,
+      "shape": [
+        4,
+        64,
+        3072,
+        512
+      ],
+      "family": "splitk4",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 1,
+      "ordinal": 53,
+      "shape": [
+        4,
+        192,
+        3072,
+        1536
+      ],
+      "family": "host",
+      "purpose": "model_identification",
+      "within_current_shape_domain": false
+    },
+    {
+      "block": 1,
+      "ordinal": 55,
+      "shape": [
+        4,
+        192,
+        3072,
+        1536
+      ],
+      "family": "splitk8",
+      "purpose": "model_identification",
+      "within_current_shape_domain": false
+    },
+    {
+      "block": 1,
+      "ordinal": 57,
+      "shape": [
+        4,
+        512,
+        3072,
+        512
+      ],
+      "family": "splitk4",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 1,
+      "ordinal": 59,
+      "shape": [
+        4,
+        192,
+        3072,
+        512
+      ],
+      "family": "splitk4",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 1,
+      "ordinal": 61,
+      "shape": [
+        4,
+        192,
+        3072,
+        512
+      ],
+      "family": "direct",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 1,
+      "ordinal": 63,
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      "family": "splitk4",
+      "purpose": "environment_anchor",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 1,
+      "ordinal": 65,
+      "shape": [
+        4,
+        192,
+        3072,
+        512
+      ],
+      "family": "splitk8",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 1,
+      "ordinal": 67,
+      "shape": [
+        4,
+        64,
+        3072,
+        1536
+      ],
+      "family": "splitk8",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 1,
+      "ordinal": 69,
+      "shape": [
+        4,
+        512,
+        3072,
+        512
+      ],
+      "family": "direct",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 1,
+      "ordinal": 71,
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      "family": "splitk8",
+      "purpose": "environment_anchor",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 1,
+      "ordinal": 73,
+      "shape": [
+        4,
+        192,
+        3072,
+        512
+      ],
+      "family": "host",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 1,
+      "ordinal": 75,
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      "family": "direct",
+      "purpose": "environment_anchor",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 1,
+      "ordinal": 77,
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ],
+      "family": "direct",
+      "purpose": "environment_anchor",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 1,
+      "ordinal": 79,
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ],
+      "family": "splitk8",
+      "purpose": "environment_anchor",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 1,
+      "ordinal": 81,
+      "shape": [
+        4,
+        64,
+        3072,
+        1536
+      ],
+      "family": "splitk2",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 1,
+      "ordinal": 83,
+      "shape": [
+        4,
+        512,
+        3072,
+        512
+      ],
+      "family": "splitk8",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 1,
+      "ordinal": 85,
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ],
+      "family": "host",
+      "purpose": "environment_anchor",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 1,
+      "ordinal": 87,
+      "shape": [
+        4,
+        192,
+        3072,
+        1536
+      ],
+      "family": "splitk2",
+      "purpose": "model_identification",
+      "within_current_shape_domain": false
+    },
+    {
+      "block": 1,
+      "ordinal": 89,
+      "shape": [
+        4,
+        192,
+        3072,
+        1536
+      ],
+      "family": "splitk4",
+      "purpose": "model_identification",
+      "within_current_shape_domain": false
+    },
+    {
+      "block": 1,
+      "ordinal": 91,
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      "family": "splitk2",
+      "purpose": "environment_anchor",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 1,
+      "ordinal": 93,
+      "shape": [
+        4,
+        192,
+        3072,
+        1536
+      ],
+      "family": "direct",
+      "purpose": "model_identification",
+      "within_current_shape_domain": false
+    },
+    {
+      "block": 1,
+      "ordinal": 95,
+      "shape": [
+        4,
+        512,
+        3072,
+        512
+      ],
+      "family": "host",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 1,
+      "ordinal": 97,
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ],
+      "family": "splitk4",
+      "purpose": "environment_anchor",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 1,
+      "ordinal": 99,
+      "shape": [
+        4,
+        64,
+        3072,
+        512
+      ],
+      "family": "direct",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 1,
+      "ordinal": 101,
+      "shape": [
+        4,
+        64,
+        3072,
+        1536
+      ],
+      "family": "splitk4",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 1,
+      "ordinal": 103,
+      "shape": [
+        4,
+        192,
+        3072,
+        512
+      ],
+      "family": "splitk2",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 2,
+      "ordinal": 70,
+      "shape": [
+        4,
+        64,
+        3072,
+        1536
+      ],
+      "family": "host",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 2,
+      "ordinal": 72,
+      "shape": [
+        4,
+        64,
+        3072,
+        512
+      ],
+      "family": "host",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 2,
+      "ordinal": 74,
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      "family": "host",
+      "purpose": "environment_anchor",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 2,
+      "ordinal": 76,
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ],
+      "family": "splitk4",
+      "purpose": "environment_anchor",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 2,
+      "ordinal": 78,
+      "shape": [
+        4,
+        64,
+        3072,
+        1536
+      ],
+      "family": "splitk8",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 2,
+      "ordinal": 80,
+      "shape": [
+        4,
+        512,
+        3072,
+        512
+      ],
+      "family": "splitk4",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 2,
+      "ordinal": 82,
+      "shape": [
+        4,
+        64,
+        3072,
+        1536
+      ],
+      "family": "splitk2",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 2,
+      "ordinal": 84,
+      "shape": [
+        4,
+        64,
+        3072,
+        512
+      ],
+      "family": "splitk8",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 2,
+      "ordinal": 86,
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ],
+      "family": "splitk8",
+      "purpose": "environment_anchor",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 2,
+      "ordinal": 88,
+      "shape": [
+        4,
+        192,
+        3072,
+        1536
+      ],
+      "family": "direct",
+      "purpose": "model_identification",
+      "within_current_shape_domain": false
+    },
+    {
+      "block": 2,
+      "ordinal": 90,
+      "shape": [
+        4,
+        192,
+        3072,
+        512
+      ],
+      "family": "splitk4",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 2,
+      "ordinal": 92,
+      "shape": [
+        4,
+        192,
+        3072,
+        512
+      ],
+      "family": "host",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 2,
+      "ordinal": 94,
+      "shape": [
+        4,
+        512,
+        3072,
+        512
+      ],
+      "family": "host",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 2,
+      "ordinal": 96,
+      "shape": [
+        4,
+        192,
+        3072,
+        1536
+      ],
+      "family": "host",
+      "purpose": "model_identification",
+      "within_current_shape_domain": false
+    },
+    {
+      "block": 2,
+      "ordinal": 98,
+      "shape": [
+        4,
+        192,
+        3072,
+        1536
+      ],
+      "family": "splitk2",
+      "purpose": "model_identification",
+      "within_current_shape_domain": false
+    },
+    {
+      "block": 2,
+      "ordinal": 100,
+      "shape": [
+        4,
+        192,
+        3072,
+        512
+      ],
+      "family": "splitk8",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 2,
+      "ordinal": 102,
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ],
+      "family": "direct",
+      "purpose": "environment_anchor",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 2,
+      "ordinal": 104,
+      "shape": [
+        4,
+        192,
+        3072,
+        512
+      ],
+      "family": "direct",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 2,
+      "ordinal": 106,
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      "family": "splitk4",
+      "purpose": "environment_anchor",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 2,
+      "ordinal": 108,
+      "shape": [
+        4,
+        192,
+        3072,
+        1536
+      ],
+      "family": "splitk8",
+      "purpose": "model_identification",
+      "within_current_shape_domain": false
+    },
+    {
+      "block": 2,
+      "ordinal": 110,
+      "shape": [
+        4,
+        512,
+        3072,
+        512
+      ],
+      "family": "direct",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 2,
+      "ordinal": 112,
+      "shape": [
+        4,
+        192,
+        3072,
+        1536
+      ],
+      "family": "splitk4",
+      "purpose": "model_identification",
+      "within_current_shape_domain": false
+    },
+    {
+      "block": 2,
+      "ordinal": 114,
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      "family": "splitk8",
+      "purpose": "environment_anchor",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 2,
+      "ordinal": 116,
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      "family": "direct",
+      "purpose": "environment_anchor",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 2,
+      "ordinal": 118,
+      "shape": [
+        4,
+        512,
+        3072,
+        512
+      ],
+      "family": "splitk2",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 2,
+      "ordinal": 120,
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ],
+      "family": "splitk2",
+      "purpose": "environment_anchor",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 2,
+      "ordinal": 122,
+      "shape": [
+        4,
+        64,
+        3072,
+        512
+      ],
+      "family": "splitk4",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 2,
+      "ordinal": 124,
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ],
+      "family": "host",
+      "purpose": "environment_anchor",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 2,
+      "ordinal": 126,
+      "shape": [
+        4,
+        64,
+        3072,
+        512
+      ],
+      "family": "direct",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 2,
+      "ordinal": 128,
+      "shape": [
+        4,
+        64,
+        3072,
+        1536
+      ],
+      "family": "splitk4",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 2,
+      "ordinal": 130,
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      "family": "splitk2",
+      "purpose": "environment_anchor",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 2,
+      "ordinal": 132,
+      "shape": [
+        4,
+        192,
+        3072,
+        512
+      ],
+      "family": "splitk2",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 2,
+      "ordinal": 134,
+      "shape": [
+        4,
+        64,
+        3072,
+        512
+      ],
+      "family": "splitk2",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 2,
+      "ordinal": 136,
+      "shape": [
+        4,
+        512,
+        3072,
+        512
+      ],
+      "family": "splitk8",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    },
+    {
+      "block": 2,
+      "ordinal": 138,
+      "shape": [
+        4,
+        64,
+        3072,
+        1536
+      ],
+      "family": "direct",
+      "purpose": "model_identification",
+      "within_current_shape_domain": true
+    }
+  ],
+  "not_complete_candidate_oracle": true,
+  "scope_limit": "The crossed M192/N1536 point is diagnostic only; this plan does not extend compiler admission or grouped-N support. q16/grouped candidates are not covered.",
+  "source_sha256": {
+    "experiments/2026-10-21-structural-identifiability/measurement_design.py": "669a5ec94167b8fc998c8e32df5db2df3a17ae244539bfac887b9431bdf9bba6",
+    "experiments/2026-10-21-structural-identifiability/candidate.py": "ea0f4c8fea56e47af71a7838773106b87fc3702187b0a2201acc67ca469a3e57"
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "schema": "edmir.execution-cost-revision-decision.v1",
+  "date": "2026-10-21",
+  "implementation_complete": true,
+  "model_judgment_resolved": false,
+  "proposed_model": "execution_balanced",
+  "local_gate": {
+    "passed": false,
+    "checks": {
+      "mean_no_worse_than_controls": true,
+      "max_no_worse_than_controls": false,
+      "host_regressions_no_more_than_old_relative": true,
+      "no_priority_false_host": false,
+      "no_priority_false_fused": false,
+      "priority_regret_at_most_five_percent": false,
+      "leave_k_max_no_worse_than_fixed": false
+    }
+  },
+  "server_ready": false,
+  "compiler_admission": false,
+  "reason": "The proposed fixed revision failed bidirectional priority and leave-K checks. Do not promote it or retune after these results.",
+  "tests": {
+    "selection_tests": 43,
+    "splitk_tests": 7,
+    "reliability_tests": 13,
+    "review_tests": 2
+  },
+  "total_tests": 65,
+  "numerical_replay_exact": true,
+  "gpu_operations": 0,
+  "frozen_package_sha256": "20e4df1a58ab838541d4212f4d99035b6312cf7ce93ae348327c138e2df4d1c5",
+  "new_source_files_not_in_old_package": [
+    "EDM-IR/edmir/compiler/execution_cost_selection.py",
+    "EDM-IR/tools/evaluate_execution_cost_selector.py"
+  ],
+  "design_sha256": "57c1cc0d69a230ce5645c45d11ad02afd252269132413180ff30aa40ed47b451",
+  "source_sha256": {
+    "EDM-IR/edmir/compiler/execution_cost_selection.py": "30d8d2b2d69893a70a20f0775f11177d075304cea72183c94b46f7bf77b00e7f",
+    "EDM-IR/tools/evaluate_execution_cost_selector.py": "0b8fc94a5c275e034197607cc8aa22f82ef522e4cecb9b1db13ee43bc0265740",
+    "EDM-IR/tests/execution_cost_selection_test.py": "dacd04021c6223d167f6729ca8266e95585abf59d0fa976a8a96167031b228e8",
+    "experiments/2026-10-21-execution-cost-revision/review_revision.py": "9c9452fef52ea69be5ec5d6e1428420d50183522aed410f4649c26150dd93030",
+    "experiments/2026-10-21-execution-cost-revision/test_revision.py": "153791d7301ddba45e11f65e059c6a8750186729493f62aa0b8ac77f0bc2b884",
+    "experiments/2026-10-21-execution-cost-revision/run_local_revision.py": "1a4c07a3022c239cbe0f71b34e304d87417c73694b119ee5035a381736d392ac"
+  },
+  "evidence_sha256": {
+    "evaluate.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "evaluate.stdout.txt": "1e7f74a3a5ba6aa0ac56ad6479dd11a80620c6d040e0dffdfcef5a8713be253a",
+    "evidence.json": "e6a7fe5d290aa7aa29a2a736993e1a3080568ae36316808019c940c5793d907c",
+    "evidence.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "evidence.stdout.txt": "30f60c54c67631be427399d341651ee92671a1667eaaa97b1e54c082f11ec090",
+    "reliability_tests.stderr.txt": "4bf6999ac6798d7dad9ea7d9255acfb56feeef33bf528bc62de5e8b7f3943224",
+    "reliability_tests.stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "results.json": "95d5208c4b3f4cbc311beefe1f40baa1566667bf75f519794a13cdfc24f33e36",
+    "review.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "review.stdout.txt": "19ab650eef569c37d409e985636aa2e16f3b97eef41620278f8f00ed4f0ffbe1",
+    "review_results.json": "cf92e841db04326f22a429a893cddabac932fbffabe37628f16aa30abd19e4a3",
+    "review_tests.stderr.txt": "13271e51798b4c9073dd00e733706ecb3c539cd1a5438c4020d9f5aba8a3e028",
+    "review_tests.stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "selection_tests.stderr.txt": "b86ec7140684dcfb7e3603247893f12fb0f651acfb8fb31a84eb8dca8d0fbcb9",
+    "selection_tests.stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "splitk_tests.stderr.txt": "963df522bab7296406932f14ce928433be2b3a8aeaf45135a42131cc44c45368",
+    "splitk_tests.stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

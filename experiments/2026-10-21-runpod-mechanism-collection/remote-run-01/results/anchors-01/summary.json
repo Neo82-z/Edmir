@@ -1,0 +1,148 @@
+{
+  "stage": "anchors",
+  "workloads": [
+    {
+      "id": "w001",
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      "process_medians_ms": {
+        "direct@legacy": [
+          1.059326,
+          1.061706,
+          1.065696
+        ],
+        "host@legacy": [
+          0.574572,
+          0.575593,
+          0.5767235
+        ],
+        "splitk2@legacy": [
+          0.7215425,
+          0.720872,
+          0.7182225
+        ],
+        "splitk4@legacy": [
+          0.719608,
+          0.7175469999999999,
+          0.7179575
+        ],
+        "splitk8@legacy": [
+          0.8333269999999999,
+          0.8210219999999999,
+          0.822397
+        ]
+      },
+      "median_of_process_medians_ms": {
+        "direct@legacy": 1.061706,
+        "host@legacy": 0.575593,
+        "splitk2@legacy": 0.720872,
+        "splitk4@legacy": 0.7179575,
+        "splitk8@legacy": 0.822397
+      },
+      "best_of_measured_subset": "host@legacy",
+      "paired_contrasts": [
+        {
+          "a": "splitk2@legacy",
+          "b": "splitk4@legacy",
+          "b_minus_a_us": [
+            -1.9344999999999501,
+            -3.3250000000000224,
+            -0.2649999999999597
+          ],
+          "b_over_a": [
+            0.9973189382468809,
+            0.995387530657315,
+            0.9996310335585421
+          ]
+        }
+      ],
+      "process_max_over_min": {
+        "direct@legacy": 1.006013257486364,
+        "host@legacy": 1.003744526360491,
+        "splitk2@legacy": 1.0046225229646801,
+        "splitk4@legacy": 1.0028722857178696,
+        "splitk8@legacy": 1.0149874181203427
+      },
+      "review_drift_candidates": []
+    },
+    {
+      "id": "w004",
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ],
+      "process_medians_ms": {
+        "direct@legacy": [
+          1.0831065,
+          1.086511,
+          1.079746
+        ],
+        "host@legacy": [
+          1.085601,
+          1.076641,
+          1.1009165
+        ],
+        "splitk2@legacy": [
+          1.0064515,
+          1.007737,
+          1.0091265
+        ],
+        "splitk4@legacy": [
+          1.053181,
+          1.0505010000000001,
+          1.0525864999999999
+        ],
+        "splitk8@legacy": [
+          1.21408,
+          1.2222955,
+          1.2219955
+        ]
+      },
+      "median_of_process_medians_ms": {
+        "direct@legacy": 1.0831065,
+        "host@legacy": 1.085601,
+        "splitk2@legacy": 1.007737,
+        "splitk4@legacy": 1.0525864999999999,
+        "splitk8@legacy": 1.2219955
+      },
+      "best_of_measured_subset": "splitk2@legacy",
+      "paired_contrasts": [
+        {
+          "a": "splitk2@legacy",
+          "b": "splitk4@legacy",
+          "b_minus_a_us": [
+            46.72949999999987,
+            42.764000000000024,
+            43.45999999999983
+          ],
+          "b_over_a": [
+            1.0464299571315656,
+            1.0424356751811237,
+            1.0430669494855203
+          ]
+        }
+      ],
+      "process_max_over_min": {
+        "direct@legacy": 1.0062653624093072,
+        "host@legacy": 1.0225474415334361,
+        "splitk2@legacy": 1.0026578528622592,
+        "splitk4@legacy": 1.0025511636828521,
+        "splitk8@legacy": 1.0067668522667368
+      },
+      "review_drift_candidates": []
+    }
+  ],
+  "geometry_contrasts": [],
+  "independent_validation": false,
+  "compiler_admission": false,
+  "full_candidate_oracle": false,
+  "unit_of_repetition": "fresh process block; iterations are not independent repeats",
+  "drift_rule": "max/min > 1.10 requests review; all observations retained; not a confidence bound",
+  "causal_limit": "Timing contrasts do not identify physical traffic or semaphore stall time."
+}

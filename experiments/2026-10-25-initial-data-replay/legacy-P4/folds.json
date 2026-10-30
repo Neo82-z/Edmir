@@ -1,0 +1,5645 @@
+[
+  {
+    "excluded_group": "m128-n512",
+    "training_shapes": [
+      [
+        4,
+        32,
+        512,
+        512
+      ],
+      [
+        4,
+        32,
+        1024,
+        512
+      ],
+      [
+        4,
+        32,
+        2048,
+        512
+      ],
+      [
+        4,
+        32,
+        4096,
+        512
+      ],
+      [
+        4,
+        32,
+        8192,
+        512
+      ],
+      [
+        4,
+        64,
+        512,
+        128
+      ],
+      [
+        4,
+        64,
+        512,
+        256
+      ],
+      [
+        4,
+        64,
+        512,
+        512
+      ],
+      [
+        4,
+        64,
+        512,
+        1024
+      ],
+      [
+        4,
+        64,
+        512,
+        2048
+      ],
+      [
+        4,
+        64,
+        1024,
+        128
+      ],
+      [
+        4,
+        64,
+        1024,
+        256
+      ],
+      [
+        4,
+        64,
+        1024,
+        512
+      ],
+      [
+        4,
+        64,
+        1024,
+        1024
+      ],
+      [
+        4,
+        64,
+        1024,
+        2048
+      ],
+      [
+        4,
+        64,
+        2048,
+        128
+      ],
+      [
+        4,
+        64,
+        2048,
+        256
+      ],
+      [
+        4,
+        64,
+        2048,
+        512
+      ],
+      [
+        4,
+        64,
+        2048,
+        1024
+      ],
+      [
+        4,
+        64,
+        2048,
+        2048
+      ],
+      [
+        4,
+        64,
+        4096,
+        128
+      ],
+      [
+        4,
+        64,
+        4096,
+        256
+      ],
+      [
+        4,
+        64,
+        4096,
+        512
+      ],
+      [
+        4,
+        64,
+        4096,
+        1024
+      ],
+      [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      [
+        4,
+        64,
+        8192,
+        128
+      ],
+      [
+        4,
+        64,
+        8192,
+        256
+      ],
+      [
+        4,
+        64,
+        8192,
+        512
+      ],
+      [
+        4,
+        64,
+        8192,
+        1024
+      ],
+      [
+        4,
+        64,
+        8192,
+        2048
+      ],
+      [
+        4,
+        256,
+        2048,
+        512
+      ],
+      [
+        4,
+        256,
+        4096,
+        512
+      ],
+      [
+        4,
+        256,
+        8192,
+        512
+      ],
+      [
+        4,
+        512,
+        2048,
+        512
+      ],
+      [
+        4,
+        512,
+        4096,
+        512
+      ],
+      [
+        4,
+        512,
+        8192,
+        512
+      ]
+    ],
+    "evaluation_shapes": [
+      [
+        4,
+        128,
+        512,
+        512
+      ],
+      [
+        4,
+        128,
+        1024,
+        512
+      ],
+      [
+        4,
+        128,
+        2048,
+        512
+      ],
+      [
+        4,
+        128,
+        4096,
+        512
+      ],
+      [
+        4,
+        128,
+        8192,
+        512
+      ]
+    ],
+    "models": {
+      "original_full_log": {
+        "host_model": {
+          "stage": "host",
+          "ablation": "full",
+          "feature_names": [
+            "log_flops",
+            "log_unique_remote_bytes",
+            "log_local_bytes"
+          ],
+          "means": [
+            29.444444444444443,
+            20.029406945165604,
+            22.53440685814732
+          ],
+          "scales": [
+            2.27845518382332,
+            1.9499920860871383,
+            1.728105752127077
+          ],
+          "coefficients": [
+            -0.38063452976032425,
+            -0.0151322177775872,
+            0.14377694263890833,
+            0.08721302029781905
+          ],
+          "ridge": 1.0,
+          "sm_count": 108
+        },
+        "fused_model": {
+          "stage": "fused",
+          "ablation": "full",
+          "feature_names": [
+            "log_flops",
+            "log_unique_remote_bytes",
+            "log_local_bytes",
+            "log_split_k_depth",
+            "log_q",
+            "grouped",
+            "log_rho_n",
+            "log_gamma",
+            "underfill",
+            "log_reduction_bytes",
+            "q_minus_one"
+          ],
+          "means": [
+            29.107142857142858,
+            19.870676786435443,
+            22.242179032823838,
+            9.107142857142858,
+            2.0,
+            0.35714285714285715,
+            1.5535714285714286,
+            3.8214285714285716,
+            0.7595899470899471,
+            20.464107920226024,
+            3.6666666666666665
+          ],
+          "scales": [
+            2.1685954261800378,
+            1.7899948694488097,
+            1.577338347581591,
+            1.6184785414442933,
+            0.816496580927726,
+            0.4791574237499549,
+            1.2235726795089927,
+            1.740010360435181,
+            0.2811993359792201,
+            1.880191693679268,
+            2.4944382578492945
+          ],
+          "coefficients": [
+            -0.5915817500651086,
+            -0.17122175185391889,
+            0.17172498452474882,
+            0.5846572485122465,
+            -0.005343775851119552,
+            -0.1407804556750588,
+            0.01629644864288722,
+            -0.15117362873207535,
+            0.014937883292497366,
+            -0.10649507558334609,
+            -0.2828468498209591,
+            0.13318952587199567
+          ],
+          "ridge": 1.0,
+          "sm_count": 108
+        },
+        "minimum_fused_advantage": 0.0,
+        "force_fused": false
+      },
+      "regime_max_refit": {
+        "host": {
+          "coefficients_us": [
+            512.091493300543,
+            4.581415692334866,
+            5.622739642376107,
+            117.17135144914094
+          ],
+          "training_scales": [
+            1.0,
+            21.165364543281555,
+            16.55540900498654,
+            1.086134199811423
+          ],
+          "objective_us2": 60367.749502782375,
+          "kkt_relative_violation": 1.426300382292959e-16,
+          "unregularized_rank": 4,
+          "feature_count": 4,
+          "enumerated_faces": 16,
+          "ridge": 1e-06
+        },
+        "fused": {
+          "coefficients_us": [
+            195.36210968760884,
+            48.94581938537076,
+            36.53473113749771,
+            0.0,
+            31.411209308258222,
+            9.755961287858186,
+            456.2856109348316,
+            48.32405115026718
+          ],
+          "training_scales": [
+            1.0,
+            0.4080489017875186,
+            0.5976143046671968,
+            0.8099691069882005,
+            4.43471156521669,
+            1.4332923993151305,
+            0.7058973123797824,
+            6.22330795814929
+          ],
+          "objective_us2": 39301.07621229941,
+          "feature_count": 8,
+          "ridge": 1e-06,
+          "unregularized_rank": 8,
+          "kkt_relative_violation": 1.982426041884779e-15,
+          "selected_interval": 5,
+          "interval_count": 9,
+          "interval_certificates": [
+            {
+              "interval": 0,
+              "normalized_ratio_lower": 0.0,
+              "normalized_ratio_upper": 0.056713994962713093,
+              "objective_us2": 515626.36845477525,
+              "kkt_relative_violation": 4.2846293398417383e-16,
+              "visited_faces": 5,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 1,
+              "normalized_ratio_lower": 0.056713994962713093,
+              "normalized_ratio_upper": 0.11342798992542619,
+              "objective_us2": 500928.39497933787,
+              "kkt_relative_violation": 5.717893159830667e-16,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 4.547473508864641e-13
+            },
+            {
+              "interval": 2,
+              "normalized_ratio_lower": 0.11342798992542619,
+              "normalized_ratio_upper": 0.22685597985085237,
+              "objective_us2": 409059.7495518009,
+              "kkt_relative_violation": 1.982426041884779e-15,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 3,
+              "normalized_ratio_lower": 0.22685597985085237,
+              "normalized_ratio_upper": 0.45371195970170475,
+              "objective_us2": 221211.00784819704,
+              "kkt_relative_violation": 2.801235447810663e-16,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 4,
+              "normalized_ratio_lower": 0.45371195970170475,
+              "normalized_ratio_upper": 0.9074239194034095,
+              "objective_us2": 61587.412482333595,
+              "kkt_relative_violation": 2.801235447810663e-16,
+              "visited_faces": 1,
+              "branch_feasibility_error_us": 4.547473508864641e-13
+            },
+            {
+              "interval": 5,
+              "normalized_ratio_lower": 0.9074239194034095,
+              "normalized_ratio_upper": 1.814847838806819,
+              "objective_us2": 39301.07621229941,
+              "kkt_relative_violation": 1.456350409437133e-16,
+              "visited_faces": 9,
+              "branch_feasibility_error_us": 1.1368683772161603e-13
+            },
+            {
+              "interval": 6,
+              "normalized_ratio_lower": 1.814847838806819,
+              "normalized_ratio_upper": 3.629695677613638,
+              "objective_us2": 298978.8927871168,
+              "kkt_relative_violation": 1.5784289408201601e-16,
+              "visited_faces": 139,
+              "branch_feasibility_error_us": 1.1368683772161603e-13
+            },
+            {
+              "interval": 7,
+              "normalized_ratio_lower": 3.629695677613638,
+              "normalized_ratio_upper": 7.259391355227276,
+              "objective_us2": 558231.4507650337,
+              "kkt_relative_violation": 1.5784289408201601e-16,
+              "visited_faces": 139,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 8,
+              "normalized_ratio_lower": 7.259391355227276,
+              "normalized_ratio_upper": null,
+              "objective_us2": 606972.2902306962,
+              "kkt_relative_violation": 1.5784289408201601e-16,
+              "visited_faces": 11,
+              "branch_feasibility_error_us": 1.1368683772161603e-13
+            }
+          ],
+          "training_branch_counts": {
+            "latency": 138,
+            "throughput": 30
+          },
+          "crossover_W_over_L": 9.442205280264645,
+          "crossover_note": "Null means zero throughput coefficient; no finite crossover. A finite ratio alone does not establish branch identification.",
+          "optimality_scope": "All training-ratio cones enumerated, each numerically KKT-certified, fixed basis/weights/ridge only; no physical identification.",
+          "max_faces_per_interval": 256
+        }
+      },
+      "retained_0.25_refit": {
+        "host": {
+          "coefficients_us": [
+            512.091493300543,
+            4.581415692334866,
+            5.622739642376107,
+            117.17135144914094
+          ],
+          "training_scales": [
+            1.0,
+            21.165364543281555,
+            16.55540900498654,
+            1.086134199811423
+          ],
+          "objective_us2": 60367.749502782375,
+          "kkt_relative_violation": 1.426300382292959e-16,
+          "unregularized_rank": 4,
+          "feature_count": 4,
+          "enumerated_faces": 16,
+          "ridge": 1e-06
+        },
+        "fused": {
+          "coefficients_us": [
+            152.4673026701056,
+            82.60410264513592,
+            28.135650687262082,
+            44.63636762887766,
+            31.711676363924997,
+            21.804216611141396,
+            413.10134973538135,
+            44.09198772415616
+          ],
+          "training_scales": [
+            1.0,
+            0.4080489017875186,
+            0.5976143046671968,
+            0.8099691069882005,
+            4.43471156521669,
+            1.4332923993151305,
+            0.7058973123797824,
+            6.22330795814929
+          ],
+          "objective_us2": 17837.810589283017,
+          "feature_count": 8,
+          "ridge": 1e-06,
+          "unregularized_rank": 8,
+          "kkt_relative_violation": 1.1304178032660342e-15,
+          "selected_interval": 5,
+          "interval_count": 9,
+          "interval_certificates": [
+            {
+              "interval": 0,
+              "normalized_ratio_lower": 0.0,
+              "normalized_ratio_upper": 0.056713994962713093,
+              "objective_us2": 498751.08280847635,
+              "kkt_relative_violation": 1.1304178032660342e-15,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 1,
+              "normalized_ratio_lower": 0.056713994962713093,
+              "normalized_ratio_upper": 0.11342798992542619,
+              "objective_us2": 471455.03174449113,
+              "kkt_relative_violation": 2.7940248502909394e-16,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 2,
+              "normalized_ratio_lower": 0.11342798992542619,
+              "normalized_ratio_upper": 0.22685597985085237,
+              "objective_us2": 374227.3928432196,
+              "kkt_relative_violation": 1.0896897209763954e-15,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 3,
+              "normalized_ratio_lower": 0.22685597985085237,
+              "normalized_ratio_upper": 0.45371195970170475,
+              "objective_us2": 193675.1870163653,
+              "kkt_relative_violation": 5.277087974288776e-16,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 4,
+              "normalized_ratio_lower": 0.45371195970170475,
+              "normalized_ratio_upper": 0.9074239194034095,
+              "objective_us2": 30035.7881611536,
+              "kkt_relative_violation": 1.319271993572194e-16,
+              "visited_faces": 65,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 5,
+              "normalized_ratio_lower": 0.9074239194034095,
+              "normalized_ratio_upper": 1.814847838806819,
+              "objective_us2": 17837.810589283017,
+              "kkt_relative_violation": 1.3382194024019697e-16,
+              "visited_faces": 1,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 6,
+              "normalized_ratio_lower": 1.814847838806819,
+              "normalized_ratio_upper": 3.629695677613638,
+              "objective_us2": 178882.29452399415,
+              "kkt_relative_violation": 0.0,
+              "visited_faces": 139,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 7,
+              "normalized_ratio_lower": 3.629695677613638,
+              "normalized_ratio_upper": 7.259391355227276,
+              "objective_us2": 437751.40396513976,
+              "kkt_relative_violation": 1.5409313037960915e-16,
+              "visited_faces": 139,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 8,
+              "normalized_ratio_lower": 7.259391355227276,
+              "normalized_ratio_upper": null,
+              "objective_us2": 536913.102445396,
+              "kkt_relative_violation": 1.5784289408201601e-16,
+              "visited_faces": 139,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            }
+          ],
+          "training_branch_counts": {
+            "latency": 138,
+            "throughput": 30
+          },
+          "crossover_W_over_L": 9.369079759338232,
+          "crossover_note": "Null means zero throughput coefficient; no finite crossover. A finite ratio alone does not establish branch identification.",
+          "optimality_scope": "All training-ratio cones enumerated, each numerically KKT-certified, fixed basis/weights/ridge only; no physical identification.",
+          "max_faces_per_interval": 256
+        }
+      }
+    }
+  },
+  {
+    "excluded_group": "m256-n512-longk",
+    "training_shapes": [
+      [
+        4,
+        32,
+        512,
+        512
+      ],
+      [
+        4,
+        32,
+        1024,
+        512
+      ],
+      [
+        4,
+        32,
+        2048,
+        512
+      ],
+      [
+        4,
+        32,
+        4096,
+        512
+      ],
+      [
+        4,
+        32,
+        8192,
+        512
+      ],
+      [
+        4,
+        64,
+        512,
+        128
+      ],
+      [
+        4,
+        64,
+        512,
+        256
+      ],
+      [
+        4,
+        64,
+        512,
+        512
+      ],
+      [
+        4,
+        64,
+        512,
+        1024
+      ],
+      [
+        4,
+        64,
+        512,
+        2048
+      ],
+      [
+        4,
+        64,
+        1024,
+        128
+      ],
+      [
+        4,
+        64,
+        1024,
+        256
+      ],
+      [
+        4,
+        64,
+        1024,
+        512
+      ],
+      [
+        4,
+        64,
+        1024,
+        1024
+      ],
+      [
+        4,
+        64,
+        1024,
+        2048
+      ],
+      [
+        4,
+        64,
+        2048,
+        128
+      ],
+      [
+        4,
+        64,
+        2048,
+        256
+      ],
+      [
+        4,
+        64,
+        2048,
+        512
+      ],
+      [
+        4,
+        64,
+        2048,
+        1024
+      ],
+      [
+        4,
+        64,
+        2048,
+        2048
+      ],
+      [
+        4,
+        64,
+        4096,
+        128
+      ],
+      [
+        4,
+        64,
+        4096,
+        256
+      ],
+      [
+        4,
+        64,
+        4096,
+        512
+      ],
+      [
+        4,
+        64,
+        4096,
+        1024
+      ],
+      [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      [
+        4,
+        64,
+        8192,
+        128
+      ],
+      [
+        4,
+        64,
+        8192,
+        256
+      ],
+      [
+        4,
+        64,
+        8192,
+        512
+      ],
+      [
+        4,
+        64,
+        8192,
+        1024
+      ],
+      [
+        4,
+        64,
+        8192,
+        2048
+      ],
+      [
+        4,
+        128,
+        512,
+        512
+      ],
+      [
+        4,
+        128,
+        1024,
+        512
+      ],
+      [
+        4,
+        128,
+        2048,
+        512
+      ],
+      [
+        4,
+        128,
+        4096,
+        512
+      ],
+      [
+        4,
+        128,
+        8192,
+        512
+      ],
+      [
+        4,
+        512,
+        2048,
+        512
+      ],
+      [
+        4,
+        512,
+        4096,
+        512
+      ],
+      [
+        4,
+        512,
+        8192,
+        512
+      ]
+    ],
+    "evaluation_shapes": [
+      [
+        4,
+        256,
+        2048,
+        512
+      ],
+      [
+        4,
+        256,
+        4096,
+        512
+      ],
+      [
+        4,
+        256,
+        8192,
+        512
+      ]
+    ],
+    "models": {
+      "original_full_log": {
+        "host_model": {
+          "stage": "host",
+          "ablation": "full",
+          "feature_names": [
+            "log_flops",
+            "log_unique_remote_bytes",
+            "log_local_bytes"
+          ],
+          "means": [
+            29.31578947368421,
+            19.900751974405367,
+            22.41229067858424
+          ],
+          "scales": [
+            2.1533971100503986,
+            1.822451546650609,
+            1.6574122601952024
+          ],
+          "coefficients": [
+            -0.40233368080854326,
+            -0.027078213343891072,
+            0.12790633180050717,
+            0.09964664319390679
+          ],
+          "ridge": 1.0,
+          "sm_count": 108
+        },
+        "fused_model": {
+          "stage": "fused",
+          "ablation": "full",
+          "feature_names": [
+            "log_flops",
+            "log_unique_remote_bytes",
+            "log_local_bytes",
+            "log_split_k_depth",
+            "log_q",
+            "grouped",
+            "log_rho_n",
+            "log_gamma",
+            "underfill",
+            "log_reduction_bytes",
+            "q_minus_one"
+          ],
+          "means": [
+            29.03448275862069,
+            19.791859052445297,
+            22.207897258082642,
+            9.051724137931034,
+            2.0,
+            0.3448275862068966,
+            1.5689655172413792,
+            3.810344827586207,
+            0.7706470838654746,
+            20.44686650892036,
+            3.6666666666666665
+          ],
+          "scales": [
+            2.0758506128679186,
+            1.6994788317726355,
+            1.52971423055894,
+            1.6268834933429048,
+            0.816496580927726,
+            0.47531202593414557,
+            1.2050478451728657,
+            1.6793905902609894,
+            0.2607344197828418,
+            1.8269590973050318,
+            2.494438257849294
+          ],
+          "coefficients": [
+            -0.6148638989634064,
+            -0.1614870398764412,
+            0.1486793157018478,
+            0.5705718653989781,
+            0.007483852376563051,
+            -0.14207195114570464,
+            0.021393758893253952,
+            -0.15653008834414722,
+            0.009047927996475838,
+            -0.12271072796648258,
+            -0.28438423302980775,
+            0.1376461489507572
+          ],
+          "ridge": 1.0,
+          "sm_count": 108
+        },
+        "minimum_fused_advantage": 0.0,
+        "force_fused": false
+      },
+      "regime_max_refit": {
+        "host": {
+          "coefficients_us": [
+            514.4299853842367,
+            4.304106093493539,
+            5.6671011272506,
+            116.19482102304306
+          ],
+          "training_scales": [
+            1.0,
+            19.10515611377146,
+            15.140183683170456,
+            1.0581373281683044
+          ],
+          "objective_us2": 55211.57894279648,
+          "kkt_relative_violation": 1.3870221578239534e-16,
+          "unregularized_rank": 4,
+          "feature_count": 4,
+          "enumerated_faces": 16,
+          "ridge": 1e-06
+        },
+        "fused": {
+          "coefficients_us": [
+            200.37698674902526,
+            61.27179379736834,
+            32.41658346969852,
+            0.0,
+            31.221494150971438,
+            9.723249240484172,
+            443.54588314688317,
+            48.2973500326547
+          ],
+          "training_scales": [
+            1.0,
+            0.4009518577602295,
+            0.5872202195147035,
+            0.8135596877487571,
+            4.43471156521669,
+            1.3546735899105546,
+            0.6940445747696912,
+            5.75072029783796
+          ],
+          "objective_us2": 35964.77653352327,
+          "feature_count": 8,
+          "ridge": 1e-06,
+          "unregularized_rank": 8,
+          "kkt_relative_violation": 4.313344803983465e-11,
+          "selected_interval": 5,
+          "interval_count": 9,
+          "interval_certificates": [
+            {
+              "interval": 0,
+              "normalized_ratio_lower": 0.0,
+              "normalized_ratio_upper": 0.06034414289203251,
+              "objective_us2": 552187.131481838,
+              "kkt_relative_violation": 4.313344803983465e-11,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 1,
+              "normalized_ratio_lower": 0.06034414289203251,
+              "normalized_ratio_upper": 0.12068828578406501,
+              "objective_us2": 537316.9782790553,
+              "kkt_relative_violation": 1.4648061256832502e-16,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 2,
+              "normalized_ratio_lower": 0.12068828578406501,
+              "normalized_ratio_upper": 0.24137657156813003,
+              "objective_us2": 445273.49797308026,
+              "kkt_relative_violation": 8.700807370110815e-16,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 3,
+              "normalized_ratio_lower": 0.24137657156813003,
+              "normalized_ratio_upper": 0.48275314313626005,
+              "objective_us2": 262364.2475181885,
+              "kkt_relative_violation": 7.171570175243602e-16,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 4,
+              "normalized_ratio_lower": 0.48275314313626005,
+              "normalized_ratio_upper": 0.9655062862725201,
+              "objective_us2": 50990.99357298972,
+              "kkt_relative_violation": 2.868628070097441e-16,
+              "visited_faces": 65,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 5,
+              "normalized_ratio_lower": 0.9655062862725201,
+              "normalized_ratio_upper": 1.9310125725450402,
+              "objective_us2": 35964.77653352327,
+              "kkt_relative_violation": 2.9274222066967935e-16,
+              "visited_faces": 9,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 6,
+              "normalized_ratio_lower": 1.9310125725450402,
+              "normalized_ratio_upper": 3.8620251450900804,
+              "objective_us2": 297975.2726968838,
+              "kkt_relative_violation": 4.673702421772685e-16,
+              "visited_faces": 139,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 7,
+              "normalized_ratio_lower": 3.8620251450900804,
+              "normalized_ratio_upper": 7.724050290180161,
+              "objective_us2": 551466.6834662174,
+              "kkt_relative_violation": 1.5579008072575617e-16,
+              "visited_faces": 139,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 8,
+              "normalized_ratio_lower": 7.724050290180161,
+              "normalized_ratio_upper": null,
+              "objective_us2": 599841.4011835023,
+              "kkt_relative_violation": 4.673702421772685e-16,
+              "visited_faces": 75,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            }
+          ],
+          "training_branch_counts": {
+            "latency": 145,
+            "throughput": 29
+          },
+          "crossover_W_over_L": 9.183648437170858,
+          "crossover_note": "Null means zero throughput coefficient; no finite crossover. A finite ratio alone does not establish branch identification.",
+          "optimality_scope": "All training-ratio cones enumerated, each numerically KKT-certified, fixed basis/weights/ridge only; no physical identification.",
+          "max_faces_per_interval": 256
+        }
+      },
+      "retained_0.25_refit": {
+        "host": {
+          "coefficients_us": [
+            514.4299853842367,
+            4.304106093493539,
+            5.6671011272506,
+            116.19482102304306
+          ],
+          "training_scales": [
+            1.0,
+            19.10515611377146,
+            15.140183683170456,
+            1.0581373281683044
+          ],
+          "objective_us2": 55211.57894279648,
+          "kkt_relative_violation": 1.3870221578239534e-16,
+          "unregularized_rank": 4,
+          "feature_count": 4,
+          "enumerated_faces": 16,
+          "ridge": 1e-06
+        },
+        "fused": {
+          "coefficients_us": [
+            162.15838604763215,
+            87.70744587334309,
+            27.214342539964996,
+            38.78700392915754,
+            31.031949464311918,
+            21.089567473937493,
+            406.57499519633507,
+            44.178777052840054
+          ],
+          "training_scales": [
+            1.0,
+            0.4009518577602295,
+            0.5872202195147035,
+            0.8135596877487571,
+            4.43471156521669,
+            1.3546735899105546,
+            0.6940445747696912,
+            5.75072029783796
+          ],
+          "objective_us2": 18476.426104774226,
+          "feature_count": 8,
+          "ridge": 1e-06,
+          "unregularized_rank": 8,
+          "kkt_relative_violation": 1.4286275802365584e-15,
+          "selected_interval": 5,
+          "interval_count": 9,
+          "interval_certificates": [
+            {
+              "interval": 0,
+              "normalized_ratio_lower": 0.0,
+              "normalized_ratio_upper": 0.06034414289203251,
+              "objective_us2": 533346.2333448257,
+              "kkt_relative_violation": 7.231436226387233e-16,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 4.547473508864641e-13
+            },
+            {
+              "interval": 1,
+              "normalized_ratio_lower": 0.06034414289203251,
+              "normalized_ratio_upper": 0.12068828578406501,
+              "objective_us2": 504007.20349985093,
+              "kkt_relative_violation": 1.4286275802365584e-15,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 2,
+              "normalized_ratio_lower": 0.12068828578406501,
+              "normalized_ratio_upper": 0.24137657156813003,
+              "objective_us2": 402963.791877586,
+              "kkt_relative_violation": 9.733363570192544e-16,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 1.1368683772161603e-13
+            },
+            {
+              "interval": 3,
+              "normalized_ratio_lower": 0.24137657156813003,
+              "normalized_ratio_upper": 0.48275314313626005,
+              "objective_us2": 219061.72820731744,
+              "kkt_relative_violation": 9.417890535873712e-16,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 1.1368683772161603e-13
+            },
+            {
+              "interval": 4,
+              "normalized_ratio_lower": 0.48275314313626005,
+              "normalized_ratio_upper": 0.9655062862725201,
+              "objective_us2": 27727.22530734509,
+              "kkt_relative_violation": 2.6908258673924887e-16,
+              "visited_faces": 65,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 5,
+              "normalized_ratio_lower": 0.9655062862725201,
+              "normalized_ratio_upper": 1.9310125725450402,
+              "objective_us2": 18476.426104774226,
+              "kkt_relative_violation": 2.697026004586733e-16,
+              "visited_faces": 1,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 6,
+              "normalized_ratio_lower": 1.9310125725450402,
+              "normalized_ratio_upper": 3.8620251450900804,
+              "objective_us2": 182796.51686978407,
+              "kkt_relative_violation": 2.8983090637408274e-16,
+              "visited_faces": 139,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 7,
+              "normalized_ratio_lower": 3.8620251450900804,
+              "normalized_ratio_upper": 7.724050290180161,
+              "objective_us2": 435987.1036389845,
+              "kkt_relative_violation": 3.0824982012793683e-16,
+              "visited_faces": 139,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 8,
+              "normalized_ratio_lower": 7.724050290180161,
+              "normalized_ratio_upper": null,
+              "objective_us2": 532474.9260801289,
+              "kkt_relative_violation": 1.5579008072575617e-16,
+              "visited_faces": 139,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            }
+          ],
+          "training_branch_counts": {
+            "latency": 145,
+            "throughput": 29
+          },
+          "crossover_W_over_L": 9.202948164682123,
+          "crossover_note": "Null means zero throughput coefficient; no finite crossover. A finite ratio alone does not establish branch identification.",
+          "optimality_scope": "All training-ratio cones enumerated, each numerically KKT-certified, fixed basis/weights/ridge only; no physical identification.",
+          "max_faces_per_interval": 256
+        }
+      }
+    }
+  },
+  {
+    "excluded_group": "m32-n512",
+    "training_shapes": [
+      [
+        4,
+        64,
+        512,
+        128
+      ],
+      [
+        4,
+        64,
+        512,
+        256
+      ],
+      [
+        4,
+        64,
+        512,
+        512
+      ],
+      [
+        4,
+        64,
+        512,
+        1024
+      ],
+      [
+        4,
+        64,
+        512,
+        2048
+      ],
+      [
+        4,
+        64,
+        1024,
+        128
+      ],
+      [
+        4,
+        64,
+        1024,
+        256
+      ],
+      [
+        4,
+        64,
+        1024,
+        512
+      ],
+      [
+        4,
+        64,
+        1024,
+        1024
+      ],
+      [
+        4,
+        64,
+        1024,
+        2048
+      ],
+      [
+        4,
+        64,
+        2048,
+        128
+      ],
+      [
+        4,
+        64,
+        2048,
+        256
+      ],
+      [
+        4,
+        64,
+        2048,
+        512
+      ],
+      [
+        4,
+        64,
+        2048,
+        1024
+      ],
+      [
+        4,
+        64,
+        2048,
+        2048
+      ],
+      [
+        4,
+        64,
+        4096,
+        128
+      ],
+      [
+        4,
+        64,
+        4096,
+        256
+      ],
+      [
+        4,
+        64,
+        4096,
+        512
+      ],
+      [
+        4,
+        64,
+        4096,
+        1024
+      ],
+      [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      [
+        4,
+        64,
+        8192,
+        128
+      ],
+      [
+        4,
+        64,
+        8192,
+        256
+      ],
+      [
+        4,
+        64,
+        8192,
+        512
+      ],
+      [
+        4,
+        64,
+        8192,
+        1024
+      ],
+      [
+        4,
+        64,
+        8192,
+        2048
+      ],
+      [
+        4,
+        128,
+        512,
+        512
+      ],
+      [
+        4,
+        128,
+        1024,
+        512
+      ],
+      [
+        4,
+        128,
+        2048,
+        512
+      ],
+      [
+        4,
+        128,
+        4096,
+        512
+      ],
+      [
+        4,
+        128,
+        8192,
+        512
+      ],
+      [
+        4,
+        256,
+        2048,
+        512
+      ],
+      [
+        4,
+        256,
+        4096,
+        512
+      ],
+      [
+        4,
+        256,
+        8192,
+        512
+      ],
+      [
+        4,
+        512,
+        2048,
+        512
+      ],
+      [
+        4,
+        512,
+        4096,
+        512
+      ],
+      [
+        4,
+        512,
+        8192,
+        512
+      ]
+    ],
+    "evaluation_shapes": [
+      [
+        4,
+        32,
+        512,
+        512
+      ],
+      [
+        4,
+        32,
+        1024,
+        512
+      ],
+      [
+        4,
+        32,
+        2048,
+        512
+      ],
+      [
+        4,
+        32,
+        4096,
+        512
+      ],
+      [
+        4,
+        32,
+        8192,
+        512
+      ]
+    ],
+    "models": {
+      "original_full_log": {
+        "host_model": {
+          "stage": "host",
+          "ablation": "full",
+          "feature_names": [
+            "log_flops",
+            "log_unique_remote_bytes",
+            "log_local_bytes"
+          ],
+          "means": [
+            29.72222222222222,
+            20.30718472294338,
+            22.67691391401989
+          ],
+          "scales": [
+            2.206192183518309,
+            1.865045592399391,
+            1.6809643894376602
+          ],
+          "coefficients": [
+            -0.37298932670682283,
+            -0.031684944956512,
+            0.1450666778604745,
+            0.1092832387496301
+          ],
+          "ridge": 1.0,
+          "sm_count": 108
+        },
+        "fused_model": {
+          "stage": "fused",
+          "ablation": "full",
+          "feature_names": [
+            "log_flops",
+            "log_unique_remote_bytes",
+            "log_local_bytes",
+            "log_split_k_depth",
+            "log_q",
+            "grouped",
+            "log_rho_n",
+            "log_gamma",
+            "underfill",
+            "log_reduction_bytes",
+            "q_minus_one"
+          ],
+          "means": [
+            29.285714285714285,
+            20.049248215006873,
+            22.33292944913938,
+            9.107142857142858,
+            2.0,
+            0.35714285714285715,
+            1.5535714285714286,
+            3.9107142857142856,
+            0.744157848324515,
+            20.642679167455533,
+            3.6666666666666665
+          ],
+          "scales": [
+            2.152359881902766,
+            1.7521852245765825,
+            1.5666680227803198,
+            1.6184785414442933,
+            0.816496580927726,
+            0.4791574237499549,
+            1.2235726795089927,
+            1.7722408371984926,
+            0.2858372252962309,
+            1.8716926209385023,
+            2.4944382578492945
+          ],
+          "coefficients": [
+            -0.5844425709695268,
+            -0.16726798693693673,
+            0.1453651266646157,
+            0.5911448780776458,
+            0.02703096443304199,
+            -0.12700681579275486,
+            0.02202372844033309,
+            -0.1520504614477471,
+            0.014057232044278448,
+            -0.11827027673006202,
+            -0.3007963278723378,
+            0.13482471394037418
+          ],
+          "ridge": 1.0,
+          "sm_count": 108
+        },
+        "minimum_fused_advantage": 0.0,
+        "force_fused": false
+      },
+      "regime_max_refit": {
+        "host": {
+          "coefficients_us": [
+            504.05740789743476,
+            4.6389111584359,
+            5.45695295607222,
+            126.1810442610039
+          ],
+          "training_scales": [
+            1.0,
+            21.632224226833447,
+            16.861783727568042,
+            1.086134199811423
+          ],
+          "objective_us2": 70559.36358873824,
+          "kkt_relative_violation": 1.4124288276507317e-16,
+          "unregularized_rank": 4,
+          "feature_count": 4,
+          "enumerated_faces": 16,
+          "ridge": 1e-06
+        },
+        "fused": {
+          "coefficients_us": [
+            196.76728039153394,
+            45.418383751605795,
+            32.717799642418576,
+            0.0,
+            32.1491918893884,
+            7.900544143219941,
+            460.925837759747,
+            48.36818157994005
+          ],
+          "training_scales": [
+            1.0,
+            0.4080489017875186,
+            0.5976143046671968,
+            0.7971661198194641,
+            4.43471156521669,
+            1.4687460422945664,
+            0.7058973123797824,
+            6.336934454548982
+          ],
+          "objective_us2": 34881.66990885335,
+          "feature_count": 8,
+          "ridge": 1e-06,
+          "unregularized_rank": 8,
+          "kkt_relative_violation": 2.208215899673302e-15,
+          "selected_interval": 5,
+          "interval_count": 9,
+          "interval_certificates": [
+            {
+              "interval": 0,
+              "normalized_ratio_lower": 0.0,
+              "normalized_ratio_upper": 0.055697065942748744,
+              "objective_us2": 415681.13841688883,
+              "kkt_relative_violation": 2.208215899673302e-15,
+              "visited_faces": 5,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 1,
+              "normalized_ratio_lower": 0.055697065942748744,
+              "normalized_ratio_upper": 0.11139413188549749,
+              "objective_us2": 400149.35216067056,
+              "kkt_relative_violation": 1.5195740437481344e-15,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 2,
+              "normalized_ratio_lower": 0.11139413188549749,
+              "normalized_ratio_upper": 0.22278826377099498,
+              "objective_us2": 346803.34904962394,
+              "kkt_relative_violation": 4.133129630611414e-16,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 3,
+              "normalized_ratio_lower": 0.22278826377099498,
+              "normalized_ratio_upper": 0.44557652754198995,
+              "objective_us2": 229571.5653175891,
+              "kkt_relative_violation": 6.888549384352357e-16,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 1.1368683772161603e-13
+            },
+            {
+              "interval": 4,
+              "normalized_ratio_lower": 0.44557652754198995,
+              "normalized_ratio_upper": 0.8911530550839799,
+              "objective_us2": 60219.02598537262,
+              "kkt_relative_violation": 4.1558327881767445e-16,
+              "visited_faces": 1,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 5,
+              "normalized_ratio_lower": 0.8911530550839799,
+              "normalized_ratio_upper": 1.7823061101679598,
+              "objective_us2": 34881.66990885335,
+              "kkt_relative_violation": 1.452527919855538e-16,
+              "visited_faces": 9,
+              "branch_feasibility_error_us": 1.1368683772161603e-13
+            },
+            {
+              "interval": 6,
+              "normalized_ratio_lower": 1.7823061101679598,
+              "normalized_ratio_upper": 3.5646122203359196,
+              "objective_us2": 293553.8416984579,
+              "kkt_relative_violation": 0.0,
+              "visited_faces": 139,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 7,
+              "normalized_ratio_lower": 3.5646122203359196,
+              "normalized_ratio_upper": 7.129224440671839,
+              "objective_us2": 559205.1990310386,
+              "kkt_relative_violation": 1.5632473482041515e-16,
+              "visited_faces": 139,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 8,
+              "normalized_ratio_lower": 7.129224440671839,
+              "normalized_ratio_upper": null,
+              "objective_us2": 608237.5248026614,
+              "kkt_relative_violation": 1.5632473482041515e-16,
+              "visited_faces": 11,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            }
+          ],
+          "training_branch_counts": {
+            "latency": 133,
+            "throughput": 35
+          },
+          "crossover_W_over_L": 9.529525872250463,
+          "crossover_note": "Null means zero throughput coefficient; no finite crossover. A finite ratio alone does not establish branch identification.",
+          "optimality_scope": "All training-ratio cones enumerated, each numerically KKT-certified, fixed basis/weights/ridge only; no physical identification.",
+          "max_faces_per_interval": 256
+        }
+      },
+      "retained_0.25_refit": {
+        "host": {
+          "coefficients_us": [
+            504.05740789743476,
+            4.6389111584359,
+            5.45695295607222,
+            126.1810442610039
+          ],
+          "training_scales": [
+            1.0,
+            21.632224226833447,
+            16.861783727568042,
+            1.086134199811423
+          ],
+          "objective_us2": 70559.36358873824,
+          "kkt_relative_violation": 1.4124288276507317e-16,
+          "unregularized_rank": 4,
+          "feature_count": 4,
+          "enumerated_faces": 16,
+          "ridge": 1e-06
+        },
+        "fused": {
+          "coefficients_us": [
+            151.18199833602065,
+            86.24040796387041,
+            25.945857980827224,
+            47.39898485742328,
+            31.981193927740343,
+            21.343577376002592,
+            409.8094543954181,
+            44.118942210526086
+          ],
+          "training_scales": [
+            1.0,
+            0.4080489017875186,
+            0.5976143046671968,
+            0.7971661198194641,
+            4.43471156521669,
+            1.4687460422945664,
+            0.7058973123797824,
+            6.336934454548982
+          ],
+          "objective_us2": 19183.02873959128,
+          "feature_count": 8,
+          "ridge": 1e-06,
+          "unregularized_rank": 8,
+          "kkt_relative_violation": 1.502733412608468e-15,
+          "selected_interval": 5,
+          "interval_count": 9,
+          "interval_certificates": [
+            {
+              "interval": 0,
+              "normalized_ratio_lower": 0.0,
+              "normalized_ratio_upper": 0.055697065942748744,
+              "objective_us2": 401382.62257095147,
+              "kkt_relative_violation": 1.502733412608468e-15,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 4.547473508864641e-13
+            },
+            {
+              "interval": 1,
+              "normalized_ratio_lower": 0.055697065942748744,
+              "normalized_ratio_upper": 0.11139413188549749,
+              "objective_us2": 376062.47592812794,
+              "kkt_relative_violation": 6.757008877936479e-16,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 2,
+              "normalized_ratio_lower": 0.11139413188549749,
+              "normalized_ratio_upper": 0.22278826377099498,
+              "objective_us2": 311156.0353404607,
+              "kkt_relative_violation": 2.6502807723399353e-16,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 4.547473508864641e-13
+            },
+            {
+              "interval": 3,
+              "normalized_ratio_lower": 0.22278826377099498,
+              "normalized_ratio_upper": 0.44557652754198995,
+              "objective_us2": 185533.48318434035,
+              "kkt_relative_violation": 7.797565115882361e-16,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 4,
+              "normalized_ratio_lower": 0.44557652754198995,
+              "normalized_ratio_upper": 0.8911530550839799,
+              "objective_us2": 29856.08420037061,
+              "kkt_relative_violation": 2.599188371960787e-16,
+              "visited_faces": 65,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 5,
+              "normalized_ratio_lower": 0.8911530550839799,
+              "normalized_ratio_upper": 1.7823061101679598,
+              "objective_us2": 19183.02873959128,
+              "kkt_relative_violation": 3.9792490457154713e-16,
+              "visited_faces": 1,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 6,
+              "normalized_ratio_lower": 1.7823061101679598,
+              "normalized_ratio_upper": 3.5646122203359196,
+              "objective_us2": 183304.44658388625,
+              "kkt_relative_violation": 1.4316949274961508e-16,
+              "visited_faces": 139,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 7,
+              "normalized_ratio_lower": 3.5646122203359196,
+              "normalized_ratio_upper": 7.129224440671839,
+              "objective_us2": 442259.3834578281,
+              "kkt_relative_violation": 7.636778025676459e-17,
+              "visited_faces": 139,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 8,
+              "normalized_ratio_lower": 7.129224440671839,
+              "normalized_ratio_upper": null,
+              "objective_us2": 539693.5745746098,
+              "kkt_relative_violation": 1.5632473482041515e-16,
+              "visited_faces": 139,
+              "branch_feasibility_error_us": 1.1368683772161603e-13
+            }
+          ],
+          "training_branch_counts": {
+            "latency": 133,
+            "throughput": 35
+          },
+          "crossover_W_over_L": 9.288741612160502,
+          "crossover_note": "Null means zero throughput coefficient; no finite crossover. A finite ratio alone does not establish branch identification.",
+          "optimality_scope": "All training-ratio cones enumerated, each numerically KKT-certified, fixed basis/weights/ridge only; no physical identification.",
+          "max_faces_per_interval": 256
+        }
+      }
+    }
+  },
+  {
+    "excluded_group": "m512-n512-longk",
+    "training_shapes": [
+      [
+        4,
+        32,
+        512,
+        512
+      ],
+      [
+        4,
+        32,
+        1024,
+        512
+      ],
+      [
+        4,
+        32,
+        2048,
+        512
+      ],
+      [
+        4,
+        32,
+        4096,
+        512
+      ],
+      [
+        4,
+        32,
+        8192,
+        512
+      ],
+      [
+        4,
+        64,
+        512,
+        128
+      ],
+      [
+        4,
+        64,
+        512,
+        256
+      ],
+      [
+        4,
+        64,
+        512,
+        512
+      ],
+      [
+        4,
+        64,
+        512,
+        1024
+      ],
+      [
+        4,
+        64,
+        512,
+        2048
+      ],
+      [
+        4,
+        64,
+        1024,
+        128
+      ],
+      [
+        4,
+        64,
+        1024,
+        256
+      ],
+      [
+        4,
+        64,
+        1024,
+        512
+      ],
+      [
+        4,
+        64,
+        1024,
+        1024
+      ],
+      [
+        4,
+        64,
+        1024,
+        2048
+      ],
+      [
+        4,
+        64,
+        2048,
+        128
+      ],
+      [
+        4,
+        64,
+        2048,
+        256
+      ],
+      [
+        4,
+        64,
+        2048,
+        512
+      ],
+      [
+        4,
+        64,
+        2048,
+        1024
+      ],
+      [
+        4,
+        64,
+        2048,
+        2048
+      ],
+      [
+        4,
+        64,
+        4096,
+        128
+      ],
+      [
+        4,
+        64,
+        4096,
+        256
+      ],
+      [
+        4,
+        64,
+        4096,
+        512
+      ],
+      [
+        4,
+        64,
+        4096,
+        1024
+      ],
+      [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      [
+        4,
+        64,
+        8192,
+        128
+      ],
+      [
+        4,
+        64,
+        8192,
+        256
+      ],
+      [
+        4,
+        64,
+        8192,
+        512
+      ],
+      [
+        4,
+        64,
+        8192,
+        1024
+      ],
+      [
+        4,
+        64,
+        8192,
+        2048
+      ],
+      [
+        4,
+        128,
+        512,
+        512
+      ],
+      [
+        4,
+        128,
+        1024,
+        512
+      ],
+      [
+        4,
+        128,
+        2048,
+        512
+      ],
+      [
+        4,
+        128,
+        4096,
+        512
+      ],
+      [
+        4,
+        128,
+        8192,
+        512
+      ],
+      [
+        4,
+        256,
+        2048,
+        512
+      ],
+      [
+        4,
+        256,
+        4096,
+        512
+      ],
+      [
+        4,
+        256,
+        8192,
+        512
+      ]
+    ],
+    "evaluation_shapes": [
+      [
+        4,
+        512,
+        2048,
+        512
+      ],
+      [
+        4,
+        512,
+        4096,
+        512
+      ],
+      [
+        4,
+        512,
+        8192,
+        512
+      ]
+    ],
+    "models": {
+      "original_full_log": {
+        "host_model": {
+          "stage": "host",
+          "ablation": "full",
+          "feature_names": [
+            "log_flops",
+            "log_unique_remote_bytes",
+            "log_local_bytes"
+          ],
+          "means": [
+            29.236842105263158,
+            19.821804605984315,
+            22.345909810476577
+          ],
+          "scales": [
+            2.0317766470481704,
+            1.6769993648794546,
+            1.562742724403968
+          ],
+          "coefficients": [
+            -0.419671127969158,
+            -0.05048980592770254,
+            0.09239662514957511,
+            0.12597546942185997
+          ],
+          "ridge": 1.0,
+          "sm_count": 108
+        },
+        "fused_model": {
+          "stage": "fused",
+          "ablation": "full",
+          "feature_names": [
+            "log_flops",
+            "log_unique_remote_bytes",
+            "log_local_bytes",
+            "log_split_k_depth",
+            "log_q",
+            "grouped",
+            "log_rho_n",
+            "log_gamma",
+            "underfill",
+            "log_reduction_bytes",
+            "q_minus_one"
+          ],
+          "means": [
+            28.982758620689655,
+            19.74013491451426,
+            22.169192023534407,
+            9.051724137931034,
+            2.0,
+            0.3448275862068966,
+            1.5689655172413792,
+            3.7586206896551726,
+            0.7827799063431247,
+            20.395142379743778,
+            3.6666666666666665
+          ],
+          "scales": [
+            1.9869520872201327,
+            1.5952702088483321,
+            1.4777999794704029,
+            1.6268834933429048,
+            0.816496580927726,
+            0.47531202593414557,
+            1.2050478451728657,
+            1.5935611622911567,
+            0.2401518183758055,
+            1.7534822769294356,
+            2.494438257849294
+          ],
+          "coefficients": [
+            -0.6357014191543525,
+            -0.1794867767663029,
+            0.1484214607158979,
+            0.5818585883653948,
+            -0.004764831974642447,
+            -0.1035229303361872,
+            0.017371033322308042,
+            -0.08855096787091363,
+            -0.06651345449052554,
+            -0.08880167476536419,
+            -0.2795361588892138,
+            0.13531512499695342
+          ],
+          "ridge": 1.0,
+          "sm_count": 108
+        },
+        "minimum_fused_advantage": 0.0,
+        "force_fused": false
+      },
+      "regime_max_refit": {
+        "host": {
+          "coefficients_us": [
+            508.94294061116267,
+            6.416770721837892,
+            5.711257247668124,
+            106.57409871164973
+          ],
+          "training_scales": [
+            1.0,
+            11.236999066757805,
+            10.338961374985178,
+            1.0581373281683044
+          ],
+          "objective_us2": 61995.86391571308,
+          "kkt_relative_violation": 0.0,
+          "unregularized_rank": 4,
+          "feature_count": 4,
+          "enumerated_faces": 16,
+          "ridge": 1e-06
+        },
+        "fused": {
+          "coefficients_us": [
+            197.3031460379222,
+            51.09746670594685,
+            38.12259942639206,
+            0.0,
+            29.89909580865939,
+            16.15971579595807,
+            452.505720114226,
+            48.61544959417994
+          ],
+          "training_scales": [
+            1.0,
+            0.4009518577602295,
+            0.5872202195147035,
+            0.8187901304020201,
+            4.43471156521669,
+            1.035475494986912,
+            0.6940445747696912,
+            3.961246470385039
+          ],
+          "objective_us2": 36253.369977556074,
+          "feature_count": 8,
+          "ridge": 1e-06,
+          "unregularized_rank": 8,
+          "kkt_relative_violation": 7.951840415716098e-11,
+          "selected_interval": 5,
+          "interval_count": 8,
+          "interval_certificates": [
+            {
+              "interval": 0,
+              "normalized_ratio_lower": 0.0,
+              "normalized_ratio_upper": 0.08760431595944458,
+              "objective_us2": 530218.481892654,
+              "kkt_relative_violation": 7.951840415716098e-11,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 1,
+              "normalized_ratio_lower": 0.08760431595944458,
+              "normalized_ratio_upper": 0.17520863191888916,
+              "objective_us2": 512926.4889442263,
+              "kkt_relative_violation": 3.2977399808054153e-16,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 2,
+              "normalized_ratio_lower": 0.17520863191888916,
+              "normalized_ratio_upper": 0.3504172638377783,
+              "objective_us2": 407329.6363854694,
+              "kkt_relative_violation": 6.595479961610831e-16,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 1.1368683772161603e-13
+            },
+            {
+              "interval": 3,
+              "normalized_ratio_lower": 0.3504172638377783,
+              "normalized_ratio_upper": 0.7008345276755567,
+              "objective_us2": 207699.79113106654,
+              "kkt_relative_violation": 1.6488699904027076e-16,
+              "visited_faces": 70,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 4,
+              "normalized_ratio_lower": 0.7008345276755567,
+              "normalized_ratio_upper": 1.4016690553511133,
+              "objective_us2": 42089.84785983733,
+              "kkt_relative_violation": 2.14353098752352e-15,
+              "visited_faces": 1,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 5,
+              "normalized_ratio_lower": 1.4016690553511133,
+              "normalized_ratio_upper": 2.8033381107022266,
+              "objective_us2": 36253.369977556074,
+              "kkt_relative_violation": 1.6488699904027076e-16,
+              "visited_faces": 9,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 6,
+              "normalized_ratio_lower": 2.8033381107022266,
+              "normalized_ratio_upper": 5.606676221404453,
+              "objective_us2": 131566.2442471064,
+              "kkt_relative_violation": 1.6488699904027076e-16,
+              "visited_faces": 137,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 7,
+              "normalized_ratio_lower": 5.606676221404453,
+              "normalized_ratio_upper": null,
+              "objective_us2": 181810.87186649907,
+              "kkt_relative_violation": 1.6488699904027076e-16,
+              "visited_faces": 9,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            }
+          ],
+          "training_branch_counts": {
+            "latency": 148,
+            "throughput": 26
+          },
+          "crossover_W_over_L": 9.307858384351922,
+          "crossover_note": "Null means zero throughput coefficient; no finite crossover. A finite ratio alone does not establish branch identification.",
+          "optimality_scope": "All training-ratio cones enumerated, each numerically KKT-certified, fixed basis/weights/ridge only; no physical identification.",
+          "max_faces_per_interval": 256
+        }
+      },
+      "retained_0.25_refit": {
+        "host": {
+          "coefficients_us": [
+            508.94294061116267,
+            6.416770721837892,
+            5.711257247668124,
+            106.57409871164973
+          ],
+          "training_scales": [
+            1.0,
+            11.236999066757805,
+            10.338961374985178,
+            1.0581373281683044
+          ],
+          "objective_us2": 61995.86391571308,
+          "kkt_relative_violation": 0.0,
+          "unregularized_rank": 4,
+          "feature_count": 4,
+          "enumerated_faces": 16,
+          "ridge": 1e-06
+        },
+        "fused": {
+          "coefficients_us": [
+            124.86241234527776,
+            88.71329803943304,
+            23.64319917412139,
+            81.10871850494289,
+            30.190470461637222,
+            33.6367843579427,
+            405.08100320064244,
+            44.78551447554806
+          ],
+          "training_scales": [
+            1.0,
+            0.4009518577602295,
+            0.5872202195147035,
+            0.8187901304020201,
+            4.43471156521669,
+            1.035475494986912,
+            0.6940445747696912,
+            3.961246470385039
+          ],
+          "objective_us2": 17922.35227987208,
+          "feature_count": 8,
+          "ridge": 1e-06,
+          "unregularized_rank": 8,
+          "kkt_relative_violation": 2.14353098752352e-15,
+          "selected_interval": 5,
+          "interval_count": 8,
+          "interval_certificates": [
+            {
+              "interval": 0,
+              "normalized_ratio_lower": 0.0,
+              "normalized_ratio_upper": 0.08760431595944458,
+              "objective_us2": 510866.0458917311,
+              "kkt_relative_violation": 2.14353098752352e-15,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 1,
+              "normalized_ratio_lower": 0.08760431595944458,
+              "normalized_ratio_upper": 0.17520863191888916,
+              "objective_us2": 479400.20547320734,
+              "kkt_relative_violation": 1.4624267249443823e-15,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 2,
+              "normalized_ratio_lower": 0.17520863191888916,
+              "normalized_ratio_upper": 0.3504172638377783,
+              "objective_us2": 369324.2644199219,
+              "kkt_relative_violation": 7.866802507772712e-17,
+              "visited_faces": 70,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 3,
+              "normalized_ratio_lower": 0.3504172638377783,
+              "normalized_ratio_upper": 0.7008345276755567,
+              "objective_us2": 179322.81530276136,
+              "kkt_relative_violation": 1.5379299855653207e-16,
+              "visited_faces": 70,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 4,
+              "normalized_ratio_lower": 0.7008345276755567,
+              "normalized_ratio_upper": 1.4016690553511133,
+              "objective_us2": 22004.529911791848,
+              "kkt_relative_violation": 1.5379299855653207e-16,
+              "visited_faces": 65,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 5,
+              "normalized_ratio_lower": 1.4016690553511133,
+              "normalized_ratio_upper": 2.8033381107022266,
+              "objective_us2": 17922.35227987208,
+              "kkt_relative_violation": 1.586853369686668e-16,
+              "visited_faces": 1,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 6,
+              "normalized_ratio_lower": 2.8033381107022266,
+              "normalized_ratio_upper": 5.606676221404453,
+              "objective_us2": 85499.8891854634,
+              "kkt_relative_violation": 1.6488699904027076e-16,
+              "visited_faces": 137,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 7,
+              "normalized_ratio_lower": 5.606676221404453,
+              "normalized_ratio_upper": null,
+              "objective_us2": 146513.0555757579,
+              "kkt_relative_violation": 0.0,
+              "visited_faces": 137,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            }
+          ],
+          "training_branch_counts": {
+            "latency": 148,
+            "throughput": 26
+          },
+          "crossover_W_over_L": 9.044911238472164,
+          "crossover_note": "Null means zero throughput coefficient; no finite crossover. A finite ratio alone does not establish branch identification.",
+          "optimality_scope": "All training-ratio cones enumerated, each numerically KKT-certified, fixed basis/weights/ridge only; no physical identification.",
+          "max_faces_per_interval": 256
+        }
+      }
+    }
+  },
+  {
+    "excluded_group": "m64-n1024",
+    "training_shapes": [
+      [
+        4,
+        32,
+        512,
+        512
+      ],
+      [
+        4,
+        32,
+        1024,
+        512
+      ],
+      [
+        4,
+        32,
+        2048,
+        512
+      ],
+      [
+        4,
+        32,
+        4096,
+        512
+      ],
+      [
+        4,
+        32,
+        8192,
+        512
+      ],
+      [
+        4,
+        64,
+        512,
+        128
+      ],
+      [
+        4,
+        64,
+        512,
+        256
+      ],
+      [
+        4,
+        64,
+        512,
+        512
+      ],
+      [
+        4,
+        64,
+        512,
+        2048
+      ],
+      [
+        4,
+        64,
+        1024,
+        128
+      ],
+      [
+        4,
+        64,
+        1024,
+        256
+      ],
+      [
+        4,
+        64,
+        1024,
+        512
+      ],
+      [
+        4,
+        64,
+        1024,
+        2048
+      ],
+      [
+        4,
+        64,
+        2048,
+        128
+      ],
+      [
+        4,
+        64,
+        2048,
+        256
+      ],
+      [
+        4,
+        64,
+        2048,
+        512
+      ],
+      [
+        4,
+        64,
+        2048,
+        2048
+      ],
+      [
+        4,
+        64,
+        4096,
+        128
+      ],
+      [
+        4,
+        64,
+        4096,
+        256
+      ],
+      [
+        4,
+        64,
+        4096,
+        512
+      ],
+      [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      [
+        4,
+        64,
+        8192,
+        128
+      ],
+      [
+        4,
+        64,
+        8192,
+        256
+      ],
+      [
+        4,
+        64,
+        8192,
+        512
+      ],
+      [
+        4,
+        64,
+        8192,
+        2048
+      ],
+      [
+        4,
+        128,
+        512,
+        512
+      ],
+      [
+        4,
+        128,
+        1024,
+        512
+      ],
+      [
+        4,
+        128,
+        2048,
+        512
+      ],
+      [
+        4,
+        128,
+        4096,
+        512
+      ],
+      [
+        4,
+        128,
+        8192,
+        512
+      ],
+      [
+        4,
+        256,
+        2048,
+        512
+      ],
+      [
+        4,
+        256,
+        4096,
+        512
+      ],
+      [
+        4,
+        256,
+        8192,
+        512
+      ],
+      [
+        4,
+        512,
+        2048,
+        512
+      ],
+      [
+        4,
+        512,
+        4096,
+        512
+      ],
+      [
+        4,
+        512,
+        8192,
+        512
+      ]
+    ],
+    "evaluation_shapes": [
+      [
+        4,
+        64,
+        512,
+        1024
+      ],
+      [
+        4,
+        64,
+        1024,
+        1024
+      ],
+      [
+        4,
+        64,
+        2048,
+        1024
+      ],
+      [
+        4,
+        64,
+        4096,
+        1024
+      ],
+      [
+        4,
+        64,
+        8192,
+        1024
+      ]
+    ],
+    "models": {
+      "original_full_log": {
+        "host_model": {
+          "stage": "host",
+          "ablation": "full",
+          "feature_names": [
+            "log_flops",
+            "log_unique_remote_bytes",
+            "log_local_bytes"
+          ],
+          "means": [
+            29.444444444444443,
+            20.16829583405449,
+            22.52649620570659
+          ],
+          "scales": [
+            2.27845518382332,
+            1.9490025939210833,
+            1.726925023019051
+          ],
+          "coefficients": [
+            -0.3784383994051523,
+            -0.03503123411828157,
+            0.13269202321040566,
+            0.11921755987846284
+          ],
+          "ridge": 1.0,
+          "sm_count": 108
+        },
+        "fused_model": {
+          "stage": "fused",
+          "ablation": "full",
+          "feature_names": [
+            "log_flops",
+            "log_unique_remote_bytes",
+            "log_local_bytes",
+            "log_split_k_depth",
+            "log_q",
+            "grouped",
+            "log_rho_n",
+            "log_gamma",
+            "underfill",
+            "log_reduction_bytes",
+            "q_minus_one"
+          ],
+          "means": [
+            29.019607843137255,
+            19.99672720660351,
+            22.115407593749033,
+            9.117647058823529,
+            2.0,
+            0.29411764705882354,
+            1.411764705882353,
+            3.803921568627451,
+            0.752965383684338,
+            20.36606884528703,
+            3.6666666666666665
+          ],
+          "scales": [
+            2.209517701595526,
+            1.8276361094480067,
+            1.5767723092010093,
+            1.616666369397944,
+            0.816496580927726,
+            0.4556450995538137,
+            1.1910856900774462,
+            1.804347775737622,
+            0.2923987434934345,
+            1.90907211411436,
+            2.494438257849294
+          ],
+          "coefficients": [
+            -0.5939272796429265,
+            -0.13244369792212063,
+            0.13873802336153016,
+            0.5342779965904967,
+            0.034563815906057296,
+            -0.1264381468978305,
+            0.02764470033920294,
+            -0.137689092627873,
+            0.004544811138947079,
+            -0.1169431909812477,
+            -0.26673780528433694,
+            0.13906915912311812
+          ],
+          "ridge": 1.0,
+          "sm_count": 108
+        },
+        "minimum_fused_advantage": 0.0,
+        "force_fused": false
+      },
+      "regime_max_refit": {
+        "host": {
+          "coefficients_us": [
+            508.3046926652926,
+            4.717940663585556,
+            5.4299531214357915,
+            121.21489792164793
+          ],
+          "training_scales": [
+            1.0,
+            21.539661818375887,
+            16.55540900498654,
+            1.086134199811423
+          ],
+          "objective_us2": 66608.38067749952,
+          "kkt_relative_violation": 1.4214908185114164e-16,
+          "unregularized_rank": 4,
+          "feature_count": 4,
+          "enumerated_faces": 16,
+          "ridge": 1e-06
+        },
+        "fused": {
+          "coefficients_us": [
+            198.71907726037375,
+            52.28482804729466,
+            33.209740135989435,
+            0.0,
+            30.657816677603964,
+            9.254168914661642,
+            452.4758078727819,
+            48.360671667536145
+          ],
+          "training_scales": [
+            1.0,
+            0.37029834454205734,
+            0.5423261445466404,
+            0.8077461818067861,
+            4.43471156521669,
+            1.461240973906607,
+            0.7081215441741124,
+            6.4891205615063665
+          ],
+          "objective_us2": 38500.28569472904,
+          "feature_count": 8,
+          "ridge": 1e-06,
+          "unregularized_rank": 8,
+          "kkt_relative_violation": 1.153554858937965e-15,
+          "selected_interval": 5,
+          "interval_count": 9,
+          "interval_certificates": [
+            {
+              "interval": 0,
+              "normalized_ratio_lower": 0.0,
+              "normalized_ratio_upper": 0.05456221204878733,
+              "objective_us2": 522308.3010601303,
+              "kkt_relative_violation": 7.336154286190344e-16,
+              "visited_faces": 5,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 1,
+              "normalized_ratio_lower": 0.05456221204878733,
+              "normalized_ratio_upper": 0.10912442409757465,
+              "objective_us2": 509102.23607107496,
+              "kkt_relative_violation": 4.403860229879494e-16,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 2,
+              "normalized_ratio_lower": 0.10912442409757465,
+              "normalized_ratio_upper": 0.2182488481951493,
+              "objective_us2": 421344.23390076467,
+              "kkt_relative_violation": 2.9055277443486754e-16,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 3,
+              "normalized_ratio_lower": 0.2182488481951493,
+              "normalized_ratio_upper": 0.4364976963902986,
+              "objective_us2": 242367.2338811913,
+              "kkt_relative_violation": 4.325830721017369e-16,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 4.547473508864641e-13
+            },
+            {
+              "interval": 4,
+              "normalized_ratio_lower": 0.4364976963902986,
+              "normalized_ratio_upper": 0.8729953927805972,
+              "objective_us2": 59307.59333075531,
+              "kkt_relative_violation": 1.153554858937965e-15,
+              "visited_faces": 1,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 5,
+              "normalized_ratio_lower": 0.8729953927805972,
+              "normalized_ratio_upper": 1.7459907855611945,
+              "objective_us2": 38500.28569472904,
+              "kkt_relative_violation": 1.4935477843873124e-16,
+              "visited_faces": 9,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 6,
+              "normalized_ratio_lower": 1.7459907855611945,
+              "normalized_ratio_upper": 3.491981571122389,
+              "objective_us2": 308995.4696557595,
+              "kkt_relative_violation": 1.5889758764096187e-16,
+              "visited_faces": 139,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 7,
+              "normalized_ratio_lower": 3.491981571122389,
+              "normalized_ratio_upper": 6.983963142244778,
+              "objective_us2": 567020.5267533797,
+              "kkt_relative_violation": 3.1779517528192374e-16,
+              "visited_faces": 139,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 8,
+              "normalized_ratio_lower": 6.983963142244778,
+              "normalized_ratio_upper": null,
+              "objective_us2": 613387.4598367721,
+              "kkt_relative_violation": 0.0,
+              "visited_faces": 11,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            }
+          ],
+          "training_branch_counts": {
+            "latency": 123,
+            "throughput": 30
+          },
+          "crossover_W_over_L": 9.356276335105633,
+          "crossover_note": "Null means zero throughput coefficient; no finite crossover. A finite ratio alone does not establish branch identification.",
+          "optimality_scope": "All training-ratio cones enumerated, each numerically KKT-certified, fixed basis/weights/ridge only; no physical identification.",
+          "max_faces_per_interval": 256
+        }
+      },
+      "retained_0.25_refit": {
+        "host": {
+          "coefficients_us": [
+            508.3046926652926,
+            4.717940663585556,
+            5.4299531214357915,
+            121.21489792164793
+          ],
+          "training_scales": [
+            1.0,
+            21.539661818375887,
+            16.55540900498654,
+            1.086134199811423
+          ],
+          "objective_us2": 66608.38067749952,
+          "kkt_relative_violation": 1.4214908185114164e-16,
+          "unregularized_rank": 4,
+          "feature_count": 4,
+          "enumerated_faces": 16,
+          "ridge": 1e-06
+        },
+        "fused": {
+          "coefficients_us": [
+            150.705397882835,
+            89.86541633980404,
+            26.68140097503052,
+            49.40512208951954,
+            31.054204845049703,
+            22.51371032512946,
+            408.88147702602384,
+            44.15602153200729
+          ],
+          "training_scales": [
+            1.0,
+            0.37029834454205734,
+            0.5423261445466404,
+            0.8077461818067861,
+            4.43471156521669,
+            1.461240973906607,
+            0.7081215441741124,
+            6.4891205615063665
+          ],
+          "objective_us2": 18918.344068738148,
+          "feature_count": 8,
+          "ridge": 1e-06,
+          "unregularized_rank": 8,
+          "kkt_relative_violation": 1.958188522135134e-15,
+          "selected_interval": 5,
+          "interval_count": 9,
+          "interval_certificates": [
+            {
+              "interval": 0,
+              "normalized_ratio_lower": 0.0,
+              "normalized_ratio_upper": 0.05456221204878733,
+              "objective_us2": 504900.38489659765,
+              "kkt_relative_violation": 1.0162958736766581e-15,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 4.547473508864641e-13
+            },
+            {
+              "interval": 1,
+              "normalized_ratio_lower": 0.05456221204878733,
+              "normalized_ratio_upper": 0.10912442409757465,
+              "objective_us2": 478226.33168802457,
+              "kkt_relative_violation": 4.306075086062861e-16,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 4.547473508864641e-13
+            },
+            {
+              "interval": 2,
+              "normalized_ratio_lower": 0.10912442409757465,
+              "normalized_ratio_upper": 0.2182488481951493,
+              "objective_us2": 383442.68138111994,
+              "kkt_relative_violation": 1.958188522135134e-15,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 3,
+              "normalized_ratio_lower": 0.2182488481951493,
+              "normalized_ratio_upper": 0.4364976963902986,
+              "objective_us2": 207327.73077251032,
+              "kkt_relative_violation": 5.429334154083168e-16,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 4,
+              "normalized_ratio_lower": 0.4364976963902986,
+              "normalized_ratio_upper": 0.8729953927805972,
+              "objective_us2": 29776.425646259555,
+              "kkt_relative_violation": 1.3573335385207917e-16,
+              "visited_faces": 65,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 5,
+              "normalized_ratio_lower": 0.8729953927805972,
+              "normalized_ratio_upper": 1.7459907855611945,
+              "objective_us2": 18918.344068738148,
+              "kkt_relative_violation": 1.3700728010395725e-16,
+              "visited_faces": 1,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 6,
+              "normalized_ratio_lower": 1.7459907855611945,
+              "normalized_ratio_upper": 3.491981571122389,
+              "objective_us2": 188476.09930541698,
+              "kkt_relative_violation": 3.666688992249307e-17,
+              "visited_faces": 139,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 7,
+              "normalized_ratio_lower": 3.491981571122389,
+              "normalized_ratio_upper": 6.983963142244778,
+              "objective_us2": 446543.86469676933,
+              "kkt_relative_violation": 1.5593586131749746e-16,
+              "visited_faces": 139,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 8,
+              "normalized_ratio_lower": 6.983963142244778,
+              "normalized_ratio_upper": null,
+              "objective_us2": 543683.0715038367,
+              "kkt_relative_violation": 1.5889758764096187e-16,
+              "visited_faces": 139,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            }
+          ],
+          "training_branch_counts": {
+            "latency": 123,
+            "throughput": 30
+          },
+          "crossover_W_over_L": 9.259925664490375,
+          "crossover_note": "Null means zero throughput coefficient; no finite crossover. A finite ratio alone does not establish branch identification.",
+          "optimality_scope": "All training-ratio cones enumerated, each numerically KKT-certified, fixed basis/weights/ridge only; no physical identification.",
+          "max_faces_per_interval": 256
+        }
+      }
+    }
+  },
+  {
+    "excluded_group": "m64-n128",
+    "training_shapes": [
+      [
+        4,
+        32,
+        512,
+        512
+      ],
+      [
+        4,
+        32,
+        1024,
+        512
+      ],
+      [
+        4,
+        32,
+        2048,
+        512
+      ],
+      [
+        4,
+        32,
+        4096,
+        512
+      ],
+      [
+        4,
+        32,
+        8192,
+        512
+      ],
+      [
+        4,
+        64,
+        512,
+        256
+      ],
+      [
+        4,
+        64,
+        512,
+        512
+      ],
+      [
+        4,
+        64,
+        512,
+        1024
+      ],
+      [
+        4,
+        64,
+        512,
+        2048
+      ],
+      [
+        4,
+        64,
+        1024,
+        256
+      ],
+      [
+        4,
+        64,
+        1024,
+        512
+      ],
+      [
+        4,
+        64,
+        1024,
+        1024
+      ],
+      [
+        4,
+        64,
+        1024,
+        2048
+      ],
+      [
+        4,
+        64,
+        2048,
+        256
+      ],
+      [
+        4,
+        64,
+        2048,
+        512
+      ],
+      [
+        4,
+        64,
+        2048,
+        1024
+      ],
+      [
+        4,
+        64,
+        2048,
+        2048
+      ],
+      [
+        4,
+        64,
+        4096,
+        256
+      ],
+      [
+        4,
+        64,
+        4096,
+        512
+      ],
+      [
+        4,
+        64,
+        4096,
+        1024
+      ],
+      [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      [
+        4,
+        64,
+        8192,
+        256
+      ],
+      [
+        4,
+        64,
+        8192,
+        512
+      ],
+      [
+        4,
+        64,
+        8192,
+        1024
+      ],
+      [
+        4,
+        64,
+        8192,
+        2048
+      ],
+      [
+        4,
+        128,
+        512,
+        512
+      ],
+      [
+        4,
+        128,
+        1024,
+        512
+      ],
+      [
+        4,
+        128,
+        2048,
+        512
+      ],
+      [
+        4,
+        128,
+        4096,
+        512
+      ],
+      [
+        4,
+        128,
+        8192,
+        512
+      ],
+      [
+        4,
+        256,
+        2048,
+        512
+      ],
+      [
+        4,
+        256,
+        4096,
+        512
+      ],
+      [
+        4,
+        256,
+        8192,
+        512
+      ],
+      [
+        4,
+        512,
+        2048,
+        512
+      ],
+      [
+        4,
+        512,
+        4096,
+        512
+      ],
+      [
+        4,
+        512,
+        8192,
+        512
+      ]
+    ],
+    "evaluation_shapes": [
+      [
+        4,
+        64,
+        512,
+        128
+      ],
+      [
+        4,
+        64,
+        1024,
+        128
+      ],
+      [
+        4,
+        64,
+        2048,
+        128
+      ],
+      [
+        4,
+        64,
+        4096,
+        128
+      ],
+      [
+        4,
+        64,
+        8192,
+        128
+      ]
+    ],
+    "models": {
+      "original_full_log": {
+        "host_model": {
+          "stage": "host",
+          "ablation": "full",
+          "feature_names": [
+            "log_flops",
+            "log_unique_remote_bytes",
+            "log_local_bytes"
+          ],
+          "means": [
+            29.86111111111111,
+            20.16829583405449,
+            22.73048089270295
+          ],
+          "scales": [
+            2.0568689497737114,
+            1.9490025939210833,
+            1.6367526375078882
+          ],
+          "coefficients": [
+            -0.373701554898282,
+            -0.0444589706869602,
+            0.12982845681995292,
+            0.13470007417994448
+          ],
+          "ridge": 1.0,
+          "sm_count": 108
+        },
+        "fused_model": {
+          "stage": "fused",
+          "ablation": "full",
+          "feature_names": [
+            "log_flops",
+            "log_unique_remote_bytes",
+            "log_local_bytes",
+            "log_split_k_depth",
+            "log_q",
+            "grouped",
+            "log_rho_n",
+            "log_gamma",
+            "underfill",
+            "log_reduction_bytes",
+            "q_minus_one"
+          ],
+          "means": [
+            29.607843137254903,
+            19.99672720660351,
+            22.647541291078,
+            9.117647058823529,
+            2.0,
+            0.29411764705882354,
+            1.9019607843137254,
+            4.294117647058823,
+            0.7106027596223675,
+            20.954303210176857,
+            3.6666666666666665
+          ],
+          "scales": [
+            1.9810715200494255,
+            1.8276361094480067,
+            1.3596346785409363,
+            1.616666369397944,
+            0.816496580927726,
+            0.4556450995538137,
+            1.0338373589383583,
+            1.587872144394341,
+            0.28483240898833295,
+            1.6809654546041741,
+            2.494438257849294
+          ],
+          "coefficients": [
+            -0.5784882784829594,
+            -0.06185527625294237,
+            0.043950758559500744,
+            0.5202912527823867,
+            0.04252093069043054,
+            -0.14221075065439215,
+            -0.019905756463944598,
+            -0.18745284978262464,
+            -0.026134596073346353,
+            -0.12006466247139368,
+            -0.2153564301225861,
+            0.13423742154208765
+          ],
+          "ridge": 1.0,
+          "sm_count": 108
+        },
+        "minimum_fused_advantage": 0.0,
+        "force_fused": false
+      },
+      "regime_max_refit": {
+        "host": {
+          "coefficients_us": [
+            505.16966118412137,
+            4.681589491733326,
+            5.423067533674583,
+            124.95884922249878
+          ],
+          "training_scales": [
+            1.0,
+            21.539661818375887,
+            16.87695646830088,
+            1.086134199811423
+          ],
+          "objective_us2": 70690.22859624065,
+          "kkt_relative_violation": 1.4136747235553127e-16,
+          "unregularized_rank": 4,
+          "feature_count": 4,
+          "enumerated_faces": 16,
+          "ridge": 1e-06
+        },
+        "fused": {
+          "coefficients_us": [
+            198.19075495505123,
+            56.362045366676696,
+            39.97653029369456,
+            0.0,
+            31.29729722785275,
+            8.841218757645565,
+            453.7787214195881,
+            48.33745771737787
+          ],
+          "training_scales": [
+            1.0,
+            0.37029834454205734,
+            0.5423261445466404,
+            0.7655623966686329,
+            4.43471156521669,
+            1.5402832293025164,
+            0.7081215441741124,
+            6.644238852304347
+          ],
+          "objective_us2": 37230.59690635016,
+          "feature_count": 8,
+          "ridge": 1e-06,
+          "unregularized_rank": 8,
+          "kkt_relative_violation": 2.590709982609346e-15,
+          "selected_interval": 5,
+          "interval_count": 9,
+          "interval_certificates": [
+            {
+              "interval": 0,
+              "normalized_ratio_lower": 0.0,
+              "normalized_ratio_upper": 0.05328838712116156,
+              "objective_us2": 453331.4138042761,
+              "kkt_relative_violation": 2.874488267117934e-16,
+              "visited_faces": 5,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 1,
+              "normalized_ratio_lower": 0.05328838712116156,
+              "normalized_ratio_upper": 0.10657677424232312,
+              "objective_us2": 451051.60386297014,
+              "kkt_relative_violation": 2.590709982609346e-15,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 2,
+              "normalized_ratio_lower": 0.10657677424232312,
+              "normalized_ratio_upper": 0.21315354848464624,
+              "objective_us2": 382553.9866417161,
+              "kkt_relative_violation": 7.204252654809061e-16,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 1.1368683772161603e-13
+            },
+            {
+              "interval": 3,
+              "normalized_ratio_lower": 0.21315354848464624,
+              "normalized_ratio_upper": 0.4263070969692925,
+              "objective_us2": 236552.16797796634,
+              "kkt_relative_violation": 5.763402123847248e-16,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 4,
+              "normalized_ratio_lower": 0.4263070969692925,
+              "normalized_ratio_upper": 0.852614193938585,
+              "objective_us2": 58735.88359783633,
+              "kkt_relative_violation": 1.4464458062255003e-16,
+              "visited_faces": 1,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 5,
+              "normalized_ratio_lower": 0.852614193938585,
+              "normalized_ratio_upper": 1.70522838787717,
+              "objective_us2": 37230.59690635016,
+              "kkt_relative_violation": 1.5016570722110712e-16,
+              "visited_faces": 9,
+              "branch_feasibility_error_us": 1.1368683772161603e-13
+            },
+            {
+              "interval": 6,
+              "normalized_ratio_lower": 1.70522838787717,
+              "normalized_ratio_upper": 3.41045677575434,
+              "objective_us2": 308244.9878677967,
+              "kkt_relative_violation": 1.5740172316915433e-16,
+              "visited_faces": 139,
+              "branch_feasibility_error_us": 1.1368683772161603e-13
+            },
+            {
+              "interval": 7,
+              "normalized_ratio_lower": 3.41045677575434,
+              "normalized_ratio_upper": 6.82091355150868,
+              "objective_us2": 568147.5321463527,
+              "kkt_relative_violation": 0.0,
+              "visited_faces": 139,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 8,
+              "normalized_ratio_lower": 6.82091355150868,
+              "normalized_ratio_upper": null,
+              "objective_us2": 614154.6885026221,
+              "kkt_relative_violation": 0.0,
+              "visited_faces": 75,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            }
+          ],
+          "training_branch_counts": {
+            "latency": 118,
+            "throughput": 35
+          },
+          "crossover_W_over_L": 9.387724196683381,
+          "crossover_note": "Null means zero throughput coefficient; no finite crossover. A finite ratio alone does not establish branch identification.",
+          "optimality_scope": "All training-ratio cones enumerated, each numerically KKT-certified, fixed basis/weights/ridge only; no physical identification.",
+          "max_faces_per_interval": 256
+        }
+      },
+      "retained_0.25_refit": {
+        "host": {
+          "coefficients_us": [
+            505.16966118412137,
+            4.681589491733326,
+            5.423067533674583,
+            124.95884922249878
+          ],
+          "training_scales": [
+            1.0,
+            21.539661818375887,
+            16.87695646830088,
+            1.086134199811423
+          ],
+          "objective_us2": 70690.22859624065,
+          "kkt_relative_violation": 1.4136747235553127e-16,
+          "unregularized_rank": 4,
+          "feature_count": 4,
+          "enumerated_faces": 16,
+          "ridge": 1e-06
+        },
+        "fused": {
+          "coefficients_us": [
+            153.53018474855864,
+            93.0840910753467,
+            30.77319072891594,
+            46.66162062258246,
+            31.367482184235556,
+            21.578849634599262,
+            405.67946352891767,
+            44.159403104414025
+          ],
+          "training_scales": [
+            1.0,
+            0.37029834454205734,
+            0.5423261445466404,
+            0.7655623966686329,
+            4.43471156521669,
+            1.5402832293025164,
+            0.7081215441741124,
+            6.644238852304347
+          ],
+          "objective_us2": 18522.898706848457,
+          "feature_count": 8,
+          "ridge": 1e-06,
+          "unregularized_rank": 8,
+          "kkt_relative_violation": 1.2694961454790856e-15,
+          "selected_interval": 5,
+          "interval_count": 9,
+          "interval_certificates": [
+            {
+              "interval": 0,
+              "normalized_ratio_lower": 0.0,
+              "normalized_ratio_upper": 0.05328838712116156,
+              "objective_us2": 437656.48144951987,
+              "kkt_relative_violation": 8.536294053968584e-16,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 1,
+              "normalized_ratio_lower": 0.05328838712116156,
+              "normalized_ratio_upper": 0.10657677424232312,
+              "objective_us2": 420723.6840918964,
+              "kkt_relative_violation": 1.2694961454790856e-15,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 2,
+              "normalized_ratio_lower": 0.10657677424232312,
+              "normalized_ratio_upper": 0.21315354848464624,
+              "objective_us2": 342663.88776879397,
+              "kkt_relative_violation": 1.384379031895058e-16,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 3,
+              "normalized_ratio_lower": 0.21315354848464624,
+              "normalized_ratio_upper": 0.4263070969692925,
+              "objective_us2": 193562.2855620007,
+              "kkt_relative_violation": 1.2192646810941065e-15,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 4.547473508864641e-13
+            },
+            {
+              "interval": 4,
+              "normalized_ratio_lower": 0.4263070969692925,
+              "normalized_ratio_upper": 0.852614193938585,
+              "objective_us2": 27989.006258681922,
+              "kkt_relative_violation": 1.3547385345490073e-16,
+              "visited_faces": 65,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 5,
+              "normalized_ratio_lower": 0.852614193938585,
+              "normalized_ratio_upper": 1.70522838787717,
+              "objective_us2": 18522.898706848457,
+              "kkt_relative_violation": 1.368998467281786e-16,
+              "visited_faces": 1,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 6,
+              "normalized_ratio_lower": 1.70522838787717,
+              "normalized_ratio_upper": 3.41045677575434,
+              "objective_us2": 193019.18071965693,
+              "kkt_relative_violation": 1.4601508732815624e-16,
+              "visited_faces": 139,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 7,
+              "normalized_ratio_lower": 3.41045677575434,
+              "normalized_ratio_upper": 6.82091355150868,
+              "objective_us2": 450511.8911975111,
+              "kkt_relative_violation": 1.5482795190459044e-16,
+              "visited_faces": 139,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 8,
+              "normalized_ratio_lower": 6.82091355150868,
+              "normalized_ratio_upper": null,
+              "objective_us2": 545939.4738217791,
+              "kkt_relative_violation": 0.0,
+              "visited_faces": 139,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            }
+          ],
+          "training_branch_counts": {
+            "latency": 118,
+            "throughput": 35
+          },
+          "crossover_W_over_L": 9.186706228109486,
+          "crossover_note": "Null means zero throughput coefficient; no finite crossover. A finite ratio alone does not establish branch identification.",
+          "optimality_scope": "All training-ratio cones enumerated, each numerically KKT-certified, fixed basis/weights/ridge only; no physical identification.",
+          "max_faces_per_interval": 256
+        }
+      }
+    }
+  },
+  {
+    "excluded_group": "m64-n2048",
+    "training_shapes": [
+      [
+        4,
+        32,
+        512,
+        512
+      ],
+      [
+        4,
+        32,
+        1024,
+        512
+      ],
+      [
+        4,
+        32,
+        2048,
+        512
+      ],
+      [
+        4,
+        32,
+        4096,
+        512
+      ],
+      [
+        4,
+        32,
+        8192,
+        512
+      ],
+      [
+        4,
+        64,
+        512,
+        128
+      ],
+      [
+        4,
+        64,
+        512,
+        256
+      ],
+      [
+        4,
+        64,
+        512,
+        512
+      ],
+      [
+        4,
+        64,
+        512,
+        1024
+      ],
+      [
+        4,
+        64,
+        1024,
+        128
+      ],
+      [
+        4,
+        64,
+        1024,
+        256
+      ],
+      [
+        4,
+        64,
+        1024,
+        512
+      ],
+      [
+        4,
+        64,
+        1024,
+        1024
+      ],
+      [
+        4,
+        64,
+        2048,
+        128
+      ],
+      [
+        4,
+        64,
+        2048,
+        256
+      ],
+      [
+        4,
+        64,
+        2048,
+        512
+      ],
+      [
+        4,
+        64,
+        2048,
+        1024
+      ],
+      [
+        4,
+        64,
+        4096,
+        128
+      ],
+      [
+        4,
+        64,
+        4096,
+        256
+      ],
+      [
+        4,
+        64,
+        4096,
+        512
+      ],
+      [
+        4,
+        64,
+        4096,
+        1024
+      ],
+      [
+        4,
+        64,
+        8192,
+        128
+      ],
+      [
+        4,
+        64,
+        8192,
+        256
+      ],
+      [
+        4,
+        64,
+        8192,
+        512
+      ],
+      [
+        4,
+        64,
+        8192,
+        1024
+      ],
+      [
+        4,
+        128,
+        512,
+        512
+      ],
+      [
+        4,
+        128,
+        1024,
+        512
+      ],
+      [
+        4,
+        128,
+        2048,
+        512
+      ],
+      [
+        4,
+        128,
+        4096,
+        512
+      ],
+      [
+        4,
+        128,
+        8192,
+        512
+      ],
+      [
+        4,
+        256,
+        2048,
+        512
+      ],
+      [
+        4,
+        256,
+        4096,
+        512
+      ],
+      [
+        4,
+        256,
+        8192,
+        512
+      ],
+      [
+        4,
+        512,
+        2048,
+        512
+      ],
+      [
+        4,
+        512,
+        4096,
+        512
+      ],
+      [
+        4,
+        512,
+        8192,
+        512
+      ]
+    ],
+    "evaluation_shapes": [
+      [
+        4,
+        64,
+        512,
+        2048
+      ],
+      [
+        4,
+        64,
+        1024,
+        2048
+      ],
+      [
+        4,
+        64,
+        2048,
+        2048
+      ],
+      [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      [
+        4,
+        64,
+        8192,
+        2048
+      ]
+    ],
+    "models": {
+      "original_full_log": {
+        "host_model": {
+          "stage": "host",
+          "ablation": "full",
+          "feature_names": [
+            "log_flops",
+            "log_unique_remote_bytes",
+            "log_local_bytes"
+          ],
+          "means": [
+            29.305555555555557,
+            20.16829583405449,
+            22.4167961483542
+          ],
+          "scales": [
+            2.208813714347898,
+            1.9490025939210833,
+            1.689102973242322
+          ],
+          "coefficients": [
+            -0.3818367829167138,
+            -0.026453272288598922,
+            0.11187380240200295,
+            0.12817334636181496
+          ],
+          "ridge": 1.0,
+          "sm_count": 108
+        },
+        "fused_model": {
+          "stage": "fused",
+          "ablation": "full",
+          "feature_names": [
+            "log_flops",
+            "log_unique_remote_bytes",
+            "log_local_bytes",
+            "log_split_k_depth",
+            "log_q",
+            "grouped",
+            "log_rho_n",
+            "log_gamma",
+            "underfill",
+            "log_reduction_bytes",
+            "q_minus_one"
+          ],
+          "means": [
+            29.017857142857142,
+            19.959962500721158,
+            22.12136287440044,
+            9.107142857142858,
+            2.0,
+            0.35714285714285715,
+            1.375,
+            3.732142857142857,
+            0.7849426807760141,
+            20.374822236164,
+            3.6666666666666665
+          ],
+          "scales": [
+            2.108580018371973,
+            1.79843682124227,
+            1.4729038438314093,
+            1.6184785414442933,
+            0.816496580927726,
+            0.4791574237499549,
+            0.9739921530924746,
+            1.649217759329275,
+            0.24801555457553534,
+            1.8053509508002934,
+            2.4944382578492945
+          ],
+          "coefficients": [
+            -0.6081508729050704,
+            -0.14810844407012966,
+            0.13955723877837145,
+            0.5491558183783629,
+            0.005909862891378202,
+            -0.16145460051837116,
+            0.018729333120664663,
+            -0.1578330146084149,
+            0.05853067646784683,
+            -0.07856595380665225,
+            -0.28380474003966877,
+            0.1450517268666917
+          ],
+          "ridge": 1.0,
+          "sm_count": 108
+        },
+        "minimum_fused_advantage": 0.0,
+        "force_fused": false
+      },
+      "regime_max_refit": {
+        "host": {
+          "coefficients_us": [
+            510.9329680872366,
+            3.5690506465327845,
+            6.9791944085094,
+            121.04478677967744
+          ],
+          "training_scales": [
+            1.0,
+            21.539661818375887,
+            15.534457867371648,
+            1.086134199811423
+          ],
+          "objective_us2": 56585.929393786486,
+          "kkt_relative_violation": 0.0,
+          "unregularized_rank": 4,
+          "feature_count": 4,
+          "enumerated_faces": 16,
+          "ridge": 1e-06
+        },
+        "fused": {
+          "coefficients_us": [
+            187.76766836323003,
+            68.53319770178881,
+            32.558914472968866,
+            11.438283287173574,
+            31.694518636961938,
+            9.779129777282627,
+            436.85685907870743,
+            47.987110093730664
+          ],
+          "training_scales": [
+            1.0,
+            0.4080489017875186,
+            0.5976143046671968,
+            0.823193007389668,
+            4.43471156521669,
+            1.3134253045019166,
+            0.7058973123797824,
+            5.844877899173771
+          ],
+          "objective_us2": 17115.475311165817,
+          "feature_count": 8,
+          "ridge": 1e-06,
+          "unregularized_rank": 8,
+          "kkt_relative_violation": 3.253938176983527e-16,
+          "selected_interval": 5,
+          "interval_count": 9,
+          "interval_certificates": [
+            {
+              "interval": 0,
+              "normalized_ratio_lower": 0.0,
+              "normalized_ratio_upper": 0.06038597593968281,
+              "objective_us2": 527738.9358820848,
+              "kkt_relative_violation": 1.520877596813424e-16,
+              "visited_faces": 5,
+              "branch_feasibility_error_us": 1.1368683772161603e-13
+            },
+            {
+              "interval": 1,
+              "normalized_ratio_lower": 0.06038597593968281,
+              "normalized_ratio_upper": 0.12077195187936562,
+              "objective_us2": 513109.3031749028,
+              "kkt_relative_violation": 1.5223959327924665e-16,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 2,
+              "normalized_ratio_lower": 0.12077195187936562,
+              "normalized_ratio_upper": 0.24154390375873125,
+              "objective_us2": 422450.61945473833,
+              "kkt_relative_violation": 1.5061478196991853e-16,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 3,
+              "normalized_ratio_lower": 0.24154390375873125,
+              "normalized_ratio_upper": 0.4830878075174625,
+              "objective_us2": 241957.89466244448,
+              "kkt_relative_violation": 2.9742688987339774e-16,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 1.1368683772161603e-13
+            },
+            {
+              "interval": 4,
+              "normalized_ratio_lower": 0.4830878075174625,
+              "normalized_ratio_upper": 0.966175615034925,
+              "objective_us2": 27883.37921853574,
+              "kkt_relative_violation": 1.4871344493669884e-16,
+              "visited_faces": 65,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 5,
+              "normalized_ratio_lower": 0.966175615034925,
+              "normalized_ratio_upper": 1.93235123006985,
+              "objective_us2": 17115.475311165817,
+              "kkt_relative_violation": 1.5123366847765334e-16,
+              "visited_faces": 1,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 6,
+              "normalized_ratio_lower": 1.93235123006985,
+              "normalized_ratio_upper": 3.8647024601397,
+              "objective_us2": 266879.990832912,
+              "kkt_relative_violation": 1.6269690884917636e-16,
+              "visited_faces": 139,
+              "branch_feasibility_error_us": 1.1368683772161603e-13
+            },
+            {
+              "interval": 7,
+              "normalized_ratio_lower": 3.8647024601397,
+              "normalized_ratio_upper": 7.7294049202794,
+              "objective_us2": 497111.50836614205,
+              "kkt_relative_violation": 3.253938176983527e-16,
+              "visited_faces": 139,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 8,
+              "normalized_ratio_lower": 7.7294049202794,
+              "normalized_ratio_upper": null,
+              "objective_us2": 535413.4153042727,
+              "kkt_relative_violation": 1.6269690884917636e-16,
+              "visited_faces": 11,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            }
+          ],
+          "training_branch_counts": {
+            "latency": 143,
+            "throughput": 25
+          },
+          "crossover_W_over_L": 9.103629250134427,
+          "crossover_note": "Null means zero throughput coefficient; no finite crossover. A finite ratio alone does not establish branch identification.",
+          "optimality_scope": "All training-ratio cones enumerated, each numerically KKT-certified, fixed basis/weights/ridge only; no physical identification.",
+          "max_faces_per_interval": 256
+        }
+      },
+      "retained_0.25_refit": {
+        "host": {
+          "coefficients_us": [
+            510.9329680872366,
+            3.5690506465327845,
+            6.9791944085094,
+            121.04478677967744
+          ],
+          "training_scales": [
+            1.0,
+            21.539661818375887,
+            15.534457867371648,
+            1.086134199811423
+          ],
+          "objective_us2": 56585.929393786486,
+          "kkt_relative_violation": 0.0,
+          "unregularized_rank": 4,
+          "feature_count": 4,
+          "enumerated_faces": 16,
+          "ridge": 1e-06
+        },
+        "fused": {
+          "coefficients_us": [
+            115.26057398421707,
+            98.13736601204602,
+            20.221116874745164,
+            91.91026872529235,
+            31.745358120182573,
+            26.600311939757532,
+            396.9067263366767,
+            44.3367795078251
+          ],
+          "training_scales": [
+            1.0,
+            0.4080489017875186,
+            0.5976143046671968,
+            0.823193007389668,
+            4.43471156521669,
+            1.3134253045019166,
+            0.7058973123797824,
+            5.844877899173771
+          ],
+          "objective_us2": 8748.270356343737,
+          "feature_count": 8,
+          "ridge": 1e-06,
+          "unregularized_rank": 8,
+          "kkt_relative_violation": 1.4845702304455665e-15,
+          "selected_interval": 5,
+          "interval_count": 9,
+          "interval_certificates": [
+            {
+              "interval": 0,
+              "normalized_ratio_lower": 0.0,
+              "normalized_ratio_upper": 0.06038597593968281,
+              "objective_us2": 509819.2906133345,
+              "kkt_relative_violation": 4.509603736918844e-16,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 1,
+              "normalized_ratio_lower": 0.06038597593968281,
+              "normalized_ratio_upper": 0.12077195187936562,
+              "objective_us2": 481539.58015490446,
+              "kkt_relative_violation": 1.4845702304455665e-15,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 2,
+              "normalized_ratio_lower": 0.12077195187936562,
+              "normalized_ratio_upper": 0.24154390375873125,
+              "objective_us2": 383095.23111330875,
+              "kkt_relative_violation": 5.776030180895044e-16,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 3,
+              "normalized_ratio_lower": 0.24154390375873125,
+              "normalized_ratio_upper": 0.4830878075174625,
+              "objective_us2": 203664.2964375054,
+              "kkt_relative_violation": 5.580643250939469e-16,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 4,
+              "normalized_ratio_lower": 0.4830878075174625,
+              "normalized_ratio_upper": 0.966175615034925,
+              "objective_us2": 14205.710835109512,
+              "kkt_relative_violation": 5.578430231274962e-16,
+              "visited_faces": 65,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 5,
+              "normalized_ratio_lower": 0.966175615034925,
+              "normalized_ratio_upper": 1.93235123006985,
+              "objective_us2": 8748.270356343737,
+              "kkt_relative_violation": 1.3946075578187405e-15,
+              "visited_faces": 1,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 6,
+              "normalized_ratio_lower": 1.93235123006985,
+              "normalized_ratio_upper": 3.8647024601397,
+              "objective_us2": 167083.53610407162,
+              "kkt_relative_violation": 1.4970865149620937e-16,
+              "visited_faces": 137,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 7,
+              "normalized_ratio_lower": 3.8647024601397,
+              "normalized_ratio_upper": 7.7294049202794,
+              "objective_us2": 396219.6265282025,
+              "kkt_relative_violation": 1.59186342258373e-16,
+              "visited_faces": 139,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 8,
+              "normalized_ratio_lower": 7.7294049202794,
+              "normalized_ratio_upper": null,
+              "objective_us2": 477754.0071347021,
+              "kkt_relative_violation": 1.6269690884917636e-16,
+              "visited_faces": 139,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            }
+          ],
+          "training_branch_counts": {
+            "latency": 143,
+            "throughput": 25
+          },
+          "crossover_W_over_L": 8.952087425894922,
+          "crossover_note": "Null means zero throughput coefficient; no finite crossover. A finite ratio alone does not establish branch identification.",
+          "optimality_scope": "All training-ratio cones enumerated, each numerically KKT-certified, fixed basis/weights/ridge only; no physical identification.",
+          "max_faces_per_interval": 256
+        }
+      }
+    }
+  },
+  {
+    "excluded_group": "m64-n256",
+    "training_shapes": [
+      [
+        4,
+        32,
+        512,
+        512
+      ],
+      [
+        4,
+        32,
+        1024,
+        512
+      ],
+      [
+        4,
+        32,
+        2048,
+        512
+      ],
+      [
+        4,
+        32,
+        4096,
+        512
+      ],
+      [
+        4,
+        32,
+        8192,
+        512
+      ],
+      [
+        4,
+        64,
+        512,
+        128
+      ],
+      [
+        4,
+        64,
+        512,
+        512
+      ],
+      [
+        4,
+        64,
+        512,
+        1024
+      ],
+      [
+        4,
+        64,
+        512,
+        2048
+      ],
+      [
+        4,
+        64,
+        1024,
+        128
+      ],
+      [
+        4,
+        64,
+        1024,
+        512
+      ],
+      [
+        4,
+        64,
+        1024,
+        1024
+      ],
+      [
+        4,
+        64,
+        1024,
+        2048
+      ],
+      [
+        4,
+        64,
+        2048,
+        128
+      ],
+      [
+        4,
+        64,
+        2048,
+        512
+      ],
+      [
+        4,
+        64,
+        2048,
+        1024
+      ],
+      [
+        4,
+        64,
+        2048,
+        2048
+      ],
+      [
+        4,
+        64,
+        4096,
+        128
+      ],
+      [
+        4,
+        64,
+        4096,
+        512
+      ],
+      [
+        4,
+        64,
+        4096,
+        1024
+      ],
+      [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      [
+        4,
+        64,
+        8192,
+        128
+      ],
+      [
+        4,
+        64,
+        8192,
+        512
+      ],
+      [
+        4,
+        64,
+        8192,
+        1024
+      ],
+      [
+        4,
+        64,
+        8192,
+        2048
+      ],
+      [
+        4,
+        128,
+        512,
+        512
+      ],
+      [
+        4,
+        128,
+        1024,
+        512
+      ],
+      [
+        4,
+        128,
+        2048,
+        512
+      ],
+      [
+        4,
+        128,
+        4096,
+        512
+      ],
+      [
+        4,
+        128,
+        8192,
+        512
+      ],
+      [
+        4,
+        256,
+        2048,
+        512
+      ],
+      [
+        4,
+        256,
+        4096,
+        512
+      ],
+      [
+        4,
+        256,
+        8192,
+        512
+      ],
+      [
+        4,
+        512,
+        2048,
+        512
+      ],
+      [
+        4,
+        512,
+        4096,
+        512
+      ],
+      [
+        4,
+        512,
+        8192,
+        512
+      ]
+    ],
+    "evaluation_shapes": [
+      [
+        4,
+        64,
+        512,
+        256
+      ],
+      [
+        4,
+        64,
+        1024,
+        256
+      ],
+      [
+        4,
+        64,
+        2048,
+        256
+      ],
+      [
+        4,
+        64,
+        4096,
+        256
+      ],
+      [
+        4,
+        64,
+        8192,
+        256
+      ]
+    ],
+    "models": {
+      "original_full_log": {
+        "host_model": {
+          "stage": "host",
+          "ablation": "full",
+          "feature_names": [
+            "log_flops",
+            "log_unique_remote_bytes",
+            "log_local_bytes"
+          ],
+          "means": [
+            29.72222222222222,
+            20.16829583405449,
+            22.685272334942937
+          ],
+          "scales": [
+            2.206192183518309,
+            1.9490025939210833,
+            1.675847052544745
+          ],
+          "coefficients": [
+            -0.37300395213870485,
+            -0.04806819194779989,
+            0.1345076833315934,
+            0.1318928699022121
+          ],
+          "ridge": 1.0,
+          "sm_count": 108
+        },
+        "fused_model": {
+          "stage": "fused",
+          "ablation": "full",
+          "feature_names": [
+            "log_flops",
+            "log_unique_remote_bytes",
+            "log_local_bytes",
+            "log_split_k_depth",
+            "log_q",
+            "grouped",
+            "log_rho_n",
+            "log_gamma",
+            "underfill",
+            "log_reduction_bytes",
+            "q_minus_one"
+          ],
+          "means": [
+            29.41176470588235,
+            19.99672720660351,
+            22.481914063263186,
+            9.117647058823529,
+            2.0,
+            0.29411764705882354,
+            1.803921568627451,
+            4.196078431372549,
+            0.7148390220285645,
+            20.75822530979105,
+            3.6666666666666665
+          ],
+          "scales": [
+            2.1708990690877568,
+            1.8276361094480067,
+            1.5563899814962547,
+            1.616666369397944,
+            0.816496580927726,
+            0.4556450995538137,
+            1.155033449021423,
+            1.6921920792463856,
+            0.28784967753376856,
+            1.8888259034256605,
+            2.494438257849294
+          ],
+          "coefficients": [
+            -0.5839028957205927,
+            -0.1347147362190185,
+            0.13914449360511258,
+            0.523182505378635,
+            0.04459094661983397,
+            -0.12082218409548326,
+            0.027583450112815197,
+            -0.13355357408971616,
+            0.009084536194883903,
+            -0.128029772281794,
+            -0.27500554738385385,
+            0.1358271635906729
+          ],
+          "ridge": 1.0,
+          "sm_count": 108
+        },
+        "minimum_fused_advantage": 0.0,
+        "force_fused": false
+      },
+      "regime_max_refit": {
+        "host": {
+          "coefficients_us": [
+            505.767623215194,
+            4.765705335728817,
+            5.238640228065543,
+            126.4670693335584
+          ],
+          "training_scales": [
+            1.0,
+            21.539661818375887,
+            16.861783727568042,
+            1.086134199811423
+          ],
+          "objective_us2": 70877.6670062561,
+          "kkt_relative_violation": 1.4128347374091586e-16,
+          "unregularized_rank": 4,
+          "feature_count": 4,
+          "enumerated_faces": 16,
+          "ridge": 1e-06
+        },
+        "fused": {
+          "coefficients_us": [
+            199.0408096175215,
+            45.18657777971669,
+            35.647856305856024,
+            0.0,
+            30.787762739551273,
+            10.04383470224547,
+            453.6748507615195,
+            48.20869734343076
+          ],
+          "training_scales": [
+            1.0,
+            0.37029834454205734,
+            0.5423261445466404,
+            0.7706181053356125,
+            4.43471156521669,
+            1.5366115119722,
+            0.7081215441741124,
+            6.638339788460578
+          ],
+          "objective_us2": 38439.885515587644,
+          "feature_count": 8,
+          "ridge": 1e-06,
+          "unregularized_rank": 8,
+          "kkt_relative_violation": 3.809836641363755e-11,
+          "selected_interval": 5,
+          "interval_count": 9,
+          "interval_certificates": [
+            {
+              "interval": 0,
+              "normalized_ratio_lower": 0.0,
+              "normalized_ratio_upper": 0.05333574106925347,
+              "objective_us2": 470279.2123820755,
+              "kkt_relative_violation": 3.809836641363755e-11,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 1,
+              "normalized_ratio_lower": 0.05333574106925347,
+              "normalized_ratio_upper": 0.10667148213850694,
+              "objective_us2": 456963.32469649374,
+              "kkt_relative_violation": 2.887662371365344e-16,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 4.547473508864641e-13
+            },
+            {
+              "interval": 2,
+              "normalized_ratio_lower": 0.10667148213850694,
+              "normalized_ratio_upper": 0.21334296427701388,
+              "objective_us2": 386846.4451063633,
+              "kkt_relative_violation": 5.768298926647518e-16,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 1.1368683772161603e-13
+            },
+            {
+              "interval": 3,
+              "normalized_ratio_lower": 0.21334296427701388,
+              "normalized_ratio_upper": 0.42668592855402776,
+              "objective_us2": 241299.6134034254,
+              "kkt_relative_violation": 1.2978672584956916e-15,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 1.1368683772161603e-13
+            },
+            {
+              "interval": 4,
+              "normalized_ratio_lower": 0.42668592855402776,
+              "normalized_ratio_upper": 0.8533718571080555,
+              "objective_us2": 60916.53053554499,
+              "kkt_relative_violation": 2.894149997511909e-16,
+              "visited_faces": 1,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 5,
+              "normalized_ratio_lower": 0.8533718571080555,
+              "normalized_ratio_upper": 1.706743714216111,
+              "objective_us2": 38439.885515587644,
+              "kkt_relative_violation": 3.0078962675864023e-16,
+              "visited_faces": 9,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 6,
+              "normalized_ratio_lower": 1.706743714216111,
+              "normalized_ratio_upper": 3.413487428432222,
+              "objective_us2": 308785.9560141108,
+              "kkt_relative_violation": 1.5794854444192188e-16,
+              "visited_faces": 139,
+              "branch_feasibility_error_us": 1.1368683772161603e-13
+            },
+            {
+              "interval": 7,
+              "normalized_ratio_lower": 3.413487428432222,
+              "normalized_ratio_upper": 6.826974856864444,
+              "objective_us2": 570641.9211488392,
+              "kkt_relative_violation": 1.5794854444192188e-16,
+              "visited_faces": 139,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 8,
+              "normalized_ratio_lower": 6.826974856864444,
+              "normalized_ratio_upper": null,
+              "objective_us2": 618202.7404061793,
+              "kkt_relative_violation": 3.948713611048047e-17,
+              "visited_faces": 75,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            }
+          ],
+          "training_branch_counts": {
+            "latency": 118,
+            "throughput": 35
+          },
+          "crossover_W_over_L": 9.41064321920203,
+          "crossover_note": "Null means zero throughput coefficient; no finite crossover. A finite ratio alone does not establish branch identification.",
+          "optimality_scope": "All training-ratio cones enumerated, each numerically KKT-certified, fixed basis/weights/ridge only; no physical identification.",
+          "max_faces_per_interval": 256
+        }
+      },
+      "retained_0.25_refit": {
+        "host": {
+          "coefficients_us": [
+            505.767623215194,
+            4.765705335728817,
+            5.238640228065543,
+            126.4670693335584
+          ],
+          "training_scales": [
+            1.0,
+            21.539661818375887,
+            16.861783727568042,
+            1.086134199811423
+          ],
+          "objective_us2": 70877.6670062561,
+          "kkt_relative_violation": 1.4128347374091586e-16,
+          "unregularized_rank": 4,
+          "feature_count": 4,
+          "enumerated_faces": 16,
+          "ridge": 1e-06
+        },
+        "fused": {
+          "coefficients_us": [
+            153.89754544002759,
+            81.06081535072323,
+            26.700418985885594,
+            46.851933454009604,
+            31.054794487110218,
+            22.416371465414443,
+            406.47505139563043,
+            44.063540517167226
+          ],
+          "training_scales": [
+            1.0,
+            0.37029834454205734,
+            0.5423261445466404,
+            0.7706181053356125,
+            4.43471156521669,
+            1.5366115119722,
+            0.7081215441741124,
+            6.638339788460578
+          ],
+          "objective_us2": 18673.271648241556,
+          "feature_count": 8,
+          "ridge": 1e-06,
+          "unregularized_rank": 8,
+          "kkt_relative_violation": 1.1307787937663097e-15,
+          "selected_interval": 5,
+          "interval_count": 9,
+          "interval_certificates": [
+            {
+              "interval": 0,
+              "normalized_ratio_lower": 0.0,
+              "normalized_ratio_upper": 0.05333574106925347,
+              "objective_us2": 454234.5660096978,
+              "kkt_relative_violation": 7.136006831216123e-16,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 1,
+              "normalized_ratio_lower": 0.05333574106925347,
+              "normalized_ratio_upper": 0.10667148213850694,
+              "objective_us2": 428865.5828280083,
+              "kkt_relative_violation": 1.1307787937663097e-15,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 2,
+              "normalized_ratio_lower": 0.10667148213850694,
+              "normalized_ratio_upper": 0.21334296427701388,
+              "objective_us2": 348910.7314440942,
+              "kkt_relative_violation": 6.932124886073396e-16,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 4.547473508864641e-13
+            },
+            {
+              "interval": 3,
+              "normalized_ratio_lower": 0.21334296427701388,
+              "normalized_ratio_upper": 0.42668592855402776,
+              "objective_us2": 198513.48066691466,
+              "kkt_relative_violation": 2.7128256182044645e-16,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 4.547473508864641e-13
+            },
+            {
+              "interval": 4,
+              "normalized_ratio_lower": 0.42668592855402776,
+              "normalized_ratio_upper": 0.8533718571080555,
+              "objective_us2": 28834.304283651167,
+              "kkt_relative_violation": 4.069238427306697e-16,
+              "visited_faces": 65,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 5,
+              "normalized_ratio_lower": 0.8533718571080555,
+              "normalized_ratio_upper": 1.706743714216111,
+              "objective_us2": 18673.271648241556,
+              "kkt_relative_violation": 2.743688515388659e-16,
+              "visited_faces": 1,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 6,
+              "normalized_ratio_lower": 1.706743714216111,
+              "normalized_ratio_upper": 3.413487428432222,
+              "objective_us2": 191780.12928631494,
+              "kkt_relative_violation": 7.322168333168494e-17,
+              "visited_faces": 139,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 7,
+              "normalized_ratio_lower": 3.413487428432222,
+              "normalized_ratio_upper": 6.826974856864444,
+              "objective_us2": 451926.6442092738,
+              "kkt_relative_violation": 1.553470048856242e-16,
+              "visited_faces": 139,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 8,
+              "normalized_ratio_lower": 6.826974856864444,
+              "normalized_ratio_upper": null,
+              "objective_us2": 549182.6994754599,
+              "kkt_relative_violation": 1.5794854444192188e-16,
+              "visited_faces": 139,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            }
+          ],
+          "training_branch_counts": {
+            "latency": 118,
+            "throughput": 35
+          },
+          "crossover_W_over_L": 9.224747866941538,
+          "crossover_note": "Null means zero throughput coefficient; no finite crossover. A finite ratio alone does not establish branch identification.",
+          "optimality_scope": "All training-ratio cones enumerated, each numerically KKT-certified, fixed basis/weights/ridge only; no physical identification.",
+          "max_faces_per_interval": 256
+        }
+      }
+    }
+  },
+  {
+    "excluded_group": "m64-n512",
+    "training_shapes": [
+      [
+        4,
+        32,
+        512,
+        512
+      ],
+      [
+        4,
+        32,
+        1024,
+        512
+      ],
+      [
+        4,
+        32,
+        2048,
+        512
+      ],
+      [
+        4,
+        32,
+        4096,
+        512
+      ],
+      [
+        4,
+        32,
+        8192,
+        512
+      ],
+      [
+        4,
+        64,
+        512,
+        128
+      ],
+      [
+        4,
+        64,
+        512,
+        256
+      ],
+      [
+        4,
+        64,
+        512,
+        1024
+      ],
+      [
+        4,
+        64,
+        512,
+        2048
+      ],
+      [
+        4,
+        64,
+        1024,
+        128
+      ],
+      [
+        4,
+        64,
+        1024,
+        256
+      ],
+      [
+        4,
+        64,
+        1024,
+        1024
+      ],
+      [
+        4,
+        64,
+        1024,
+        2048
+      ],
+      [
+        4,
+        64,
+        2048,
+        128
+      ],
+      [
+        4,
+        64,
+        2048,
+        256
+      ],
+      [
+        4,
+        64,
+        2048,
+        1024
+      ],
+      [
+        4,
+        64,
+        2048,
+        2048
+      ],
+      [
+        4,
+        64,
+        4096,
+        128
+      ],
+      [
+        4,
+        64,
+        4096,
+        256
+      ],
+      [
+        4,
+        64,
+        4096,
+        1024
+      ],
+      [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      [
+        4,
+        64,
+        8192,
+        128
+      ],
+      [
+        4,
+        64,
+        8192,
+        256
+      ],
+      [
+        4,
+        64,
+        8192,
+        1024
+      ],
+      [
+        4,
+        64,
+        8192,
+        2048
+      ],
+      [
+        4,
+        128,
+        512,
+        512
+      ],
+      [
+        4,
+        128,
+        1024,
+        512
+      ],
+      [
+        4,
+        128,
+        2048,
+        512
+      ],
+      [
+        4,
+        128,
+        4096,
+        512
+      ],
+      [
+        4,
+        128,
+        8192,
+        512
+      ],
+      [
+        4,
+        256,
+        2048,
+        512
+      ],
+      [
+        4,
+        256,
+        4096,
+        512
+      ],
+      [
+        4,
+        256,
+        8192,
+        512
+      ],
+      [
+        4,
+        512,
+        2048,
+        512
+      ],
+      [
+        4,
+        512,
+        4096,
+        512
+      ],
+      [
+        4,
+        512,
+        8192,
+        512
+      ]
+    ],
+    "evaluation_shapes": [
+      [
+        4,
+        64,
+        512,
+        512
+      ],
+      [
+        4,
+        64,
+        1024,
+        512
+      ],
+      [
+        4,
+        64,
+        2048,
+        512
+      ],
+      [
+        4,
+        64,
+        4096,
+        512
+      ],
+      [
+        4,
+        64,
+        8192,
+        512
+      ]
+    ],
+    "models": {
+      "original_full_log": {
+        "host_model": {
+          "stage": "host",
+          "ablation": "full",
+          "feature_names": [
+            "log_flops",
+            "log_unique_remote_bytes",
+            "log_local_bytes"
+          ],
+          "means": [
+            29.583333333333332,
+            20.16829583405449,
+            22.617389743264372
+          ],
+          "scales": [
+            2.277608394786075,
+            1.9490025939210833,
+            1.7133818272562564
+          ],
+          "coefficients": [
+            -0.3746323812472533,
+            -0.04350184390575726,
+            0.1354379586285292,
+            0.12710042009063569
+          ],
+          "ridge": 1.0,
+          "sm_count": 108
+        },
+        "fused_model": {
+          "stage": "fused",
+          "ablation": "full",
+          "feature_names": [
+            "log_flops",
+            "log_unique_remote_bytes",
+            "log_local_bytes",
+            "log_split_k_depth",
+            "log_q",
+            "grouped",
+            "log_rho_n",
+            "log_gamma",
+            "underfill",
+            "log_reduction_bytes",
+            "q_minus_one"
+          ],
+          "means": [
+            29.215686274509803,
+            19.99672720660351,
+            22.30262651063922,
+            9.117647058823529,
+            2.0,
+            0.29411764705882354,
+            1.607843137254902,
+            4.0,
+            0.7275478092471556,
+            20.56214714391246,
+            3.6666666666666665
+          ],
+          "scales": [
+            2.2431921013451124,
+            1.8276361094480067,
+            1.630929610585786,
+            1.616666369397944,
+            0.816496580927726,
+            0.4556450995538137,
+            1.2692197907986085,
+            1.8149704259460602,
+            0.2939622514814868,
+            1.9597536573941343,
+            2.494438257849294
+          ],
+          "coefficients": [
+            -0.5857626586567326,
+            -0.1333101861653713,
+            0.14200190990589717,
+            0.5314301378394005,
+            0.04614480424469257,
+            -0.12283731832670947,
+            0.024442210145562037,
+            -0.14177823921603044,
+            0.0016937407129006734,
+            -0.12673960172943546,
+            -0.2721627455397107,
+            0.14306974170971345
+          ],
+          "ridge": 1.0,
+          "sm_count": 108
+        },
+        "minimum_fused_advantage": 0.0,
+        "force_fused": false
+      },
+      "regime_max_refit": {
+        "host": {
+          "coefficients_us": [
+            505.55392367136164,
+            4.66607465705077,
+            5.378413377608932,
+            126.59331380161518
+          ],
+          "training_scales": [
+            1.0,
+            21.539661818375887,
+            16.800955742001722,
+            1.086134199811423
+          ],
+          "objective_us2": 69325.72370762803,
+          "kkt_relative_violation": 1.4150824265388677e-16,
+          "unregularized_rank": 4,
+          "feature_count": 4,
+          "enumerated_faces": 16,
+          "ridge": 1e-06
+        },
+        "fused": {
+          "coefficients_us": [
+            199.37086469575445,
+            48.6209791142365,
+            34.50821328123364,
+            0.0,
+            30.601556914272706,
+            10.11097079819497,
+            453.43119895668553,
+            48.224821604796944
+          ],
+          "training_scales": [
+            1.0,
+            0.37029834454205734,
+            0.5423261445466404,
+            0.7846907798849178,
+            4.43471156521669,
+            1.521836058103861,
+            0.7081215441741124,
+            6.608765486079832
+          ],
+          "objective_us2": 38710.70635680126,
+          "feature_count": 8,
+          "ridge": 1e-06,
+          "unregularized_rank": 8,
+          "kkt_relative_violation": 3.833483915974784e-11,
+          "selected_interval": 5,
+          "interval_count": 9,
+          "interval_certificates": [
+            {
+              "interval": 0,
+              "normalized_ratio_lower": 0.0,
+              "normalized_ratio_upper": 0.05357441913059574,
+              "objective_us2": 499461.5368230242,
+              "kkt_relative_violation": 3.833483915974784e-11,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 1,
+              "normalized_ratio_lower": 0.05357441913059574,
+              "normalized_ratio_upper": 0.10714883826119148,
+              "objective_us2": 484154.15832718194,
+              "kkt_relative_violation": 1.1629680238653756e-15,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 2,
+              "normalized_ratio_lower": 0.10714883826119148,
+              "normalized_ratio_upper": 0.21429767652238296,
+              "objective_us2": 393594.2710449253,
+              "kkt_relative_violation": 7.22076598372955e-16,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 3,
+              "normalized_ratio_lower": 0.21429767652238296,
+              "normalized_ratio_upper": 0.4285953530447659,
+              "objective_us2": 242817.66722698213,
+              "kkt_relative_violation": 1.1553225573967282e-15,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 4,
+              "normalized_ratio_lower": 0.4285953530447659,
+              "normalized_ratio_upper": 0.8571907060895319,
+              "objective_us2": 61154.25407650156,
+              "kkt_relative_violation": 4.333832624948954e-16,
+              "visited_faces": 1,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 5,
+              "normalized_ratio_lower": 0.8571907060895319,
+              "normalized_ratio_upper": 1.7143814121790637,
+              "objective_us2": 38710.70635680126,
+              "kkt_relative_violation": 1.5000321438200904e-16,
+              "visited_faces": 9,
+              "branch_feasibility_error_us": 1.1368683772161603e-13
+            },
+            {
+              "interval": 6,
+              "normalized_ratio_lower": 1.7143814121790637,
+              "normalized_ratio_upper": 3.4287628243581274,
+              "objective_us2": 309889.31003289844,
+              "kkt_relative_violation": 3.9521711434331217e-17,
+              "visited_faces": 139,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 7,
+              "normalized_ratio_lower": 3.4287628243581274,
+              "normalized_ratio_upper": 6.857525648716255,
+              "objective_us2": 575461.45457099,
+              "kkt_relative_violation": 1.5808684573732487e-16,
+              "visited_faces": 139,
+              "branch_feasibility_error_us": 1.1368683772161603e-13
+            },
+            {
+              "interval": 8,
+              "normalized_ratio_lower": 6.857525648716255,
+              "normalized_ratio_upper": null,
+              "objective_us2": 625353.5584514656,
+              "kkt_relative_violation": 1.5808684573732487e-16,
+              "visited_faces": 75,
+              "branch_feasibility_error_us": 1.1368683772161603e-13
+            }
+          ],
+          "training_branch_counts": {
+            "latency": 118,
+            "throughput": 35
+          },
+          "crossover_W_over_L": 9.402444298758848,
+          "crossover_note": "Null means zero throughput coefficient; no finite crossover. A finite ratio alone does not establish branch identification.",
+          "optimality_scope": "All training-ratio cones enumerated, each numerically KKT-certified, fixed basis/weights/ridge only; no physical identification.",
+          "max_faces_per_interval": 256
+        }
+      },
+      "retained_0.25_refit": {
+        "host": {
+          "coefficients_us": [
+            505.55392367136164,
+            4.66607465705077,
+            5.378413377608932,
+            126.59331380161518
+          ],
+          "training_scales": [
+            1.0,
+            21.539661818375887,
+            16.800955742001722,
+            1.086134199811423
+          ],
+          "objective_us2": 69325.72370762803,
+          "kkt_relative_violation": 1.4150824265388677e-16,
+          "unregularized_rank": 4,
+          "feature_count": 4,
+          "enumerated_faces": 16,
+          "ridge": 1e-06
+        },
+        "fused": {
+          "coefficients_us": [
+            152.40915980819165,
+            85.31116585138479,
+            25.634207206481925,
+            48.48023848669794,
+            31.139871810470396,
+            22.427457983717122,
+            407.57018451241555,
+            44.09107042720781
+          ],
+          "training_scales": [
+            1.0,
+            0.37029834454205734,
+            0.5423261445466404,
+            0.7846907798849178,
+            4.43471156521669,
+            1.521836058103861,
+            0.7081215441741124,
+            6.608765486079832
+          ],
+          "objective_us2": 19336.676919343445,
+          "feature_count": 8,
+          "ridge": 1e-06,
+          "unregularized_rank": 8,
+          "kkt_relative_violation": 5.560838679056186e-16,
+          "selected_interval": 5,
+          "interval_count": 9,
+          "interval_certificates": [
+            {
+              "interval": 0,
+              "normalized_ratio_lower": 0.0,
+              "normalized_ratio_upper": 0.05357441913059574,
+              "objective_us2": 482825.95058184926,
+              "kkt_relative_violation": 4.3146076771106267e-16,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 1,
+              "normalized_ratio_lower": 0.05357441913059574,
+              "normalized_ratio_upper": 0.10714883826119148,
+              "objective_us2": 455371.76132956846,
+              "kkt_relative_violation": 2.8444079329149526e-16,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 4.547473508864641e-13
+            },
+            {
+              "interval": 2,
+              "normalized_ratio_lower": 0.10714883826119148,
+              "normalized_ratio_upper": 0.21429767652238296,
+              "objective_us2": 359730.2472552173,
+              "kkt_relative_violation": 5.560838679056186e-16,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 3,
+              "normalized_ratio_lower": 0.21429767652238296,
+              "normalized_ratio_upper": 0.4285953530447659,
+              "objective_us2": 203670.35728390573,
+              "kkt_relative_violation": 1.3568506503417204e-16,
+              "visited_faces": 69,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 4,
+              "normalized_ratio_lower": 0.4285953530447659,
+              "normalized_ratio_upper": 0.8571907060895319,
+              "objective_us2": 29964.565553151337,
+              "kkt_relative_violation": 1.3568506503417204e-16,
+              "visited_faces": 65,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 5,
+              "normalized_ratio_lower": 0.8571907060895319,
+              "normalized_ratio_upper": 1.7143814121790637,
+              "objective_us2": 19336.676919343445,
+              "kkt_relative_violation": 1.3713024409268438e-16,
+              "visited_faces": 1,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 6,
+              "normalized_ratio_lower": 1.7143814121790637,
+              "normalized_ratio_upper": 3.4287628243581274,
+              "objective_us2": 192155.58015642376,
+              "kkt_relative_violation": 1.4650091785131858e-16,
+              "visited_faces": 139,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 7,
+              "normalized_ratio_lower": 3.4287628243581274,
+              "normalized_ratio_upper": 6.857525648716255,
+              "objective_us2": 455747.1736510337,
+              "kkt_relative_violation": 3.10858473946164e-16,
+              "visited_faces": 139,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            },
+            {
+              "interval": 8,
+              "normalized_ratio_lower": 6.857525648716255,
+              "normalized_ratio_upper": null,
+              "objective_us2": 555447.1036219065,
+              "kkt_relative_violation": 1.5808684573732487e-16,
+              "visited_faces": 139,
+              "branch_feasibility_error_us": 2.2737367544323206e-13
+            }
+          ],
+          "training_branch_counts": {
+            "latency": 118,
+            "throughput": 35
+          },
+          "crossover_W_over_L": 9.243826030154878,
+          "crossover_note": "Null means zero throughput coefficient; no finite crossover. A finite ratio alone does not establish branch identification.",
+          "optimality_scope": "All training-ratio cones enumerated, each numerically KKT-certified, fixed basis/weights/ridge only; no physical identification.",
+          "max_faces_per_interval": 256
+        }
+      }
+    }
+  }
+]

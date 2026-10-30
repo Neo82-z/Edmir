@@ -1,0 +1,28 @@
+[
+  [
+    "cmake",
+    "-S",
+    "/Users/neo/code/llm-serving/EDM-IR/runtime",
+    "-B",
+    "/Users/neo/code/llm-serving/experiments/2026-10-24-execution-contract-repair/local-check-02/build",
+    "-DCMAKE_BUILD_TYPE=Release",
+    "-DEDMIR_CUDA_API_TRACE_TESTS=ON",
+    "-DEDMIR_ENABLE_CUDA=OFF",
+    "-DEDMIR_CUDA_API_HEADER_DIRS=/private/tmp/edmir-cuda-api-check;/private/tmp/edmir-cuda-api-check/nvidia/cuda_runtime/include;/private/tmp/edmir-cuda-api-check/nvidia/cuda_nvcc/include;/private/tmp/edmir-cuda-api-check/nvidia/cuda_cccl/include;/private/tmp/edmir-cuda-api-check/nvidia/cublas/include;/Users/neo/code/nccl-tests/nccl/src/include",
+    "-DEDMIR_GENERATED_DIR=/Users/neo/code/llm-serving/experiments/2026-10-24-execution-contract-repair/local-check-02/generated"
+  ],
+  [
+    "cmake",
+    "--build",
+    "/Users/neo/code/llm-serving/experiments/2026-10-24-execution-contract-repair/local-check-02/build",
+    "--parallel",
+    "2"
+  ],
+  [
+    "ctest",
+    "--test-dir",
+    "/Users/neo/code/llm-serving/experiments/2026-10-24-execution-contract-repair/local-check-02/build",
+    "--output-on-failure",
+    "-V"
+  ]
+]

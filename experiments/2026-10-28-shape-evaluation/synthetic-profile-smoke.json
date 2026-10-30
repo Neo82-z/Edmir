@@ -1,0 +1,92 @@
+{
+  "schema": "edmir.moe-shape-profile.v1",
+  "origin": "synthetic_test",
+  "provenance": {
+    "model_id": "synthetic_unit_test",
+    "model_revision": "synthetic_unit_test",
+    "engine_revision": "synthetic_unit_test",
+    "run_id": "synthetic_unit_test",
+    "workload_id": "synthetic_unit_test",
+    "request_corpus_sha256": "synthetic_unit_test",
+    "dtype": "synthetic_unit_test",
+    "sampling_rule": "synthetic_unit_test",
+    "router_hook_source": "synthetic_unit_test"
+  },
+  "input_sha256": "83cf36a5571ed184678608728e90352588fe121609d6044bef474a5ee99b0da7",
+  "complete_step_layers": 1,
+  "token_layer_observations": 4,
+  "routed_rows": 8,
+  "empty_expert_step_layers": 0,
+  "source_expert_M_histogram": {
+    "0": 9,
+    "1": 6,
+    "2": 1
+  },
+  "logical_expert_shapes": [
+    {
+      "phase": "prefill",
+      "projection": "down",
+      "M": 2,
+      "K": 4,
+      "N": 4,
+      "occurrences": 4,
+      "fraction_all_logical_calls": 0.5,
+      "fraction_within_phase": 0.5,
+      "exact_MKN_match": false
+    },
+    {
+      "phase": "prefill",
+      "projection": "gate_up",
+      "M": 2,
+      "K": 4,
+      "N": 8,
+      "occurrences": 4,
+      "fraction_all_logical_calls": 0.5,
+      "fraction_within_phase": 0.5,
+      "exact_MKN_match": false
+    }
+  ],
+  "logical_totals": {
+    "calls": 8,
+    "rows": 16,
+    "flops": 768
+  },
+  "logical_exact_MKN_coverage": {
+    "calls": 0.0,
+    "rows": 0.0,
+    "flops": 0.0
+  },
+  "kernel_shapes": null,
+  "reference_shape_status": "measured_uniform_FP16; MKN coincidence only, not routed_BF16 execution coverage",
+  "coverage_scope": "sampled routed expert logical projections only; excludes shared expert, attention, dispatch and combine",
+  "execution_identity_coverage": null,
+  "measured_time_coverage": null,
+  "application_representativeness_validated": false,
+  "interpretation": "routing M is not padded kernel M or client batch; MKN match alone does not transfer uniform FP16 results to routed BF16",
+  "reference_set_coverage": {
+    "archived_p8": {
+      "status": "measured_uniform_FP16; MKN coincidence only, not routed_BF16 execution coverage",
+      "logical_MKN_only": {
+        "calls": 0.0,
+        "rows": 0.0,
+        "flops": 0.0
+      }
+    },
+    "diagnostic": {
+      "status": "planned_new_runtime; known design shapes",
+      "logical_MKN_only": {
+        "calls": 0.0,
+        "rows": 0.0,
+        "flops": 0.0
+      }
+    },
+    "boundary": {
+      "status": "planned_new_runtime; no measured labels",
+      "logical_MKN_only": {
+        "calls": 0.0,
+        "rows": 0.0,
+        "flops": 0.0
+      }
+    }
+  }
+}

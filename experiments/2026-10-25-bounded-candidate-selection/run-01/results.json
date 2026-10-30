@@ -1,0 +1,7355 @@
+{
+  "GPU_runs": 0,
+  "calibration_and_tuning_wall_seconds": null,
+  "compiler_admission": false,
+  "deployment_policy_validated": false,
+  "design": {
+    "GPU_package_unchanged": true,
+    "baselines": [
+      "uniform_random_without_replacement_exact_expectation",
+      "training_only_common_candidate_order",
+      "always_splitk4",
+      "always_host_merged_cublaslt"
+    ],
+    "budgets": [
+      1,
+      2,
+      3
+    ],
+    "independent_validation": false,
+    "models": [
+      "regime_max",
+      "residual_depth",
+      "row_service"
+    ],
+    "near_optimal_loss_fraction": 0.05,
+    "near_optimal_threshold_is_diagnostic_not_a_pass_gate": true,
+    "new_fit": false,
+    "no_automatic_k_selection_or_model_promotion": true,
+    "old_top1_metrics_remain_required": true,
+    "primary_model": "regime_max",
+    "protected_host_policy": "Reserve one budget slot for host_merged_cublaslt@merged, then fill by regime_max order; report only shapes with this host measured and stable.",
+    "quality_rule": "Use the unchanged stable subset. Retain and enumerate every excluded candidate; never impute a label.",
+    "sample_savings": "Candidate-label count only, not GPU wall time. Calibration, compilation, prediction, repetition and profiler costs are not measured here.",
+    "schema": "edmir.bounded-candidate-evaluation.v1",
+    "scoring": "Minimum observed latency within the proposed shortlist, relative to minimum over the same measured stable candidate set. This is an ideal retrospective shortlist score, not a deployed noisy measurement policy.",
+    "status": "declared_before_this_evaluation_of_existing_development_data",
+    "tie_rule": "Candidate identity lexicographic order for exactly equal scores; no measured timing tie-break for model ranking."
+  },
+  "evaluation_scope": "Ideal shortlist replay on previously inspected development data; measured stable subsets vary by shape.",
+  "matched_comparisons": [
+    {
+      "budget": 1,
+      "matched_shapes": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "other_max_loss_or_max_expected_loss": 0.0,
+      "other_mean_loss_or_expected_loss": 0.0,
+      "other_policy": "always_merged_cublaslt",
+      "primary_max_loss": 0.022918288761499817,
+      "primary_mean_loss": 0.004583657752299963
+    },
+    {
+      "budget": 1,
+      "matched_shapes": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          3072,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "other_max_loss_or_max_expected_loss": 1.2535574908082472,
+      "other_mean_loss_or_expected_loss": 0.5187957921795336,
+      "other_policy": "always_splitk4",
+      "primary_max_loss": 0.022918288761499817,
+      "primary_mean_loss": 0.0022918288761499817
+    },
+    {
+      "budget": 1,
+      "matched_shapes": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "other_max_loss_or_max_expected_loss": 0.0,
+      "other_mean_loss_or_expected_loss": 0.0,
+      "other_policy": "protected_host_plus_regime",
+      "primary_max_loss": 0.022918288761499817,
+      "primary_mean_loss": 0.004583657752299963
+    },
+    {
+      "budget": 2,
+      "matched_shapes": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "other_max_loss_or_max_expected_loss": 0.0,
+      "other_mean_loss_or_expected_loss": 0.0,
+      "other_policy": "protected_host_plus_regime",
+      "primary_max_loss": 0.0,
+      "primary_mean_loss": 0.0
+    },
+    {
+      "budget": 3,
+      "matched_shapes": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "other_max_loss_or_max_expected_loss": 0.0,
+      "other_mean_loss_or_expected_loss": 0.0,
+      "other_policy": "protected_host_plus_regime",
+      "primary_max_loss": 0.0,
+      "primary_mean_loss": 0.0
+    },
+    {
+      "budget": 1,
+      "matched_shapes": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          3072,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "other_max_loss_or_max_expected_loss": 0.09021231483338621,
+      "other_mean_loss_or_expected_loss": 0.012501995568316349,
+      "other_policy": "residual_depth",
+      "primary_max_loss": 0.022918288761499817,
+      "primary_mean_loss": 0.0022918288761499817
+    },
+    {
+      "budget": 2,
+      "matched_shapes": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          3072,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "other_max_loss_or_max_expected_loss": 0.0,
+      "other_mean_loss_or_expected_loss": 0.0,
+      "other_policy": "residual_depth",
+      "primary_max_loss": 0.0,
+      "primary_mean_loss": 0.0
+    },
+    {
+      "budget": 3,
+      "matched_shapes": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          3072,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "other_max_loss_or_max_expected_loss": 0.0,
+      "other_mean_loss_or_expected_loss": 0.0,
+      "other_policy": "residual_depth",
+      "primary_max_loss": 0.0,
+      "primary_mean_loss": 0.0
+    },
+    {
+      "budget": 1,
+      "matched_shapes": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          3072,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "other_max_loss_or_max_expected_loss": 0.022918288761499817,
+      "other_mean_loss_or_expected_loss": 0.003480764084977728,
+      "other_policy": "row_service",
+      "primary_max_loss": 0.022918288761499817,
+      "primary_mean_loss": 0.0022918288761499817
+    },
+    {
+      "budget": 2,
+      "matched_shapes": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          3072,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "other_max_loss_or_max_expected_loss": 0.0,
+      "other_mean_loss_or_expected_loss": 0.0,
+      "other_policy": "row_service",
+      "primary_max_loss": 0.0,
+      "primary_mean_loss": 0.0
+    },
+    {
+      "budget": 3,
+      "matched_shapes": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          3072,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "other_max_loss_or_max_expected_loss": 0.0,
+      "other_mean_loss_or_expected_loss": 0.0,
+      "other_policy": "row_service",
+      "primary_max_loss": 0.0,
+      "primary_mean_loss": 0.0
+    },
+    {
+      "budget": 1,
+      "matched_shapes": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          3072,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "other_max_loss_or_max_expected_loss": 1.3823357801350822,
+      "other_mean_loss_or_expected_loss": 0.3902298023167905,
+      "other_policy": "training_only_fixed_order",
+      "primary_max_loss": 0.022918288761499817,
+      "primary_mean_loss": 0.0022918288761499817
+    },
+    {
+      "budget": 2,
+      "matched_shapes": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          3072,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "other_max_loss_or_max_expected_loss": 1.0180066203112061,
+      "other_mean_loss_or_expected_loss": 0.3222278826226934,
+      "other_policy": "training_only_fixed_order",
+      "primary_max_loss": 0.0,
+      "primary_mean_loss": 0.0
+    },
+    {
+      "budget": 3,
+      "matched_shapes": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          3072,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "other_max_loss_or_max_expected_loss": 1.0180066203112061,
+      "other_mean_loss_or_expected_loss": 0.32180640820030887,
+      "other_policy": "training_only_fixed_order",
+      "primary_max_loss": 0.0,
+      "primary_mean_loss": 0.0
+    },
+    {
+      "budget": 1,
+      "matched_shapes": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          3072,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "other_max_loss_or_max_expected_loss": 1.1210806818408225,
+      "other_mean_loss_or_expected_loss": 0.4318259754953317,
+      "other_policy": "uniform_random",
+      "primary_max_loss": 0.022918288761499817,
+      "primary_mean_loss": 0.0022918288761499817
+    },
+    {
+      "budget": 2,
+      "matched_shapes": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          3072,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "other_max_loss_or_max_expected_loss": 0.6470252083513199,
+      "other_mean_loss_or_expected_loss": 0.24510861673092316,
+      "other_policy": "uniform_random",
+      "primary_max_loss": 0.0,
+      "primary_mean_loss": 0.0
+    },
+    {
+      "budget": 3,
+      "matched_shapes": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          3072,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "other_max_loss_or_max_expected_loss": 0.43947615530502504,
+      "other_mean_loss_or_expected_loss": 0.1469789513484468,
+      "other_policy": "uniform_random",
+      "primary_max_loss": 0.0,
+      "primary_mean_loss": 0.0
+    }
+  ],
+  "new_fit": false,
+  "per_shape": [
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.75,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 4,
+      "policy": "regime_max",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged"
+      ],
+      "shape": [
+        4,
+        64,
+        1024,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.75,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 4,
+      "policy": "residual_depth",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged"
+      ],
+      "shape": [
+        4,
+        64,
+        1024,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.75,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 4,
+      "policy": "row_service",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged"
+      ],
+      "shape": [
+        4,
+        64,
+        1024,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.75,
+      "evaluated_candidates": 1,
+      "expectation_is_over_random_subsets_not_model_confidence": true,
+      "expected_choice_loss_fraction": 0.5443548196584993,
+      "near_optimal_retention_probability": 0.25,
+      "observed_candidates": 4,
+      "policy": "uniform_random",
+      "shape": [
+        4,
+        64,
+        1024,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.75,
+      "choice_loss_fraction": 0.8040221304582007,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4_groupedn2@prepared",
+      "near_optimal_retained": false,
+      "observed_candidates": 4,
+      "policy": "training_only_fixed_order",
+      "selected_candidates": [
+        "splitk4_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        1024,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.75,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 4,
+      "policy": "protected_host_plus_regime",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged"
+      ],
+      "shape": [
+        4,
+        64,
+        1024,
+        512
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.5,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 2,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 4,
+      "policy": "regime_max",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged",
+        "splitk4@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        1024,
+        512
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.5,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 2,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 4,
+      "policy": "residual_depth",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged",
+        "splitk4@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        1024,
+        512
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.5,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 2,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 4,
+      "policy": "row_service",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged",
+        "splitk4@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        1024,
+        512
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.5,
+      "evaluated_candidates": 2,
+      "expectation_is_over_random_subsets_not_model_confidence": true,
+      "expected_choice_loss_fraction": 0.33581537162853836,
+      "near_optimal_retention_probability": 0.5,
+      "observed_candidates": 4,
+      "policy": "uniform_random",
+      "shape": [
+        4,
+        64,
+        1024,
+        512
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.5,
+      "choice_loss_fraction": 0.6414950815954339,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 2,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4@prepared",
+      "near_optimal_retained": false,
+      "observed_candidates": 4,
+      "policy": "training_only_fixed_order",
+      "selected_candidates": [
+        "splitk4_groupedn2@prepared",
+        "splitk4@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        1024,
+        512
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.5,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 2,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 4,
+      "policy": "protected_host_plus_regime",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged",
+        "splitk4@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        1024,
+        512
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.25,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 3,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 4,
+      "policy": "regime_max",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged",
+        "splitk4@prepared",
+        "splitk4_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        1024,
+        512
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.25,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 3,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 4,
+      "policy": "residual_depth",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged",
+        "splitk4@prepared",
+        "splitk2_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        1024,
+        512
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.25,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 3,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 4,
+      "policy": "row_service",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged",
+        "splitk4@prepared",
+        "splitk2_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        1024,
+        512
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.25,
+      "evaluated_candidates": 3,
+      "expectation_is_over_random_subsets_not_model_confidence": true,
+      "expected_choice_loss_fraction": 0.16037377039885858,
+      "near_optimal_retention_probability": 0.75,
+      "observed_candidates": 4,
+      "policy": "uniform_random",
+      "shape": [
+        4,
+        64,
+        1024,
+        512
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.25,
+      "choice_loss_fraction": 0.6414950815954339,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 3,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4@prepared",
+      "near_optimal_retained": false,
+      "observed_candidates": 4,
+      "policy": "training_only_fixed_order",
+      "selected_candidates": [
+        "splitk4_groupedn2@prepared",
+        "splitk4@prepared",
+        "splitk2_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        1024,
+        512
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.25,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 3,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 4,
+      "policy": "protected_host_plus_regime",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged",
+        "splitk4@prepared",
+        "splitk4_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        1024,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.75,
+      "choice_loss_fraction": 0.6414950815954339,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4@prepared",
+      "near_optimal_retained": false,
+      "observed_candidates": 4,
+      "policy": "always_splitk4",
+      "selected_candidates": [
+        "splitk4@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        1024,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.75,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 4,
+      "policy": "always_merged_cublaslt",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged"
+      ],
+      "shape": [
+        4,
+        64,
+        1024,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.75,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 4,
+      "policy": "regime_max",
+      "selected_candidates": [
+        "splitk4@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.75,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 4,
+      "policy": "residual_depth",
+      "selected_candidates": [
+        "splitk4@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.75,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 4,
+      "policy": "row_service",
+      "selected_candidates": [
+        "splitk4@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.75,
+      "evaluated_candidates": 1,
+      "expectation_is_over_random_subsets_not_model_confidence": true,
+      "expected_choice_loss_fraction": 0.18716357181235144,
+      "near_optimal_retention_probability": 0.25,
+      "observed_candidates": 4,
+      "policy": "uniform_random",
+      "shape": [
+        4,
+        64,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.75,
+      "choice_loss_fraction": 0.14127363616605093,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4_groupedn2@prepared",
+      "near_optimal_retained": false,
+      "observed_candidates": 4,
+      "policy": "training_only_fixed_order",
+      "selected_candidates": [
+        "splitk4_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.5,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 2,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 4,
+      "policy": "regime_max",
+      "selected_candidates": [
+        "splitk4@prepared",
+        "splitk4_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.5,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 2,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 4,
+      "policy": "residual_depth",
+      "selected_candidates": [
+        "splitk4@prepared",
+        "splitk4_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.5,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 2,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 4,
+      "policy": "row_service",
+      "selected_candidates": [
+        "splitk4@prepared",
+        "splitk4_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.5,
+      "evaluated_candidates": 2,
+      "expectation_is_over_random_subsets_not_model_confidence": true,
+      "expected_choice_loss_fraction": 0.07786672580190213,
+      "near_optimal_retention_probability": 0.5,
+      "observed_candidates": 4,
+      "policy": "uniform_random",
+      "shape": [
+        4,
+        64,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.5,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 2,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 4,
+      "policy": "training_only_fixed_order",
+      "selected_candidates": [
+        "splitk4_groupedn2@prepared",
+        "splitk4@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.25,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 3,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 4,
+      "policy": "regime_max",
+      "selected_candidates": [
+        "splitk4@prepared",
+        "splitk4_groupedn2@prepared",
+        "splitk2@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.25,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 3,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 4,
+      "policy": "residual_depth",
+      "selected_candidates": [
+        "splitk4@prepared",
+        "splitk4_groupedn2@prepared",
+        "splitk2@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.25,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 3,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 4,
+      "policy": "row_service",
+      "selected_candidates": [
+        "splitk4@prepared",
+        "splitk4_groupedn2@prepared",
+        "splitk2@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.25,
+      "evaluated_candidates": 3,
+      "expectation_is_over_random_subsets_not_model_confidence": true,
+      "expected_choice_loss_fraction": 0.035318409041512844,
+      "near_optimal_retention_probability": 0.75,
+      "observed_candidates": 4,
+      "policy": "uniform_random",
+      "shape": [
+        4,
+        64,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.25,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 3,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 4,
+      "policy": "training_only_fixed_order",
+      "selected_candidates": [
+        "splitk4_groupedn2@prepared",
+        "splitk4@prepared",
+        "splitk2_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.75,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 4,
+      "policy": "always_splitk4",
+      "selected_candidates": [
+        "splitk4@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.8,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 5,
+      "policy": "regime_max",
+      "selected_candidates": [
+        "host@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        3072,
+        1536
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.8,
+      "choice_loss_fraction": 0.09021231483338621,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4_groupedn2@prepared",
+      "near_optimal_retained": false,
+      "observed_candidates": 5,
+      "policy": "residual_depth",
+      "selected_candidates": [
+        "splitk4_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        3072,
+        1536
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.8,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 5,
+      "policy": "row_service",
+      "selected_candidates": [
+        "host@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        3072,
+        1536
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.8,
+      "evaluated_candidates": 1,
+      "expectation_is_over_random_subsets_not_model_confidence": true,
+      "expected_choice_loss_fraction": 0.13143933657242757,
+      "near_optimal_retention_probability": 0.19999999999999996,
+      "observed_candidates": 5,
+      "policy": "uniform_random",
+      "shape": [
+        4,
+        64,
+        3072,
+        1536
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.8,
+      "choice_loss_fraction": 0.09021231483338621,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4_groupedn2@prepared",
+      "near_optimal_retained": false,
+      "observed_candidates": 5,
+      "policy": "training_only_fixed_order",
+      "selected_candidates": [
+        "splitk4_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        3072,
+        1536
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.6,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 2,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 5,
+      "policy": "regime_max",
+      "selected_candidates": [
+        "host@prepared",
+        "splitk4@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        3072,
+        1536
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.6,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 2,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 5,
+      "policy": "residual_depth",
+      "selected_candidates": [
+        "splitk4_groupedn2@prepared",
+        "host@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        3072,
+        1536
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.6,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 2,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 5,
+      "policy": "row_service",
+      "selected_candidates": [
+        "host@prepared",
+        "splitk4_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        3072,
+        1536
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.6,
+      "evaluated_candidates": 2,
+      "expectation_is_over_random_subsets_not_model_confidence": true,
+      "expected_choice_loss_fraction": 0.06300146946260266,
+      "near_optimal_retention_probability": 0.4,
+      "observed_candidates": 5,
+      "policy": "uniform_random",
+      "shape": [
+        4,
+        64,
+        3072,
+        1536
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.6,
+      "choice_loss_fraction": 0.09021231483338621,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 2,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4_groupedn2@prepared",
+      "near_optimal_retained": false,
+      "observed_candidates": 5,
+      "policy": "training_only_fixed_order",
+      "selected_candidates": [
+        "splitk4_groupedn2@prepared",
+        "splitk4@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        3072,
+        1536
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.4,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 3,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 5,
+      "policy": "regime_max",
+      "selected_candidates": [
+        "host@prepared",
+        "splitk4@prepared",
+        "splitk4_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        3072,
+        1536
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.4,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 3,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 5,
+      "policy": "residual_depth",
+      "selected_candidates": [
+        "splitk4_groupedn2@prepared",
+        "host@prepared",
+        "splitk4@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        3072,
+        1536
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.4,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 3,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 5,
+      "policy": "row_service",
+      "selected_candidates": [
+        "host@prepared",
+        "splitk4_groupedn2@prepared",
+        "splitk4@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        3072,
+        1536
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.4,
+      "evaluated_candidates": 3,
+      "expectation_is_over_random_subsets_not_model_confidence": true,
+      "expected_choice_loss_fraction": 0.03786137933010503,
+      "near_optimal_retention_probability": 0.6,
+      "observed_candidates": 5,
+      "policy": "uniform_random",
+      "shape": [
+        4,
+        64,
+        3072,
+        1536
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.4,
+      "choice_loss_fraction": 0.09021231483338621,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 3,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4_groupedn2@prepared",
+      "near_optimal_retained": false,
+      "observed_candidates": 5,
+      "policy": "training_only_fixed_order",
+      "selected_candidates": [
+        "splitk4_groupedn2@prepared",
+        "splitk4@prepared",
+        "splitk2_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        3072,
+        1536
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.8,
+      "choice_loss_fraction": 0.10797684880089409,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4@prepared",
+      "near_optimal_retained": false,
+      "observed_candidates": 5,
+      "policy": "always_splitk4",
+      "selected_candidates": [
+        "splitk4@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        3072,
+        1536
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.8571428571428572,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 7,
+      "policy": "regime_max",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged"
+      ],
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.8571428571428572,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 7,
+      "policy": "residual_depth",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged"
+      ],
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.8571428571428572,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 7,
+      "policy": "row_service",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged"
+      ],
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.8571428571428572,
+      "evaluated_candidates": 1,
+      "expectation_is_over_random_subsets_not_model_confidence": true,
+      "expected_choice_loss_fraction": 0.8785852767026925,
+      "near_optimal_retention_probability": 0.1428571428571429,
+      "observed_candidates": 7,
+      "policy": "uniform_random",
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.8571428571428572,
+      "choice_loss_fraction": 0.8815424577430324,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4_groupedn2@prepared",
+      "near_optimal_retained": false,
+      "observed_candidates": 7,
+      "policy": "training_only_fixed_order",
+      "selected_candidates": [
+        "splitk4_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.8571428571428572,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 7,
+      "policy": "protected_host_plus_regime",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged"
+      ],
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.7142857142857143,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 2,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 7,
+      "policy": "regime_max",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged",
+        "host_compiler_cublas@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.7142857142857143,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 2,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 7,
+      "policy": "residual_depth",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged",
+        "host_compiler_cublas@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.7142857142857143,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 2,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 7,
+      "policy": "row_service",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged",
+        "host_compiler_cublas@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.7142857142857143,
+      "evaluated_candidates": 2,
+      "expectation_is_over_random_subsets_not_model_confidence": true,
+      "expected_choice_loss_fraction": 0.5813352885042287,
+      "near_optimal_retention_probability": 0.2857142857142857,
+      "observed_candidates": 7,
+      "policy": "uniform_random",
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.7142857142857143,
+      "choice_loss_fraction": 0.8815424577430324,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 2,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4_groupedn2@prepared",
+      "near_optimal_retained": false,
+      "observed_candidates": 7,
+      "policy": "training_only_fixed_order",
+      "selected_candidates": [
+        "splitk4_groupedn2@prepared",
+        "splitk4@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.7142857142857143,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 2,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 7,
+      "policy": "protected_host_plus_regime",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged",
+        "host_compiler_cublas@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.5714285714285714,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 3,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 7,
+      "policy": "regime_max",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged",
+        "host_compiler_cublas@prepared",
+        "splitk4_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.5714285714285714,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 3,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 7,
+      "policy": "residual_depth",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged",
+        "host_compiler_cublas@prepared",
+        "splitk4_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.5714285714285714,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 3,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 7,
+      "policy": "row_service",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged",
+        "host_compiler_cublas@prepared",
+        "host@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.5714285714285714,
+      "evaluated_candidates": 3,
+      "expectation_is_over_random_subsets_not_model_confidence": true,
+      "expected_choice_loss_fraction": 0.39583601482153385,
+      "near_optimal_retention_probability": 0.4285714285714286,
+      "observed_candidates": 7,
+      "policy": "uniform_random",
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.5714285714285714,
+      "choice_loss_fraction": 0.8815424577430324,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 3,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4_groupedn2@prepared",
+      "near_optimal_retained": false,
+      "observed_candidates": 7,
+      "policy": "training_only_fixed_order",
+      "selected_candidates": [
+        "splitk4_groupedn2@prepared",
+        "splitk4@prepared",
+        "splitk2_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.5714285714285714,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 3,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 7,
+      "policy": "protected_host_plus_regime",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged",
+        "host_compiler_cublas@prepared",
+        "splitk4_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.8571428571428572,
+      "choice_loss_fraction": 1.2535574908082472,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4@prepared",
+      "near_optimal_retained": false,
+      "observed_candidates": 7,
+      "policy": "always_splitk4",
+      "selected_candidates": [
+        "splitk4@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.8571428571428572,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 7,
+      "policy": "always_merged_cublaslt",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged"
+      ],
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.9,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 10,
+      "policy": "regime_max",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged"
+      ],
+      "shape": [
+        4,
+        64,
+        8192,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.9,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 10,
+      "policy": "residual_depth",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged"
+      ],
+      "shape": [
+        4,
+        64,
+        8192,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.9,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 10,
+      "policy": "row_service",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged"
+      ],
+      "shape": [
+        4,
+        64,
+        8192,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.9,
+      "evaluated_candidates": 1,
+      "expectation_is_over_random_subsets_not_model_confidence": true,
+      "expected_choice_loss_fraction": 1.1210806818408225,
+      "near_optimal_retention_probability": 0.09999999999999998,
+      "observed_candidates": 10,
+      "policy": "uniform_random",
+      "shape": [
+        4,
+        64,
+        8192,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.9,
+      "choice_loss_fraction": 1.3823357801350822,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4_groupedn2@prepared",
+      "near_optimal_retained": false,
+      "observed_candidates": 10,
+      "policy": "training_only_fixed_order",
+      "selected_candidates": [
+        "splitk4_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        8192,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.9,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 10,
+      "policy": "protected_host_plus_regime",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged"
+      ],
+      "shape": [
+        4,
+        64,
+        8192,
+        512
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.8,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 2,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 10,
+      "policy": "regime_max",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged",
+        "host_merged_cutlass@merged"
+      ],
+      "shape": [
+        4,
+        64,
+        8192,
+        512
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.8,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 2,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 10,
+      "policy": "residual_depth",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged",
+        "host_merged_cutlass@merged"
+      ],
+      "shape": [
+        4,
+        64,
+        8192,
+        512
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.8,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 2,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 10,
+      "policy": "row_service",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged",
+        "host_merged_cutlass@merged"
+      ],
+      "shape": [
+        4,
+        64,
+        8192,
+        512
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.8,
+      "evaluated_candidates": 2,
+      "expectation_is_over_random_subsets_not_model_confidence": true,
+      "expected_choice_loss_fraction": 0.6470252083513199,
+      "near_optimal_retention_probability": 0.19999999999999996,
+      "observed_candidates": 10,
+      "policy": "uniform_random",
+      "shape": [
+        4,
+        64,
+        8192,
+        512
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.8,
+      "choice_loss_fraction": 1.0180066203112061,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 2,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4@prepared",
+      "near_optimal_retained": false,
+      "observed_candidates": 10,
+      "policy": "training_only_fixed_order",
+      "selected_candidates": [
+        "splitk4_groupedn2@prepared",
+        "splitk4@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        8192,
+        512
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.8,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 2,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 10,
+      "policy": "protected_host_plus_regime",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged",
+        "host_merged_cutlass@merged"
+      ],
+      "shape": [
+        4,
+        64,
+        8192,
+        512
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.7,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 3,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 10,
+      "policy": "regime_max",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged",
+        "host_merged_cutlass@merged",
+        "host_compiler_cublas@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        8192,
+        512
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.7,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 3,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 10,
+      "policy": "residual_depth",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged",
+        "host_merged_cutlass@merged",
+        "host_compiler_cublas@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        8192,
+        512
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.7,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 3,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 10,
+      "policy": "row_service",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged",
+        "host_merged_cutlass@merged",
+        "host_compiler_cublas@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        8192,
+        512
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.7,
+      "evaluated_candidates": 3,
+      "expectation_is_over_random_subsets_not_model_confidence": true,
+      "expected_choice_loss_fraction": 0.43947615530502504,
+      "near_optimal_retention_probability": 0.30000000000000004,
+      "observed_candidates": 10,
+      "policy": "uniform_random",
+      "shape": [
+        4,
+        64,
+        8192,
+        512
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.7,
+      "choice_loss_fraction": 1.0180066203112061,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 3,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4@prepared",
+      "near_optimal_retained": false,
+      "observed_candidates": 10,
+      "policy": "training_only_fixed_order",
+      "selected_candidates": [
+        "splitk4_groupedn2@prepared",
+        "splitk4@prepared",
+        "splitk2_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        8192,
+        512
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.7,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 3,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 10,
+      "policy": "protected_host_plus_regime",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged",
+        "host_merged_cutlass@merged",
+        "host_compiler_cublas@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        8192,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.9,
+      "choice_loss_fraction": 1.0180066203112061,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4@prepared",
+      "near_optimal_retained": false,
+      "observed_candidates": 10,
+      "policy": "always_splitk4",
+      "selected_candidates": [
+        "splitk4@prepared"
+      ],
+      "shape": [
+        4,
+        64,
+        8192,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.9,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 10,
+      "policy": "always_merged_cublaslt",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged"
+      ],
+      "shape": [
+        4,
+        64,
+        8192,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.8,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 5,
+      "policy": "regime_max",
+      "selected_candidates": [
+        "splitk4@prepared"
+      ],
+      "shape": [
+        4,
+        192,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.8,
+      "choice_loss_fraction": 0.01188935208827746,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4_groupedn2@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 5,
+      "policy": "residual_depth",
+      "selected_candidates": [
+        "splitk4_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        192,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.8,
+      "choice_loss_fraction": 0.01188935208827746,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4_groupedn2@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 5,
+      "policy": "row_service",
+      "selected_candidates": [
+        "splitk4_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        192,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.8,
+      "evaluated_candidates": 1,
+      "expectation_is_over_random_subsets_not_model_confidence": true,
+      "expected_choice_loss_fraction": 0.0931247946023166,
+      "near_optimal_retention_probability": 0.4,
+      "observed_candidates": 5,
+      "policy": "uniform_random",
+      "shape": [
+        4,
+        192,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.8,
+      "choice_loss_fraction": 0.01188935208827746,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4_groupedn2@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 5,
+      "policy": "training_only_fixed_order",
+      "selected_candidates": [
+        "splitk4_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        192,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.6,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 2,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 5,
+      "policy": "regime_max",
+      "selected_candidates": [
+        "splitk4@prepared",
+        "splitk4_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        192,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.6,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 2,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 5,
+      "policy": "residual_depth",
+      "selected_candidates": [
+        "splitk4_groupedn2@prepared",
+        "splitk4@prepared"
+      ],
+      "shape": [
+        4,
+        192,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.6,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 2,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 5,
+      "policy": "row_service",
+      "selected_candidates": [
+        "splitk4_groupedn2@prepared",
+        "splitk4@prepared"
+      ],
+      "shape": [
+        4,
+        192,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.6,
+      "evaluated_candidates": 2,
+      "expectation_is_over_random_subsets_not_model_confidence": true,
+      "expected_choice_loss_fraction": 0.03344367720059349,
+      "near_optimal_retention_probability": 0.7,
+      "observed_candidates": 5,
+      "policy": "uniform_random",
+      "shape": [
+        4,
+        192,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.6,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 2,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 5,
+      "policy": "training_only_fixed_order",
+      "selected_candidates": [
+        "splitk4_groupedn2@prepared",
+        "splitk4@prepared"
+      ],
+      "shape": [
+        4,
+        192,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.4,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 3,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 5,
+      "policy": "regime_max",
+      "selected_candidates": [
+        "splitk4@prepared",
+        "splitk4_groupedn2@prepared",
+        "splitk2@prepared"
+      ],
+      "shape": [
+        4,
+        192,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.4,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 3,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 5,
+      "policy": "residual_depth",
+      "selected_candidates": [
+        "splitk4_groupedn2@prepared",
+        "splitk4@prepared",
+        "splitk2@prepared"
+      ],
+      "shape": [
+        4,
+        192,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.4,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 3,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 5,
+      "policy": "row_service",
+      "selected_candidates": [
+        "splitk4_groupedn2@prepared",
+        "splitk4@prepared",
+        "host@prepared"
+      ],
+      "shape": [
+        4,
+        192,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.4,
+      "evaluated_candidates": 3,
+      "expectation_is_over_random_subsets_not_model_confidence": true,
+      "expected_choice_loss_fraction": 0.009373895164064283,
+      "near_optimal_retention_probability": 0.9,
+      "observed_candidates": 5,
+      "policy": "uniform_random",
+      "shape": [
+        4,
+        192,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.4,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 3,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 5,
+      "policy": "training_only_fixed_order",
+      "selected_candidates": [
+        "splitk4_groupedn2@prepared",
+        "splitk4@prepared",
+        "splitk2_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        192,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.8,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 5,
+      "policy": "always_splitk4",
+      "selected_candidates": [
+        "splitk4@prepared"
+      ],
+      "shape": [
+        4,
+        192,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.8,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 5,
+      "policy": "regime_max",
+      "selected_candidates": [
+        "host@prepared"
+      ],
+      "shape": [
+        4,
+        192,
+        3072,
+        1536
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.8,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 5,
+      "policy": "residual_depth",
+      "selected_candidates": [
+        "host@prepared"
+      ],
+      "shape": [
+        4,
+        192,
+        3072,
+        1536
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.8,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 5,
+      "policy": "row_service",
+      "selected_candidates": [
+        "host@prepared"
+      ],
+      "shape": [
+        4,
+        192,
+        3072,
+        1536
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.8,
+      "evaluated_candidates": 1,
+      "expectation_is_over_random_subsets_not_model_confidence": true,
+      "expected_choice_loss_fraction": 0.17741874119233358,
+      "near_optimal_retention_probability": 0.6,
+      "observed_candidates": 5,
+      "policy": "uniform_random",
+      "shape": [
+        4,
+        192,
+        3072,
+        1536
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.8,
+      "choice_loss_fraction": 0.025512937187451623,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4_groupedn2@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 5,
+      "policy": "training_only_fixed_order",
+      "selected_candidates": [
+        "splitk4_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        192,
+        3072,
+        1536
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.6,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 2,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 5,
+      "policy": "regime_max",
+      "selected_candidates": [
+        "host@prepared",
+        "splitk2_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        192,
+        3072,
+        1536
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.6,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 2,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 5,
+      "policy": "residual_depth",
+      "selected_candidates": [
+        "host@prepared",
+        "splitk4_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        192,
+        3072,
+        1536
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.6,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 2,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 5,
+      "policy": "row_service",
+      "selected_candidates": [
+        "host@prepared",
+        "splitk4_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        192,
+        3072,
+        1536
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.6,
+      "evaluated_candidates": 2,
+      "expectation_is_over_random_subsets_not_model_confidence": true,
+      "expected_choice_loss_fraction": 0.052303918137020844,
+      "near_optimal_retention_probability": 0.9,
+      "observed_candidates": 5,
+      "policy": "uniform_random",
+      "shape": [
+        4,
+        192,
+        3072,
+        1536
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.6,
+      "choice_loss_fraction": 0.025512937187451623,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 2,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4_groupedn2@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 5,
+      "policy": "training_only_fixed_order",
+      "selected_candidates": [
+        "splitk4_groupedn2@prepared",
+        "splitk4@prepared"
+      ],
+      "shape": [
+        4,
+        192,
+        3072,
+        1536
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.4,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 3,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 5,
+      "policy": "regime_max",
+      "selected_candidates": [
+        "host@prepared",
+        "splitk2_groupedn2@prepared",
+        "splitk4_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        192,
+        3072,
+        1536
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.4,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 3,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 5,
+      "policy": "residual_depth",
+      "selected_candidates": [
+        "host@prepared",
+        "splitk4_groupedn2@prepared",
+        "splitk2_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        192,
+        3072,
+        1536
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.4,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 3,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 5,
+      "policy": "row_service",
+      "selected_candidates": [
+        "host@prepared",
+        "splitk4_groupedn2@prepared",
+        "splitk2_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        192,
+        3072,
+        1536
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.4,
+      "evaluated_candidates": 3,
+      "expectation_is_over_random_subsets_not_model_confidence": true,
+      "expected_choice_loss_fraction": 0.008940751607827258,
+      "near_optimal_retention_probability": 1.0,
+      "observed_candidates": 5,
+      "policy": "uniform_random",
+      "shape": [
+        4,
+        192,
+        3072,
+        1536
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.4,
+      "choice_loss_fraction": 0.021298192963606688,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 3,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk2_groupedn2@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 5,
+      "policy": "training_only_fixed_order",
+      "selected_candidates": [
+        "splitk4_groupedn2@prepared",
+        "splitk4@prepared",
+        "splitk2_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        192,
+        3072,
+        1536
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.8,
+      "choice_loss_fraction": 0.43216384770612604,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4@prepared",
+      "near_optimal_retained": false,
+      "observed_candidates": 5,
+      "policy": "always_splitk4",
+      "selected_candidates": [
+        "splitk4@prepared"
+      ],
+      "shape": [
+        4,
+        192,
+        3072,
+        1536
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.9,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 10,
+      "policy": "regime_max",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged"
+      ],
+      "shape": [
+        4,
+        256,
+        8192,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.9,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 10,
+      "policy": "residual_depth",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged"
+      ],
+      "shape": [
+        4,
+        256,
+        8192,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.9,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 10,
+      "policy": "row_service",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged"
+      ],
+      "shape": [
+        4,
+        256,
+        8192,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.9,
+      "evaluated_candidates": 1,
+      "expectation_is_over_random_subsets_not_model_confidence": true,
+      "expected_choice_loss_fraction": 0.6171910443644455,
+      "near_optimal_retention_probability": 0.09999999999999998,
+      "observed_candidates": 10,
+      "policy": "uniform_random",
+      "shape": [
+        4,
+        256,
+        8192,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.9,
+      "choice_loss_fraction": 0.4279416590181706,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4_groupedn2@prepared",
+      "near_optimal_retained": false,
+      "observed_candidates": 10,
+      "policy": "training_only_fixed_order",
+      "selected_candidates": [
+        "splitk4_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        256,
+        8192,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.9,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 10,
+      "policy": "protected_host_plus_regime",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged"
+      ],
+      "shape": [
+        4,
+        256,
+        8192,
+        512
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.8,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 2,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 10,
+      "policy": "regime_max",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged",
+        "host_merged_cutlass@merged"
+      ],
+      "shape": [
+        4,
+        256,
+        8192,
+        512
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.8,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 2,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 10,
+      "policy": "residual_depth",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged",
+        "host_merged_cutlass@merged"
+      ],
+      "shape": [
+        4,
+        256,
+        8192,
+        512
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.8,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 2,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 10,
+      "policy": "row_service",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged",
+        "host_merged_cutlass@merged"
+      ],
+      "shape": [
+        4,
+        256,
+        8192,
+        512
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.8,
+      "evaluated_candidates": 2,
+      "expectation_is_over_random_subsets_not_model_confidence": true,
+      "expected_choice_loss_fraction": 0.3771819965066143,
+      "near_optimal_retention_probability": 0.19999999999999996,
+      "observed_candidates": 10,
+      "policy": "uniform_random",
+      "shape": [
+        4,
+        256,
+        8192,
+        512
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.8,
+      "choice_loss_fraction": 0.4279416590181706,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 2,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4_groupedn2@prepared",
+      "near_optimal_retained": false,
+      "observed_candidates": 10,
+      "policy": "training_only_fixed_order",
+      "selected_candidates": [
+        "splitk4_groupedn2@prepared",
+        "splitk4@prepared"
+      ],
+      "shape": [
+        4,
+        256,
+        8192,
+        512
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.8,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 2,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 10,
+      "policy": "protected_host_plus_regime",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged",
+        "host_merged_cutlass@merged"
+      ],
+      "shape": [
+        4,
+        256,
+        8192,
+        512
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.7,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 3,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 10,
+      "policy": "regime_max",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged",
+        "host_merged_cutlass@merged",
+        "splitk4_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        256,
+        8192,
+        512
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.7,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 3,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 10,
+      "policy": "residual_depth",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged",
+        "host_merged_cutlass@merged",
+        "splitk4_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        256,
+        8192,
+        512
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.7,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 3,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 10,
+      "policy": "row_service",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged",
+        "host_merged_cutlass@merged",
+        "splitk8_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        256,
+        8192,
+        512
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.7,
+      "evaluated_candidates": 3,
+      "expectation_is_over_random_subsets_not_model_confidence": true,
+      "expected_choice_loss_fraction": 0.2533275579925063,
+      "near_optimal_retention_probability": 0.30000000000000004,
+      "observed_candidates": 10,
+      "policy": "uniform_random",
+      "shape": [
+        4,
+        256,
+        8192,
+        512
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.7,
+      "choice_loss_fraction": 0.4279416590181706,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 3,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4_groupedn2@prepared",
+      "near_optimal_retained": false,
+      "observed_candidates": 10,
+      "policy": "training_only_fixed_order",
+      "selected_candidates": [
+        "splitk4_groupedn2@prepared",
+        "splitk4@prepared",
+        "splitk2_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        256,
+        8192,
+        512
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.7,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 3,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 10,
+      "policy": "protected_host_plus_regime",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged",
+        "host_merged_cutlass@merged",
+        "splitk4_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        256,
+        8192,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.9,
+      "choice_loss_fraction": 0.7083505721708883,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4@prepared",
+      "near_optimal_retained": false,
+      "observed_candidates": 10,
+      "policy": "always_splitk4",
+      "selected_candidates": [
+        "splitk4@prepared"
+      ],
+      "shape": [
+        4,
+        256,
+        8192,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.9,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 10,
+      "policy": "always_merged_cublaslt",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged"
+      ],
+      "shape": [
+        4,
+        256,
+        8192,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.8,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4_groupedn2@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 5,
+      "policy": "regime_max",
+      "selected_candidates": [
+        "splitk4_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        512,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.8,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4_groupedn2@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 5,
+      "policy": "residual_depth",
+      "selected_candidates": [
+        "splitk4_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        512,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.8,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4_groupedn2@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 5,
+      "policy": "row_service",
+      "selected_candidates": [
+        "splitk4_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        512,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.8,
+      "evaluated_candidates": 1,
+      "expectation_is_over_random_subsets_not_model_confidence": true,
+      "expected_choice_loss_fraction": 0.22948467628731528,
+      "near_optimal_retention_probability": 0.4,
+      "observed_candidates": 5,
+      "policy": "uniform_random",
+      "shape": [
+        4,
+        512,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.8,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4_groupedn2@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 5,
+      "policy": "training_only_fixed_order",
+      "selected_candidates": [
+        "splitk4_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        512,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.6,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 2,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4_groupedn2@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 5,
+      "policy": "regime_max",
+      "selected_candidates": [
+        "splitk4_groupedn2@prepared",
+        "splitk2_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        512,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.6,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 2,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4_groupedn2@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 5,
+      "policy": "residual_depth",
+      "selected_candidates": [
+        "splitk4_groupedn2@prepared",
+        "splitk2_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        512,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.6,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 2,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4_groupedn2@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 5,
+      "policy": "row_service",
+      "selected_candidates": [
+        "splitk4_groupedn2@prepared",
+        "splitk2_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        512,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.6,
+      "evaluated_candidates": 2,
+      "expectation_is_over_random_subsets_not_model_confidence": true,
+      "expected_choice_loss_fraction": 0.11327824458291746,
+      "near_optimal_retention_probability": 0.7,
+      "observed_candidates": 5,
+      "policy": "uniform_random",
+      "shape": [
+        4,
+        512,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.6,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 2,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4_groupedn2@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 5,
+      "policy": "training_only_fixed_order",
+      "selected_candidates": [
+        "splitk4_groupedn2@prepared",
+        "splitk4@prepared"
+      ],
+      "shape": [
+        4,
+        512,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.4,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 3,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4_groupedn2@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 5,
+      "policy": "regime_max",
+      "selected_candidates": [
+        "splitk4_groupedn2@prepared",
+        "splitk2_groupedn2@prepared",
+        "splitk2@prepared"
+      ],
+      "shape": [
+        4,
+        512,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.4,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 3,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4_groupedn2@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 5,
+      "policy": "residual_depth",
+      "selected_candidates": [
+        "splitk4_groupedn2@prepared",
+        "splitk2_groupedn2@prepared",
+        "splitk2@prepared"
+      ],
+      "shape": [
+        4,
+        512,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.4,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 3,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4_groupedn2@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 5,
+      "policy": "row_service",
+      "selected_candidates": [
+        "splitk4_groupedn2@prepared",
+        "splitk2_groupedn2@prepared",
+        "splitk2@prepared"
+      ],
+      "shape": [
+        4,
+        512,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.4,
+      "evaluated_candidates": 3,
+      "expectation_is_over_random_subsets_not_model_confidence": true,
+      "expected_choice_loss_fraction": 0.042431752116529386,
+      "near_optimal_retention_probability": 0.9,
+      "observed_candidates": 5,
+      "policy": "uniform_random",
+      "shape": [
+        4,
+        512,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.4,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 3,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4_groupedn2@prepared",
+      "near_optimal_retained": true,
+      "observed_candidates": 5,
+      "policy": "training_only_fixed_order",
+      "selected_candidates": [
+        "splitk4_groupedn2@prepared",
+        "splitk4@prepared",
+        "splitk2_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        512,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.8,
+      "choice_loss_fraction": 0.3835004155515702,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4@prepared",
+      "near_optimal_retained": false,
+      "observed_candidates": 5,
+      "policy": "always_splitk4",
+      "selected_candidates": [
+        "splitk4@prepared"
+      ],
+      "shape": [
+        4,
+        512,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.875,
+      "choice_loss_fraction": 0.022918288761499817,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cutlass@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 8,
+      "policy": "regime_max",
+      "selected_candidates": [
+        "host_merged_cutlass@merged"
+      ],
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.875,
+      "choice_loss_fraction": 0.022918288761499817,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cutlass@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 8,
+      "policy": "residual_depth",
+      "selected_candidates": [
+        "host_merged_cutlass@merged"
+      ],
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.875,
+      "choice_loss_fraction": 0.022918288761499817,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cutlass@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 8,
+      "policy": "row_service",
+      "selected_candidates": [
+        "host_merged_cutlass@merged"
+      ],
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.875,
+      "evaluated_candidates": 1,
+      "expectation_is_over_random_subsets_not_model_confidence": true,
+      "expected_choice_loss_fraction": 0.3384168119201132,
+      "near_optimal_retention_probability": 0.25,
+      "observed_candidates": 8,
+      "policy": "uniform_random",
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.875,
+      "choice_loss_fraction": 0.13756775553825307,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4_groupedn2@prepared",
+      "near_optimal_retained": false,
+      "observed_candidates": 8,
+      "policy": "training_only_fixed_order",
+      "selected_candidates": [
+        "splitk4_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.875,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 8,
+      "policy": "protected_host_plus_regime",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged"
+      ],
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.75,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 2,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 8,
+      "policy": "regime_max",
+      "selected_candidates": [
+        "host_merged_cutlass@merged",
+        "host_merged_cublaslt@merged"
+      ],
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.75,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 2,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 8,
+      "policy": "residual_depth",
+      "selected_candidates": [
+        "host_merged_cutlass@merged",
+        "host_merged_cublaslt@merged"
+      ],
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.75,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 2,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 8,
+      "policy": "row_service",
+      "selected_candidates": [
+        "host_merged_cutlass@merged",
+        "host_merged_cublaslt@merged"
+      ],
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.75,
+      "evaluated_candidates": 2,
+      "expectation_is_over_random_subsets_not_model_confidence": true,
+      "expected_choice_loss_fraction": 0.1698342671334938,
+      "near_optimal_retention_probability": 0.4642857142857143,
+      "observed_candidates": 8,
+      "policy": "uniform_random",
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.75,
+      "choice_loss_fraction": 0.13756775553825307,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 2,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4_groupedn2@prepared",
+      "near_optimal_retained": false,
+      "observed_candidates": 8,
+      "policy": "training_only_fixed_order",
+      "selected_candidates": [
+        "splitk4_groupedn2@prepared",
+        "splitk4@prepared"
+      ],
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ]
+    },
+    {
+      "budget": 2,
+      "candidate_count_reduction": 0.75,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 2,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 8,
+      "policy": "protected_host_plus_regime",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged",
+        "host_merged_cutlass@merged"
+      ],
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.625,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 3,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 8,
+      "policy": "regime_max",
+      "selected_candidates": [
+        "host_merged_cutlass@merged",
+        "host_merged_cublaslt@merged",
+        "splitk4_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.625,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 3,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 8,
+      "policy": "residual_depth",
+      "selected_candidates": [
+        "host_merged_cutlass@merged",
+        "host_merged_cublaslt@merged",
+        "splitk4_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.625,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 3,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 8,
+      "policy": "row_service",
+      "selected_candidates": [
+        "host_merged_cutlass@merged",
+        "host_merged_cublaslt@merged",
+        "splitk4_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.625,
+      "evaluated_candidates": 3,
+      "expectation_is_over_random_subsets_not_model_confidence": true,
+      "expected_choice_loss_fraction": 0.08684982770650551,
+      "near_optimal_retention_probability": 0.6428571428571428,
+      "observed_candidates": 8,
+      "policy": "uniform_random",
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.625,
+      "choice_loss_fraction": 0.13756775553825307,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 3,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4_groupedn2@prepared",
+      "near_optimal_retained": false,
+      "observed_candidates": 8,
+      "policy": "training_only_fixed_order",
+      "selected_candidates": [
+        "splitk4_groupedn2@prepared",
+        "splitk4@prepared",
+        "splitk2_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ]
+    },
+    {
+      "budget": 3,
+      "candidate_count_reduction": 0.625,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 3,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 8,
+      "policy": "protected_host_plus_regime",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged",
+        "host_merged_cutlass@merged",
+        "splitk4_groupedn2@prepared"
+      ],
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.875,
+      "choice_loss_fraction": 0.6429070448509708,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "splitk4@prepared",
+      "near_optimal_retained": false,
+      "observed_candidates": 8,
+      "policy": "always_splitk4",
+      "selected_candidates": [
+        "splitk4@prepared"
+      ],
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "candidate_count_reduction": 0.875,
+      "choice_loss_fraction": 0.0,
+      "deployment_policy_validated": false,
+      "evaluated_candidates": 1,
+      "full_candidate_oracle": false,
+      "ideal_measured_subset_choice": "host_merged_cublaslt@merged",
+      "near_optimal_retained": true,
+      "observed_candidates": 8,
+      "policy": "always_merged_cublaslt",
+      "selected_candidates": [
+        "host_merged_cublaslt@merged"
+      ],
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ]
+    }
+  ],
+  "quality_excluded": [
+    {
+      "candidate_id": "host_merged_cutlass@merged",
+      "quality_flags": [
+        "within_process_drift"
+      ],
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ]
+    },
+    {
+      "candidate_id": "splitk2@prepared",
+      "quality_flags": [
+        "within_process_drift"
+      ],
+      "shape": [
+        4,
+        64,
+        1024,
+        512
+      ]
+    },
+    {
+      "candidate_id": "host@prepared",
+      "quality_flags": [
+        "within_process_drift"
+      ],
+      "shape": [
+        4,
+        64,
+        3072,
+        512
+      ]
+    },
+    {
+      "candidate_id": "host_merged_cutlass@merged",
+      "quality_flags": [
+        "within_process_drift",
+        "between_process_spread"
+      ],
+      "shape": [
+        4,
+        64,
+        1024,
+        512
+      ]
+    },
+    {
+      "candidate_id": "host_compiler_cublas@prepared",
+      "quality_flags": [
+        "within_process_drift"
+      ],
+      "shape": [
+        4,
+        64,
+        1024,
+        512
+      ]
+    },
+    {
+      "candidate_id": "host@prepared",
+      "quality_flags": [
+        "within_process_drift",
+        "between_process_spread"
+      ],
+      "shape": [
+        4,
+        64,
+        1024,
+        512
+      ]
+    }
+  ],
+  "schema": "edmir.candidate-budget-results.v1",
+  "summary": [
+    {
+      "budget": 1,
+      "covered_shapes": 5,
+      "macro_candidate_count_reduction": 0.8564285714285715,
+      "macro_mean_loss": 0.0,
+      "macro_near_optimal_retention": 1.0,
+      "max_shape_loss_or_max_shape_expected_loss": 0.0,
+      "mean_candidates_evaluated": 1.0,
+      "policy": "always_merged_cublaslt",
+      "random_expectation_not_realized_worst_case": false,
+      "shape_list": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "total_shapes": 10
+    },
+    {
+      "budget": 1,
+      "covered_shapes": 10,
+      "macro_candidate_count_reduction": 0.8232142857142858,
+      "macro_mean_loss": 0.5187957921795336,
+      "macro_near_optimal_retention": 0.2,
+      "max_shape_loss_or_max_shape_expected_loss": 1.2535574908082472,
+      "mean_candidates_evaluated": 1.0,
+      "policy": "always_splitk4",
+      "random_expectation_not_realized_worst_case": false,
+      "shape_list": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          3072,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "total_shapes": 10
+    },
+    {
+      "budget": 1,
+      "covered_shapes": 5,
+      "macro_candidate_count_reduction": 0.8564285714285715,
+      "macro_mean_loss": 0.0,
+      "macro_near_optimal_retention": 1.0,
+      "max_shape_loss_or_max_shape_expected_loss": 0.0,
+      "mean_candidates_evaluated": 1.0,
+      "policy": "protected_host_plus_regime",
+      "random_expectation_not_realized_worst_case": false,
+      "shape_list": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "total_shapes": 10
+    },
+    {
+      "budget": 2,
+      "covered_shapes": 5,
+      "macro_candidate_count_reduction": 0.7128571428571429,
+      "macro_mean_loss": 0.0,
+      "macro_near_optimal_retention": 1.0,
+      "max_shape_loss_or_max_shape_expected_loss": 0.0,
+      "mean_candidates_evaluated": 2.0,
+      "policy": "protected_host_plus_regime",
+      "random_expectation_not_realized_worst_case": false,
+      "shape_list": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "total_shapes": 10
+    },
+    {
+      "budget": 3,
+      "covered_shapes": 5,
+      "macro_candidate_count_reduction": 0.5692857142857143,
+      "macro_mean_loss": 0.0,
+      "macro_near_optimal_retention": 1.0,
+      "max_shape_loss_or_max_shape_expected_loss": 0.0,
+      "mean_candidates_evaluated": 3.0,
+      "policy": "protected_host_plus_regime",
+      "random_expectation_not_realized_worst_case": false,
+      "shape_list": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "total_shapes": 10
+    },
+    {
+      "budget": 1,
+      "covered_shapes": 10,
+      "macro_candidate_count_reduction": 0.8232142857142858,
+      "macro_mean_loss": 0.0022918288761499817,
+      "macro_near_optimal_retention": 1.0,
+      "max_shape_loss_or_max_shape_expected_loss": 0.022918288761499817,
+      "mean_candidates_evaluated": 1.0,
+      "policy": "regime_max",
+      "random_expectation_not_realized_worst_case": false,
+      "shape_list": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          3072,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "total_shapes": 10
+    },
+    {
+      "budget": 2,
+      "covered_shapes": 10,
+      "macro_candidate_count_reduction": 0.6464285714285715,
+      "macro_mean_loss": 0.0,
+      "macro_near_optimal_retention": 1.0,
+      "max_shape_loss_or_max_shape_expected_loss": 0.0,
+      "mean_candidates_evaluated": 2.0,
+      "policy": "regime_max",
+      "random_expectation_not_realized_worst_case": false,
+      "shape_list": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          3072,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "total_shapes": 10
+    },
+    {
+      "budget": 3,
+      "covered_shapes": 10,
+      "macro_candidate_count_reduction": 0.46964285714285714,
+      "macro_mean_loss": 0.0,
+      "macro_near_optimal_retention": 1.0,
+      "max_shape_loss_or_max_shape_expected_loss": 0.0,
+      "mean_candidates_evaluated": 3.0,
+      "policy": "regime_max",
+      "random_expectation_not_realized_worst_case": false,
+      "shape_list": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          3072,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "total_shapes": 10
+    },
+    {
+      "budget": 1,
+      "covered_shapes": 10,
+      "macro_candidate_count_reduction": 0.8232142857142858,
+      "macro_mean_loss": 0.012501995568316349,
+      "macro_near_optimal_retention": 0.9,
+      "max_shape_loss_or_max_shape_expected_loss": 0.09021231483338621,
+      "mean_candidates_evaluated": 1.0,
+      "policy": "residual_depth",
+      "random_expectation_not_realized_worst_case": false,
+      "shape_list": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          3072,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "total_shapes": 10
+    },
+    {
+      "budget": 2,
+      "covered_shapes": 10,
+      "macro_candidate_count_reduction": 0.6464285714285715,
+      "macro_mean_loss": 0.0,
+      "macro_near_optimal_retention": 1.0,
+      "max_shape_loss_or_max_shape_expected_loss": 0.0,
+      "mean_candidates_evaluated": 2.0,
+      "policy": "residual_depth",
+      "random_expectation_not_realized_worst_case": false,
+      "shape_list": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          3072,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "total_shapes": 10
+    },
+    {
+      "budget": 3,
+      "covered_shapes": 10,
+      "macro_candidate_count_reduction": 0.46964285714285714,
+      "macro_mean_loss": 0.0,
+      "macro_near_optimal_retention": 1.0,
+      "max_shape_loss_or_max_shape_expected_loss": 0.0,
+      "mean_candidates_evaluated": 3.0,
+      "policy": "residual_depth",
+      "random_expectation_not_realized_worst_case": false,
+      "shape_list": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          3072,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "total_shapes": 10
+    },
+    {
+      "budget": 1,
+      "covered_shapes": 10,
+      "macro_candidate_count_reduction": 0.8232142857142858,
+      "macro_mean_loss": 0.003480764084977728,
+      "macro_near_optimal_retention": 1.0,
+      "max_shape_loss_or_max_shape_expected_loss": 0.022918288761499817,
+      "mean_candidates_evaluated": 1.0,
+      "policy": "row_service",
+      "random_expectation_not_realized_worst_case": false,
+      "shape_list": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          3072,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "total_shapes": 10
+    },
+    {
+      "budget": 2,
+      "covered_shapes": 10,
+      "macro_candidate_count_reduction": 0.6464285714285715,
+      "macro_mean_loss": 0.0,
+      "macro_near_optimal_retention": 1.0,
+      "max_shape_loss_or_max_shape_expected_loss": 0.0,
+      "mean_candidates_evaluated": 2.0,
+      "policy": "row_service",
+      "random_expectation_not_realized_worst_case": false,
+      "shape_list": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          3072,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "total_shapes": 10
+    },
+    {
+      "budget": 3,
+      "covered_shapes": 10,
+      "macro_candidate_count_reduction": 0.46964285714285714,
+      "macro_mean_loss": 0.0,
+      "macro_near_optimal_retention": 1.0,
+      "max_shape_loss_or_max_shape_expected_loss": 0.0,
+      "mean_candidates_evaluated": 3.0,
+      "policy": "row_service",
+      "random_expectation_not_realized_worst_case": false,
+      "shape_list": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          3072,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "total_shapes": 10
+    },
+    {
+      "budget": 1,
+      "covered_shapes": 10,
+      "macro_candidate_count_reduction": 0.8232142857142858,
+      "macro_mean_loss": 0.3902298023167905,
+      "macro_near_optimal_retention": 0.3,
+      "max_shape_loss_or_max_shape_expected_loss": 1.3823357801350822,
+      "mean_candidates_evaluated": 1.0,
+      "policy": "training_only_fixed_order",
+      "random_expectation_not_realized_worst_case": false,
+      "shape_list": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          3072,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "total_shapes": 10
+    },
+    {
+      "budget": 2,
+      "covered_shapes": 10,
+      "macro_candidate_count_reduction": 0.6464285714285715,
+      "macro_mean_loss": 0.3222278826226934,
+      "macro_near_optimal_retention": 0.4,
+      "max_shape_loss_or_max_shape_expected_loss": 1.0180066203112061,
+      "mean_candidates_evaluated": 2.0,
+      "policy": "training_only_fixed_order",
+      "random_expectation_not_realized_worst_case": false,
+      "shape_list": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          3072,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "total_shapes": 10
+    },
+    {
+      "budget": 3,
+      "covered_shapes": 10,
+      "macro_candidate_count_reduction": 0.46964285714285714,
+      "macro_mean_loss": 0.32180640820030887,
+      "macro_near_optimal_retention": 0.4,
+      "max_shape_loss_or_max_shape_expected_loss": 1.0180066203112061,
+      "mean_candidates_evaluated": 3.0,
+      "policy": "training_only_fixed_order",
+      "random_expectation_not_realized_worst_case": false,
+      "shape_list": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          3072,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "total_shapes": 10
+    },
+    {
+      "budget": 1,
+      "covered_shapes": 10,
+      "macro_candidate_count_reduction": 0.8232142857142858,
+      "macro_mean_loss": 0.4318259754953317,
+      "macro_near_optimal_retention": 0.2692857142857143,
+      "max_shape_loss_or_max_shape_expected_loss": 1.1210806818408225,
+      "mean_candidates_evaluated": 1.0,
+      "policy": "uniform_random",
+      "random_expectation_not_realized_worst_case": true,
+      "shape_list": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          3072,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "total_shapes": 10
+    },
+    {
+      "budget": 2,
+      "covered_shapes": 10,
+      "macro_candidate_count_reduction": 0.6464285714285715,
+      "macro_mean_loss": 0.24510861673092316,
+      "macro_near_optimal_retention": 0.485,
+      "max_shape_loss_or_max_shape_expected_loss": 0.6470252083513199,
+      "mean_candidates_evaluated": 2.0,
+      "policy": "uniform_random",
+      "random_expectation_not_realized_worst_case": true,
+      "shape_list": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          3072,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "total_shapes": 10
+    },
+    {
+      "budget": 3,
+      "covered_shapes": 10,
+      "macro_candidate_count_reduction": 0.46964285714285714,
+      "macro_mean_loss": 0.1469789513484468,
+      "macro_near_optimal_retention": 0.6571428571428571,
+      "max_shape_loss_or_max_shape_expected_loss": 0.43947615530502504,
+      "mean_candidates_evaluated": 3.0,
+      "policy": "uniform_random",
+      "random_expectation_not_realized_worst_case": true,
+      "shape_list": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          3072,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "total_shapes": 10
+    }
+  ],
+  "training_only_baseline_folds": [
+    {
+      "eligibility": "observed in every training shape; test availability is not imputed",
+      "held_out_shape": [
+        4,
+        64,
+        1024,
+        512
+      ],
+      "mean_log_relative_cost": {
+        "splitk2@prepared": 0.45065664651512294,
+        "splitk2_groupedn2@prepared": 0.44734878090013175,
+        "splitk4@prepared": 0.37032831782093684,
+        "splitk4_groupedn2@prepared": 0.24898102607943906
+      },
+      "order": [
+        "splitk4_groupedn2@prepared",
+        "splitk4@prepared",
+        "splitk2_groupedn2@prepared",
+        "splitk2@prepared"
+      ],
+      "training_shapes": [
+        [
+          4,
+          64,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          3072,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ]
+    },
+    {
+      "eligibility": "observed in every training shape; test availability is not imputed",
+      "held_out_shape": [
+        4,
+        64,
+        3072,
+        512
+      ],
+      "mean_log_relative_cost": {
+        "splitk2_groupedn2@prepared": 0.4691981601050759,
+        "splitk4@prepared": 0.42539581356186495,
+        "splitk4_groupedn2@prepared": 0.29985589558175285
+      },
+      "order": [
+        "splitk4_groupedn2@prepared",
+        "splitk4@prepared",
+        "splitk2_groupedn2@prepared"
+      ],
+      "training_shapes": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          3072,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ]
+    },
+    {
+      "eligibility": "observed in every training shape; test availability is not imputed",
+      "held_out_shape": [
+        4,
+        64,
+        3072,
+        1536
+      ],
+      "mean_log_relative_cost": {
+        "splitk2_groupedn2@prepared": 0.47789766943988354,
+        "splitk4@prepared": 0.414002958726002,
+        "splitk4_groupedn2@prepared": 0.30494171802158776
+      },
+      "order": [
+        "splitk4_groupedn2@prepared",
+        "splitk4@prepared",
+        "splitk2_groupedn2@prepared"
+      ],
+      "training_shapes": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          3072,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ]
+    },
+    {
+      "eligibility": "observed in every training shape; test availability is not imputed",
+      "held_out_shape": [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      "mean_log_relative_cost": {
+        "splitk2_groupedn2@prepared": 0.4094355178238108,
+        "splitk4@prepared": 0.33511691638314517,
+        "splitk4_groupedn2@prepared": 0.24430622522447307
+      },
+      "order": [
+        "splitk4_groupedn2@prepared",
+        "splitk4@prepared",
+        "splitk2_groupedn2@prepared"
+      ],
+      "training_shapes": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          3072,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ]
+    },
+    {
+      "eligibility": "observed in every training shape; test availability is not imputed",
+      "held_out_shape": [
+        4,
+        64,
+        8192,
+        512
+      ],
+      "mean_log_relative_cost": {
+        "splitk2_groupedn2@prepared": 0.363917666804703,
+        "splitk4@prepared": 0.3473835688334239,
+        "splitk4_groupedn2@prepared": 0.2180851663431025
+      },
+      "order": [
+        "splitk4_groupedn2@prepared",
+        "splitk4@prepared",
+        "splitk2_groupedn2@prepared"
+      ],
+      "training_shapes": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          3072,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ]
+    },
+    {
+      "eligibility": "observed in every training shape; test availability is not imputed",
+      "held_out_shape": [
+        4,
+        192,
+        3072,
+        512
+      ],
+      "mean_log_relative_cost": {
+        "splitk2_groupedn2@prepared": 0.48691470279236376,
+        "splitk4@prepared": 0.42539581356186495,
+        "splitk4_groupedn2@prepared": 0.313225410523516
+      },
+      "order": [
+        "splitk4_groupedn2@prepared",
+        "splitk4@prepared",
+        "splitk2_groupedn2@prepared"
+      ],
+      "training_shapes": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          3072,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ]
+    },
+    {
+      "eligibility": "observed in every training shape; test availability is not imputed",
+      "held_out_shape": [
+        4,
+        192,
+        3072,
+        1536
+      ],
+      "mean_log_relative_cost": {
+        "splitk2_groupedn2@prepared": 0.5060316374274288,
+        "splitk4@prepared": 0.38548620458605193,
+        "splitk4_groupedn2@prepared": 0.3117394455305608
+      },
+      "order": [
+        "splitk4_groupedn2@prepared",
+        "splitk4@prepared",
+        "splitk2_groupedn2@prepared"
+      ],
+      "training_shapes": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          3072,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ]
+    },
+    {
+      "eligibility": "observed in every training shape; test availability is not imputed",
+      "held_out_shape": [
+        4,
+        256,
+        8192,
+        512
+      ],
+      "mean_log_relative_cost": {
+        "splitk2_groupedn2@prepared": 0.4233422830763676,
+        "splitk4@prepared": 0.3658926660804973,
+        "splitk4_groupedn2@prepared": 0.27495710174051724
+      },
+      "order": [
+        "splitk4_groupedn2@prepared",
+        "splitk4@prepared",
+        "splitk2_groupedn2@prepared"
+      ],
+      "training_shapes": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          512,
+          3072,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ]
+    },
+    {
+      "eligibility": "observed in every training shape; test availability is not imputed",
+      "held_out_shape": [
+        4,
+        512,
+        3072,
+        512
+      ],
+      "mean_log_relative_cost": {
+        "splitk2_groupedn2@prepared": 0.5047531330940456,
+        "splitk4@prepared": 0.38932727793882765,
+        "splitk4_groupedn2@prepared": 0.31453865819090737
+      },
+      "order": [
+        "splitk4_groupedn2@prepared",
+        "splitk4@prepared",
+        "splitk2_groupedn2@prepared"
+      ],
+      "training_shapes": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ]
+    },
+    {
+      "eligibility": "observed in every training shape; test availability is not imputed",
+      "held_out_shape": [
+        4,
+        512,
+        4096,
+        512
+      ],
+      "mean_log_relative_cost": {
+        "splitk2_groupedn2@prepared": 0.48651974163414624,
+        "splitk4@prepared": 0.3702327845641701,
+        "splitk4_groupedn2@prepared": 0.30021727648230956
+      },
+      "order": [
+        "splitk4_groupedn2@prepared",
+        "splitk4@prepared",
+        "splitk2_groupedn2@prepared"
+      ],
+      "training_shapes": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          3072,
+          512
+        ]
+      ]
+    }
+  ],
+  "unavailable_policy_cases": [
+    {
+      "budget": 1,
+      "policy": "protected_host_plus_regime",
+      "reason": "missing measured stable candidate; no replacement or imputation",
+      "required_candidates": [
+        "host_merged_cublaslt@merged"
+      ],
+      "shape": [
+        4,
+        64,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 2,
+      "policy": "protected_host_plus_regime",
+      "reason": "missing measured stable candidate; no replacement or imputation",
+      "required_candidates": [
+        "host_merged_cublaslt@merged"
+      ],
+      "shape": [
+        4,
+        64,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 3,
+      "policy": "protected_host_plus_regime",
+      "reason": "missing measured stable candidate; no replacement or imputation",
+      "required_candidates": [
+        "host_merged_cublaslt@merged"
+      ],
+      "shape": [
+        4,
+        64,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "policy": "always_merged_cublaslt",
+      "reason": "missing measured stable candidate; no replacement or imputation",
+      "required_candidates": [
+        "host_merged_cublaslt@merged"
+      ],
+      "shape": [
+        4,
+        64,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "policy": "protected_host_plus_regime",
+      "reason": "missing measured stable candidate; no replacement or imputation",
+      "required_candidates": [
+        "host_merged_cublaslt@merged"
+      ],
+      "shape": [
+        4,
+        64,
+        3072,
+        1536
+      ]
+    },
+    {
+      "budget": 2,
+      "policy": "protected_host_plus_regime",
+      "reason": "missing measured stable candidate; no replacement or imputation",
+      "required_candidates": [
+        "host_merged_cublaslt@merged"
+      ],
+      "shape": [
+        4,
+        64,
+        3072,
+        1536
+      ]
+    },
+    {
+      "budget": 3,
+      "policy": "protected_host_plus_regime",
+      "reason": "missing measured stable candidate; no replacement or imputation",
+      "required_candidates": [
+        "host_merged_cublaslt@merged"
+      ],
+      "shape": [
+        4,
+        64,
+        3072,
+        1536
+      ]
+    },
+    {
+      "budget": 1,
+      "policy": "always_merged_cublaslt",
+      "reason": "missing measured stable candidate; no replacement or imputation",
+      "required_candidates": [
+        "host_merged_cublaslt@merged"
+      ],
+      "shape": [
+        4,
+        64,
+        3072,
+        1536
+      ]
+    },
+    {
+      "budget": 1,
+      "policy": "protected_host_plus_regime",
+      "reason": "missing measured stable candidate; no replacement or imputation",
+      "required_candidates": [
+        "host_merged_cublaslt@merged"
+      ],
+      "shape": [
+        4,
+        192,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 2,
+      "policy": "protected_host_plus_regime",
+      "reason": "missing measured stable candidate; no replacement or imputation",
+      "required_candidates": [
+        "host_merged_cublaslt@merged"
+      ],
+      "shape": [
+        4,
+        192,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 3,
+      "policy": "protected_host_plus_regime",
+      "reason": "missing measured stable candidate; no replacement or imputation",
+      "required_candidates": [
+        "host_merged_cublaslt@merged"
+      ],
+      "shape": [
+        4,
+        192,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "policy": "always_merged_cublaslt",
+      "reason": "missing measured stable candidate; no replacement or imputation",
+      "required_candidates": [
+        "host_merged_cublaslt@merged"
+      ],
+      "shape": [
+        4,
+        192,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "policy": "protected_host_plus_regime",
+      "reason": "missing measured stable candidate; no replacement or imputation",
+      "required_candidates": [
+        "host_merged_cublaslt@merged"
+      ],
+      "shape": [
+        4,
+        192,
+        3072,
+        1536
+      ]
+    },
+    {
+      "budget": 2,
+      "policy": "protected_host_plus_regime",
+      "reason": "missing measured stable candidate; no replacement or imputation",
+      "required_candidates": [
+        "host_merged_cublaslt@merged"
+      ],
+      "shape": [
+        4,
+        192,
+        3072,
+        1536
+      ]
+    },
+    {
+      "budget": 3,
+      "policy": "protected_host_plus_regime",
+      "reason": "missing measured stable candidate; no replacement or imputation",
+      "required_candidates": [
+        "host_merged_cublaslt@merged"
+      ],
+      "shape": [
+        4,
+        192,
+        3072,
+        1536
+      ]
+    },
+    {
+      "budget": 1,
+      "policy": "always_merged_cublaslt",
+      "reason": "missing measured stable candidate; no replacement or imputation",
+      "required_candidates": [
+        "host_merged_cublaslt@merged"
+      ],
+      "shape": [
+        4,
+        192,
+        3072,
+        1536
+      ]
+    },
+    {
+      "budget": 1,
+      "policy": "protected_host_plus_regime",
+      "reason": "missing measured stable candidate; no replacement or imputation",
+      "required_candidates": [
+        "host_merged_cublaslt@merged"
+      ],
+      "shape": [
+        4,
+        512,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 2,
+      "policy": "protected_host_plus_regime",
+      "reason": "missing measured stable candidate; no replacement or imputation",
+      "required_candidates": [
+        "host_merged_cublaslt@merged"
+      ],
+      "shape": [
+        4,
+        512,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 3,
+      "policy": "protected_host_plus_regime",
+      "reason": "missing measured stable candidate; no replacement or imputation",
+      "required_candidates": [
+        "host_merged_cublaslt@merged"
+      ],
+      "shape": [
+        4,
+        512,
+        3072,
+        512
+      ]
+    },
+    {
+      "budget": 1,
+      "policy": "always_merged_cublaslt",
+      "reason": "missing measured stable candidate; no replacement or imputation",
+      "required_candidates": [
+        "host_merged_cublaslt@merged"
+      ],
+      "shape": [
+        4,
+        512,
+        3072,
+        512
+      ]
+    }
+  ]
+}

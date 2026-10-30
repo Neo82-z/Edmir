@@ -1,0 +1,2089 @@
+{
+  "axis": "shape",
+  "held_out": [
+    4,
+    512,
+    4096,
+    512
+  ],
+  "model": {
+    "schema": "edmir.retained-regime.v1",
+    "variant": "retained_0",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "models": {
+      "fused": {
+        "coefficients_us": [
+          194.32924050213205,
+          76.56610319147218,
+          23.30160152883891,
+          0.0,
+          31.843396175426182,
+          1.253117087346247,
+          460.7362971416845,
+          49.309462660755244
+        ],
+        "training_scales": [
+          1.0,
+          0.6272395771788377,
+          0.7161148740394329,
+          0.7251444521278229,
+          3.1008683647302115,
+          1.5012014419226918,
+          0.8861469461982083,
+          7.34301517054621
+        ],
+        "objective_us2": 6650.650963349352,
+        "kkt_relative_violation": 2.901468824318167e-16,
+        "unregularized_rank": 8,
+        "feature_count": 8,
+        "ridge": 1e-06,
+        "names": [
+          "fixed",
+          "grouped_partition_depth_64",
+          "dynamic_smem_optins_over_16",
+          "SM_spread_deficit",
+          "ordered_epilogue_boundaries",
+          "extra_serial_output_MiB",
+          "latency_depth_64",
+          "throughput_logical_A_MiB"
+        ],
+        "training_shapes": [
+          [
+            4,
+            64,
+            1024,
+            512
+          ],
+          [
+            4,
+            64,
+            3072,
+            512
+          ],
+          [
+            4,
+            64,
+            3072,
+            1536
+          ],
+          [
+            4,
+            64,
+            4096,
+            2048
+          ],
+          [
+            4,
+            64,
+            8192,
+            512
+          ],
+          [
+            4,
+            192,
+            3072,
+            512
+          ],
+          [
+            4,
+            192,
+            3072,
+            1536
+          ],
+          [
+            4,
+            256,
+            8192,
+            512
+          ],
+          [
+            4,
+            512,
+            3072,
+            512
+          ]
+        ],
+        "config_ids": [
+          "0584b8531e9e8d64206b099aa1aa694fdd9083561f040d40344565a0d4ab02eb",
+          "05a18b400fc2bbc92ef7020723561b4f865d9e87bebcab90420fdbc13b0570c8",
+          "0c5f0fed104b013aa919794eb322cc35116c914a2bad733964faa2ca0f2889a8",
+          "0c9404ea9dd0ac03d93b3fb9a172913d4d6460a92e49bfebb999a433d9fdbcee",
+          "0e00ffbbc35335459f11a56852092d427f69f22b65caa1902218e59f16012cd9",
+          "16e87d4223ca0a53fe8ade581c0fa2e7f0a67daf798d5e3a4677189f72ace842",
+          "20dfbb56745f2f06896db0b68c936ba1c20c795e7ffc9483d811e11e40eed9dc",
+          "24bb96d632ffc02ae4927433266e119096930613c09e90b31506a75ffb8c5a8a",
+          "357279e5d20c7de901ef736f231e29d521af2c4a993c80525a7958f56442cff8",
+          "379959166e1e1b1e9f3b9b3e5ec2938ab7c4b977d3c7601fcc9d0051d062b7fd",
+          "385f868ef19039f6b49d3cd0f4d109fe7905ec01167e46dc602f83b12d78f31e",
+          "3ba6e3f9962dbe04d02ac9cf63f31fb57f70ffe82f89ce225d0c01179708ff49",
+          "42f29d0dcd3544c980a25a350f4a02afe5900ca9a5bf6ddd452088da256720f9",
+          "44d43f75c58a2e949c3aeb5a94aed3fbadb2d0c89f26ea79d66a3868846daaa3",
+          "4721cadaecefe3f5b43fd60f64b91594d6b8ee3f5ed6c293155c4f553a42cec7",
+          "51164340d38dd7b02978798df84ec4a6c88ba2f5430e4bf0909f1cce951bc6f3",
+          "57ec2cc034c7f7ed12d3fb400147e778ae06cf94aa116639be402129cedc8c25",
+          "57f7c9110dc0100ab17040e1ded9e8c832a5872c21dd35cb990d0965e0c90f7b",
+          "615f899c90116440ee674f7c978f050b6d04c53cc1c892a05d9d4a4139fb285a",
+          "6187d0570cd833960e6b65f1512a51fb2d6d9a9303e2598422586ac09784ecf1",
+          "6bd5510f13f3a9741d2ec21b708ac8ebeba6525c52a3af72713fe9aef9b39a6c",
+          "6be5898c07de5a61f8de8d1c9e401edfb93a001055f62ee0e58a52efe06829f8",
+          "6bede1b9a83cd7492a88773132cccbcb3a7d47edf4260fd07d6f0d23f4709c2d",
+          "7243723b0fd38c2bee898d3744092ac18cf78a9ba62892db8d1df7b6d9795d6d",
+          "8bb5966bb9709a393a5b45e327e8b34276bc1a45b57773a1662f5387d2a699a5",
+          "9137b6dfb622aafe6157abe64831f3e51ea8b5051d2b98ed5ebe1a8f5b18bae0",
+          "9772bec9ff8bb5c85a7ff059ceaaa5c3f381e758bb65f2aa1da08b6e6ee8f667",
+          "97cf344f698a9d3e2e32e01bffbdb408f6a142dfc2a9d9c5bfdd8b03ef413727",
+          "9ab58cd593577addd1ff4b5c00a1cc6fe01bfefe44d8527ecf56d90b5a7b0724",
+          "9e08915e02bf94f98423f0414ae5ff7f6c0417236810a55d8f5fffe7e9244890",
+          "b51e85d04e1c453433d9056e7f3763534e3e854f3d107d02feb015db560ccb1a",
+          "b53794a42545d3ab62858b6ac2f9e628831f9a69ec614aedea4658acb4669284",
+          "c9d7ff01e98490c1d12ab2f064633f1e79001d15d03ba9bd67d1ec3c100fe15f",
+          "d1979f4cb6922f6376773ce9f2271eb9ef411b441d79a4cda47d01f2cafc95ec",
+          "d26dfdf2c04c9d494f3246ab1122d3ec152b690177d217b403bb6b3c8f4e625d",
+          "eb38ea8ac3a18cc877a2ce4884cad135b4c18deefe022b5a2add8a1dfd3d1941",
+          "f0e6afc0312485d7c503c3c9d2b82b2b28c2a896a2da6a7d0ad1163274db3d8d",
+          "f64be5045b327833707bb444def427095681f8c1785da4d6b5d45c0c50b93674",
+          "fba81d6bcc508535e94f551e94665e76efe8f0ecc4ff573be949b70059c742b7"
+        ],
+        "families": [
+          "splitk2",
+          "splitk2_groupedn2",
+          "splitk4",
+          "splitk4_groupedn2",
+          "splitk8",
+          "splitk8_groupedn2"
+        ],
+        "family_shapes": {
+          "splitk2": [
+            [
+              4,
+              64,
+              3072,
+              512
+            ],
+            [
+              4,
+              64,
+              3072,
+              1536
+            ],
+            [
+              4,
+              64,
+              4096,
+              2048
+            ],
+            [
+              4,
+              64,
+              8192,
+              512
+            ],
+            [
+              4,
+              192,
+              3072,
+              512
+            ],
+            [
+              4,
+              192,
+              3072,
+              1536
+            ],
+            [
+              4,
+              256,
+              8192,
+              512
+            ],
+            [
+              4,
+              512,
+              3072,
+              512
+            ]
+          ],
+          "splitk2_groupedn2": [
+            [
+              4,
+              64,
+              1024,
+              512
+            ],
+            [
+              4,
+              64,
+              3072,
+              512
+            ],
+            [
+              4,
+              64,
+              3072,
+              1536
+            ],
+            [
+              4,
+              64,
+              4096,
+              2048
+            ],
+            [
+              4,
+              64,
+              8192,
+              512
+            ],
+            [
+              4,
+              192,
+              3072,
+              512
+            ],
+            [
+              4,
+              192,
+              3072,
+              1536
+            ],
+            [
+              4,
+              256,
+              8192,
+              512
+            ],
+            [
+              4,
+              512,
+              3072,
+              512
+            ]
+          ],
+          "splitk4": [
+            [
+              4,
+              64,
+              1024,
+              512
+            ],
+            [
+              4,
+              64,
+              3072,
+              512
+            ],
+            [
+              4,
+              64,
+              3072,
+              1536
+            ],
+            [
+              4,
+              64,
+              4096,
+              2048
+            ],
+            [
+              4,
+              64,
+              8192,
+              512
+            ],
+            [
+              4,
+              192,
+              3072,
+              512
+            ],
+            [
+              4,
+              192,
+              3072,
+              1536
+            ],
+            [
+              4,
+              256,
+              8192,
+              512
+            ],
+            [
+              4,
+              512,
+              3072,
+              512
+            ]
+          ],
+          "splitk4_groupedn2": [
+            [
+              4,
+              64,
+              1024,
+              512
+            ],
+            [
+              4,
+              64,
+              3072,
+              512
+            ],
+            [
+              4,
+              64,
+              3072,
+              1536
+            ],
+            [
+              4,
+              64,
+              4096,
+              2048
+            ],
+            [
+              4,
+              64,
+              8192,
+              512
+            ],
+            [
+              4,
+              192,
+              3072,
+              512
+            ],
+            [
+              4,
+              192,
+              3072,
+              1536
+            ],
+            [
+              4,
+              256,
+              8192,
+              512
+            ],
+            [
+              4,
+              512,
+              3072,
+              512
+            ]
+          ],
+          "splitk8": [
+            [
+              4,
+              64,
+              8192,
+              512
+            ],
+            [
+              4,
+              256,
+              8192,
+              512
+            ]
+          ],
+          "splitk8_groupedn2": [
+            [
+              4,
+              64,
+              8192,
+              512
+            ],
+            [
+              4,
+              256,
+              8192,
+              512
+            ]
+          ]
+        },
+        "feature_bounds": [
+          [
+            1.0,
+            1.0
+          ],
+          [
+            0.0,
+            2.0
+          ],
+          [
+            0.0,
+            1.0
+          ],
+          [
+            0.0,
+            0.962962962962963
+          ],
+          [
+            1.0,
+            7.0
+          ],
+          [
+            0.125,
+            3.5
+          ],
+          [
+            0.125,
+            2.0
+          ],
+          [
+            0.25,
+            16.0
+          ]
+        ],
+        "selected_interval": 11,
+        "interval_count": 19,
+        "interval_certificates": [
+          {
+            "interval": 0,
+            "normalized_ratio_lower": 0.0,
+            "normalized_ratio_upper": 0.1206788935630501,
+            "objective_us2": 92362.18528323097,
+            "kkt_relative_violation": 1.4507344121590835e-16,
+            "visited_faces": 166,
+            "branch_feasibility_error_us": 2.2737367544323206e-13
+          },
+          {
+            "interval": 1,
+            "normalized_ratio_lower": 0.1206788935630501,
+            "normalized_ratio_upper": 0.12067889356305012,
+            "objective_us2": 92362.18806308991,
+            "kkt_relative_violation": 1.4507344121590835e-16,
+            "visited_faces": 102,
+            "branch_feasibility_error_us": 1.1368683772161603e-13
+          },
+          {
+            "interval": 2,
+            "normalized_ratio_lower": 0.12067889356305012,
+            "normalized_ratio_upper": 0.2413577871261002,
+            "objective_us2": 82138.67257997325,
+            "kkt_relative_violation": 7.253672060795417e-17,
+            "visited_faces": 102,
+            "branch_feasibility_error_us": 2.2737367544323206e-13
+          },
+          {
+            "interval": 3,
+            "normalized_ratio_lower": 0.2413577871261002,
+            "normalized_ratio_upper": 0.24135778712610023,
+            "objective_us2": 82138.67257997321,
+            "kkt_relative_violation": 1.4507344121590835e-16,
+            "visited_faces": 102,
+            "branch_feasibility_error_us": 2.2737367544323206e-13
+          },
+          {
+            "interval": 4,
+            "normalized_ratio_lower": 0.24135778712610023,
+            "normalized_ratio_upper": 0.3620366806891503,
+            "objective_us2": 55471.24785735582,
+            "kkt_relative_violation": 1.4507344121590835e-16,
+            "visited_faces": 102,
+            "branch_feasibility_error_us": 2.2737367544323206e-13
+          },
+          {
+            "interval": 5,
+            "normalized_ratio_lower": 0.3620366806891503,
+            "normalized_ratio_upper": 0.4827155742522004,
+            "objective_us2": 37703.52633092524,
+            "kkt_relative_violation": 1.4507344121590835e-16,
+            "visited_faces": 102,
+            "branch_feasibility_error_us": 2.2737367544323206e-13
+          },
+          {
+            "interval": 6,
+            "normalized_ratio_lower": 0.4827155742522004,
+            "normalized_ratio_upper": 0.48271557425220046,
+            "objective_us2": 37703.52633092523,
+            "kkt_relative_violation": 1.4507344121590835e-16,
+            "visited_faces": 102,
+            "branch_feasibility_error_us": 2.2737367544323206e-13
+          },
+          {
+            "interval": 7,
+            "normalized_ratio_lower": 0.48271557425220046,
+            "normalized_ratio_upper": 0.7240733613783006,
+            "objective_us2": 10298.222099322425,
+            "kkt_relative_violation": 1.4507344121590835e-16,
+            "visited_faces": 70,
+            "branch_feasibility_error_us": 1.1368683772161603e-13
+          },
+          {
+            "interval": 8,
+            "normalized_ratio_lower": 0.7240733613783006,
+            "normalized_ratio_upper": 0.9654311485044008,
+            "objective_us2": 7198.876424772486,
+            "kkt_relative_violation": 2.901468824318167e-16,
+            "visited_faces": 5,
+            "branch_feasibility_error_us": 1.1368683772161603e-13
+          },
+          {
+            "interval": 9,
+            "normalized_ratio_lower": 0.9654311485044008,
+            "normalized_ratio_upper": 0.9654311485044009,
+            "objective_us2": 9951.946998837193,
+            "kkt_relative_violation": 1.4507344121590835e-16,
+            "visited_faces": 97,
+            "branch_feasibility_error_us": 2.2737367544323206e-13
+          },
+          {
+            "interval": 10,
+            "normalized_ratio_lower": 0.9654311485044009,
+            "normalized_ratio_upper": 1.0861100420674508,
+            "objective_us2": 6955.091235103054,
+            "kkt_relative_violation": 1.4507344121590835e-16,
+            "visited_faces": 97,
+            "branch_feasibility_error_us": 2.2737367544323206e-13
+          },
+          {
+            "interval": 11,
+            "normalized_ratio_lower": 1.0861100420674508,
+            "normalized_ratio_upper": 1.4481467227566012,
+            "objective_us2": 6650.650963349352,
+            "kkt_relative_violation": 1.4507344121590835e-16,
+            "visited_faces": 9,
+            "branch_feasibility_error_us": 1.1368683772161603e-13
+          },
+          {
+            "interval": 12,
+            "normalized_ratio_lower": 1.4481467227566012,
+            "normalized_ratio_upper": 1.9308622970088016,
+            "objective_us2": 15074.671343220069,
+            "kkt_relative_violation": 7.253672060795417e-17,
+            "visited_faces": 141,
+            "branch_feasibility_error_us": 1.1368683772161603e-13
+          },
+          {
+            "interval": 13,
+            "normalized_ratio_lower": 1.9308622970088016,
+            "normalized_ratio_upper": 1.9308622970088019,
+            "objective_us2": 39466.95754517368,
+            "kkt_relative_violation": 1.4507344121590835e-16,
+            "visited_faces": 77,
+            "branch_feasibility_error_us": 1.1368683772161603e-13
+          },
+          {
+            "interval": 14,
+            "normalized_ratio_lower": 1.9308622970088019,
+            "normalized_ratio_upper": 2.1722200841349015,
+            "objective_us2": 39466.95754517368,
+            "kkt_relative_violation": 1.4507344121590835e-16,
+            "visited_faces": 141,
+            "branch_feasibility_error_us": 1.1368683772161603e-13
+          },
+          {
+            "interval": 15,
+            "normalized_ratio_lower": 2.1722200841349015,
+            "normalized_ratio_upper": 3.8617245940176033,
+            "objective_us2": 44746.140948022345,
+            "kkt_relative_violation": 1.4507344121590835e-16,
+            "visited_faces": 141,
+            "branch_feasibility_error_us": 1.1368683772161603e-13
+          },
+          {
+            "interval": 16,
+            "normalized_ratio_lower": 3.8617245940176033,
+            "normalized_ratio_upper": 3.8617245940176037,
+            "objective_us2": 61084.82709697876,
+            "kkt_relative_violation": 1.4507344121590835e-16,
+            "visited_faces": 77,
+            "branch_feasibility_error_us": 1.1368683772161603e-13
+          },
+          {
+            "interval": 17,
+            "normalized_ratio_lower": 3.8617245940176037,
+            "normalized_ratio_upper": 4.344440168269803,
+            "objective_us2": 61084.82709697875,
+            "kkt_relative_violation": 0.0,
+            "visited_faces": 141,
+            "branch_feasibility_error_us": 1.1368683772161603e-13
+          },
+          {
+            "interval": 18,
+            "normalized_ratio_lower": 4.344440168269803,
+            "normalized_ratio_upper": null,
+            "objective_us2": 62336.908136156184,
+            "kkt_relative_violation": 0.0,
+            "visited_faces": 13,
+            "branch_feasibility_error_us": 1.1368683772161603e-13
+          }
+        ],
+        "training_branch_counts": {
+          "latency": 27,
+          "throughput": 12
+        },
+        "crossover_W_over_L": 9.343770389702065,
+        "crossover_note": "Null means zero throughput coefficient; no finite crossover. A finite ratio alone does not establish branch identification.",
+        "optimality_scope": "All training-ratio cones enumerated, each numerically KKT-certified, fixed basis/weights/ridge only; no physical identification.",
+        "max_faces_per_interval": 256
+      },
+      "host": {
+        "coefficients_us": [
+          266.67521829876716,
+          11.18169119953781,
+          2.5547561380374173,
+          210.3865457067097
+        ],
+        "training_scales": [
+          1.0,
+          24.391889752831485,
+          21.516977846242543,
+          1.267731382092775
+        ],
+        "objective_us2": 587.2633779399013,
+        "kkt_relative_violation": 0.0,
+        "unregularized_rank": 4,
+        "feature_count": 4,
+        "enumerated_faces": 16,
+        "ridge": 1e-06,
+        "names": [
+          "fixed",
+          "remote_A_MiB",
+          "logical_work_Gflop",
+          "cutlass_K_iterations_over_128"
+        ],
+        "training_shapes": [
+          [
+            4,
+            64,
+            3072,
+            1536
+          ],
+          [
+            4,
+            64,
+            4096,
+            2048
+          ],
+          [
+            4,
+            64,
+            8192,
+            512
+          ],
+          [
+            4,
+            192,
+            3072,
+            512
+          ],
+          [
+            4,
+            192,
+            3072,
+            1536
+          ],
+          [
+            4,
+            256,
+            8192,
+            512
+          ],
+          [
+            4,
+            512,
+            3072,
+            512
+          ]
+        ],
+        "config_ids": [
+          "015eb7cd794fefe60356630551f28985acae02e47ac328a42d86a83a4f5e8ae1",
+          "09e2cc41c27b9a2d7fba6c22aa58b7aa1c726cc041478f86276a13012373195e",
+          "27937bd5c826a76448724354d633c08762890ee67e00547d2ed7ace26e0bac1e",
+          "486179c73ce890e6ae63c49071df9a31a29006411a59b14c6ce6fd8f929927c8",
+          "9885894d07cb77b7f731c59cf200c191cf858dec64182232448169d28bc2a241",
+          "b353381c247de5dae4fe7cdde7f895e51d723d005a23ecc4dd6003cb41224ba7",
+          "e5e7ecb59f00138f1dd3f6603c4c1cdc7c38be4c25c827dfe2c98903f196d90f"
+        ],
+        "families": [
+          "host"
+        ],
+        "family_shapes": {
+          "host": [
+            [
+              4,
+              64,
+              3072,
+              1536
+            ],
+            [
+              4,
+              64,
+              4096,
+              2048
+            ],
+            [
+              4,
+              64,
+              8192,
+              512
+            ],
+            [
+              4,
+              192,
+              3072,
+              512
+            ],
+            [
+              4,
+              192,
+              3072,
+              1536
+            ],
+            [
+              4,
+              256,
+              8192,
+              512
+            ],
+            [
+              4,
+              512,
+              3072,
+              512
+            ]
+          ]
+        },
+        "feature_bounds": [
+          [
+            1.0,
+            1.0
+          ],
+          [
+            4.5,
+            48.0
+          ],
+          [
+            8.589934592,
+            34.359738368
+          ],
+          [
+            0.75,
+            2.0
+          ]
+        ]
+      },
+      "host_compiler_cublas": {
+        "coefficients_us": [
+          420.74524696282845,
+          10.05943694494345,
+          0.0
+        ],
+        "training_scales": [
+          1.0,
+          28.77498913987632,
+          22.72683070874308
+        ],
+        "objective_us2": 20.60186760267866,
+        "kkt_relative_violation": 1.1764019601259794e-16,
+        "unregularized_rank": 3,
+        "feature_count": 3,
+        "enumerated_faces": 8,
+        "ridge": 1e-06,
+        "names": [
+          "fixed",
+          "remote_A_MiB",
+          "logical_work_Gflop"
+        ],
+        "training_shapes": [
+          [
+            4,
+            64,
+            4096,
+            2048
+          ],
+          [
+            4,
+            64,
+            8192,
+            512
+          ],
+          [
+            4,
+            256,
+            8192,
+            512
+          ]
+        ],
+        "config_ids": [
+          "167bd22d349051206c9aeebb05cbb09acb2bb70559de38f6b75d9212978504af",
+          "cc902eda0355d1350e88f70327d0586614991d9bc82998fed9191afc6982fd90",
+          "f1cd4780be6ada13c0c2232ea5a22e408d67c1bd93b0bef6b6a2939018ffd795"
+        ],
+        "families": [
+          "host_compiler_cublas"
+        ],
+        "family_shapes": {
+          "host_compiler_cublas": [
+            [
+              4,
+              64,
+              4096,
+              2048
+            ],
+            [
+              4,
+              64,
+              8192,
+              512
+            ],
+            [
+              4,
+              256,
+              8192,
+              512
+            ]
+          ]
+        },
+        "feature_bounds": [
+          [
+            1.0,
+            1.0
+          ],
+          [
+            6.0,
+            48.0
+          ],
+          [
+            8.589934592,
+            34.359738368
+          ]
+        ]
+      },
+      "host_merged_cublaslt": {
+        "coefficients_us": [
+          219.7397206077218,
+          6.089334271329421,
+          3.6373021197857582
+        ],
+        "training_scales": [
+          1.0,
+          24.931155207891994,
+          19.68933355713322
+        ],
+        "objective_us2": 1228.901501894175,
+        "kkt_relative_violation": 1.4727791465258132e-16,
+        "unregularized_rank": 3,
+        "feature_count": 3,
+        "enumerated_faces": 8,
+        "ridge": 1e-06,
+        "names": [
+          "fixed",
+          "remote_A_MiB",
+          "logical_work_Gflop"
+        ],
+        "training_shapes": [
+          [
+            4,
+            64,
+            1024,
+            512
+          ],
+          [
+            4,
+            64,
+            4096,
+            2048
+          ],
+          [
+            4,
+            64,
+            8192,
+            512
+          ],
+          [
+            4,
+            256,
+            8192,
+            512
+          ]
+        ],
+        "config_ids": [
+          "5626cb246c2323679aaf99c7f91e843649529fcc72a9f25dfe0f008b732a3880",
+          "d1f75d4bc04d96fb96831abf5154589c7faf8c59ab829006696662e68e86fdec",
+          "dcf79d8cfba9cd5c3fe0c64771d342269a8f0f26128699849f5c7bbf6e8f9d1b",
+          "e5e0e60bf86b3c3f3fca5e54a7b62d4fd2b395f0884037c2aff09ea4a7f93a9c"
+        ],
+        "families": [
+          "host_merged_cublaslt"
+        ],
+        "family_shapes": {
+          "host_merged_cublaslt": [
+            [
+              4,
+              64,
+              1024,
+              512
+            ],
+            [
+              4,
+              64,
+              4096,
+              2048
+            ],
+            [
+              4,
+              64,
+              8192,
+              512
+            ],
+            [
+              4,
+              256,
+              8192,
+              512
+            ]
+          ]
+        },
+        "feature_bounds": [
+          [
+            1.0,
+            1.0
+          ],
+          [
+            1.5,
+            48.0
+          ],
+          [
+            1.073741824,
+            34.359738368
+          ]
+        ]
+      },
+      "host_merged_cutlass": {
+        "coefficients_us": [
+          166.694372284709,
+          3.9887362026691764,
+          5.572200104508927,
+          83.34718610493067
+        ],
+        "training_scales": [
+          1.0,
+          34.9857113690718,
+          25.043747692909797,
+          2.0
+        ],
+        "objective_us2": 0.0945217617709286,
+        "kkt_relative_violation": 1.985057746578409e-16,
+        "unregularized_rank": 2,
+        "feature_count": 4,
+        "enumerated_faces": 16,
+        "ridge": 1e-06,
+        "names": [
+          "fixed",
+          "remote_A_MiB",
+          "logical_work_Gflop",
+          "cutlass_K_iterations_over_128"
+        ],
+        "training_shapes": [
+          [
+            4,
+            64,
+            8192,
+            512
+          ],
+          [
+            4,
+            256,
+            8192,
+            512
+          ]
+        ],
+        "config_ids": [
+          "4bc2c8ab047ecd21946dbf6ede954d96e2d60bf833839f7c985c3da5dc685b3c",
+          "7ca982af1d855555371090bdac6d9f41112149ddb523ee9fa811896646407376"
+        ],
+        "families": [
+          "host_merged_cutlass"
+        ],
+        "family_shapes": {
+          "host_merged_cutlass": [
+            [
+              4,
+              64,
+              8192,
+              512
+            ],
+            [
+              4,
+              256,
+              8192,
+              512
+            ]
+          ]
+        },
+        "feature_bounds": [
+          [
+            1.0,
+            1.0
+          ],
+          [
+            12.0,
+            48.0
+          ],
+          [
+            8.589934592,
+            34.359738368
+          ],
+          [
+            2.0,
+            2.0
+          ]
+        ]
+      }
+    },
+    "training_config_ids": [
+      "015eb7cd794fefe60356630551f28985acae02e47ac328a42d86a83a4f5e8ae1",
+      "0584b8531e9e8d64206b099aa1aa694fdd9083561f040d40344565a0d4ab02eb",
+      "05a18b400fc2bbc92ef7020723561b4f865d9e87bebcab90420fdbc13b0570c8",
+      "09e2cc41c27b9a2d7fba6c22aa58b7aa1c726cc041478f86276a13012373195e",
+      "0c5f0fed104b013aa919794eb322cc35116c914a2bad733964faa2ca0f2889a8",
+      "0c9404ea9dd0ac03d93b3fb9a172913d4d6460a92e49bfebb999a433d9fdbcee",
+      "0e00ffbbc35335459f11a56852092d427f69f22b65caa1902218e59f16012cd9",
+      "167bd22d349051206c9aeebb05cbb09acb2bb70559de38f6b75d9212978504af",
+      "16e87d4223ca0a53fe8ade581c0fa2e7f0a67daf798d5e3a4677189f72ace842",
+      "20dfbb56745f2f06896db0b68c936ba1c20c795e7ffc9483d811e11e40eed9dc",
+      "24bb96d632ffc02ae4927433266e119096930613c09e90b31506a75ffb8c5a8a",
+      "27937bd5c826a76448724354d633c08762890ee67e00547d2ed7ace26e0bac1e",
+      "357279e5d20c7de901ef736f231e29d521af2c4a993c80525a7958f56442cff8",
+      "379959166e1e1b1e9f3b9b3e5ec2938ab7c4b977d3c7601fcc9d0051d062b7fd",
+      "385f868ef19039f6b49d3cd0f4d109fe7905ec01167e46dc602f83b12d78f31e",
+      "3ba6e3f9962dbe04d02ac9cf63f31fb57f70ffe82f89ce225d0c01179708ff49",
+      "42f29d0dcd3544c980a25a350f4a02afe5900ca9a5bf6ddd452088da256720f9",
+      "44d43f75c58a2e949c3aeb5a94aed3fbadb2d0c89f26ea79d66a3868846daaa3",
+      "4721cadaecefe3f5b43fd60f64b91594d6b8ee3f5ed6c293155c4f553a42cec7",
+      "486179c73ce890e6ae63c49071df9a31a29006411a59b14c6ce6fd8f929927c8",
+      "4bc2c8ab047ecd21946dbf6ede954d96e2d60bf833839f7c985c3da5dc685b3c",
+      "51164340d38dd7b02978798df84ec4a6c88ba2f5430e4bf0909f1cce951bc6f3",
+      "5626cb246c2323679aaf99c7f91e843649529fcc72a9f25dfe0f008b732a3880",
+      "57ec2cc034c7f7ed12d3fb400147e778ae06cf94aa116639be402129cedc8c25",
+      "57f7c9110dc0100ab17040e1ded9e8c832a5872c21dd35cb990d0965e0c90f7b",
+      "615f899c90116440ee674f7c978f050b6d04c53cc1c892a05d9d4a4139fb285a",
+      "6187d0570cd833960e6b65f1512a51fb2d6d9a9303e2598422586ac09784ecf1",
+      "6bd5510f13f3a9741d2ec21b708ac8ebeba6525c52a3af72713fe9aef9b39a6c",
+      "6be5898c07de5a61f8de8d1c9e401edfb93a001055f62ee0e58a52efe06829f8",
+      "6bede1b9a83cd7492a88773132cccbcb3a7d47edf4260fd07d6f0d23f4709c2d",
+      "7243723b0fd38c2bee898d3744092ac18cf78a9ba62892db8d1df7b6d9795d6d",
+      "7ca982af1d855555371090bdac6d9f41112149ddb523ee9fa811896646407376",
+      "8bb5966bb9709a393a5b45e327e8b34276bc1a45b57773a1662f5387d2a699a5",
+      "9137b6dfb622aafe6157abe64831f3e51ea8b5051d2b98ed5ebe1a8f5b18bae0",
+      "9772bec9ff8bb5c85a7ff059ceaaa5c3f381e758bb65f2aa1da08b6e6ee8f667",
+      "97cf344f698a9d3e2e32e01bffbdb408f6a142dfc2a9d9c5bfdd8b03ef413727",
+      "9885894d07cb77b7f731c59cf200c191cf858dec64182232448169d28bc2a241",
+      "9ab58cd593577addd1ff4b5c00a1cc6fe01bfefe44d8527ecf56d90b5a7b0724",
+      "9e08915e02bf94f98423f0414ae5ff7f6c0417236810a55d8f5fffe7e9244890",
+      "b353381c247de5dae4fe7cdde7f895e51d723d005a23ecc4dd6003cb41224ba7",
+      "b51e85d04e1c453433d9056e7f3763534e3e854f3d107d02feb015db560ccb1a",
+      "b53794a42545d3ab62858b6ac2f9e628831f9a69ec614aedea4658acb4669284",
+      "c9d7ff01e98490c1d12ab2f064633f1e79001d15d03ba9bd67d1ec3c100fe15f",
+      "cc902eda0355d1350e88f70327d0586614991d9bc82998fed9191afc6982fd90",
+      "d1979f4cb6922f6376773ce9f2271eb9ef411b441d79a4cda47d01f2cafc95ec",
+      "d1f75d4bc04d96fb96831abf5154589c7faf8c59ab829006696662e68e86fdec",
+      "d26dfdf2c04c9d494f3246ab1122d3ec152b690177d217b403bb6b3c8f4e625d",
+      "dcf79d8cfba9cd5c3fe0c64771d342269a8f0f26128699849f5c7bbf6e8f9d1b",
+      "e5e0e60bf86b3c3f3fca5e54a7b62d4fd2b395f0884037c2aff09ea4a7f93a9c",
+      "e5e7ecb59f00138f1dd3f6603c4c1cdc7c38be4c25c827dfe2c98903f196d90f",
+      "eb38ea8ac3a18cc877a2ce4884cad135b4c18deefe022b5a2add8a1dfd3d1941",
+      "f0e6afc0312485d7c503c3c9d2b82b2b28c2a896a2da6a7d0ad1163274db3d8d",
+      "f1cd4780be6ada13c0c2232ea5a22e408d67c1bd93b0bef6b6a2939018ffd795",
+      "f64be5045b327833707bb444def427095681f8c1785da4d6b5d45c0c50b93674",
+      "fba81d6bcc508535e94f551e94665e76efe8f0ecc4ff573be949b70059c742b7"
+    ],
+    "training_shapes": [
+      [
+        4,
+        64,
+        1024,
+        512
+      ],
+      [
+        4,
+        64,
+        3072,
+        512
+      ],
+      [
+        4,
+        64,
+        3072,
+        1536
+      ],
+      [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      [
+        4,
+        64,
+        8192,
+        512
+      ],
+      [
+        4,
+        192,
+        3072,
+        512
+      ],
+      [
+        4,
+        192,
+        3072,
+        1536
+      ],
+      [
+        4,
+        256,
+        8192,
+        512
+      ],
+      [
+        4,
+        512,
+        3072,
+        512
+      ]
+    ],
+    "quality_mode": "stable_only",
+    "compiler_admission": false,
+    "retained_fraction": 0.0,
+    "retained_fraction_selection": "fixed declared grid; development evidence only"
+  },
+  "predictions": [
+    {
+      "predicted_us": 1016.3771563369884,
+      "contributions_us": {
+        "fixed": 194.32924050213205,
+        "grouped_partition_depth_64": 0.0,
+        "dynamic_smem_optins_over_16": 0.0,
+        "SM_spread_deficit": 0.0,
+        "ordered_epilogue_boundaries": 31.843396175426182,
+        "extra_serial_output_MiB": 1.253117087346247,
+        "latency_depth_64": 0.0,
+        "throughput_logical_A_MiB": 788.9514025720839
+      },
+      "geometry": {
+        "kind": "fused",
+        "q": 2,
+        "g": 1,
+        "tile": [
+          64,
+          128,
+          32
+        ],
+        "partition_iterations": 64,
+        "ctas": 64,
+        "unique_A_bytes": 4194304,
+        "logical_A_replay_bytes": 16777216,
+        "extra_serial_output_bytes": 1048576,
+        "threads_per_cta": 128,
+        "shared_storage_bytes": 36864,
+        "gemm_count": 16,
+        "queue_edges": 31,
+        "unit_duration_chain": 11,
+        "counter_scope": "Per GEMM, except graph counts. Logical bytes, not measured traffic."
+      },
+      "execution_detail": {
+        "m_tiles": 8,
+        "n_tiles": 4,
+        "output_tiles": 32,
+        "partition_k_elements": 2048,
+        "partition_A_bytes": 2097152,
+        "partition_B_bytes": 2097152,
+        "max_valid_A_bytes_per_CTA": 262144,
+        "max_valid_B_bytes_per_CTA": 524288,
+        "logical_B_replay_bytes": 33554432,
+        "semaphore_slots": 32,
+        "ordered_boundaries_per_output_tile": 1,
+        "registers_per_thread": 140,
+        "warps_per_CTA": 4,
+        "raw_registers_per_CTA": 17920,
+        "register_only_resident_block_upper_bound": 3,
+        "maximum_smem_resident_block_upper_bound": 4,
+        "combined_resident_block_upper_bound": 3,
+        "possible_active_SM_upper_bound": 64,
+        "SM_spread_deficit_proxy": 0.40740740740740744,
+        "grid_warps": 256,
+        "resource_capacity_round_lower_bound": 1,
+        "dynamic_smem_optin_calls_per_execution": 0,
+        "cudaGetLastError_calls_per_execution": 16,
+        "achieved_occupancy": null,
+        "actual_smem_carveout": null,
+        "scope": "Per GEMM unless named per_execution; optimistic resource bounds only."
+      },
+      "feature_extrapolation": [],
+      "family_seen": true,
+      "shape_seen": false,
+      "coefficient_identification": "full_column_rank_not_causal_identification",
+      "training_shape_count_for_implementation": 9,
+      "training_shapes_for_exact_candidate_family": [
+        [
+          4,
+          64,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          3072,
+          512
+        ]
+      ],
+      "library_algorithm_prediction": "fixed audited kernel family",
+      "compiler_admission": false,
+      "physical_bandwidth_or_stall_attribution": null,
+      "regime": {
+        "composition": "common_plus_max_plus_retained_min",
+        "retained_fraction": 0.0,
+        "latency_proxy_us": 460.7362971416845,
+        "throughput_proxy_us": 788.9514025720839,
+        "retained_smaller_proxy_us": 0.0,
+        "dominant_proxy": "throughput",
+        "branch_margin_us": 328.21510543039943,
+        "W_over_L": 16.0,
+        "physical_bottleneck_identified": false,
+        "physical_overlap_fraction_identified": false
+      },
+      "config_id": "276e1fcae0d09fb00de2dc2a05edbd10d98d2be7ab0017bb633a65e45e3ded7c",
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ],
+      "candidate_id": "splitk2@prepared",
+      "family": "splitk2",
+      "observed_us": 1006.0514999999999,
+      "process_medians_us": [
+        1009.4759999999998,
+        1006.0514999999999,
+        1005.7770000000002
+      ],
+      "error_us": 10.325656336988459,
+      "absolute_percentage_error": 0.01026354648543193,
+      "quality_flags": [],
+      "eligible_for_calibration": true,
+      "scope": "development_leave_shape_out"
+    },
+    {
+      "predicted_us": 788.0297556269,
+      "contributions_us": {
+        "fixed": 194.32924050213205,
+        "grouped_partition_depth_64": 76.56610319147218,
+        "dynamic_smem_optins_over_16": 23.30160152883891,
+        "SM_spread_deficit": 0.0,
+        "ordered_epilogue_boundaries": 31.843396175426182,
+        "extra_serial_output_MiB": 1.253117087346247,
+        "latency_depth_64": 460.7362971416845,
+        "throughput_logical_A_MiB": 0.0
+      },
+      "geometry": {
+        "kind": "fused",
+        "q": 2,
+        "g": 2,
+        "tile": [
+          64,
+          256,
+          32
+        ],
+        "partition_iterations": 64,
+        "ctas": 32,
+        "unique_A_bytes": 4194304,
+        "logical_A_replay_bytes": 8388608,
+        "extra_serial_output_bytes": 1048576,
+        "threads_per_cta": 256,
+        "shared_storage_bytes": 61440,
+        "gemm_count": 16,
+        "queue_edges": 31,
+        "unit_duration_chain": 11,
+        "counter_scope": "Per GEMM, except graph counts. Logical bytes, not measured traffic."
+      },
+      "execution_detail": {
+        "m_tiles": 8,
+        "n_tiles": 2,
+        "output_tiles": 16,
+        "partition_k_elements": 2048,
+        "partition_A_bytes": 2097152,
+        "partition_B_bytes": 2097152,
+        "max_valid_A_bytes_per_CTA": 262144,
+        "max_valid_B_bytes_per_CTA": 1048576,
+        "logical_B_replay_bytes": 33554432,
+        "semaphore_slots": 16,
+        "ordered_boundaries_per_output_tile": 1,
+        "registers_per_thread": 134,
+        "warps_per_CTA": 8,
+        "raw_registers_per_CTA": 34304,
+        "register_only_resident_block_upper_bound": 1,
+        "maximum_smem_resident_block_upper_bound": 2,
+        "combined_resident_block_upper_bound": 1,
+        "possible_active_SM_upper_bound": 32,
+        "SM_spread_deficit_proxy": 0.7037037037037037,
+        "grid_warps": 256,
+        "resource_capacity_round_lower_bound": 1,
+        "dynamic_smem_optin_calls_per_execution": 16,
+        "cudaGetLastError_calls_per_execution": 16,
+        "achieved_occupancy": null,
+        "actual_smem_carveout": null,
+        "scope": "Per GEMM unless named per_execution; optimistic resource bounds only."
+      },
+      "feature_extrapolation": [],
+      "family_seen": true,
+      "shape_seen": false,
+      "coefficient_identification": "full_column_rank_not_causal_identification",
+      "training_shape_count_for_implementation": 9,
+      "training_shapes_for_exact_candidate_family": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          3072,
+          512
+        ]
+      ],
+      "library_algorithm_prediction": "fixed audited kernel family",
+      "compiler_admission": false,
+      "physical_bandwidth_or_stall_attribution": null,
+      "regime": {
+        "composition": "common_plus_max_plus_retained_min",
+        "retained_fraction": 0.0,
+        "latency_proxy_us": 460.7362971416845,
+        "throughput_proxy_us": 394.47570128604195,
+        "retained_smaller_proxy_us": 0.0,
+        "dominant_proxy": "latency",
+        "branch_margin_us": 66.26059585564252,
+        "W_over_L": 8.0,
+        "physical_bottleneck_identified": false,
+        "physical_overlap_fraction_identified": false
+      },
+      "config_id": "3418a67557dc54577fe771aba445c1398564c41930507e3bf46c785e07144a24",
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ],
+      "candidate_id": "splitk2_groupedn2@prepared",
+      "family": "splitk2_groupedn2",
+      "observed_us": 776.282,
+      "process_medians_us": [
+        776.282,
+        770.4169999999999,
+        777.7825
+      ],
+      "error_us": 11.747755626900016,
+      "absolute_percentage_error": 0.015133360849407751,
+      "quality_flags": [],
+      "eligible_for_calibration": true,
+      "scope": "development_leave_shape_out"
+    },
+    {
+      "predicted_us": 1101.5636940802995,
+      "contributions_us": {
+        "fixed": 266.67521829876716,
+        "remote_A_MiB": 536.7211775778148,
+        "logical_work_Gflop": 87.78075249700775,
+        "cutlass_K_iterations_over_128": 210.3865457067097
+      },
+      "geometry": {
+        "kind": "host",
+        "actual_gemm_M": 512,
+        "gemm_count": 16,
+        "remote_A_bytes": 50331648,
+        "logical_flops": 34359738368,
+        "library_internal_geometry": null
+      },
+      "execution_detail": {
+        "host_identity": "host",
+        "fused_resource_bounds": null
+      },
+      "feature_extrapolation": [],
+      "family_seen": true,
+      "shape_seen": false,
+      "coefficient_identification": "full_column_rank_not_causal_identification",
+      "training_shape_count_for_implementation": 7,
+      "training_shapes_for_exact_candidate_family": [
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          3072,
+          512
+        ]
+      ],
+      "library_algorithm_prediction": "fixed audited kernel family",
+      "compiler_admission": false,
+      "physical_bandwidth_or_stall_attribution": null,
+      "config_id": "3bd7c2af99ed59a275c21e1a525f7b3b9c8bdc91e1993a329169226df5a8409d",
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ],
+      "candidate_id": "host@prepared",
+      "family": "host",
+      "observed_us": 1076.486,
+      "process_medians_us": [
+        1076.486,
+        1085.5410000000002,
+        1057.7465
+      ],
+      "error_us": 25.077694080299352,
+      "absolute_percentage_error": 0.02329588501875479,
+      "quality_flags": [],
+      "eligible_for_calibration": true,
+      "scope": "development_leave_shape_out"
+    },
+    {
+      "predicted_us": 749.6791347010663,
+      "contributions_us": {
+        "fixed": 194.32924050213205,
+        "grouped_partition_depth_64": 38.28305159573609,
+        "dynamic_smem_optins_over_16": 23.30160152883891,
+        "SM_spread_deficit": 0.0,
+        "ordered_epilogue_boundaries": 95.53018852627855,
+        "extra_serial_output_MiB": 3.7593512620387406,
+        "latency_depth_64": 0.0,
+        "throughput_logical_A_MiB": 394.47570128604195
+      },
+      "geometry": {
+        "kind": "fused",
+        "q": 4,
+        "g": 2,
+        "tile": [
+          64,
+          256,
+          32
+        ],
+        "partition_iterations": 32,
+        "ctas": 64,
+        "unique_A_bytes": 4194304,
+        "logical_A_replay_bytes": 8388608,
+        "extra_serial_output_bytes": 3145728,
+        "threads_per_cta": 256,
+        "shared_storage_bytes": 61440,
+        "gemm_count": 16,
+        "queue_edges": 31,
+        "unit_duration_chain": 11,
+        "counter_scope": "Per GEMM, except graph counts. Logical bytes, not measured traffic."
+      },
+      "execution_detail": {
+        "m_tiles": 8,
+        "n_tiles": 2,
+        "output_tiles": 16,
+        "partition_k_elements": 1024,
+        "partition_A_bytes": 1048576,
+        "partition_B_bytes": 1048576,
+        "max_valid_A_bytes_per_CTA": 131072,
+        "max_valid_B_bytes_per_CTA": 524288,
+        "logical_B_replay_bytes": 33554432,
+        "semaphore_slots": 16,
+        "ordered_boundaries_per_output_tile": 3,
+        "registers_per_thread": 134,
+        "warps_per_CTA": 8,
+        "raw_registers_per_CTA": 34304,
+        "register_only_resident_block_upper_bound": 1,
+        "maximum_smem_resident_block_upper_bound": 2,
+        "combined_resident_block_upper_bound": 1,
+        "possible_active_SM_upper_bound": 64,
+        "SM_spread_deficit_proxy": 0.40740740740740744,
+        "grid_warps": 512,
+        "resource_capacity_round_lower_bound": 1,
+        "dynamic_smem_optin_calls_per_execution": 16,
+        "cudaGetLastError_calls_per_execution": 16,
+        "achieved_occupancy": null,
+        "actual_smem_carveout": null,
+        "scope": "Per GEMM unless named per_execution; optimistic resource bounds only."
+      },
+      "feature_extrapolation": [],
+      "family_seen": true,
+      "shape_seen": false,
+      "coefficient_identification": "full_column_rank_not_causal_identification",
+      "training_shape_count_for_implementation": 9,
+      "training_shapes_for_exact_candidate_family": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          3072,
+          512
+        ]
+      ],
+      "library_algorithm_prediction": "fixed audited kernel family",
+      "compiler_admission": false,
+      "physical_bandwidth_or_stall_attribution": null,
+      "regime": {
+        "composition": "common_plus_max_plus_retained_min",
+        "retained_fraction": 0.0,
+        "latency_proxy_us": 230.36814857084224,
+        "throughput_proxy_us": 394.47570128604195,
+        "retained_smaller_proxy_us": 0.0,
+        "dominant_proxy": "throughput",
+        "branch_margin_us": 164.10755271519972,
+        "W_over_L": 16.0,
+        "physical_bottleneck_identified": false,
+        "physical_overlap_fraction_identified": false
+      },
+      "config_id": "7e485506859f4297b6efc92ec5b45115cbc0e1ee40c4bc789f5daf24a2b30be9",
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ],
+      "candidate_id": "splitk4_groupedn2@prepared",
+      "family": "splitk4_groupedn2",
+      "observed_us": 725.4024999999999,
+      "process_medians_us": [
+        722.893,
+        725.4024999999999,
+        726.2975
+      ],
+      "error_us": 24.276634701066428,
+      "absolute_percentage_error": 0.033466433739980816,
+      "quality_flags": [],
+      "eligible_for_calibration": true,
+      "scope": "development_leave_shape_out"
+    },
+    {
+      "predicted_us": 632.9602338428292,
+      "contributions_us": {
+        "fixed": 166.694372284709,
+        "remote_A_MiB": 191.45933772812046,
+        "logical_work_Gflop": 191.45933772506902,
+        "cutlass_K_iterations_over_128": 83.34718610493067
+      },
+      "geometry": {
+        "kind": "host_merged_cutlass",
+        "actual_gemm_M": 2048,
+        "gemm_count": 4,
+        "remote_A_bytes": 50331648,
+        "logical_flops": 34359738368,
+        "library_internal_geometry": null
+      },
+      "execution_detail": {
+        "host_identity": "host_merged_cutlass",
+        "fused_resource_bounds": null
+      },
+      "feature_extrapolation": [
+        "cutlass_K_iterations_over_128"
+      ],
+      "family_seen": true,
+      "shape_seen": false,
+      "coefficient_identification": "rank_deficient",
+      "training_shape_count_for_implementation": 2,
+      "training_shapes_for_exact_candidate_family": [
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ]
+      ],
+      "library_algorithm_prediction": "fixed audited kernel family",
+      "compiler_admission": false,
+      "physical_bandwidth_or_stall_attribution": null,
+      "config_id": "8dc7017d1bf013a7d48cd9e4a0260275672a3d1c97ca7451025a8715ee805aec",
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ],
+      "candidate_id": "host_merged_cutlass@merged",
+      "family": "host_merged_cutlass",
+      "observed_us": 652.293,
+      "process_medians_us": [
+        654.398,
+        652.293,
+        645.1875
+      ],
+      "error_us": -19.332766157170795,
+      "absolute_percentage_error": 0.029638162845792904,
+      "quality_flags": [],
+      "eligible_for_calibration": true,
+      "scope": "development_leave_shape_out"
+    },
+    {
+      "predicted_us": 903.598220320114,
+      "contributions_us": {
+        "fixed": 420.74524696282845,
+        "remote_A_MiB": 482.8529733572856,
+        "logical_work_Gflop": 0.0
+      },
+      "geometry": {
+        "kind": "host_compiler_cublas",
+        "actual_gemm_M": 512,
+        "gemm_count": 16,
+        "remote_A_bytes": 50331648,
+        "logical_flops": 34359738368,
+        "library_internal_geometry": null
+      },
+      "execution_detail": {
+        "host_identity": "host_compiler_cublas",
+        "fused_resource_bounds": null
+      },
+      "feature_extrapolation": [],
+      "family_seen": true,
+      "shape_seen": false,
+      "coefficient_identification": "full_column_rank_not_causal_identification",
+      "training_shape_count_for_implementation": 3,
+      "training_shapes_for_exact_candidate_family": [
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ]
+      ],
+      "library_algorithm_prediction": "not modeled separately",
+      "compiler_admission": false,
+      "physical_bandwidth_or_stall_attribution": null,
+      "config_id": "b9bb50aa0796b3023f2babbbeb8c8888679baef44c5c7421ffde60d5c42fbd2a",
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ],
+      "candidate_id": "host_compiler_cublas@prepared",
+      "family": "host_compiler_cublas",
+      "observed_us": 905.997,
+      "process_medians_us": [
+        905.997,
+        908.2865,
+        905.122
+      ],
+      "error_us": -2.3987796798859335,
+      "absolute_percentage_error": 0.002647668457937402,
+      "quality_flags": [],
+      "eligible_for_calibration": true,
+      "scope": "development_leave_shape_out"
+    },
+    {
+      "predicted_us": 637.0045148327445,
+      "contributions_us": {
+        "fixed": 219.7397206077218,
+        "remote_A_MiB": 292.28804502381223,
+        "logical_work_Gflop": 124.97674920121045
+      },
+      "geometry": {
+        "kind": "host_merged_cublaslt",
+        "actual_gemm_M": 2048,
+        "gemm_count": 4,
+        "remote_A_bytes": 50331648,
+        "logical_flops": 34359738368,
+        "library_internal_geometry": null
+      },
+      "execution_detail": {
+        "host_identity": "host_merged_cublaslt",
+        "fused_resource_bounds": null
+      },
+      "feature_extrapolation": [],
+      "family_seen": true,
+      "shape_seen": false,
+      "coefficient_identification": "full_column_rank_not_causal_identification",
+      "training_shape_count_for_implementation": 4,
+      "training_shapes_for_exact_candidate_family": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ]
+      ],
+      "library_algorithm_prediction": "not modeled separately",
+      "compiler_admission": false,
+      "physical_bandwidth_or_stall_attribution": null,
+      "config_id": "e8dbbdd2caaa2a1215a63e3f5d9ff7a8a009d7548ff9dda88c54613fbf309b6e",
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ],
+      "candidate_id": "host_merged_cublaslt@merged",
+      "family": "host_merged_cublaslt",
+      "observed_us": 637.6785,
+      "process_medians_us": [
+        637.978,
+        637.6785,
+        637.5580000000001
+      ],
+      "error_us": -0.6739851672555233,
+      "absolute_percentage_error": 0.0010569356929166496,
+      "quality_flags": [],
+      "eligible_for_calibration": true,
+      "scope": "development_leave_shape_out"
+    },
+    {
+      "predicted_us": 1082.5701828625333,
+      "contributions_us": {
+        "fixed": 194.32924050213205,
+        "grouped_partition_depth_64": 0.0,
+        "dynamic_smem_optins_over_16": 0.0,
+        "SM_spread_deficit": 0.0,
+        "ordered_epilogue_boundaries": 95.53018852627855,
+        "extra_serial_output_MiB": 3.7593512620387406,
+        "latency_depth_64": 0.0,
+        "throughput_logical_A_MiB": 788.9514025720839
+      },
+      "geometry": {
+        "kind": "fused",
+        "q": 4,
+        "g": 1,
+        "tile": [
+          64,
+          128,
+          32
+        ],
+        "partition_iterations": 32,
+        "ctas": 128,
+        "unique_A_bytes": 4194304,
+        "logical_A_replay_bytes": 16777216,
+        "extra_serial_output_bytes": 3145728,
+        "threads_per_cta": 128,
+        "shared_storage_bytes": 36864,
+        "gemm_count": 16,
+        "queue_edges": 31,
+        "unit_duration_chain": 11,
+        "counter_scope": "Per GEMM, except graph counts. Logical bytes, not measured traffic."
+      },
+      "execution_detail": {
+        "m_tiles": 8,
+        "n_tiles": 4,
+        "output_tiles": 32,
+        "partition_k_elements": 1024,
+        "partition_A_bytes": 1048576,
+        "partition_B_bytes": 1048576,
+        "max_valid_A_bytes_per_CTA": 131072,
+        "max_valid_B_bytes_per_CTA": 262144,
+        "logical_B_replay_bytes": 33554432,
+        "semaphore_slots": 32,
+        "ordered_boundaries_per_output_tile": 3,
+        "registers_per_thread": 140,
+        "warps_per_CTA": 4,
+        "raw_registers_per_CTA": 17920,
+        "register_only_resident_block_upper_bound": 3,
+        "maximum_smem_resident_block_upper_bound": 4,
+        "combined_resident_block_upper_bound": 3,
+        "possible_active_SM_upper_bound": 108,
+        "SM_spread_deficit_proxy": 0.0,
+        "grid_warps": 512,
+        "resource_capacity_round_lower_bound": 1,
+        "dynamic_smem_optin_calls_per_execution": 0,
+        "cudaGetLastError_calls_per_execution": 16,
+        "achieved_occupancy": null,
+        "actual_smem_carveout": null,
+        "scope": "Per GEMM unless named per_execution; optimistic resource bounds only."
+      },
+      "feature_extrapolation": [],
+      "family_seen": true,
+      "shape_seen": false,
+      "coefficient_identification": "full_column_rank_not_causal_identification",
+      "training_shape_count_for_implementation": 9,
+      "training_shapes_for_exact_candidate_family": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          3072,
+          512
+        ]
+      ],
+      "library_algorithm_prediction": "fixed audited kernel family",
+      "compiler_admission": false,
+      "physical_bandwidth_or_stall_attribution": null,
+      "regime": {
+        "composition": "common_plus_max_plus_retained_min",
+        "retained_fraction": 0.0,
+        "latency_proxy_us": 230.36814857084224,
+        "throughput_proxy_us": 788.9514025720839,
+        "retained_smaller_proxy_us": 0.0,
+        "dominant_proxy": "throughput",
+        "branch_margin_us": 558.5832540012417,
+        "W_over_L": 32.0,
+        "physical_bottleneck_identified": false,
+        "physical_overlap_fraction_identified": false
+      },
+      "config_id": "fb0d7621dfcbdc08dac73ec9f0e42fb96ceddb26e3ccd6e5141ea91af499cf90",
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ],
+      "candidate_id": "splitk4@prepared",
+      "family": "splitk4",
+      "observed_us": 1047.6464999999998,
+      "process_medians_us": [
+        1047.496,
+        1047.6464999999998,
+        1050.2715
+      ],
+      "error_us": 34.9236828625335,
+      "absolute_percentage_error": 0.03333536919422109,
+      "quality_flags": [],
+      "eligible_for_calibration": true,
+      "scope": "development_leave_shape_out"
+    }
+  ],
+  "repeat_predictions": [],
+  "skipped": [],
+  "training_only_fixed_order": [
+    "splitk4_groupedn2@prepared",
+    "splitk4@prepared",
+    "splitk2_groupedn2@prepared"
+  ]
+}

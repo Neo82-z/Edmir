@@ -1,0 +1,440 @@
+{
+  "profiler": true,
+  "primary_dataset": false,
+  "compiler_admission": false,
+  "scope": "Single trace per configuration; ordinal slicing verified against kernel counts and stream serialization. GEMM envelopes exclude host communication before GEMMs. API window is bounded by GEMMs, not exact CPU iteration markers. Do not subtract these times from unprofiled wall times or infer physical traffic / semaphore stalls.",
+  "traces": {
+    "trace-largenhost": {
+      "job": {
+        "stage": "mechanisms",
+        "workload_id": "w001",
+        "shape": [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        "family": "host",
+        "candidate_id": "host@prepared",
+        "metadata_mode": "prepared",
+        "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+        "executable": "mechanism_w001_host",
+        "repetition": 0,
+        "trial_order": 37,
+        "ordinal": 37
+      },
+      "total_gemm_kernels": 1936,
+      "profiled_wall_median_us": 951.9915,
+      "median_all_device_gemm_envelope_us": 353.2545,
+      "median_between_gemm_envelopes_us": 597.149,
+      "per_device": {
+        "0": {
+          "median_sum_of_four_gemm_us": 193.983,
+          "median_gemm_span_us": 236.015,
+          "median_kernel_us_by_launch_ordinal": [
+            50.6395,
+            47.424,
+            47.743,
+            48.064
+          ]
+        },
+        "1": {
+          "median_sum_of_four_gemm_us": 195.08749999999998,
+          "median_gemm_span_us": 209.855,
+          "median_kernel_us_by_launch_ordinal": [
+            52.048,
+            47.296,
+            47.456,
+            47.84
+          ]
+        },
+        "2": {
+          "median_sum_of_four_gemm_us": 192.415,
+          "median_gemm_span_us": 209.663,
+          "median_kernel_us_by_launch_ordinal": [
+            50.0475,
+            47.04,
+            47.487,
+            47.807
+          ]
+        },
+        "3": {
+          "median_sum_of_four_gemm_us": 193.935,
+          "median_gemm_span_us": 208.895,
+          "median_kernel_us_by_launch_ordinal": [
+            50.928,
+            47.264,
+            47.648,
+            47.98350000000001
+          ]
+        }
+      },
+      "launch_resources": [
+        {
+          "gridX": 1,
+          "gridY": 16,
+          "gridZ": 1,
+          "blockX": 128,
+          "blockY": 1,
+          "blockZ": 1,
+          "registersPerThread": 138,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 36864,
+          "localMemoryPerThread": 0
+        }
+      ],
+      "runtime_api_within_gemm_window": {
+        "cudaEventRecord_v3020": {
+          "count": 9528,
+          "sum_us": 22227.913,
+          "median_us": 2.3
+        },
+        "cudaStreamWaitEvent_v3020": {
+          "count": 15106,
+          "sum_us": 15828.682,
+          "median_us": 0.76
+        },
+        "cudaStreamGetCaptureInfo_v2_v11030": {
+          "count": 2378,
+          "sum_us": 603.241,
+          "median_us": 0.24
+        },
+        "cudaGetFuncBySymbol_v11000": {
+          "count": 2378,
+          "sum_us": 334.714,
+          "median_us": 0.14
+        },
+        "cuLaunchKernelEx": {
+          "count": 2378,
+          "sum_us": 9412.393,
+          "median_us": 3.92
+        },
+        "cudaLaunchKernel_v7000": {
+          "count": 1599,
+          "sum_us": 8817.374,
+          "median_us": 5.44
+        },
+        "cudaStreamSynchronize_v3020": {
+          "count": 1198,
+          "sum_us": 8745.707,
+          "median_us": 2.91
+        },
+        "cudaMemcpyAsync_v3020": {
+          "count": 396,
+          "sum_us": 2095.9,
+          "median_us": 4.82
+        }
+      },
+      "sqlite_sha256": "0cee05d562ef9360206c80acddefcdf01d31cab788e17a0d079b23d71b194f25"
+    },
+    "trace-largenq2": {
+      "job": {
+        "stage": "mechanisms",
+        "workload_id": "w001",
+        "shape": [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        "family": "splitk2",
+        "candidate_id": "splitk2@prepared",
+        "metadata_mode": "prepared",
+        "implementation_id": "direct_peer_cutlass_sm80_q2_g1_prepared_metadata_v2",
+        "executable": "mechanism_w001_splitk2",
+        "repetition": 0,
+        "trial_order": 34,
+        "ordinal": 34
+      },
+      "total_gemm_kernels": 1936,
+      "profiled_wall_median_us": 754.6469999999999,
+      "median_all_device_gemm_envelope_us": 713.108,
+      "median_between_gemm_envelopes_us": 39.414,
+      "per_device": {
+        "0": {
+          "median_sum_of_four_gemm_us": 207.743,
+          "median_gemm_span_us": 515.374,
+          "median_kernel_us_by_launch_ordinal": [
+            31.072,
+            58.943,
+            59.232,
+            58.368
+          ]
+        },
+        "1": {
+          "median_sum_of_four_gemm_us": 207.0385,
+          "median_gemm_span_us": 570.703,
+          "median_kernel_us_by_launch_ordinal": [
+            30.976,
+            58.816,
+            58.912,
+            58.24
+          ]
+        },
+        "2": {
+          "median_sum_of_four_gemm_us": 208.7185,
+          "median_gemm_span_us": 625.869,
+          "median_kernel_us_by_launch_ordinal": [
+            31.008,
+            59.264,
+            59.5355,
+            58.799499999999995
+          ]
+        },
+        "3": {
+          "median_sum_of_four_gemm_us": 208.64,
+          "median_gemm_span_us": 685.838,
+          "median_kernel_us_by_launch_ordinal": [
+            31.2,
+            59.231,
+            59.583,
+            58.752
+          ]
+        }
+      },
+      "launch_resources": [
+        {
+          "gridX": 1,
+          "gridY": 16,
+          "gridZ": 2,
+          "blockX": 128,
+          "blockY": 1,
+          "blockZ": 1,
+          "registersPerThread": 140,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 36864,
+          "localMemoryPerThread": 0
+        }
+      ],
+      "runtime_api_within_gemm_window": {
+        "cudaLaunchKernel_v7000": {
+          "count": 1599,
+          "sum_us": 7895.445,
+          "median_us": 4.83
+        },
+        "cudaEventRecord_v3020": {
+          "count": 2799,
+          "sum_us": 6733.121,
+          "median_us": 2.39
+        },
+        "cudaStreamWaitEvent_v3020": {
+          "count": 7400,
+          "sum_us": 13609.023,
+          "median_us": 2.09
+        },
+        "cudaStreamSynchronize_v3020": {
+          "count": 1194,
+          "sum_us": 48767.262,
+          "median_us": 2.79
+        }
+      },
+      "sqlite_sha256": "df4052060559a06fa351e26c48036bb8e1e68c53038d76899e5cced8e635e73e"
+    },
+    "trace-m512q2": {
+      "job": {
+        "stage": "mechanisms",
+        "workload_id": "w004",
+        "shape": [
+          4,
+          512,
+          4096,
+          512
+        ],
+        "family": "splitk2",
+        "candidate_id": "splitk2@prepared",
+        "metadata_mode": "prepared",
+        "implementation_id": "direct_peer_cutlass_sm80_q2_g1_prepared_metadata_v2",
+        "executable": "mechanism_w004_splitk2",
+        "repetition": 0,
+        "trial_order": 78,
+        "ordinal": 78
+      },
+      "total_gemm_kernels": 1936,
+      "profiled_wall_median_us": 1039.5965,
+      "median_all_device_gemm_envelope_us": 1001.7394999999999,
+      "median_between_gemm_envelopes_us": 35.579,
+      "per_device": {
+        "0": {
+          "median_sum_of_four_gemm_us": 298.3815,
+          "median_gemm_span_us": 715.5640000000001,
+          "median_kernel_us_by_launch_ordinal": [
+            30.9595,
+            89.10300000000001,
+            88.33500000000001,
+            89.328
+          ]
+        },
+        "1": {
+          "median_sum_of_four_gemm_us": 294.3995,
+          "median_gemm_span_us": 802.014,
+          "median_kernel_us_by_launch_ordinal": [
+            30.848,
+            87.536,
+            87.583,
+            88.49600000000001
+          ]
+        },
+        "2": {
+          "median_sum_of_four_gemm_us": 294.87850000000003,
+          "median_gemm_span_us": 888.124,
+          "median_kernel_us_by_launch_ordinal": [
+            30.7195,
+            87.456,
+            87.647,
+            88.8475
+          ]
+        },
+        "3": {
+          "median_sum_of_four_gemm_us": 294.942,
+          "median_gemm_span_us": 978.492,
+          "median_kernel_us_by_launch_ordinal": [
+            30.976,
+            87.52,
+            87.5035,
+            88.864
+          ]
+        }
+      },
+      "launch_resources": [
+        {
+          "gridX": 8,
+          "gridY": 4,
+          "gridZ": 2,
+          "blockX": 128,
+          "blockY": 1,
+          "blockZ": 1,
+          "registersPerThread": 140,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 36864,
+          "localMemoryPerThread": 0
+        }
+      ],
+      "runtime_api_within_gemm_window": {
+        "cudaLaunchKernel_v7000": {
+          "count": 1599,
+          "sum_us": 6945.969,
+          "median_us": 4.31
+        },
+        "cudaEventRecord_v3020": {
+          "count": 2799,
+          "sum_us": 5809.628,
+          "median_us": 2.04
+        },
+        "cudaStreamWaitEvent_v3020": {
+          "count": 7400,
+          "sum_us": 11829.965,
+          "median_us": 2.03
+        },
+        "cudaStreamSynchronize_v3020": {
+          "count": 1194,
+          "sum_us": 73218.056,
+          "median_us": 2.5244999999999997
+        }
+      },
+      "sqlite_sha256": "a58a28bb68fb27545a824bd07e59c794547d684cd86261460c5e5703c5ad0a55"
+    },
+    "trace-m512q4": {
+      "job": {
+        "stage": "mechanisms",
+        "workload_id": "w004",
+        "shape": [
+          4,
+          512,
+          4096,
+          512
+        ],
+        "family": "splitk4",
+        "candidate_id": "splitk4@prepared",
+        "metadata_mode": "prepared",
+        "implementation_id": "direct_peer_cutlass_sm80_q4_g1_prepared_metadata_v2",
+        "executable": "mechanism_w004_splitk4",
+        "repetition": 0,
+        "trial_order": 32,
+        "ordinal": 32
+      },
+      "total_gemm_kernels": 1936,
+      "profiled_wall_median_us": 1065.3410000000001,
+      "median_all_device_gemm_envelope_us": 1025.7455,
+      "median_between_gemm_envelopes_us": 39.195,
+      "per_device": {
+        "0": {
+          "median_sum_of_four_gemm_us": 305.949,
+          "median_gemm_span_us": 734.284,
+          "median_kernel_us_by_launch_ordinal": [
+            32.736,
+            91.152,
+            90.87950000000001,
+            90.944
+          ]
+        },
+        "1": {
+          "median_sum_of_four_gemm_us": 305.58349999999996,
+          "median_gemm_span_us": 822.4455,
+          "median_kernel_us_by_launch_ordinal": [
+            32.608,
+            91.072,
+            90.9115,
+            90.944
+          ]
+        },
+        "2": {
+          "median_sum_of_four_gemm_us": 304.0935,
+          "median_gemm_span_us": 909.276,
+          "median_kernel_us_by_launch_ordinal": [
+            32.48,
+            90.336,
+            90.687,
+            90.304
+          ]
+        },
+        "3": {
+          "median_sum_of_four_gemm_us": 304.4145,
+          "median_gemm_span_us": 1000.0285,
+          "median_kernel_us_by_launch_ordinal": [
+            32.48,
+            90.72,
+            90.41550000000001,
+            90.56
+          ]
+        }
+      },
+      "launch_resources": [
+        {
+          "gridX": 8,
+          "gridY": 4,
+          "gridZ": 4,
+          "blockX": 128,
+          "blockY": 1,
+          "blockZ": 1,
+          "registersPerThread": 140,
+          "staticSharedMemory": 0,
+          "dynamicSharedMemory": 36864,
+          "localMemoryPerThread": 0
+        }
+      ],
+      "runtime_api_within_gemm_window": {
+        "cudaLaunchKernel_v7000": {
+          "count": 1599,
+          "sum_us": 8113.604,
+          "median_us": 4.52
+        },
+        "cudaEventRecord_v3020": {
+          "count": 2799,
+          "sum_us": 6831.236,
+          "median_us": 2.28
+        },
+        "cudaStreamWaitEvent_v3020": {
+          "count": 7400,
+          "sum_us": 13276.493,
+          "median_us": 2.14
+        },
+        "cudaStreamSynchronize_v3020": {
+          "count": 1194,
+          "sum_us": 71625.804,
+          "median_us": 2.88
+        }
+      },
+      "sqlite_sha256": "60987c31d9124438102e51e03e13142360ea03f42686cf7d8e1145adc2894327"
+    }
+  }
+}

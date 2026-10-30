@@ -1,0 +1,772 @@
+{
+  "schema": "edmir.shape-evaluation-protocol.v1",
+  "date": "2026-10-28",
+  "state": "protocol_frozen; model_binary_and_environment_not_yet_frozen",
+  "shape_order": "P,M,K,N",
+  "diagnostic_shapes": [
+    [
+      8,
+      64,
+      4096,
+      2048
+    ],
+    [
+      8,
+      64,
+      8192,
+      1024
+    ],
+    [
+      8,
+      256,
+      8192,
+      512
+    ],
+    [
+      8,
+      512,
+      8192,
+      512
+    ]
+  ],
+  "frozen_boundary_shapes": [
+    [
+      8,
+      56,
+      3072,
+      776
+    ],
+    [
+      8,
+      72,
+      3072,
+      776
+    ],
+    [
+      8,
+      64,
+      3072,
+      3328
+    ],
+    [
+      8,
+      64,
+      3072,
+      3584
+    ],
+    [
+      8,
+      320,
+      6144,
+      768
+    ],
+    [
+      8,
+      96,
+      6144,
+      2560
+    ]
+  ],
+  "boundary_questions": [
+    "M=56/72 crosses a 64-row tile edge with a fixed N tail",
+    "q4/g1 CTA count 104/112 crosses the 108-CTA reference capacity; not actual residency",
+    "equal MN with different M/N aspect ratios; host/fused winner not preassigned"
+  ],
+  "exposure_inventory_sha256": "38966d16e1fe0238e80dcc3335636d5c346dfdd775045ba17768288a5749a978",
+  "exposure_review": "no explicit M,K,N match in searchable repositories; old P4/P8 finite sweep axes checked; implicit/external exposure cannot be excluded by regex alone",
+  "candidates": [
+    "host",
+    "host_merged_cutlass",
+    "host_merged_cublaslt",
+    "direct",
+    "splitk2",
+    "splitk4",
+    "splitk8",
+    "splitk16",
+    "direct_groupedn2",
+    "splitk2_groupedn2",
+    "splitk4_groupedn2",
+    "splitk8_groupedn2",
+    "splitk16_groupedn2"
+  ],
+  "comparisons": [
+    {
+      "a": [
+        8,
+        64,
+        4096,
+        2048
+      ],
+      "b": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "example_candidate": "splitk4",
+      "changed_geometry": {
+        "n_tiles": [
+          16,
+          8
+        ],
+        "output_tiles": [
+          16,
+          8
+        ],
+        "ctas": [
+          64,
+          32
+        ],
+        "partition_k_iterations": [
+          32,
+          64
+        ],
+        "one_cta_per_sm_reference": [
+          {
+            "capacity_ctas": 108,
+            "rounds": 1,
+            "last_round_ctas": 64,
+            "last_round_fraction": 0.5925925925925926,
+            "total_slot_fraction": 0.5925925925925926,
+            "meaning": "reference packing only; ignores scheduling, stalls and serial progress"
+          },
+          {
+            "capacity_ctas": 108,
+            "rounds": 1,
+            "last_round_ctas": 32,
+            "last_round_fraction": 0.2962962962962963,
+            "total_slot_fraction": 0.2962962962962963,
+            "meaning": "reference packing only; ignores scheduling, stalls and serial progress"
+          }
+        ]
+      },
+      "controlled_single_mechanism_experiment": false,
+      "observed_latency_difference": null
+    },
+    {
+      "a": [
+        8,
+        256,
+        8192,
+        512
+      ],
+      "b": [
+        8,
+        512,
+        8192,
+        512
+      ],
+      "example_candidate": "splitk4",
+      "changed_geometry": {
+        "m_tiles": [
+          4,
+          8
+        ],
+        "output_tiles": [
+          16,
+          32
+        ],
+        "ctas": [
+          64,
+          128
+        ],
+        "logical_flops": [
+          2147483648,
+          4294967296
+        ],
+        "one_cta_per_sm_reference": [
+          {
+            "capacity_ctas": 108,
+            "rounds": 1,
+            "last_round_ctas": 64,
+            "last_round_fraction": 0.5925925925925926,
+            "total_slot_fraction": 0.5925925925925926,
+            "meaning": "reference packing only; ignores scheduling, stalls and serial progress"
+          },
+          {
+            "capacity_ctas": 108,
+            "rounds": 2,
+            "last_round_ctas": 20,
+            "last_round_fraction": 0.18518518518518517,
+            "total_slot_fraction": 0.5925925925925926,
+            "meaning": "reference packing only; ignores scheduling, stalls and serial progress"
+          }
+        ]
+      },
+      "controlled_single_mechanism_experiment": false,
+      "observed_latency_difference": null
+    },
+    {
+      "a": [
+        8,
+        56,
+        3072,
+        776
+      ],
+      "b": [
+        8,
+        72,
+        3072,
+        776
+      ],
+      "example_candidate": "splitk4",
+      "changed_geometry": {
+        "m_tiles": [
+          1,
+          2
+        ],
+        "output_tiles": [
+          7,
+          14
+        ],
+        "ctas": [
+          28,
+          56
+        ],
+        "logical_flops": [
+          266993664,
+          343277568
+        ],
+        "valid_output_fraction": [
+          0.7578125,
+          0.48716517857142855
+        ],
+        "last_m_tile_rows": [
+          56,
+          8
+        ],
+        "one_cta_per_sm_reference": [
+          {
+            "capacity_ctas": 108,
+            "rounds": 1,
+            "last_round_ctas": 28,
+            "last_round_fraction": 0.25925925925925924,
+            "total_slot_fraction": 0.25925925925925924,
+            "meaning": "reference packing only; ignores scheduling, stalls and serial progress"
+          },
+          {
+            "capacity_ctas": 108,
+            "rounds": 1,
+            "last_round_ctas": 56,
+            "last_round_fraction": 0.5185185185185185,
+            "total_slot_fraction": 0.5185185185185185,
+            "meaning": "reference packing only; ignores scheduling, stalls and serial progress"
+          }
+        ]
+      },
+      "controlled_single_mechanism_experiment": false,
+      "observed_latency_difference": null
+    },
+    {
+      "a": [
+        8,
+        64,
+        3072,
+        3328
+      ],
+      "b": [
+        8,
+        64,
+        3072,
+        3584
+      ],
+      "example_candidate": "splitk4",
+      "changed_geometry": {
+        "n_tiles": [
+          26,
+          28
+        ],
+        "output_tiles": [
+          26,
+          28
+        ],
+        "ctas": [
+          104,
+          112
+        ],
+        "logical_flops": [
+          1308622848,
+          1409286144
+        ],
+        "one_cta_per_sm_reference": [
+          {
+            "capacity_ctas": 108,
+            "rounds": 1,
+            "last_round_ctas": 104,
+            "last_round_fraction": 0.9629629629629629,
+            "total_slot_fraction": 0.9629629629629629,
+            "meaning": "reference packing only; ignores scheduling, stalls and serial progress"
+          },
+          {
+            "capacity_ctas": 108,
+            "rounds": 2,
+            "last_round_ctas": 4,
+            "last_round_fraction": 0.037037037037037035,
+            "total_slot_fraction": 0.5185185185185185,
+            "meaning": "reference packing only; ignores scheduling, stalls and serial progress"
+          }
+        ]
+      },
+      "controlled_single_mechanism_experiment": false,
+      "observed_latency_difference": null
+    },
+    {
+      "a": [
+        8,
+        320,
+        6144,
+        768
+      ],
+      "b": [
+        8,
+        96,
+        6144,
+        2560
+      ],
+      "example_candidate": "splitk4",
+      "changed_geometry": {
+        "m_tiles": [
+          5,
+          2
+        ],
+        "n_tiles": [
+          6,
+          20
+        ],
+        "output_tiles": [
+          30,
+          40
+        ],
+        "ctas": [
+          120,
+          160
+        ],
+        "valid_output_fraction": [
+          1.0,
+          0.75
+        ],
+        "last_m_tile_rows": [
+          64,
+          32
+        ],
+        "one_cta_per_sm_reference": [
+          {
+            "capacity_ctas": 108,
+            "rounds": 2,
+            "last_round_ctas": 12,
+            "last_round_fraction": 0.1111111111111111,
+            "total_slot_fraction": 0.5555555555555556,
+            "meaning": "reference packing only; ignores scheduling, stalls and serial progress"
+          },
+          {
+            "capacity_ctas": 108,
+            "rounds": 2,
+            "last_round_ctas": 52,
+            "last_round_fraction": 0.48148148148148145,
+            "total_slot_fraction": 0.7407407407407407,
+            "meaning": "reference packing only; ignores scheduling, stalls and serial progress"
+          }
+        ]
+      },
+      "controlled_single_mechanism_experiment": false,
+      "observed_latency_difference": null
+    }
+  ],
+  "representativeness_reference_sets": {
+    "archived_p8": {
+      "shapes": [
+        [
+          8,
+          32,
+          512,
+          512
+        ],
+        [
+          8,
+          32,
+          512,
+          1024
+        ],
+        [
+          8,
+          32,
+          1024,
+          512
+        ],
+        [
+          8,
+          32,
+          2048,
+          512
+        ],
+        [
+          8,
+          32,
+          2048,
+          1024
+        ],
+        [
+          8,
+          32,
+          2048,
+          2048
+        ],
+        [
+          8,
+          32,
+          4096,
+          512
+        ],
+        [
+          8,
+          32,
+          4096,
+          2048
+        ],
+        [
+          8,
+          32,
+          8192,
+          512
+        ],
+        [
+          8,
+          32,
+          8192,
+          1024
+        ],
+        [
+          8,
+          32,
+          8192,
+          2048
+        ],
+        [
+          8,
+          64,
+          512,
+          512
+        ],
+        [
+          8,
+          64,
+          512,
+          1024
+        ],
+        [
+          8,
+          64,
+          2048,
+          512
+        ],
+        [
+          8,
+          64,
+          2048,
+          1024
+        ],
+        [
+          8,
+          64,
+          4096,
+          512
+        ],
+        [
+          8,
+          64,
+          4096,
+          1024
+        ],
+        [
+          8,
+          64,
+          4096,
+          2048
+        ],
+        [
+          8,
+          64,
+          8192,
+          512
+        ],
+        [
+          8,
+          64,
+          8192,
+          1024
+        ],
+        [
+          8,
+          64,
+          8192,
+          2048
+        ],
+        [
+          8,
+          256,
+          8192,
+          512
+        ],
+        [
+          8,
+          512,
+          8192,
+          512
+        ]
+      ],
+      "status": "measured_uniform_FP16; MKN coincidence only, not routed_BF16 execution coverage"
+    },
+    "diagnostic": {
+      "shapes": [
+        [
+          8,
+          64,
+          4096,
+          2048
+        ],
+        [
+          8,
+          64,
+          8192,
+          1024
+        ],
+        [
+          8,
+          256,
+          8192,
+          512
+        ],
+        [
+          8,
+          512,
+          8192,
+          512
+        ]
+      ],
+      "status": "planned_new_runtime; known design shapes"
+    },
+    "boundary": {
+      "shapes": [
+        [
+          8,
+          56,
+          3072,
+          776
+        ],
+        [
+          8,
+          72,
+          3072,
+          776
+        ],
+        [
+          8,
+          64,
+          3072,
+          3328
+        ],
+        [
+          8,
+          64,
+          3072,
+          3584
+        ],
+        [
+          8,
+          320,
+          6144,
+          768
+        ],
+        [
+          8,
+          96,
+          6144,
+          2560
+        ]
+      ],
+      "status": "planned_new_runtime; no measured labels"
+    }
+  },
+  "training": {
+    "features": [
+      "host",
+      "merged_host",
+      "geometry_unknown",
+      "uniform_dependencies",
+      "prepared",
+      "log_P",
+      "log_M",
+      "log_K",
+      "log_N",
+      "log_SM",
+      "log_q",
+      "log_group_N",
+      "log_gemms_per_destination",
+      "log_logical_flops",
+      "log_A_bytes",
+      "log_B_bytes",
+      "log_remote_input_bytes",
+      "log_m_tiles",
+      "log_n_tiles",
+      "log_output_tiles",
+      "log_ctas",
+      "log_K_iterations",
+      "valid_tile_fraction",
+      "last_M_fraction",
+      "last_N_fraction",
+      "reference_waves",
+      "last_wave_fraction",
+      "log_epilogue_edges",
+      "log_padded_work",
+      "group_x_K_depth",
+      "q_x_output_tiles"
+    ],
+    "variants": {
+      "linear_latency": [
+        0,
+        0.0,
+        0.0
+      ],
+      "linear_decision": [
+        0,
+        1.0,
+        1.0
+      ],
+      "mlp_decision": [
+        8,
+        1.0,
+        1.0
+      ]
+    },
+    "settings": {
+      "epochs": 100,
+      "learning_rate": 0.003,
+      "weight_decay": 0.001,
+      "temperature": 0.05,
+      "seeds": [
+        0,
+        1
+      ],
+      "gradient_clip": 10.0,
+      "batching": "all training shapes; equal shape mass",
+      "max_seconds": 10.0
+    },
+    "parameters": {
+      "linear": 32,
+      "width8_mlp": 296
+    },
+    "loss": "balanced log-time MSE + expected relative regret + observed-best log-gap hinge squared; AdamW decay",
+    "physical_prior": "not yet identified; current numerical head is empirical, service model remains separate",
+    "observed_candidates_only": true,
+    "selection_weights_are_calibrated_probabilities": false,
+    "language_encoder": false,
+    "Jev_RLCD_reproduced": false,
+    "development_only": "all previously measured or design-exposed shapes; whole-shape folds; no promotion from historical pilot",
+    "P4_P8_BF16_contexts_may_be_pooled": false
+  },
+  "evaluation": {
+    "model_sha256": null,
+    "binary_sha256": null,
+    "environment_manifest_sha256": null,
+    "independent_evaluation_ready": false,
+    "must_freeze_before_labels": true,
+    "candidate_order": "score canonical candidates; exact ties use host then stable candidate ID",
+    "missing_or_failed_candidates": "preserve status and failed numerical checks; incomplete surface cannot pass full-candidate oracle gate",
+    "selection_blocks": "separate block IDs from all verification blocks; k=1/2/3",
+    "verification_blocks": 3,
+    "shortlist_selection_blocks_per_candidate": 1,
+    "metrics": [
+      "mean/max hard regret",
+      "host-to-fused errors",
+      "fused-to-host errors",
+      "score order invariance",
+      "shape-balanced latency MAPE",
+      "top1/2/3 oracle retention",
+      "amortized search+execution cost"
+    ],
+    "primary_gate": {
+      "mean_regret_max": 0.01,
+      "worst_regret_max": 0.03,
+      "no_worse_mean_and_max_than_training_fixed_order": true,
+      "no_worse_mean_and_max_than_strong_host_control": true,
+      "all_candidate_permutations_invariant": true,
+      "both_directions_observed_with_over_2_percent_margin": true
+    },
+    "missing_direction": "mark bidirectional coverage unestablished; do not replace shapes after observing labels",
+    "failure_policy": "retain every shape and failed model; fresh labels become development-only after any retuning"
+  },
+  "budget": {
+    "diagnostic_primary_blocks": 156,
+    "boundary_oracle_verification_blocks": 234,
+    "boundary_shortlist_selection_blocks_max": 18,
+    "matched_pipeline_control_blocks": 12,
+    "two_host_selection_control_blocks_max": 12,
+    "equal_budget_search_blocks_max": 18,
+    "candidate_block_total_max": 450,
+    "new_hardware_or_model_sweeps": 0,
+    "deadline": "estimate from first smoke run; preserve partial outputs, no automatic rental or overtime"
+  },
+  "moe": {
+    "model_id": "Qwen/Qwen3-Next-80B-A3B-Instruct",
+    "revision": "9c7f2fbe84465e40164a94cc16cd30b6999b0cc7",
+    "dtype": "BF16",
+    "EP": 8,
+    "TP": 1,
+    "num_experts": 512,
+    "top_k": 10,
+    "projections": [
+      {
+        "name": "gate_up",
+        "K": 2048,
+        "N": 1024
+      },
+      {
+        "name": "down",
+        "K": 512,
+        "N": 2048
+      }
+    ],
+    "projection_status": "config-derived logical projections; actual backend fusion/padding must be captured",
+    "workloads": {
+      "input_tokens": [
+        512,
+        4096
+      ],
+      "concurrency": [
+        1,
+        128
+      ],
+      "max_output_tokens": 128
+    },
+    "sampling": "diagnostic run only; first three complete prefill and first three complete decode steps per workload, all MoE layers and EP ranks; record missing phases",
+    "request_corpus_sha256": null,
+    "engine_revision": null,
+    "real_trace_sha256": null,
+    "required_statistics": [
+      "source-expert token histogram including zeros",
+      "global expert token histogram",
+      "logical projection dimensions/frequency by phase",
+      "actual backend padded MKN when observed",
+      "exact logical MKN occurrence/row/FLOP coverage with denominator and sample scope"
+    ],
+    "claims_forbidden_without_measurement": [
+      "kernel-time share from FLOPs",
+      "uniform M equals expert M",
+      "FP16 proxy implies BF16 end-to-end gain"
+    ],
+    "runtime_hook_validated": false,
+    "representation_validation_passed": false
+  },
+  "preserved_failures_sha256": {
+    "experiments/2026-10-21-shared-candidate-review/verified/decision.json": "cc6c8b63106e9b509f545c23321a2ea10d2505dac28435abedf2f8532a88f671",
+    "experiments/2026-10-21-decision-loss-iterations/README.md": "da05de18a97b6bc5c0d17f64a286a0d66c804ce8c447da81e534241ef57aea75",
+    "experiments/2026-10-26-tile-model-revision/validated/plan.json": "87f87a8a4aa7c067fbc70eaa728667938562f862d42e1b19b70cd607f6f3b333"
+  },
+  "implementation_sha256": {
+    "EDM-IR/tools/prepare_shape_evaluation.py": "54d15486d032a3e965fbf9453f396f3edac815214dca8304a63320d3f1d0844c",
+    "EDM-IR/edmir/compiler/shape_decision_model.py": "6b428f0f56e7ffe01766d355817633aafc8fd5e16d45242ce20fc7a5ee302acb",
+    "EDM-IR/edmir/benchmark/moe_shape_profile.py": "2261ffffde49c31c8cd9d7ff11cf96d7b87a2cd78b45d9c033b4f846f8aa77c0"
+  },
+  "compiler_admission": false,
+  "new_GPU_measurements": 0
+}

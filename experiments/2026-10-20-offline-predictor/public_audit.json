@@ -1,0 +1,207 @@
+{
+  "schema": "edmir.public-source-audit.v1",
+  "catalog_sha256": "2bd0748933acc89b894d676768aa958f85e1d5244713f5020d30c580cd91d83f",
+  "checked_files": 19,
+  "admitted_public_fused_training_rows": 0,
+  "tilelang_benchmark": [
+    {
+      "path": "ampere_benchmark/dense_matmul/data/data_float16_gemm.py",
+      "providers": [
+        {
+          "name": "cuBLAS-W$_{FP16}$A$_{FP16}$",
+          "entries": 13,
+          "positive_values": 0,
+          "missing_minus_one": 13
+        },
+        {
+          "name": "Triton-W$_{FP16}$A$_{FP16}$",
+          "entries": 13,
+          "positive_values": 0,
+          "missing_minus_one": 13
+        },
+        {
+          "name": "BitBLAS-W$_{FP16}$A$_{FP16}$",
+          "entries": 13,
+          "positive_values": 13,
+          "missing_minus_one": 0
+        }
+      ],
+      "decision": "not fused training; missing cuBLAS/Triton labels, incomplete timing provenance"
+    },
+    {
+      "path": "ampere_benchmark/contiguous_dequant_matmul/data/n8192_k8192_data.py",
+      "providers": [
+        {
+          "name": "cuBLAS-W$_{FP16}$A$_{FP16}$",
+          "entries": 6,
+          "positive_values": 0,
+          "missing_minus_one": 6
+        },
+        {
+          "name": "CUTLASS-W$_{INT4}$A$_{FP16}$",
+          "entries": 6,
+          "positive_values": 0,
+          "missing_minus_one": 6
+        },
+        {
+          "name": "Marlin-W$_{INT4}$A$_{FP16}$",
+          "entries": 6,
+          "positive_values": 0,
+          "missing_minus_one": 6
+        },
+        {
+          "name": "BitBLAS-W$_{INT4}$A$_{FP16}$",
+          "entries": 6,
+          "positive_values": 0,
+          "missing_minus_one": 6
+        },
+        {
+          "name": "BitBLAS-W$_{INT2}$A$_{INT8}$",
+          "entries": 6,
+          "positive_values": 0,
+          "missing_minus_one": 6
+        }
+      ],
+      "decision": "not fused training; missing cuBLAS/Triton labels, incomplete timing provenance"
+    }
+  ],
+  "gpperf_cutlass": {
+    "rows": 16128,
+    "gpus": [
+      "NVIDIA GeForce RTX 4070"
+    ],
+    "kernels": [
+      "cutlass_simt_sgemm_128x128_8x2_nn_align1",
+      "cutlass_simt_sgemm_128x128_8x2_nt_align1",
+      "cutlass_simt_sgemm_128x128_8x2_tn_align1",
+      "cutlass_simt_sgemm_128x128_8x2_tt_align1"
+    ],
+    "m_values": [
+      512,
+      1024,
+      2048,
+      128256
+    ],
+    "beta_counts": {
+      "0.0": 8064,
+      "1.0": 4032,
+      "0.5": 4032
+    },
+    "decision": "external SIMT SGEMM, not A100 FP16 Tensor Core or fused labels",
+    "unresolved": [
+      "runtime unit not independently reconstructed from measurement command",
+      "blocksize columns disagree with kernel-name tile in example rows",
+      "TFlops field should not be used without unit verification",
+      "dimension 128256 retained exactly as recorded"
+    ]
+  },
+  "public_a100_nccl": {
+    "rows": 496,
+    "operation_counts": {
+      "all_reduce_perf": 124,
+      "all_gather_perf": 124,
+      "broadcast_perf": 124,
+      "alltoall_perf": 124
+    },
+    "gpu_counts": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "columns": [
+      "op",
+      "gpus",
+      "size_bytes",
+      "busbw_oop_gbps",
+      "busbw_ip_gbps",
+      "returncode",
+      "error"
+    ],
+    "nonzero_returncodes": 0,
+    "decision": "bandwidth component reference only; no stored latency or per-row validation counts",
+    "normalization": "do not reconstruct exact times from rounded bandwidth or treat one-GPU zero BW as latency"
+  },
+  "tilebench_b200_matmul": {
+    "tables": {
+      "default": {
+        "rows": 60,
+        "fp16_shapes": 20,
+        "fixed_dimensions": {
+          "M": 4096,
+          "N": 4096
+        },
+        "k_values": [
+          1024,
+          2048,
+          3072,
+          4096,
+          5120,
+          6144,
+          7168,
+          8192,
+          9216,
+          10240,
+          11264,
+          12288,
+          13312,
+          14336,
+          15360,
+          16384,
+          17408,
+          18432,
+          19456,
+          20480
+        ],
+        "time_columns_ms": [
+          "torch_ms",
+          "triton_ms",
+          "cutile_ms",
+          "tilelang_ms"
+        ]
+      },
+      "autotune": {
+        "rows": 60,
+        "fp16_shapes": 20,
+        "fixed_dimensions": {
+          "M": 4096,
+          "N": 4096
+        },
+        "k_values": [
+          1024,
+          2048,
+          3072,
+          4096,
+          5120,
+          6144,
+          7168,
+          8192,
+          9216,
+          10240,
+          11264,
+          12288,
+          13312,
+          14336,
+          15360,
+          16384,
+          17408,
+          18432,
+          19456,
+          20480
+        ],
+        "time_columns_ms": [
+          "torch_ms",
+          "triton_ms",
+          "cutile_ms",
+          "tilelang_ms"
+        ]
+      }
+    },
+    "decision": "component methodology/reference; hardware and M range differ from current A100 small-M target",
+    "notes": [
+      "default and autotune are different conditions, not independent repetitions",
+      "recorded config: CUDA graph enabled, L2 flush enabled, warmup 1, repeat 3",
+      "recorded tolerance atol 5.0, rtol 0.1 is not our FP16 correctness contract"
+    ]
+  }
+}

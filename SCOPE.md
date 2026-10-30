@@ -2,6 +2,8 @@
 
 Status: **frozen for v0.1**.
 
+2026-10-27：下面保留 v0.1 实现与正确性契约。当前论文主线是固定通信条件下的暴露延迟、执行代价与候选选择，统一入口见 [NeuSight 适配方案](paper/NEUSIGHT_ADAPTATION_PLAN.md)。当前算子阶段以单机八卡 A100 为主验证、四卡为机制对照；之后一个真实 MoE 推理验证按 [收尾计划](paper/P8_MOE_CLOSEOUT_PLAN.md)执行。v0.1 的静态算子契约不代表已经完成动态 MoE，也不覆盖后续应用验证的范围声明。
+
 修改本文件中的核心问题、输入范围或停止条件，等同于重新立项；普通实现细节不应扩大范围。
 
 ## 核心问题
@@ -31,7 +33,7 @@ schedule, then lower it to an inspectable implementation artifact?
 - 每个 destination 收到等尺寸分片；
 - GEMM 直接消费 All2All 重排后的矩阵；
 - 不包含 top-k routing、ragged tokens、capacity factor 或动态 expert placement；
-- 第一目标拓扑是单节点 H100 SXM/NVSwitch；A100 只作为传统路径和 P2P 对照。
+- v0.1 最初验证环境为单节点四卡 A100 SXM4 80GB、全互联 NVLink/P2P；当前论文八卡主验证遵循上述新计划，旧八卡结果按原执行身份独立归档。H100 不作为硬件前提。
 
 ## v0.1 编译对象
 

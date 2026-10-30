@@ -95,8 +95,8 @@ def run_case(
     else:
         passed = (
             result.returncode != 0
-            and expected_violation in output
-            and "is violated" in output
+            and re.search(r"Invariant " + re.escape(expected_violation) + r" is violated\b", output) is not None
+            and "The behavior up to this point is:" in output
         )
     return {
         "config": config.name,
@@ -108,6 +108,7 @@ def run_case(
         "states_generated": generated,
         "distinct_states": distinct,
         "raw_output": raw_output.name,
+        "raw_output_sha256": sha256(raw_output),
     }
 
 

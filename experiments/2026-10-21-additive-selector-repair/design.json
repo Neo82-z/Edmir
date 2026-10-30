@@ -1,0 +1,27 @@
+{
+  "schema": "edmir.additive-selector-development.v1",
+  "date": "2026-10-21",
+  "status": "Adaptive engineering repair, recorded after architecture development; not preregistered or independent validation",
+  "user_authorization": "Continue repairing to the existing acceptance standard",
+  "prior_failed_rounds_preserved": ["2026-10-20-selector-decision-audit", "2026-10-21-execution-cost-revision"],
+  "development_ledger": [
+    {"file": "exploration_01.json", "trials": 48, "host": "signed polynomial in continuous log M including N squared", "result": "four priorities corrected in some variants; M32 false-host fails maximum-loss gate"},
+    {"file": "exploration_02.json", "trials": 12, "host": "discrete M tile count", "result": "M32 corrected; large N host extrapolation still fails priority gate"},
+    {"file": "exploration_03.json", "trials": 12, "host": "nonnegative coefficients", "result": "large N failure remains"},
+    {"file": "exploration_04.json", "trials": 12, "host": "remove unsupported N squared growth", "result": "some fixed configurations pass; not used to fix a winning hyperparameter"},
+    {"file": "nested_01.json", "trials": "12 options per inner training-only search", "result": "all unchanged acceptance checks pass"}
+  ],
+  "final_architecture": "separate nonnegative additive host/fused absolute milliseconds; host 7 and fused 12 basis terms; grouped changes K/q, q, K and actual grid independently",
+  "capacity_candidates": [16, 32, 64, 108],
+  "ridge_candidates": [0.001, 0.01, 0.1],
+  "inner_selection": "leave original M/N training sweep out; mean of 0.5 host squared error and 0.5 mean fused squared error, both normalized by that inner workload's observed host time",
+  "outer_evaluation": ["leave M/N sweep out", "leave K out"],
+  "decision": "minimum predicted latency across eligible host and fused candidates; no extra host margin, no abstention counted as success",
+  "acceptance": "unchanged evaluate_execution_cost_selector.decision_gate; 4 priority shapes each <=5% regret; mean/max no worse than all previous controls; host regressions no more than old relative; leave-K maximum no worse than fixed",
+  "support": "archived A100 SXM4 80GB P4 environment and per-source CUTLASS baseline; M64 N sweep or N512 M sweep; grouped-N paired exact M/q and K/N range; training-range extrapolation requires explicit diagnostic opt-in",
+  "robustness": "72 group-deletion refits; independent BVLS; active-region LP witnesses and full nested refits; no statistical confidence claimed",
+  "bounds": {"candidates": 11, "training_rows": 4096, "training_workloads": 256, "training_groups": 32, "fit_deadline_seconds": 30, "NNLS_max_iterations": 1000, "LP_seconds": 5},
+  "new_independent_labels": 0,
+  "gpu_operations": 0,
+  "compiler_admission": false
+}

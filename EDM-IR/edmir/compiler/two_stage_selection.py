@@ -4,13 +4,76 @@ import csv
 import math
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Iterable, Mapping, Sequence
+from typing import Iterable, Mapping, Protocol, Sequence
 
 
-SCHEMA_TWO_STAGE_EVALUATION = "edmir.two-stage-evaluation.v1"
+SCHEMA_TWO_STAGE_EVALUATION = "edmir.two-stage-evaluation.v2"
 DEFAULT_SM_COUNT = 108
 DEFAULT_THREADBLOCK_M = 64
 DEFAULT_THREADBLOCK_N = 128
+
+
+class ScheduleGeometry(Protocol):
+    """Static inputs to the analytical features; no timing label is required."""
+
+    family: str
+    world_size: int
+    rows_per_peer: int
+    k: int
+    n: int
+    remote_input_bytes: int
+    remote_a_replay: int
+    split_k_slices: int
+    n_tiles_per_cta: int
+    estimated_ctas_per_op: int
+
+    @property
+    def is_host(self) -> bool: ...
+
+
+def _require_int(name: str, value: int, *, minimum: int = 1) -> None:
+    if type(value) is not int or value < minimum:
+        raise ValueError(f"{name} must be an integer >= {minimum}")
+
+
+def _require_finite(name: str, value: float) -> None:
+    if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
+        raise ValueError(f"{name} must be a finite number")
+
+
+def _validate_geometry(row: ScheduleGeometry) -> None:
+    """Contract for the current uniform FP16, base-64x128 schedule family."""
+    for name in ("world_size", "rows_per_peer", "k", "n", "remote_input_bytes",
+                 "remote_a_replay", "split_k_slices", "n_tiles_per_cta"):
+        _require_int(name, getattr(row, name), minimum=2 if name == "world_size" else 1)
+    _require_int("estimated_ctas_per_op", row.estimated_ctas_per_op, minimum=0)
+    q, g = parse_schedule_family(row.family)
+    if (q, g) != (row.split_k_slices, row.n_tiles_per_cta):
+        raise ValueError("candidate family does not match q/g fields")
+    if row.k % 8 or row.n % 8 or (q > 1 and row.k % (32 * q)):
+        raise ValueError("shape violates the current SM80 CUTLASS K/N or split-K alignment")
+    expected_remote = 2 * row.world_size * (row.world_size - 1) * row.rows_per_peer * row.k
+    if row.remote_input_bytes != expected_remote:
+        raise ValueError("remote_input_bytes must be the full-program FP16 remote payload")
+    n_tiles = (row.n + DEFAULT_THREADBLOCK_N - 1) // DEFAULT_THREADBLOCK_N
+    rho = 1 if row.is_host else (n_tiles + g - 1) // g
+    gamma = (0 if row.is_host else
+             ((row.rows_per_peer + DEFAULT_THREADBLOCK_M - 1) // DEFAULT_THREADBLOCK_M) * rho * q)
+    if (row.remote_a_replay, row.estimated_ctas_per_op) != (rho, gamma):
+        raise ValueError("rho/CTA counts disagree with the base-64x128 schedule geometry")
+
+
+def _validate_linear_state(names, means, scales, coefficients, *, ridge, sm_count):
+    _require_finite("ridge", ridge)
+    _require_int("sm_count", sm_count)
+    if ridge <= 0:
+        raise ValueError("ridge regularization must be positive")
+    if len(means) != len(names) or len(scales) != len(names) or len(coefficients) != len(names) + 1:
+        raise ValueError("model vector lengths do not match the feature schema")
+    for value in (*means, *scales, *coefficients):
+        _require_finite("model parameter", value)
+    if any(scale <= 0 for scale in scales):
+        raise ValueError("feature scales must be positive")
 
 
 @dataclass(frozen=True, slots=True)
@@ -37,34 +100,12 @@ class ScheduleMeasurement:
     estimated_ctas_per_op: int
 
     def validate(self) -> None:
-        if not self.group_id:
+        if not isinstance(self.group_id, str) or not self.group_id.strip():
             raise ValueError("measurement group_id must not be empty")
-        if self.world_size < 2:
-            raise ValueError("measurement world_size must be at least two")
-        if min(self.rows_per_peer, self.k, self.n) <= 0:
-            raise ValueError("measurement dimensions must be positive")
+        _validate_geometry(self)
+        _require_finite("measurement latency", self.measured_ms)
         if self.measured_ms <= 0.0:
-            raise ValueError("measurement latency must be positive")
-        if self.remote_input_bytes <= 0 or self.remote_a_replay <= 0:
-            raise ValueError("measurement traffic terms must be positive")
-        if self.split_k_slices <= 0 or self.n_tiles_per_cta <= 0:
-            raise ValueError("measurement schedule axes must be positive")
-        if self.estimated_ctas_per_op < 0:
-            raise ValueError("estimated CTA count must be non-negative")
-        expected_q, expected_g = parse_schedule_family(self.family)
-        if self.family == "host":
-            if self.estimated_ctas_per_op != 0:
-                raise ValueError("host measurements must report zero fused CTAs")
-        elif self.estimated_ctas_per_op == 0:
-            raise ValueError("fused measurements must report a positive CTA count")
-        if (expected_q, expected_g) != (
-            self.split_k_slices,
-            self.n_tiles_per_cta,
-        ):
-            raise ValueError(
-                f"family {self.family!r} does not match q/g fields "
-                f"({self.split_k_slices}, {self.n_tiles_per_cta})"
-            )
+            raise ValueError("measurement latency must be finite and positive")
 
     @property
     def shape(self) -> tuple[int, int, int, int]:
@@ -82,6 +123,8 @@ class ScheduleMeasurement:
 def parse_schedule_family(family: str) -> tuple[int, int]:
     """Return ``(split_k_slices, n_tiles_per_cta)`` for a runtime family."""
 
+    if not isinstance(family, str):
+        raise ValueError("schedule family must be a string")
     grouped = 1
     base = family
     if "_groupedn" in base:
@@ -107,6 +150,11 @@ def parse_schedule_family(family: str) -> tuple[int, int]:
         raise ValueError(f"unsupported executable grouped-N factor in {family!r}")
     if base == "host" and grouped != 1:
         raise ValueError("host family cannot use grouped-N")
+    canonical = "host" if base == "host" else "direct" if split_k == 1 else f"splitk{split_k}"
+    if grouped == 2:
+        canonical += "_groupedn2"
+    if family != canonical:
+        raise ValueError(f"noncanonical schedule family {family!r}; expected {canonical!r}")
     return split_k, grouped
 
 
@@ -147,8 +195,11 @@ def _group_measurements(
     groups: dict[
         tuple[str, int, int, int, int], dict[str, ScheduleMeasurement]
     ] = {}
+    owners = {}
     for row in measurements:
         row.validate()
+        if owners.setdefault(row.shape, row.group_id) != row.group_id:
+            raise ValueError(f"shape assigned to multiple sweep groups: {row.shape}")
         candidates = groups.setdefault(row.grouped_shape, {})
         if row.family in candidates:
             raise ValueError(
@@ -180,14 +231,15 @@ class AnalyticalScheduleFeatures:
 
     @classmethod
     def from_measurement(
-        cls, row: ScheduleMeasurement, *, sm_count: int = DEFAULT_SM_COUNT
+        cls, row: ScheduleGeometry, *, sm_count: int = DEFAULT_SM_COUNT
     ) -> "AnalyticalScheduleFeatures":
-        if sm_count <= 0:
-            raise ValueError("SM count must be positive")
+        _require_int("SM count", sm_count)
+        _validate_geometry(row)
         flops = 2 * row.world_size * row.rows_per_peer * row.k * row.n
         # The benchmark CSV stores traffic summed across all ranks, while
-        # latency, FLOPs, and the remaining model terms are per destination.
-        # Keeping one accounting unit is essential for P=4 -> P=8 transfer.
+        # FLOPs and the other model counts are per destination. The timing
+        # label is whole-program wall time, including dispatch/synchronization;
+        # these counts alone do not model that critical path.
         if row.remote_input_bytes % row.world_size:
             raise ValueError("full-program remote bytes must divide across ranks")
         unique_remote_bytes = row.remote_input_bytes // row.world_size
@@ -215,8 +267,10 @@ class AnalyticalScheduleFeatures:
             + reduction_bytes
         )
         if row.is_host:
+            # The historical host launches P separate GEMMs on each rank.
+            # Gamma is one GEMM's grid, not the hypothetical merged-PM grid.
             gamma = (
-                math.ceil(row.world_size * row.rows_per_peer / DEFAULT_THREADBLOCK_M)
+                math.ceil(row.rows_per_peer / DEFAULT_THREADBLOCK_M)
                 * math.ceil(row.n / DEFAULT_THREADBLOCK_N)
             )
             rho_n = 1
@@ -258,7 +312,10 @@ _FULL_FUSED_FEATURES = (
 
 
 def _feature_names(stage: str, ablation: str) -> tuple[str, ...]:
-    if ablation not in {"full", "no_gamma", "no_rho", "no_reduction", "k_only"}:
+    if ablation not in {
+        "full", "no_gamma", "no_rho", "no_reduction", "k_only",
+        "interaction_depth", "interaction_depth_grid",
+    }:
         raise ValueError(f"unknown feature ablation {ablation!r}")
     if stage == "host":
         return ("log_k",) if ablation == "k_only" else _HOST_FEATURES
@@ -275,11 +332,15 @@ def _feature_names(stage: str, ablation: str) -> tuple[str, ...]:
     elif ablation == "no_reduction":
         names.remove("log_reduction_bytes")
         names.remove("q_minus_one")
+    elif ablation in {"interaction_depth", "interaction_depth_grid"}:
+        names.append("grouped_x_log_split_k_depth")
+        if ablation == "interaction_depth_grid":
+            names.append("underfill_x_log_split_k_depth")
     return tuple(names)
 
 
 def _feature_values(
-    row: ScheduleMeasurement,
+    row: ScheduleGeometry,
     names: Sequence[str],
     *,
     sm_count: int,
@@ -301,12 +362,22 @@ def _feature_values(
         "underfill": features.underfill,
         "log_reduction_bytes": math.log2(features.reduction_bytes + 1),
         "q_minus_one": float(features.split_k_slices - 1),
+        "grouped_x_log_split_k_depth": (
+            float(features.n_tiles_per_cta > 1) * math.log2(features.split_k_depth)
+        ),
+        "underfill_x_log_split_k_depth": (
+            features.underfill * math.log2(features.split_k_depth)
+        ),
     }
     return tuple(values[name] for name in names)
 
 
 def _solve_linear_system(matrix: list[list[float]], rhs: list[float]) -> list[float]:
     size = len(rhs)
+    if not size or len(matrix) != size or any(len(row) != size for row in matrix):
+        raise ValueError("linear system must be square and nonempty")
+    for value in (*rhs, *(value for row in matrix for value in row)):
+        _require_finite("linear-system entry", value)
     augmented = [matrix[index][:] + [rhs[index]] for index in range(size)]
     for column in range(size):
         pivot = max(range(column, size), key=lambda row: abs(augmented[row][column]))
@@ -325,7 +396,10 @@ def _solve_linear_system(matrix: list[list[float]], rhs: list[float]) -> list[fl
                 value - factor * pivot_value
                 for value, pivot_value in zip(augmented[row], augmented[column])
             ]
-    return [augmented[index][-1] for index in range(size)]
+    solution = [augmented[index][-1] for index in range(size)]
+    for value in solution:
+        _require_finite("linear-system solution", value)
+    return solution
 
 
 @dataclass(frozen=True, slots=True)
@@ -339,6 +413,12 @@ class RidgeLatencyModel:
     ridge: float
     sm_count: int
 
+    def validate(self) -> None:
+        if self.feature_names != _feature_names(self.stage, self.ablation):
+            raise ValueError("model feature schema does not match stage/ablation")
+        _validate_linear_state(self.feature_names, self.means, self.scales, self.coefficients,
+                               ridge=self.ridge, sm_count=self.sm_count)
+
     @classmethod
     def fit(
         cls,
@@ -349,8 +429,12 @@ class RidgeLatencyModel:
         ridge: float,
         sm_count: int,
     ) -> "RidgeLatencyModel":
+        _require_finite("ridge", ridge)
+        _require_int("sm_count", sm_count)
         if ridge <= 0.0:
             raise ValueError("ridge regularization must be positive")
+        for row in measurements:
+            row.validate()
         names = _feature_names(stage, ablation)
         rows = [
             row
@@ -406,6 +490,9 @@ class RidgeLatencyModel:
         )
 
     def predict_ms(self, row: ScheduleMeasurement) -> float:
+        self.validate()
+        if row.is_host != (self.stage == "host"):
+            raise ValueError("prediction candidate does not match the model stage")
         values = _feature_values(row, self.feature_names, sm_count=self.sm_count)
         normalized = tuple(
             (value - mean) / scale
@@ -415,7 +502,14 @@ class RidgeLatencyModel:
             coefficient * value
             for coefficient, value in zip(self.coefficients[1:], normalized)
         )
-        return math.exp(prediction)
+        _require_finite("log-latency prediction", prediction)
+        try:
+            latency = math.exp(prediction)
+        except OverflowError as error:
+            raise ValueError("predicted latency overflows") from error
+        if not math.isfinite(latency) or latency <= 0:
+            raise ValueError("predicted latency is not finite and positive")
+        return latency
 
     def to_dict(self) -> dict:
         return {
@@ -474,6 +568,16 @@ class TwoStageSelector:
     def select(
         self, candidates: Mapping[str, ScheduleMeasurement]
     ) -> tuple[ScheduleMeasurement, dict[str, float | str | bool]]:
+        if not 0 <= self.minimum_fused_advantage < 1 or type(self.force_fused) is not bool:
+            raise ValueError("invalid selector admission options")
+        if any(name != row.family for name, row in candidates.items()):
+            raise ValueError("candidate mapping key must equal family")
+        if len({row.grouped_shape for row in candidates.values()}) != 1:
+            raise ValueError("selection cannot mix workloads or sweep groups")
+        for row in candidates.values():
+            _validate_geometry(row)
+        if self.host_model.stage != "host" or self.fused_model.stage != "fused":
+            raise ValueError("selector must contain host and fused model stages")
         host = candidates.get("host")
         fused = tuple(row for row in candidates.values() if not row.is_host)
         if host is None or not fused:
@@ -512,8 +616,10 @@ class SelectionGates:
     maximum_host_regressions: int = 0
 
     def validate(self) -> None:
-        if self.minimum_problems <= 0:
-            raise ValueError("minimum problem count must be positive")
+        _require_int("minimum problem count", self.minimum_problems)
+        _require_int("maximum host regressions", self.maximum_host_regressions, minimum=0)
+        for name in ("minimum_direction_accuracy", "maximum_mean_regret", "maximum_worst_regret"):
+            _require_finite(name, getattr(self, name))
         if not 0.0 <= self.minimum_direction_accuracy <= 1.0:
             raise ValueError("minimum direction accuracy must be in [0, 1]")
         if min(self.maximum_mean_regret, self.maximum_worst_regret) < 0.0:
@@ -523,13 +629,31 @@ class SelectionGates:
 
 
 def _summarize_decisions(decisions: Sequence[dict], gates: SelectionGates) -> dict:
+    gates.validate()
+    if not decisions:
+        raise ValueError("cannot score an empty decision set")
+    for row in decisions:
+        for key in ("oracle_ms", "selected_ms", "host_ms", "regret"):
+            _require_finite(key, row[key])
+        if min(row["oracle_ms"], row["selected_ms"], row["host_ms"]) <= 0 or row["regret"] < 0:
+            raise ValueError("latencies must be positive and regret nonnegative")
+        expected = row["selected_ms"] / row["oracle_ms"] - 1
+        if not math.isfinite(expected) or not math.isclose(row["regret"], expected, abs_tol=1e-12):
+            raise ValueError("reported regret does not match measured latencies")
+        if not math.isfinite(row["selected_ms"] / row["host_ms"]):
+            raise ValueError("host-relative change overflows")
     problems = len(decisions)
     regrets = [float(row["regret"]) for row in decisions]
     direction_correct = sum(row["oracle_direction"] == row["selected_direction"] for row in decisions)
-    host_regressions = sum(
+    host_admission_errors = sum(
         row["oracle_direction"] == "host" and row["selected_direction"] == "fused"
         for row in decisions
     )
+    # A bad fused choice can lose to host even when another fused choice wins.
+    # These are point-estimate comparisons, not significance tests.
+    host_changes = [float(row["selected_ms"]) / float(row["host_ms"]) - 1.0
+                    for row in decisions]
+    host_regressions = sum(change > 0.0 for change in host_changes)
     oracle_fused = sum(row["oracle_direction"] == "fused" for row in decisions)
     selected_fused = sum(row["selected_direction"] == "fused" for row in decisions)
     admitted_oracle_fused = sum(
@@ -551,8 +675,13 @@ def _summarize_decisions(decisions: Sequence[dict], gates: SelectionGates) -> di
         "direction_accuracy": direction_correct / problems,
         "exact_family_accuracy": exact / problems,
         "mean_selection_regret": sum(regrets) / problems,
+        "p95_selection_regret": sorted(regrets)[math.ceil(0.95 * problems) - 1],
         "max_selection_regret": max(regrets),
         "host_regressions": host_regressions,
+        "host_admission_errors": host_admission_errors,
+        "mean_host_relative_change": sum(host_changes) / problems,
+        "max_host_regression": max(0.0, max(host_changes)),
+        "host_comparison": "point estimates; no statistical significance implied",
         "oracle_fused_problems": oracle_fused,
         "selected_fused_problems": selected_fused,
         "fused_coverage": admitted_oracle_fused / oracle_fused if oracle_fused else 1.0,
@@ -635,6 +764,7 @@ def evaluate_group_heldout(
                     "selected_direction": "host" if selected.is_host else "fused",
                     "oracle_ms": oracle.measured_ms,
                     "selected_ms": selected.measured_ms,
+                    "host_ms": candidates["host"].measured_ms,
                     "regret": regret,
                     **prediction,
                 }
@@ -685,7 +815,7 @@ def evaluate_two_stage_ablations(
         )
         reports[label] = report
     return {
-        "schema": "edmir.two-stage-ablation-suite.v1",
+        "schema": "edmir.two-stage-ablation-suite.v2",
         "primary": "full",
         "reports": reports,
     }

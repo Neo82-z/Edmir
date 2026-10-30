@@ -1,0 +1,4515 @@
+[
+  {
+    "config_id": "015eb7cd794fefe60356630551f28985acae02e47ac328a42d86a83a4f5e8ae1",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      3072,
+      1536
+    ],
+    "family": "host",
+    "candidate_id": "host@prepared",
+    "stage": "geometry",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32"
+    ],
+    "input_sha256": "29971b6db6b73399e9f6f5e79379af56faf96ad57242e34d0178779c65ece344",
+    "reference_sha256": "59b39adf4ea9e6164d976faef942abb47933457976fb7ec2e57fd716121e8bf0",
+    "header_sha256": "09183d537da354740bfc254d42f4ce65cbe77b29e992f48deefb8101292ca374",
+    "process_medians_us": [
+      496.4285,
+      488.614,
+      488.168
+    ],
+    "observed_us": 488.614,
+    "last20_over_first20": [
+      0.9777464400837476,
+      0.9109759967552524,
+      0.9979826555458549
+    ],
+    "max_process_over_min": 1.0169214286884842,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "9af54970883cd15341b07ea2e5f306f8100115afaa94b802974a6897d5edc2b3",
+      "f87e018bb124ea4c35b646a144ebdf555abfe73c61977bfd525dd763a3745155",
+      "6337197dfb906049ea2a007c9fe60e2cda0d195096b543cfe1e2c8456597a6de"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "0584b8531e9e8d64206b099aa1aa694fdd9083561f040d40344565a0d4ab02eb",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      1024,
+      512
+    ],
+    "family": "splitk4",
+    "candidate_id": "splitk4@prepared",
+    "stage": "mechanisms",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q4_g1_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk4"
+    ],
+    "input_sha256": "cf476691cd5ec7f2f02c3e88dc61b73b721eba1086d4004a23243dded2b92dc3",
+    "reference_sha256": "3d53f9d7dc06b868e6dec81062dd9ffa906186e4d1bb19b2a72b6f32b9a20347",
+    "header_sha256": "b48bd6db0df4c463d38874ac8a8d7bde56c6fe45afba94bff586751aa13a7860",
+    "process_medians_us": [
+      350.5385,
+      342.68399999999997,
+      347.429
+    ],
+    "observed_us": 347.429,
+    "last20_over_first20": [
+      0.9710658547831889,
+      0.9904133942761685,
+      1.0186702245682053
+    ],
+    "max_process_over_min": 1.0229205332026008,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "ab971a05530858bc1702c074ecee4d7d3bbfcc42064808d696d4d1953f4e56c2",
+      "5314c773c60bf0b2034eeb44267b2fdff76699f0e4b6a586ba51f7ef79e668c8",
+      "8b983d991fabd6b9e0f61261c8d112f4f1ea534f50a30acfe60c61fc0c16bdc6"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "05a18b400fc2bbc92ef7020723561b4f865d9e87bebcab90420fdbc13b0570c8",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      3072,
+      512
+    ],
+    "family": "splitk4",
+    "candidate_id": "splitk4@prepared",
+    "stage": "geometry",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q4_g1_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk4"
+    ],
+    "input_sha256": "7b7e101029cb1ceeefcdeacc762ea3540d39294e11e1ccb315f27c50f4a00ce6",
+    "reference_sha256": "3c506883577e4ffdc94bc211a56d102e75a58578e3357a02df1d33d63cfb4a17",
+    "header_sha256": "71955ed9fd96eaee67f8c0b7b3795128520b5567752b0344f9c9511658e46f8c",
+    "process_medians_us": [
+      453.1985,
+      452.884,
+      453.283
+    ],
+    "observed_us": 453.1985,
+    "last20_over_first20": [
+      1.0126348851849298,
+      0.991984258401156,
+      0.9914507208397971
+    ],
+    "max_process_over_min": 1.0008810203054204,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "e110dd75813fe9af0e8271b62ee0b05e9c382dc1292911ef3c8f5b3375602705",
+      "42f7453369a79b49541e6a9b731fe7cede138199917d5ea41805fc450a64e545",
+      "10c1fab56aad35f4657dd886636c9e30fef578c8d46c8be09e7819e0424a558b"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "06ec4a848b101a4b48795aea51125dfd53e241eb0898f28b5289456d4415982c",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      1024,
+      512
+    ],
+    "family": "host_merged_cublaslt",
+    "candidate_id": "host_merged_cublaslt@merged",
+    "stage": "short_host_warmup_diagnostic",
+    "metadata_mode": "merged",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "host_nccl_cublaslt_merged_v1",
+    "algorithm_ids": [
+      "rank0:0=31;1=15;2=1;3=0;4=0;5=0;6=17;workspace=0;budget=33554432|rank1:0=31;1=15;2=1;3=0;4=0;5=0;6=17;workspace=0;budget=33554432|rank2:0=31;1=15;2=1;3=0;4=0;5=0;6=17;workspace=0;budget=33554432|rank3:0=31;1=15;2=1;3=0;4=0;5=0;6=17;workspace=0;budget=33554432|"
+    ],
+    "input_sha256": "cf476691cd5ec7f2f02c3e88dc61b73b721eba1086d4004a23243dded2b92dc3",
+    "reference_sha256": "3d53f9d7dc06b868e6dec81062dd9ffa906186e4d1bb19b2a72b6f32b9a20347",
+    "header_sha256": "5086cdcd3538696246e138573c0317c637c46f13a3779d205a13f60b6080b3b7",
+    "process_medians_us": [
+      211.529,
+      209.9145,
+      210.439
+    ],
+    "observed_us": 210.439,
+    "last20_over_first20": [
+      0.9900102945556104,
+      1.013212769003197,
+      1.004977613842961
+    ],
+    "max_process_over_min": 1.007691226666095,
+    "quality_flags": [],
+    "primary_scope": false,
+    "eligible_for_calibration": false,
+    "process_ids": [
+      "d3c11252a48cc9b412c8802968777c6afc06b456540aa0f3141b37d9965c0e5a",
+      "84dd72cd31055b32eb9441c731e76ab4b3624596afcdb577dc206ed06b1c7233",
+      "2c5795444d21f8fedf57ebbb72ab4e937ccc77cedf77c55bc47e91e8e0a53630"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "09e2cc41c27b9a2d7fba6c22aa58b7aa1c726cc041478f86276a13012373195e",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      256,
+      8192,
+      512
+    ],
+    "family": "host",
+    "candidate_id": "host@prepared",
+    "stage": "mechanisms",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32"
+    ],
+    "input_sha256": "393d4932a81e7f1c58fdfc0f4c7b0a6343d29f6297d7fffbe740d6ad0987d6e7",
+    "reference_sha256": "2b601ff6603aa9767fe3e5abfb8c6ef00f493b29c33dc273fef9551edccbb4d3",
+    "header_sha256": "e114b6a0a7d4809210dfef4ac6f7e91a3bea19c7a325e867f85a670102addfb8",
+    "process_medians_us": [
+      1308.5355000000002,
+      1333.806,
+      1313.6709999999998
+    ],
+    "observed_us": 1313.6709999999998,
+    "last20_over_first20": [
+      1.0151213064722473,
+      1.0465547429026685,
+      1.013253515490279
+    ],
+    "max_process_over_min": 1.0193120477052398,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "acdcfdacdd823200accab9d0e64aef352d831aeed3e81b66babff3ed4a75986b",
+      "76dfa006d1b0fa6bc30aaa1fd49c55c09fcd3c4d1c134557ff0d035d03837bd3",
+      "b1c6f5ba29a6ff6785f2d24f2208dc48567e565e171155e6e74a29a3303542f0"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "0c5f0fed104b013aa919794eb322cc35116c914a2bad733964faa2ca0f2889a8",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      4096,
+      2048
+    ],
+    "family": "splitk2_groupedn2",
+    "candidate_id": "splitk2_groupedn2@prepared",
+    "stage": "mechanisms",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q2_g2_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk2"
+    ],
+    "input_sha256": "f6fba035e48f6c5c60e5565020ab17c88a8060931c1511dcd046643ecec12598",
+    "reference_sha256": "c82a490a3d1db291944c79feaec6431baac2dc734d5440209b33cfdea6027602",
+    "header_sha256": "d003d0e21e8bb8387b50489a98336e8117e135e0bf2add90c97fb7bbc939eb56",
+    "process_medians_us": [
+      776.573,
+      783.7275000000001,
+      771.373
+    ],
+    "observed_us": 776.573,
+    "last20_over_first20": [
+      1.0102311076243795,
+      1.0447591344357772,
+      1.0167967385734196
+    ],
+    "max_process_over_min": 1.0160162463555245,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "2bc2ea2bf034e8dee27dda233e753f68cb46c19945a7f762e052a150fc08d73c",
+      "f295a9c4b8fd8efdff429212cce11019019c386fdd247da7f1e192f1bc763b21",
+      "46082f658b78c3d1843f7b2424a59587ba0b10822a328cbaff07960f96e34cb4"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "0c9404ea9dd0ac03d93b3fb9a172913d4d6460a92e49bfebb999a433d9fdbcee",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      8192,
+      512
+    ],
+    "family": "splitk8",
+    "candidate_id": "splitk8@prepared",
+    "stage": "mechanisms",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q8_g1_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk8"
+    ],
+    "input_sha256": "9f01da29c9bff0efd896001a4984ec6f6b68c32fd981b68e6de64d1793471e3a",
+    "reference_sha256": "1e10ae2fca27e174a966c86881defb8a39b9c97fcdd2b0fe1f250eb90810e454",
+    "header_sha256": "bd8e1cf18065a0ee06d2cc2d715e31a71764fae2d866011ebfd4ba93445dde4b",
+    "process_medians_us": [
+      652.6229999999999,
+      651.8575,
+      650.818
+    ],
+    "observed_us": 651.8575,
+    "last20_over_first20": [
+      1.0056067885778268,
+      0.9993703437263688,
+      1.0041397430727221
+    ],
+    "max_process_over_min": 1.0027734328183915,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "33acca0586b26b16f4e51e52d39f04c77c32b2a1fedaf62209bf274d5e3d4c20",
+      "faeaa45f5d916e9f47fa5362d66153570b339763b827f50a5930f571ba77bd63",
+      "ae0063823f5e8a2883602e0407ef0b1c4dcb11360ec193d7fac15e9d0c70f6be"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "0e00ffbbc35335459f11a56852092d427f69f22b65caa1902218e59f16012cd9",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      192,
+      3072,
+      1536
+    ],
+    "family": "splitk2",
+    "candidate_id": "splitk2@prepared",
+    "stage": "geometry",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q2_g1_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk2"
+    ],
+    "input_sha256": "b9ed929b1b13a691057ede64dd5ad36a4e7d3feb8a7a4ada62c00568a0965eb7",
+    "reference_sha256": "e319c6e27f86e048fbb118916af6c4b93db0f9f131858476049aa147f0b04134",
+    "header_sha256": "5ff8ce42ed15ca1a487fcd9e601e89fa4c69060225dac4fbc748caccd6b226a3",
+    "process_medians_us": [
+      920.717,
+      925.2719999999999,
+      926.342
+    ],
+    "observed_us": 925.2719999999999,
+    "last20_over_first20": [
+      1.006030563548014,
+      1.0064433199016283,
+      1.000762849138738
+    ],
+    "max_process_over_min": 1.006109369111247,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "41946b0e5a4054d54d8150f98f8cc7f3a0896c4a3685e54c06b2f4b82fd39f10",
+      "ec53de77611c66692f905414e7334d677f19a750d8e234bc23b67b9a912b08dd",
+      "43a27e67d778444584a63e8582d1194489261741a87cd711092de063e5be393d"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "12c459ffbd753a2eab8f6213fff3879b1990faafdc04109b23ea7f48210bc81f",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      8192,
+      512
+    ],
+    "family": "splitk4",
+    "candidate_id": "splitk4@legacy",
+    "stage": "mechanisms",
+    "metadata_mode": "legacy",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q4_g1",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk4"
+    ],
+    "input_sha256": "9f01da29c9bff0efd896001a4984ec6f6b68c32fd981b68e6de64d1793471e3a",
+    "reference_sha256": "1e10ae2fca27e174a966c86881defb8a39b9c97fcdd2b0fe1f250eb90810e454",
+    "header_sha256": "b75d3bc3db5eac24d7b948497572f05da7d021e58f036daf65ad2ee3ab1513c8",
+    "process_medians_us": [
+      710.6875,
+      710.018,
+      718.6574999999999
+    ],
+    "observed_us": 710.6875,
+    "last20_over_first20": [
+      1.0015920930740427,
+      1.0168915085776529,
+      1.0123940169126109
+    ],
+    "max_process_over_min": 1.0121680013746128,
+    "quality_flags": [],
+    "primary_scope": false,
+    "eligible_for_calibration": false,
+    "process_ids": [
+      "8a0f320445b084b90a70081cf34a9ec29a9ddb7e94d24b1aacb05e900404bd55",
+      "111eedfd270d042fe94fb923874b4f95f38b206ad1f3d4ca85c80f6bf6c9e3c1",
+      "36b64d937c0df951980662c5ca9ea0be52ee6282c83e7bbaa5325481d32837a0"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "167bd22d349051206c9aeebb05cbb09acb2bb70559de38f6b75d9212978504af",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      8192,
+      512
+    ],
+    "family": "host_compiler_cublas",
+    "candidate_id": "host_compiler_cublas@prepared",
+    "stage": "mechanisms",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "host_nccl_cublas_per_source_v1_prepared_metadata_v2",
+    "algorithm_ids": [
+      "library_default"
+    ],
+    "input_sha256": "9f01da29c9bff0efd896001a4984ec6f6b68c32fd981b68e6de64d1793471e3a",
+    "reference_sha256": "1e10ae2fca27e174a966c86881defb8a39b9c97fcdd2b0fe1f250eb90810e454",
+    "header_sha256": "e16c19ed48c4228d312a2ab5b2818b9517fc825900fe31ae9de8fbab9db8784b",
+    "process_medians_us": [
+      542.283,
+      544.8629999999999,
+      545.553
+    ],
+    "observed_us": 544.8629999999999,
+    "last20_over_first20": [
+      0.9937270735098815,
+      1.02167976930017,
+      1.0402585975207919
+    ],
+    "max_process_over_min": 1.006030061794303,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "1faab25208d8f5d6022d611b87e87fe45b8ad7f96e9e329e5eb4103993651642",
+      "786b7f75c8447ea3d2c1064ef8710c2111cb81e81a59de36bbb4a70921043427",
+      "35c855de87f4536de4a269bf2a021fb6f472fe43d8c25b07a1c4117e812280bd"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "16e87d4223ca0a53fe8ade581c0fa2e7f0a67daf798d5e3a4677189f72ace842",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      4096,
+      2048
+    ],
+    "family": "splitk4_groupedn2",
+    "candidate_id": "splitk4_groupedn2@prepared",
+    "stage": "mechanisms",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q4_g2_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk4"
+    ],
+    "input_sha256": "f6fba035e48f6c5c60e5565020ab17c88a8060931c1511dcd046643ecec12598",
+    "reference_sha256": "c82a490a3d1db291944c79feaec6431baac2dc734d5440209b33cfdea6027602",
+    "header_sha256": "5927e7f46a4ec679acd91d504154659571e63e2abeafc480532217de611cf186",
+    "process_medians_us": [
+      599.3785,
+      600.138,
+      599.768
+    ],
+    "observed_us": 599.768,
+    "last20_over_first20": [
+      1.0002748360145115,
+      1.009254649876883,
+      0.9935055214295339
+    ],
+    "max_process_over_min": 1.0012671458852795,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "ac583a2f5349957d2f4b14221ea821863e64582796bf189e5153e9e8ef23bf1b",
+      "9e37ea2fd4a1558e0c9c0963de3ba7d5af621da5d0dea0eace8fca48920d0bbb",
+      "e7c6f287e7307bd06f44fb4268ac67ac6f042dca15194c747af3de10ed3ccaf1"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "1c80d3c4df86ba26e98b8fd472bd33eb6b4aa95b17b9b76365f771ff686b0d8d",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      512,
+      4096,
+      512
+    ],
+    "family": "splitk8",
+    "candidate_id": "splitk8@legacy",
+    "stage": "anchors",
+    "metadata_mode": "legacy",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q8_g1",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk8"
+    ],
+    "input_sha256": "29100ffb1a0419f170eb21e8dce3afef85c6bc2af63ab68540e2c3673fa36f9f",
+    "reference_sha256": "7bcae5fd61c978340ffa2e8c66ac306843819eb0f0a61a2cd23112ff95710950",
+    "header_sha256": "8ae25e92f4ae4fdab12f1ccb944a12add225b38cf12ae3d7c5490b1a368069ad",
+    "process_medians_us": [
+      1214.0800000000002,
+      1222.2955,
+      1221.9955
+    ],
+    "observed_us": 1221.9955,
+    "last20_over_first20": [
+      0.9975121846923765,
+      1.019698440170817,
+      1.0170688695843142
+    ],
+    "max_process_over_min": 1.0067668522667368,
+    "quality_flags": [],
+    "primary_scope": false,
+    "eligible_for_calibration": false,
+    "process_ids": [
+      "4e3d92c4bd01f41691a4e5ada41d9e47fe706ee053afd8bb0123bb89f21e784f",
+      "e45d68a9f41eac98dbcc01d051878392ff051e23c7d60ba3f33304ed19b0acd2",
+      "ccf0186b3380316c0d9545035a5ba5e04fcee381439ce1814746b832819f9e2d"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "20dfbb56745f2f06896db0b68c936ba1c20c795e7ffc9483d811e11e40eed9dc",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      192,
+      3072,
+      1536
+    ],
+    "family": "splitk4",
+    "candidate_id": "splitk4@prepared",
+    "stage": "geometry",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q4_g1_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk4"
+    ],
+    "input_sha256": "b9ed929b1b13a691057ede64dd5ad36a4e7d3feb8a7a4ada62c00568a0965eb7",
+    "reference_sha256": "e319c6e27f86e048fbb118916af6c4b93db0f9f131858476049aa147f0b04134",
+    "header_sha256": "1af4a74d02d04e14558fcd618c730c91143f2eaeef9b6a0cd298bbb0cedf906f",
+    "process_medians_us": [
+      940.9765000000001,
+      946.572,
+      941.072
+    ],
+    "observed_us": 941.072,
+    "last20_over_first20": [
+      0.9965771510368594,
+      1.0063412584028308,
+      0.9997926903687134
+    ],
+    "max_process_over_min": 1.005946482191638,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "9af0f0f212c4fa276302ea30e9eeb6bac7aedf163d1724b76a913d2635f9e0b9",
+      "d83232e4c9959b3226d3921f5e568e75a6acf48d73580879770027d5e5e1daf8",
+      "c159729ad17b60d71c23fd590106ecea76b13da04054aca8d8b6e89347916dd5"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "24bb96d632ffc02ae4927433266e119096930613c09e90b31506a75ffb8c5a8a",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      8192,
+      512
+    ],
+    "family": "splitk2",
+    "candidate_id": "splitk2@prepared",
+    "stage": "mechanisms",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q2_g1_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk2"
+    ],
+    "input_sha256": "9f01da29c9bff0efd896001a4984ec6f6b68c32fd981b68e6de64d1793471e3a",
+    "reference_sha256": "1e10ae2fca27e174a966c86881defb8a39b9c97fcdd2b0fe1f250eb90810e454",
+    "header_sha256": "9a7096117f88c99bda3e4b4cea160a5800f6bc1b6a549aebb0149ce46cd1f030",
+    "process_medians_us": [
+      1069.6765,
+      1070.1665,
+      1066.0265
+    ],
+    "observed_us": 1069.6765,
+    "last20_over_first20": [
+      1.01792580986669,
+      1.0104550649404378,
+      1.0144005662140672
+    ],
+    "max_process_over_min": 1.0038835807552628,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "d7c4b2a4a6e0daaa7f6105425134bb30769398ee7cea587fe8187e1774499bb8",
+      "c887201b996fd53daade000a09fd126983e8c16e08261aca625add67bacebcb2",
+      "6ae7c785277a7fe01d77d08efec39da993284b64c5488151e6599156ea811bb2"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "276e1fcae0d09fb00de2dc2a05edbd10d98d2be7ab0017bb633a65e45e3ded7c",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      512,
+      4096,
+      512
+    ],
+    "family": "splitk2",
+    "candidate_id": "splitk2@prepared",
+    "stage": "mechanisms",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q2_g1_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk2"
+    ],
+    "input_sha256": "29100ffb1a0419f170eb21e8dce3afef85c6bc2af63ab68540e2c3673fa36f9f",
+    "reference_sha256": "7bcae5fd61c978340ffa2e8c66ac306843819eb0f0a61a2cd23112ff95710950",
+    "header_sha256": "308fc4804b4606716c88128c271d48b0413d1f44a12bba740dd8bee89746dcc0",
+    "process_medians_us": [
+      1009.4759999999998,
+      1006.0514999999999,
+      1005.7770000000002
+    ],
+    "observed_us": 1006.0514999999999,
+    "last20_over_first20": [
+      0.9996075131217642,
+      1.0005662176363619,
+      1.0003729276410984
+    ],
+    "max_process_over_min": 1.0036777536173522,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "50df413db5525e193517f35c7512b6af16906c5edea33e09dd83e1f60a4c0e07",
+      "12e6897a934477fe91c91ea7a673770bb29ea2e10d2f9913d3829899ee4958a1",
+      "dc122d9b6523be3456fd2026cbc5c9df9e7d57580057a387611022660b111f14"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "27937bd5c826a76448724354d633c08762890ee67e00547d2ed7ace26e0bac1e",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      192,
+      3072,
+      1536
+    ],
+    "family": "host",
+    "candidate_id": "host@prepared",
+    "stage": "geometry",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32"
+    ],
+    "input_sha256": "b9ed929b1b13a691057ede64dd5ad36a4e7d3feb8a7a4ada62c00568a0965eb7",
+    "reference_sha256": "e319c6e27f86e048fbb118916af6c4b93db0f9f131858476049aa147f0b04134",
+    "header_sha256": "df9bc8d2f558f594b2bc4bf32db07ee5f32cb3d60473c4890d2139adf3b3b824",
+    "process_medians_us": [
+      657.098,
+      653.913,
+      664.4725
+    ],
+    "observed_us": 657.098,
+    "last20_over_first20": [
+      1.0269985029422675,
+      1.020233250384171,
+      1.0052993862117667
+    ],
+    "max_process_over_min": 1.016148172616235,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "6045caa1eefc0d00b478adbe0cf306661d92217f172de8fc76e193f6ca335379",
+      "db98f738e720c2d0ea248030aae6fee3a61291168dd46fa7e3307bd10a671324",
+      "f0498f784434a64f0141a53e1b4b1820f629234688233b64213c7c27d82e32d8"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "3055bb564aec47b0ca60c85c773739e5d88236caf7acdc3b705b90e7486183b0",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      4096,
+      2048
+    ],
+    "family": "host_merged_cutlass",
+    "candidate_id": "host_merged_cutlass@merged",
+    "stage": "mechanisms",
+    "metadata_mode": "merged",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "host_nccl_cutlass_sm80_merged_v1",
+    "algorithm_ids": [
+      "sm80_64x128x32"
+    ],
+    "input_sha256": "f6fba035e48f6c5c60e5565020ab17c88a8060931c1511dcd046643ecec12598",
+    "reference_sha256": "c82a490a3d1db291944c79feaec6431baac2dc734d5440209b33cfdea6027602",
+    "header_sha256": "43a4de5dd0b2b98d30c7e77d28851fd406784908f87276d9acc9462cf14a598a",
+    "process_medians_us": [
+      362.979,
+      341.2735,
+      350.45400000000006
+    ],
+    "observed_us": 350.45400000000006,
+    "last20_over_first20": [
+      1.1783445746360444,
+      1.007087640212013,
+      0.9934722649616485
+    ],
+    "max_process_over_min": 1.063601480923658,
+    "quality_flags": [
+      "within_process_drift"
+    ],
+    "primary_scope": true,
+    "eligible_for_calibration": false,
+    "process_ids": [
+      "107386635caddba23b435e4b6e9fc5192e2788e01e158ad036417254037c2683",
+      "cd3e232d0f418a51c657afc7cf47b8564178618f9754b4eb315bd94ae4e86d5c",
+      "9af353d0daea3e41d2f1365fc8e521a831abefe97258b2294944a79004f74762"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "33fcb2fc5ce2b793b508df2232c0a1cb145fd9d203ad697528b91bd7223bebd8",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      1024,
+      512
+    ],
+    "family": "host",
+    "candidate_id": "host@legacy",
+    "stage": "mechanisms",
+    "metadata_mode": "legacy",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "host_nccl_cutlass_sm80_per_source_v1",
+    "algorithm_ids": [
+      "sm80_64x128x32"
+    ],
+    "input_sha256": "cf476691cd5ec7f2f02c3e88dc61b73b721eba1086d4004a23243dded2b92dc3",
+    "reference_sha256": "3d53f9d7dc06b868e6dec81062dd9ffa906186e4d1bb19b2a72b6f32b9a20347",
+    "header_sha256": "5086cdcd3538696246e138573c0317c637c46f13a3779d205a13f60b6080b3b7",
+    "process_medians_us": [
+      379.4685,
+      396.7735,
+      351.224
+    ],
+    "observed_us": 379.4685,
+    "last20_over_first20": [
+      0.8636125339625923,
+      1.09918781362402,
+      1.0158934331739349
+    ],
+    "max_process_over_min": 1.1296878914880533,
+    "quality_flags": [
+      "within_process_drift",
+      "between_process_spread"
+    ],
+    "primary_scope": false,
+    "eligible_for_calibration": false,
+    "process_ids": [
+      "cff100d7e78f5427cb4d19d1c2e96b20314c8be34c0de3b5e57c74c685d43775",
+      "a6f6f7c42dbc363f7546a2d3c32e3ec39252f8c9b48e4f1abd0353e556760379",
+      "809123d5b4a7a488452a3bfeaf9deb1863c1514ab1759679f06d0ebcdc5a8d98"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "3418a67557dc54577fe771aba445c1398564c41930507e3bf46c785e07144a24",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      512,
+      4096,
+      512
+    ],
+    "family": "splitk2_groupedn2",
+    "candidate_id": "splitk2_groupedn2@prepared",
+    "stage": "mechanisms",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q2_g2_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk2"
+    ],
+    "input_sha256": "29100ffb1a0419f170eb21e8dce3afef85c6bc2af63ab68540e2c3673fa36f9f",
+    "reference_sha256": "7bcae5fd61c978340ffa2e8c66ac306843819eb0f0a61a2cd23112ff95710950",
+    "header_sha256": "b7bb352da958395b058ff89f4c777a6f6a944a92400b97fd1a9501e1d5f96a09",
+    "process_medians_us": [
+      776.282,
+      770.4169999999999,
+      777.7825
+    ],
+    "observed_us": 776.282,
+    "last20_over_first20": [
+      1.0023424024025969,
+      1.0032333552958284,
+      1.0087489532352611
+    ],
+    "max_process_over_min": 1.009560406896525,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "79c9840b10474569f094695138d178867a81ce6c0d3ce2d20afd17ed85b2f7d4",
+      "1a0a6bf2fd1eb8f0a47045757011e6b5679a3f8c13c36ddba0ca351ff6bb8c50",
+      "a2192472a935a7f0b630897acc2840beb2db524372b8b9f2b624019f0300c3e5"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "357279e5d20c7de901ef736f231e29d521af2c4a993c80525a7958f56442cff8",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      3072,
+      1536
+    ],
+    "family": "splitk4",
+    "candidate_id": "splitk4@prepared",
+    "stage": "geometry",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q4_g1_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk4"
+    ],
+    "input_sha256": "29971b6db6b73399e9f6f5e79379af56faf96ad57242e34d0178779c65ece344",
+    "reference_sha256": "59b39adf4ea9e6164d976faef942abb47933457976fb7ec2e57fd716121e8bf0",
+    "header_sha256": "5fdb534b8c313830dbbcd7b13e35f86a344938c7b7e4c41237565af8465ebaa5",
+    "process_medians_us": [
+      541.868,
+      536.748,
+      541.373
+    ],
+    "observed_us": 541.373,
+    "last20_over_first20": [
+      0.9986628624334428,
+      1.0003901717686978,
+      1.0002772061683916
+    ],
+    "max_process_over_min": 1.0095389270197561,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "bc91043385f32b7de03aa691be05cb01674458f909adf43f51dc5567626d9eab",
+      "24b27740678f670787bb5a45d0e6081d702ef6d351ba039223b150862bb641f9",
+      "5747f241c5c743e27f6a28d5a00fa66eb8d6f51c46552a94c3c099115b64942e"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "379959166e1e1b1e9f3b9b3e5ec2938ab7c4b977d3c7601fcc9d0051d062b7fd",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      512,
+      3072,
+      512
+    ],
+    "family": "splitk2",
+    "candidate_id": "splitk2@prepared",
+    "stage": "geometry",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q2_g1_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk2"
+    ],
+    "input_sha256": "13d429bf0cae4ec105d76da576e66fe048f7dba5781563839d6628f83e65ff81",
+    "reference_sha256": "3ff99b31a9e1e1b3b810a9353f08360fbde5757441a8f08ac53a7cc312605806",
+    "header_sha256": "c64a3a4880f43374d0621aa1b50d02e13fb239e50303681fcc98330c018b4f66",
+    "process_medians_us": [
+      832.897,
+      835.3975,
+      832.982
+    ],
+    "observed_us": 832.982,
+    "last20_over_first20": [
+      1.000629993448068,
+      1.0060789017367007,
+      0.9997227183682875
+    ],
+    "max_process_over_min": 1.0030021719372264,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "94e2afe8b7db9d773ac6a0fa4b2cd9da7a97f8d0c8a5a41b14f7043353a7c184",
+      "1f2fa9bae1f296554af08040160015df32c55dce2094f8dfe99e16015511893b",
+      "d70e3dc1046917715280ddb005703118d75ed2e4f55152548bb871d572c9329d"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "385f868ef19039f6b49d3cd0f4d109fe7905ec01167e46dc602f83b12d78f31e",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      192,
+      3072,
+      1536
+    ],
+    "family": "splitk2_groupedn2",
+    "candidate_id": "splitk2_groupedn2@prepared",
+    "stage": "geometry",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q2_g2_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk2"
+    ],
+    "input_sha256": "b9ed929b1b13a691057ede64dd5ad36a4e7d3feb8a7a4ada62c00568a0965eb7",
+    "reference_sha256": "e319c6e27f86e048fbb118916af6c4b93db0f9f131858476049aa147f0b04134",
+    "header_sha256": "ce0832a8f25ec06a08c3a99d7541275c09af7814bde70792f05a143acb63735e",
+    "process_medians_us": [
+      671.093,
+      673.608,
+      664.9929999999999
+    ],
+    "observed_us": 671.093,
+    "last20_over_first20": [
+      0.9877156134995367,
+      1.001046641616549,
+      0.9943717151406055
+    ],
+    "max_process_over_min": 1.0129550235867144,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "30f708d2c615b2c1bdff47f14ac40dc40a427b43905f00d20c06f7d9fa167946",
+      "4bcb6ccbbdfd8564d68fe1420f32d0c1f44c0dfe0e9262f5972ed9059db292e4",
+      "6c5dac8b24aedd0786f5ad6d66edf0089486252c0637fb99876762451926dfd1"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "3922b69ec08b550cf7f3b90e43847da25d5b9ce9ae10e0bcbace4f84e19ed454",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      1024,
+      512
+    ],
+    "family": "host_merged_cutlass",
+    "candidate_id": "host_merged_cutlass@merged",
+    "stage": "short_host_warmup_diagnostic",
+    "metadata_mode": "merged",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "host_nccl_cutlass_sm80_merged_v1",
+    "algorithm_ids": [
+      "sm80_64x128x32"
+    ],
+    "input_sha256": "cf476691cd5ec7f2f02c3e88dc61b73b721eba1086d4004a23243dded2b92dc3",
+    "reference_sha256": "3d53f9d7dc06b868e6dec81062dd9ffa906186e4d1bb19b2a72b6f32b9a20347",
+    "header_sha256": "5086cdcd3538696246e138573c0317c637c46f13a3779d205a13f60b6080b3b7",
+    "process_medians_us": [
+      257.274,
+      213.194,
+      327.61899999999997
+    ],
+    "observed_us": 257.274,
+    "last20_over_first20": [
+      0.8297852156168806,
+      0.9908421485440886,
+      0.801704768838189
+    ],
+    "max_process_over_min": 1.5367177312682345,
+    "quality_flags": [
+      "within_process_drift",
+      "between_process_spread"
+    ],
+    "primary_scope": false,
+    "eligible_for_calibration": false,
+    "process_ids": [
+      "10bf6daa263bda943122c71237c9f83c59f6d4e973c87033693e0c22f5fe025c",
+      "7339b5fe49b059b7df795f7b0c6799f9d51f60377d68d8c38b09574ead8a4b60",
+      "058c10ff3ad6ce47320d7076b6aaac196e6e135c67f3f3a093322e0e06f81a19"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "3ba6e3f9962dbe04d02ac9cf63f31fb57f70ffe82f89ce225d0c01179708ff49",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      1024,
+      512
+    ],
+    "family": "splitk2_groupedn2",
+    "candidate_id": "splitk2_groupedn2@prepared",
+    "stage": "mechanisms",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q2_g2_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk2"
+    ],
+    "input_sha256": "cf476691cd5ec7f2f02c3e88dc61b73b721eba1086d4004a23243dded2b92dc3",
+    "reference_sha256": "3d53f9d7dc06b868e6dec81062dd9ffa906186e4d1bb19b2a72b6f32b9a20347",
+    "header_sha256": "f4719135007d790e264502cf91f8a9b5cafc048d5b45958faddfb67669c0cc21",
+    "process_medians_us": [
+      369.4085,
+      366.564,
+      366.434
+    ],
+    "observed_us": 366.564,
+    "last20_over_first20": [
+      0.9919459067128238,
+      0.995619760983915,
+      1.0000109084264868
+    ],
+    "max_process_over_min": 1.0081174236015216,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "54494fe579f4f865069d6220d4d0b28684946d9619faa79ad021fb3f8e022d89",
+      "f3face9d51a2e8542b15e354e56730ed3527206b86443e3ae11710acac09f53d",
+      "b32c86c4d8993f02e9b7311dbecb6e07616dd78805f6096308ae4ed4ca8c40a2"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "3bd7c2af99ed59a275c21e1a525f7b3b9c8bdc91e1993a329169226df5a8409d",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      512,
+      4096,
+      512
+    ],
+    "family": "host",
+    "candidate_id": "host@prepared",
+    "stage": "mechanisms",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32"
+    ],
+    "input_sha256": "29100ffb1a0419f170eb21e8dce3afef85c6bc2af63ab68540e2c3673fa36f9f",
+    "reference_sha256": "7bcae5fd61c978340ffa2e8c66ac306843819eb0f0a61a2cd23112ff95710950",
+    "header_sha256": "c1fb853067b1e3a8f54d5156062765d6bee361d439d6f6f2ba622408b27c7fba",
+    "process_medians_us": [
+      1076.486,
+      1085.5410000000002,
+      1057.7465
+    ],
+    "observed_us": 1076.486,
+    "last20_over_first20": [
+      1.008328703686442,
+      0.9936504009071769,
+      1.035881183890045
+    ],
+    "max_process_over_min": 1.026277090021097,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "468b246f94bca6dd8a255a819eee9f5e66acab830315b3d8e6938a46398c7d9c",
+      "f2d051bbe1934189ad3fa3ab7595da0f0615a5a28b2dbffafc00e26ea0ed0fc7",
+      "84b35e6fbf5bbf4a50174ad25cd20fdb0ff731699a14369b941c3df48f94aa19"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "42ee7ce3f195d1c81cdaa05c19c637661b96731bb9d3b985da79179704610c12",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      1024,
+      512
+    ],
+    "family": "host",
+    "candidate_id": "host@legacy",
+    "stage": "short_host_warmup_diagnostic",
+    "metadata_mode": "legacy",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "host_nccl_cutlass_sm80_per_source_v1",
+    "algorithm_ids": [
+      "sm80_64x128x32"
+    ],
+    "input_sha256": "cf476691cd5ec7f2f02c3e88dc61b73b721eba1086d4004a23243dded2b92dc3",
+    "reference_sha256": "3d53f9d7dc06b868e6dec81062dd9ffa906186e4d1bb19b2a72b6f32b9a20347",
+    "header_sha256": "5086cdcd3538696246e138573c0317c637c46f13a3779d205a13f60b6080b3b7",
+    "process_medians_us": [
+      358.4085,
+      342.85900000000004,
+      347.84400000000005
+    ],
+    "observed_us": 347.84400000000005,
+    "last20_over_first20": [
+      0.5758067216254068,
+      0.9989517834988273,
+      1.0009980400284824
+    ],
+    "max_process_over_min": 1.0453524626741604,
+    "quality_flags": [
+      "within_process_drift"
+    ],
+    "primary_scope": false,
+    "eligible_for_calibration": false,
+    "process_ids": [
+      "95860c2d6fa6e249d0311f58cfdc38ce76dcd6942230fb39955607668021442c",
+      "19461f2923534a10b1bf6c67ba5a5275e71388b930abb8291e2c2299288539ac",
+      "0178fc81532693d652efc431a0e219114908d57164ff55ab415b97d4df9de0e7"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "42f29d0dcd3544c980a25a350f4a02afe5900ca9a5bf6ddd452088da256720f9",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      8192,
+      512
+    ],
+    "family": "splitk4_groupedn2",
+    "candidate_id": "splitk4_groupedn2@prepared",
+    "stage": "mechanisms",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q4_g2_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk4"
+    ],
+    "input_sha256": "9f01da29c9bff0efd896001a4984ec6f6b68c32fd981b68e6de64d1793471e3a",
+    "reference_sha256": "1e10ae2fca27e174a966c86881defb8a39b9c97fcdd2b0fe1f250eb90810e454",
+    "header_sha256": "5d8acb414308fbd329f8cdb6b2bdefa7d415c91060943be152d5b1f111355453",
+    "process_medians_us": [
+      840.862,
+      836.8675,
+      837.017
+    ],
+    "observed_us": 837.017,
+    "last20_over_first20": [
+      1.0175440603430421,
+      1.0303675230556526,
+      1.030514060889474
+    ],
+    "max_process_over_min": 1.0047731570409892,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "7cc4d152feffa55d8ae7122e89a1c7a694a244f02027b493150faa540ccf6ddc",
+      "122fd84f2e1745ecabaaebb40647813bacca4bab217d601523cc4498e1d9a5f4",
+      "b6ff20f5e5ccad07c7460da7f7f90c15aff808c9d6bbcf0e9beab0dfcaee6900"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "439841b9491c6e52ca375a0984710e37f08f9fc0fc3ab417f52a7201548fb724",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      256,
+      8192,
+      512
+    ],
+    "family": "host",
+    "candidate_id": "host@legacy",
+    "stage": "mechanisms",
+    "metadata_mode": "legacy",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "host_nccl_cutlass_sm80_per_source_v1",
+    "algorithm_ids": [
+      "sm80_64x128x32"
+    ],
+    "input_sha256": "393d4932a81e7f1c58fdfc0f4c7b0a6343d29f6297d7fffbe740d6ad0987d6e7",
+    "reference_sha256": "2b601ff6603aa9767fe3e5abfb8c6ef00f493b29c33dc273fef9551edccbb4d3",
+    "header_sha256": "e114b6a0a7d4809210dfef4ac6f7e91a3bea19c7a325e867f85a670102addfb8",
+    "process_medians_us": [
+      1325.4155,
+      1341.7504999999999,
+      1318.2805
+    ],
+    "observed_us": 1325.4155,
+    "last20_over_first20": [
+      1.0109190197042242,
+      0.9884848186053599,
+      1.0041394095078877
+    ],
+    "max_process_over_min": 1.0178034947797527,
+    "quality_flags": [],
+    "primary_scope": false,
+    "eligible_for_calibration": false,
+    "process_ids": [
+      "54dbce4f36677a68f4b27b5f6e1990dd2bef93620e06b58a337a987c2fdbe544",
+      "7f7d41def379c1c40e115d7dec0aa1cd99e90655ff2a62f15fabc21f1f43fa51",
+      "153ec58e87dd54cdd77f79a5db3dbc4120633b8552c7dfc0375629cedf0523cb"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "44d43f75c58a2e949c3aeb5a94aed3fbadb2d0c89f26ea79d66a3868846daaa3",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      3072,
+      512
+    ],
+    "family": "splitk2",
+    "candidate_id": "splitk2@prepared",
+    "stage": "geometry",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q2_g1_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk2"
+    ],
+    "input_sha256": "7b7e101029cb1ceeefcdeacc762ea3540d39294e11e1ccb315f27c50f4a00ce6",
+    "reference_sha256": "3c506883577e4ffdc94bc211a56d102e75a58578e3357a02df1d33d63cfb4a17",
+    "header_sha256": "def04ab538e593ee8105cc2f5d811d796e63ef51e1bc5b16e70df6f3871e390a",
+    "process_medians_us": [
+      537.2585,
+      533.343,
+      536.883
+    ],
+    "observed_us": 536.883,
+    "last20_over_first20": [
+      1.0070105818875945,
+      1.0139744662208987,
+      1.019968786191026
+    ],
+    "max_process_over_min": 1.0073414294365917,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "05b75f48a602b45c5fc494f3b33a408543a735dfdf9113b084299503219c7d2b",
+      "8b51451086bfde81c970666144aa37f648dea438d3ebda62109b9f57a980b183",
+      "d017bd8d29c77fc1893f4fdb985fe695c318f89f38eef4bd9ab78a8a115384cb"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "454f1bedb3f6c7daad5ef3e630db8a2811519b8b352a5257037b076702eb7231",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      512,
+      4096,
+      512
+    ],
+    "family": "host",
+    "candidate_id": "host@legacy",
+    "stage": "mechanisms",
+    "metadata_mode": "legacy",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "host_nccl_cutlass_sm80_per_source_v1",
+    "algorithm_ids": [
+      "sm80_64x128x32"
+    ],
+    "input_sha256": "29100ffb1a0419f170eb21e8dce3afef85c6bc2af63ab68540e2c3673fa36f9f",
+    "reference_sha256": "7bcae5fd61c978340ffa2e8c66ac306843819eb0f0a61a2cd23112ff95710950",
+    "header_sha256": "c1fb853067b1e3a8f54d5156062765d6bee361d439d6f6f2ba622408b27c7fba",
+    "process_medians_us": [
+      1079.4064999999998,
+      1067.9215000000002,
+      1112.331
+    ],
+    "observed_us": 1079.4064999999998,
+    "last20_over_first20": [
+      1.0225997490849217,
+      1.023076564949072,
+      1.0361828050394823
+    ],
+    "max_process_over_min": 1.0415849854132535,
+    "quality_flags": [],
+    "primary_scope": false,
+    "eligible_for_calibration": false,
+    "process_ids": [
+      "25ee653e033ee02b3fa85ed9204f8d1f4b300e244e527fa5cad465aa5df35302",
+      "ca245db9100c22fbb9a2030f57596c24f07e06afbee9aa827ce7d7e6b1611847",
+      "f1bae06f716c92ab7866a0f62c9a9e7fb5b15af8818d02a1d483524ad7e032f3"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "4721cadaecefe3f5b43fd60f64b91594d6b8ee3f5ed6c293155c4f553a42cec7",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      512,
+      3072,
+      512
+    ],
+    "family": "splitk2_groupedn2",
+    "candidate_id": "splitk2_groupedn2@prepared",
+    "stage": "geometry",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q2_g2_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk2"
+    ],
+    "input_sha256": "13d429bf0cae4ec105d76da576e66fe048f7dba5781563839d6628f83e65ff81",
+    "reference_sha256": "3ff99b31a9e1e1b3b810a9353f08360fbde5757441a8f08ac53a7cc312605806",
+    "header_sha256": "f180e6dbaca27c65eac6c06959b99a6f7a463968f0628bd39f8af8aab4195dbe",
+    "process_medians_us": [
+      650.638,
+      649.5029999999999,
+      648.9275
+    ],
+    "observed_us": 649.5029999999999,
+    "last20_over_first20": [
+      1.0102360521292681,
+      1.0031738424220755,
+      1.0006935154761831
+    ],
+    "max_process_over_min": 1.0026358876762043,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "87d069f13fd895cec4cf6fb1a4cc9799436e191784d83b075e33832d5429a01a",
+      "4ddb85d4d319948e6814a4bdbc9368e2ac92ae634c483dabecc811e6556bd9c6",
+      "2f987ad4eeaa9a38e26aa3ace8ae0edc6c0f8ab2a2e3a799cf74fc72a68064d7"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "486179c73ce890e6ae63c49071df9a31a29006411a59b14c6ce6fd8f929927c8",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      192,
+      3072,
+      512
+    ],
+    "family": "host",
+    "candidate_id": "host@prepared",
+    "stage": "geometry",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32"
+    ],
+    "input_sha256": "814847f5edb22a7fffc23c3f66612f918af925a8c38b1529d249ed41a6aa4835",
+    "reference_sha256": "8d96e6a79d4cf245ab5af0d2f281259f4181d123d9cf2612ee3bb514cfb1747f",
+    "header_sha256": "fec4549ff5acfc4317398a71f1b97a615b5ed1e627c19abb0eac5567dc75851f",
+    "process_medians_us": [
+      617.158,
+      615.328,
+      619.6429999999999
+    ],
+    "observed_us": 617.158,
+    "last20_over_first20": [
+      0.9909169082640001,
+      1.006008366244024,
+      1.0245444202514762
+    ],
+    "max_process_over_min": 1.0070125201518538,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "79e14f0efb97e41c30eaece012bb01ff04be509e97907f11b43158dc5f6965d9",
+      "1e723caf4363135479bf66886848c77221a418282bb77234206696b4f447a05d",
+      "875abdcdd93646c4bf111d4bb37c1785474197576efbd94a32d612d56b9968b8"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "4bc2c8ab047ecd21946dbf6ede954d96e2d60bf833839f7c985c3da5dc685b3c",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      8192,
+      512
+    ],
+    "family": "host_merged_cutlass",
+    "candidate_id": "host_merged_cutlass@merged",
+    "stage": "mechanisms",
+    "metadata_mode": "merged",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "host_nccl_cutlass_sm80_merged_v1",
+    "algorithm_ids": [
+      "sm80_64x128x32"
+    ],
+    "input_sha256": "9f01da29c9bff0efd896001a4984ec6f6b68c32fd981b68e6de64d1793471e3a",
+    "reference_sha256": "1e10ae2fca27e174a966c86881defb8a39b9c97fcdd2b0fe1f250eb90810e454",
+    "header_sha256": "14bd9949dd10056a7048483d2c23b21ee86893eb8b65faef7572799ae50d8857",
+    "process_medians_us": [
+      418.4685,
+      429.1185,
+      445.589
+    ],
+    "observed_us": 429.1185,
+    "last20_over_first20": [
+      1.018906496272119,
+      1.000942204852297,
+      0.9359735691133452
+    ],
+    "max_process_over_min": 1.0648089402189174,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "64b0c9743f41b0b6a39fcc0001122a02a855c91a96e856d5ef3b9f81af137a09",
+      "ddb945123f59b84eccb91cee47d27e751fa8991b37af66adf29eef0dcdb287e9",
+      "e41b597239a683aa01c3f1f32b360c85e9a501279671497874f67305d38dfa91"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "51164340d38dd7b02978798df84ec4a6c88ba2f5430e4bf0909f1cce951bc6f3",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      256,
+      8192,
+      512
+    ],
+    "family": "splitk2_groupedn2",
+    "candidate_id": "splitk2_groupedn2@prepared",
+    "stage": "mechanisms",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q2_g2_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk2"
+    ],
+    "input_sha256": "393d4932a81e7f1c58fdfc0f4c7b0a6343d29f6297d7fffbe740d6ad0987d6e7",
+    "reference_sha256": "2b601ff6603aa9767fe3e5abfb8c6ef00f493b29c33dc273fef9551edccbb4d3",
+    "header_sha256": "9f6127381d206560570a5e6109f65e25bb16752be532b7f29dee12e13e15ed16",
+    "process_medians_us": [
+      1365.92,
+      1356.056,
+      1347.0855
+    ],
+    "observed_us": 1356.056,
+    "last20_over_first20": [
+      1.0145546862695953,
+      1.0184508280978057,
+      1.006440930645411
+    ],
+    "max_process_over_min": 1.0139816663456034,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "85d08449adea954e9aba5ee8b38ba8fc3239659aeb1f52b770aad3991b5794d9",
+      "d5d1f6af11a93cd767680032df099dda11f65927cd2572bbca71aa15abf7ad5d",
+      "425375e3827acdff226c10530064822db2e6e4537a0d2e2a5821e594b6e7c4d3"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "52735dd55aa0ceda2410316d0362feb247e4fdd1e5f68c2ea9104fc3a9100998",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      4096,
+      2048
+    ],
+    "family": "splitk8",
+    "candidate_id": "splitk8@legacy",
+    "stage": "anchors",
+    "metadata_mode": "legacy",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q8_g1",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk8"
+    ],
+    "input_sha256": "f6fba035e48f6c5c60e5565020ab17c88a8060931c1511dcd046643ecec12598",
+    "reference_sha256": "c82a490a3d1db291944c79feaec6431baac2dc734d5440209b33cfdea6027602",
+    "header_sha256": "0e547f5027f62c929db17b6e3872420acf8e857d8df4ddfb2a9703bed4190daa",
+    "process_medians_us": [
+      833.3269999999999,
+      821.0219999999999,
+      822.397
+    ],
+    "observed_us": 822.397,
+    "last20_over_first20": [
+      1.0090376725057415,
+      1.00353258843389,
+      0.9932361147427704
+    ],
+    "max_process_over_min": 1.0149874181203427,
+    "quality_flags": [],
+    "primary_scope": false,
+    "eligible_for_calibration": false,
+    "process_ids": [
+      "009766de1bf1f8ee5bf7adcb6a1ee682a9a4faf63954beb539fb89c7a355907f",
+      "544916e84d097d902a99d650961051e06aed7799cdb7f846627d4232c79ccab7",
+      "949eded329eade4d34212f6dba4152775255b56e66101f8517b09ab7c419ea4d"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "5626cb246c2323679aaf99c7f91e843649529fcc72a9f25dfe0f008b732a3880",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      8192,
+      512
+    ],
+    "family": "host_merged_cublaslt",
+    "candidate_id": "host_merged_cublaslt@merged",
+    "stage": "mechanisms",
+    "metadata_mode": "merged",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "host_nccl_cublaslt_merged_v1",
+    "algorithm_ids": [
+      "rank0:0=21;1=20;2=11;3=4;4=0;5=0;6=12;workspace=2883584;budget=33554432|rank1:0=21;1=20;2=11;3=4;4=0;5=0;6=12;workspace=2883584;budget=33554432|rank2:0=21;1=20;2=11;3=4;4=0;5=0;6=12;workspace=2883584;budget=33554432|rank3:0=21;1=20;2=11;3=4;4=0;5=0;6=12;workspace=2883584;budget=33554432|"
+    ],
+    "input_sha256": "9f01da29c9bff0efd896001a4984ec6f6b68c32fd981b68e6de64d1793471e3a",
+    "reference_sha256": "1e10ae2fca27e174a966c86881defb8a39b9c97fcdd2b0fe1f250eb90810e454",
+    "header_sha256": "14bd9949dd10056a7048483d2c23b21ee86893eb8b65faef7572799ae50d8857",
+    "process_medians_us": [
+      351.34299999999996,
+      352.839,
+      348.30400000000003
+    ],
+    "observed_us": 351.34299999999996,
+    "last20_over_first20": [
+      1.001280665375543,
+      1.0066258239715786,
+      0.9964995237056845
+    ],
+    "max_process_over_min": 1.0130202351968394,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "6130344297337de153699566ddca11290f70426aa7730ca8056c7ee7313d841c",
+      "b29e7df56f6f82677a5510f8496a246782b55d97166dec8e768656bc5aac83a1",
+      "8831a3d9cb1c100d7414bb0b39c78c3ae98b7fe1e35d76a4156481747f5a0754"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "57ec2cc034c7f7ed12d3fb400147e778ae06cf94aa116639be402129cedc8c25",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      192,
+      3072,
+      512
+    ],
+    "family": "splitk2_groupedn2",
+    "candidate_id": "splitk2_groupedn2@prepared",
+    "stage": "geometry",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q2_g2_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk2"
+    ],
+    "input_sha256": "814847f5edb22a7fffc23c3f66612f918af925a8c38b1529d249ed41a6aa4835",
+    "reference_sha256": "8d96e6a79d4cf245ab5af0d2f281259f4181d123d9cf2612ee3bb514cfb1747f",
+    "header_sha256": "b6df8a337ff5a36b424c4ce688d8c700cd9c343a07e363669d6a3f03fa9ff0ef",
+    "process_medians_us": [
+      631.0980000000001,
+      633.1774999999999,
+      633.0275
+    ],
+    "observed_us": 633.0275,
+    "last20_over_first20": [
+      1.0136432171215999,
+      1.005657239251443,
+      1.0139629560692407
+    ],
+    "max_process_over_min": 1.003295050847887,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "d96b8b8ac11bea2b644033b9a7e36d5c2b3234b100dc4c2b390fe14db9c25e59",
+      "f76c62482e58c95656581b8cf32c1c449168c79c195274107155927a1c7dba5a",
+      "6816cc2296e08e840d8641dae5d26be212ffe9415feb80dc1fe6b7ed9135c8ea"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "57f7c9110dc0100ab17040e1ded9e8c832a5872c21dd35cb990d0965e0c90f7b",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      192,
+      3072,
+      512
+    ],
+    "family": "splitk4",
+    "candidate_id": "splitk4@prepared",
+    "stage": "geometry",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q4_g1_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk4"
+    ],
+    "input_sha256": "814847f5edb22a7fffc23c3f66612f918af925a8c38b1529d249ed41a6aa4835",
+    "reference_sha256": "8d96e6a79d4cf245ab5af0d2f281259f4181d123d9cf2612ee3bb514cfb1747f",
+    "header_sha256": "9d3e95bef35d3613edc2ddf37703a157b90bb5b4e72ad301289485419b123e4b",
+    "process_medians_us": [
+      523.798,
+      521.748,
+      521.8534999999999
+    ],
+    "observed_us": 521.8534999999999,
+    "last20_over_first20": [
+      1.0016415879118046,
+      1.004546038589069,
+      1.000450115689309
+    ],
+    "max_process_over_min": 1.0039290998719688,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "422a3a7568e15a4ba47d22d6e99a95aeb196ee3499dc3adf89021aa173a1118c",
+      "a1ee2240781785bb9aa97cde6933f7c9eb959746f450344d7bfce94d84c04252",
+      "1bae739b538a1a05e68ecd3d702daec64a6d7df609752ce7c92b20c14aa2954e"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "5dac4ac5e174332cb9edea3853bc6e11e213740920278ac37518d3120612db19",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      256,
+      8192,
+      512
+    ],
+    "family": "splitk4",
+    "candidate_id": "splitk4@legacy",
+    "stage": "mechanisms",
+    "metadata_mode": "legacy",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q4_g1",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk4"
+    ],
+    "input_sha256": "393d4932a81e7f1c58fdfc0f4c7b0a6343d29f6297d7fffbe740d6ad0987d6e7",
+    "reference_sha256": "2b601ff6603aa9767fe3e5abfb8c6ef00f493b29c33dc273fef9551edccbb4d3",
+    "header_sha256": "a1b97a95987ec1540114b539ea2fb537775f77236449e5aaad2b4ed32618a197",
+    "process_medians_us": [
+      1080.691,
+      1086.7110000000002,
+      1080.6815
+    ],
+    "observed_us": 1080.691,
+    "last20_over_first20": [
+      1.0028819485308087,
+      1.0077924315990723,
+      1.0034435245748545
+    ],
+    "max_process_over_min": 1.0055793496973904,
+    "quality_flags": [],
+    "primary_scope": false,
+    "eligible_for_calibration": false,
+    "process_ids": [
+      "7b107738fcc8b1190be7af88175b6d2deebedc6873c13a0eb906599267b987df",
+      "9bf8637136de0e4d42cb530ac7d7255262ef813da9140e17f8183b2ec36b3218",
+      "e540c20a341f10e1f22fbd598e14af59fca2ca9c56f3d82869da5996c2afdc79"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "5e3b57322a83c1acffc8508d457b562399741fb1d3a80f2e9ed4abe4a7896615",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      4096,
+      2048
+    ],
+    "family": "host",
+    "candidate_id": "host@legacy",
+    "stage": "anchors",
+    "metadata_mode": "legacy",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "host_nccl_cutlass_sm80_per_source_v1",
+    "algorithm_ids": [
+      "sm80_64x128x32"
+    ],
+    "input_sha256": "f6fba035e48f6c5c60e5565020ab17c88a8060931c1511dcd046643ecec12598",
+    "reference_sha256": "c82a490a3d1db291944c79feaec6431baac2dc734d5440209b33cfdea6027602",
+    "header_sha256": "43a4de5dd0b2b98d30c7e77d28851fd406784908f87276d9acc9462cf14a598a",
+    "process_medians_us": [
+      574.572,
+      575.5930000000001,
+      576.7235
+    ],
+    "observed_us": 575.5930000000001,
+    "last20_over_first20": [
+      1.0035442476485197,
+      1.0066251340697303,
+      1.0004055583935054
+    ],
+    "max_process_over_min": 1.003744526360491,
+    "quality_flags": [],
+    "primary_scope": false,
+    "eligible_for_calibration": false,
+    "process_ids": [
+      "7d77c5c5a59fe6c220b527db6ac45ccb1aada89d2ee5cd64143763f3a53db577",
+      "9b099a786fcf42ab62441aa78e3de11f7ae6d79975668c4cac71cfc1ac83fee0",
+      "923570e558f88cdbc25d041389086952e791430859ae65e32a55e5c666c773ce"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "615f899c90116440ee674f7c978f050b6d04c53cc1c892a05d9d4a4139fb285a",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      256,
+      8192,
+      512
+    ],
+    "family": "splitk2",
+    "candidate_id": "splitk2@prepared",
+    "stage": "mechanisms",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q2_g1_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk2"
+    ],
+    "input_sha256": "393d4932a81e7f1c58fdfc0f4c7b0a6343d29f6297d7fffbe740d6ad0987d6e7",
+    "reference_sha256": "2b601ff6603aa9767fe3e5abfb8c6ef00f493b29c33dc273fef9551edccbb4d3",
+    "header_sha256": "22923f0117df27d2e9ae80d6459abbc33649d69d0b0595e8b0a5e7be71c9bc97",
+    "process_medians_us": [
+      1258.856,
+      1258.206,
+      1264.416
+    ],
+    "observed_us": 1258.856,
+    "last20_over_first20": [
+      1.0009643401445751,
+      1.0118896579120864,
+      1.0129222964220146
+    ],
+    "max_process_over_min": 1.0049355987811217,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "ac97ba668a9b8f962c43ab6e9fd4dbfd775d87d6c446e167237efd6b9fb484ca",
+      "ac727dad50d2fe2985bb736c43e34ec6ff0a8647585f040f72e0fd73c1fe2100",
+      "a5aa4f62f16f7a9c74bc50870abbb053561e5cf41f84e1c59ba236a069035f47"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "6187d0570cd833960e6b65f1512a51fb2d6d9a9303e2598422586ac09784ecf1",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      192,
+      3072,
+      512
+    ],
+    "family": "splitk2",
+    "candidate_id": "splitk2@prepared",
+    "stage": "geometry",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q2_g1_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk2"
+    ],
+    "input_sha256": "814847f5edb22a7fffc23c3f66612f918af925a8c38b1529d249ed41a6aa4835",
+    "reference_sha256": "8d96e6a79d4cf245ab5af0d2f281259f4181d123d9cf2612ee3bb514cfb1747f",
+    "header_sha256": "d6b6524684b2075bf71d4dc8e2a72c0c6b455aba65877e5da7e56294bbca75c9",
+    "process_medians_us": [
+      554.428,
+      552.1579999999999,
+      550.518
+    ],
+    "observed_us": 552.1579999999999,
+    "last20_over_first20": [
+      1.0090690062938308,
+      1.004317765742574,
+      1.0022179479254916
+    ],
+    "max_process_over_min": 1.0071024017379995,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "946693dee266bd7fca442416db262d3801e25271d038cc1b69b9066dc08a5846",
+      "1cdac506ac6d37c12f4740c5a91ce506e5eb902ab629924b24b82556d0405834",
+      "a1a3e0d675a90f5a1b6e02bb449f0e43a43f91513cc21dda4f38a1ca62ddf43f"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "68d37935096ddccca5163e124f7a97a4186e1b71cfb90292d1f406190c472493",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      512,
+      4096,
+      512
+    ],
+    "family": "splitk4",
+    "candidate_id": "splitk4@legacy",
+    "stage": "mechanisms",
+    "metadata_mode": "legacy",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q4_g1",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk4"
+    ],
+    "input_sha256": "29100ffb1a0419f170eb21e8dce3afef85c6bc2af63ab68540e2c3673fa36f9f",
+    "reference_sha256": "7bcae5fd61c978340ffa2e8c66ac306843819eb0f0a61a2cd23112ff95710950",
+    "header_sha256": "71919850f057fed754ca8e55aa4540397a6ce57c52c1eb8c62a622935ff1917c",
+    "process_medians_us": [
+      1045.2970000000003,
+      1045.4365,
+      1047.3615
+    ],
+    "observed_us": 1045.4365,
+    "last20_over_first20": [
+      1.0028982271951437,
+      1.008064373313142,
+      0.9955980329761307
+    ],
+    "max_process_over_min": 1.0019750367598872,
+    "quality_flags": [],
+    "primary_scope": false,
+    "eligible_for_calibration": false,
+    "process_ids": [
+      "1111234b7387454eeb1f612cc114f66dcc023404aeabee24ad31125aea916ef6",
+      "e60d13f2545a37cbecb4d57cbc88c696d5117d6339d002055f7d896f18737926",
+      "ab9f975e5b54eb882eb3ed3eddd87d3b2bd3bd993259bb031617ce7acd2f3a2b"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "6bd5510f13f3a9741d2ec21b708ac8ebeba6525c52a3af72713fe9aef9b39a6c",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      512,
+      3072,
+      512
+    ],
+    "family": "splitk4_groupedn2",
+    "candidate_id": "splitk4_groupedn2@prepared",
+    "stage": "geometry",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q4_g2_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk4"
+    ],
+    "input_sha256": "13d429bf0cae4ec105d76da576e66fe048f7dba5781563839d6628f83e65ff81",
+    "reference_sha256": "3ff99b31a9e1e1b3b810a9353f08360fbde5757441a8f08ac53a7cc312605806",
+    "header_sha256": "f4ea5bbee76395f880421786bee45e7a6e04da82f6cdfb1dfd9df0b5d54a9426",
+    "process_medians_us": [
+      629.4230000000001,
+      628.6825,
+      628.0980000000001
+    ],
+    "observed_us": 628.6825,
+    "last20_over_first20": [
+      0.9982050328971407,
+      1.0012802111950891,
+      1.0153958024317966
+    ],
+    "max_process_over_min": 1.0021095434151996,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "61cd02d3ea763eb275ff6334a64bc30d75a9e2feff00fc3a31f2ad837f2cf899",
+      "d6b2c7b54069d50e1b472215613a52522aa425f3844ccfd98478495f297b864a",
+      "85dd848ef03c1f2eb3c1cecb6f08d6166b9ea79c4a244620aeca1378a9067a43"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "6be5898c07de5a61f8de8d1c9e401edfb93a001055f62ee0e58a52efe06829f8",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      8192,
+      512
+    ],
+    "family": "splitk8_groupedn2",
+    "candidate_id": "splitk8_groupedn2@prepared",
+    "stage": "mechanisms",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q8_g2_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk8"
+    ],
+    "input_sha256": "9f01da29c9bff0efd896001a4984ec6f6b68c32fd981b68e6de64d1793471e3a",
+    "reference_sha256": "1e10ae2fca27e174a966c86881defb8a39b9c97fcdd2b0fe1f250eb90810e454",
+    "header_sha256": "47782f3fd556431e6d6893f4687138a53ffb80e5cffb148db4ff55e3f477f8bd",
+    "process_medians_us": [
+      726.9075,
+      728.6179999999999,
+      727.0175
+    ],
+    "observed_us": 727.0175,
+    "last20_over_first20": [
+      1.0204122198097918,
+      1.0138331021936937,
+      0.9995619927212893
+    ],
+    "max_process_over_min": 1.0023531192070516,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "d0c490803cfae18133743a21ae9f1ed0702bdd0f7b5ef8f6204673dfb02485c8",
+      "518ff207c147daea0331b5c2c541da2ebb2c83ebdd9ef8cb47e594fd8aeceab9",
+      "2df6cafd395ebd41d955b53f47f7efa38bdbe8cc9da023c10ec887d1e1d3c84b"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "6bede1b9a83cd7492a88773132cccbcb3a7d47edf4260fd07d6f0d23f4709c2d",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      4096,
+      2048
+    ],
+    "family": "splitk4",
+    "candidate_id": "splitk4@prepared",
+    "stage": "mechanisms",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q4_g1_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk4"
+    ],
+    "input_sha256": "f6fba035e48f6c5c60e5565020ab17c88a8060931c1511dcd046643ecec12598",
+    "reference_sha256": "c82a490a3d1db291944c79feaec6431baac2dc734d5440209b33cfdea6027602",
+    "header_sha256": "6b11ca3508d2fa110b050b2e9eac4769d814c7feced9aba2840f44faa56b14af",
+    "process_medians_us": [
+      715.5825,
+      719.833,
+      718.3530000000001
+    ],
+    "observed_us": 718.3530000000001,
+    "last20_over_first20": [
+      1.0060821697569158,
+      0.9997230214953367,
+      0.9922644679380547
+    ],
+    "max_process_over_min": 1.0059399160823526,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "b378c006ff5c00b4c3c9be4bacf5b1ebd037cf370f04622ba7de633f3899ed6a",
+      "dac977b277a4f3a4ebe6b44c978da8ecd77d2e5ef1a41a8ee4b64bfa3cf6f0e1",
+      "cc5506c2e2cd54c75d096fcbf1b57d909121bb5c3dac6a503c0de8b548f6bc16"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "718474209414fea77158f91d68f9a98149633ad27fac66c56855612e28a3a706",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      1024,
+      512
+    ],
+    "family": "splitk4",
+    "candidate_id": "splitk4@legacy",
+    "stage": "mechanisms",
+    "metadata_mode": "legacy",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q4_g1",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk4"
+    ],
+    "input_sha256": "cf476691cd5ec7f2f02c3e88dc61b73b721eba1086d4004a23243dded2b92dc3",
+    "reference_sha256": "3d53f9d7dc06b868e6dec81062dd9ffa906186e4d1bb19b2a72b6f32b9a20347",
+    "header_sha256": "b48bd6db0df4c463d38874ac8a8d7bde56c6fe45afba94bff586751aa13a7860",
+    "process_medians_us": [
+      350.4185,
+      342.329,
+      347.3035
+    ],
+    "observed_us": 347.3035,
+    "last20_over_first20": [
+      0.9938420735313702,
+      1.0001460606706813,
+      0.9962408885853552
+    ],
+    "max_process_over_min": 1.0236307762415688,
+    "quality_flags": [],
+    "primary_scope": false,
+    "eligible_for_calibration": false,
+    "process_ids": [
+      "d9134f910fa514b799fb9ea1edfbbce8b7833f3c4fb4e3e21e8660a6e0ef75e4",
+      "aa617cb0478def89cae0eb3227d536172f544f99fa95b33a6a436721c766da34",
+      "afd3ffe01fa233eb9d932ea624a97358d509dade97dc57e5dc4c6687ccb7bb49"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "7243723b0fd38c2bee898d3744092ac18cf78a9ba62892db8d1df7b6d9795d6d",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      4096,
+      2048
+    ],
+    "family": "splitk2",
+    "candidate_id": "splitk2@prepared",
+    "stage": "mechanisms",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q2_g1_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk2"
+    ],
+    "input_sha256": "f6fba035e48f6c5c60e5565020ab17c88a8060931c1511dcd046643ecec12598",
+    "reference_sha256": "c82a490a3d1db291944c79feaec6431baac2dc734d5440209b33cfdea6027602",
+    "header_sha256": "8bf331efec4dddb6a4e551795c934455c8a51553eba26011c39a1b13fa03297f",
+    "process_medians_us": [
+      718.0875,
+      717.6475,
+      719.0125
+    ],
+    "observed_us": 718.0875,
+    "last20_over_first20": [
+      1.0035379859150213,
+      0.9993661375181739,
+      1.0006385127521709
+    ],
+    "max_process_over_min": 1.001902048011036,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "802d290827c8d4bb7a0175ebf0bea8a4481406352a77a9b8230af242a0e73712",
+      "2e567df5e30801ea074feaf6768c08b250696cacc97af3aab70e3535ab230b96",
+      "15f74b17e6b678b4c84dc7df37191963e85ac8a045dfe5cd53f914726aa11936"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "735b3231de4d4211c833f2220901133a00879bb2ab4441a79885dd27fc0c2de3",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      1024,
+      512
+    ],
+    "family": "splitk2",
+    "candidate_id": "splitk2@legacy",
+    "stage": "mechanisms",
+    "metadata_mode": "legacy",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q2_g1",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk2"
+    ],
+    "input_sha256": "cf476691cd5ec7f2f02c3e88dc61b73b721eba1086d4004a23243dded2b92dc3",
+    "reference_sha256": "3d53f9d7dc06b868e6dec81062dd9ffa906186e4d1bb19b2a72b6f32b9a20347",
+    "header_sha256": "198c42bd9a155ce6fe13a34a7095f8d6cb2967c0afdd0232b1d8f85ec7de5262",
+    "process_medians_us": [
+      321.279,
+      317.439,
+      321.3045
+    ],
+    "observed_us": 321.279,
+    "last20_over_first20": [
+      1.0018217545520507,
+      0.9986156948739813,
+      1.0052099744492868
+    ],
+    "max_process_over_min": 1.012177142695132,
+    "quality_flags": [],
+    "primary_scope": false,
+    "eligible_for_calibration": false,
+    "process_ids": [
+      "06ef4f3ca63b7828e0126bfa80cd939c803c2a9aebd59338bdb48f2f10eaedfe",
+      "cd33f63067dbcecab726e08a035a0a5c9485d1941bb484d6782a924cc50274a2",
+      "b0df393e6ed25d1ccec58789a542c56577d18ec79511ad04f8714c7d0cd1d2c4"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "77c418a69353639174bcc67c2ff1b3c9bdfa0d3c6e2b470df7b668bc069c7580",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      512,
+      4096,
+      512
+    ],
+    "family": "direct",
+    "candidate_id": "direct@legacy",
+    "stage": "anchors",
+    "metadata_mode": "legacy",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q1_g1",
+    "algorithm_ids": [
+      "sm80_64x128x32"
+    ],
+    "input_sha256": "29100ffb1a0419f170eb21e8dce3afef85c6bc2af63ab68540e2c3673fa36f9f",
+    "reference_sha256": "7bcae5fd61c978340ffa2e8c66ac306843819eb0f0a61a2cd23112ff95710950",
+    "header_sha256": "6fed0c170888e89f27e76b4346c6debf1e20b20c7dd63fa07198e2d878039af0",
+    "process_medians_us": [
+      1083.1064999999999,
+      1086.511,
+      1079.746
+    ],
+    "observed_us": 1083.1064999999999,
+    "last20_over_first20": [
+      1.0059626938921193,
+      1.0050009446228731,
+      1.0052793441882362
+    ],
+    "max_process_over_min": 1.0062653624093072,
+    "quality_flags": [],
+    "primary_scope": false,
+    "eligible_for_calibration": false,
+    "process_ids": [
+      "e5970aeff086adce9851d1196b896486bcf5210f90c831bd7295fd4ed228efa0",
+      "c7f82e1406c3c912d248a432adfac0375466df6aeac268f85f64d91b1ea95f94",
+      "ce50ca3a43a88ea6c60b939075bba008abaf64494edde882a1808ce768825958"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "781334af0aa0d2c678f9d7ec7422f4fc1b1e7821f2445b6646843caa6c5ae3c4",
+    "context_id": "853023281883e010b726671d845fa830a4947752bf157acae79dea14692b319f",
+    "shape": [
+      4,
+      64,
+      1024,
+      512
+    ],
+    "family": "host_merged_cutlass",
+    "candidate_id": "host_merged_cutlass@merged",
+    "stage": "short_host_warmup_diagnostic",
+    "metadata_mode": "merged",
+    "warmup": 200,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "host_nccl_cutlass_sm80_merged_v1",
+    "algorithm_ids": [
+      "sm80_64x128x32"
+    ],
+    "input_sha256": "cf476691cd5ec7f2f02c3e88dc61b73b721eba1086d4004a23243dded2b92dc3",
+    "reference_sha256": "3d53f9d7dc06b868e6dec81062dd9ffa906186e4d1bb19b2a72b6f32b9a20347",
+    "header_sha256": "5086cdcd3538696246e138573c0317c637c46f13a3779d205a13f60b6080b3b7",
+    "process_medians_us": [
+      212.054,
+      213.79899999999998,
+      209.09900000000002
+    ],
+    "observed_us": 212.054,
+    "last20_over_first20": [
+      0.9986578097810345,
+      0.9949566444282484,
+      0.9982805542402632
+    ],
+    "max_process_over_min": 1.0224773910922575,
+    "quality_flags": [],
+    "primary_scope": false,
+    "eligible_for_calibration": false,
+    "process_ids": [
+      "a9d3392c373f13ae0a6b82d9c35a17f458dec098c61d4567e18dfdfd70f1d402",
+      "069d43ee8739ec244c02dbfabe6613f3e384899581edb9f0d5643dd78651fdeb",
+      "2a923db119712ab2be9a2e2eba3f58d29928cc1acdfc6527acb0a991a34d9929"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "7ca982af1d855555371090bdac6d9f41112149ddb523ee9fa811896646407376",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      256,
+      8192,
+      512
+    ],
+    "family": "host_merged_cutlass",
+    "candidate_id": "host_merged_cutlass@merged",
+    "stage": "mechanisms",
+    "metadata_mode": "merged",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "host_nccl_cutlass_sm80_merged_v1",
+    "algorithm_ids": [
+      "sm80_64x128x32"
+    ],
+    "input_sha256": "393d4932a81e7f1c58fdfc0f4c7b0a6343d29f6297d7fffbe740d6ad0987d6e7",
+    "reference_sha256": "2b601ff6603aa9767fe3e5abfb8c6ef00f493b29c33dc273fef9551edccbb4d3",
+    "header_sha256": "e114b6a0a7d4809210dfef4ac6f7e91a3bea19c7a325e867f85a670102addfb8",
+    "process_medians_us": [
+      709.5475,
+      716.3075,
+      718.273
+    ],
+    "observed_us": 716.3075,
+    "last20_over_first20": [
+      1.0072067866854795,
+      1.011539473200422,
+      1.0320728913450272
+    ],
+    "max_process_over_min": 1.0122972739668592,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "8e94307b53227d4dfd22a6b82fdff77811896ff12fa63ba5ff60764abff47fc4",
+      "18bb7492144021ccd0c59eb5b11e3d84b3f20b51e7ff71f2a5e8f06f97bc4a9b",
+      "991ed3c9b07489eda8f8490c9b8eef55aaaba0fa477c3c9695d3e38b9f73998b"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "7e485506859f4297b6efc92ec5b45115cbc0e1ee40c4bc789f5daf24a2b30be9",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      512,
+      4096,
+      512
+    ],
+    "family": "splitk4_groupedn2",
+    "candidate_id": "splitk4_groupedn2@prepared",
+    "stage": "mechanisms",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q4_g2_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk4"
+    ],
+    "input_sha256": "29100ffb1a0419f170eb21e8dce3afef85c6bc2af63ab68540e2c3673fa36f9f",
+    "reference_sha256": "7bcae5fd61c978340ffa2e8c66ac306843819eb0f0a61a2cd23112ff95710950",
+    "header_sha256": "073924ccc47a5a810c641390e917401e00c97d74fa3f30d3613037cf772264c3",
+    "process_medians_us": [
+      722.893,
+      725.4024999999999,
+      726.2975
+    ],
+    "observed_us": 725.4024999999999,
+    "last20_over_first20": [
+      1.0040401943997648,
+      1.0010272606979302,
+      1.0060950316967876
+    ],
+    "max_process_over_min": 1.0047095489927278,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "cc75316980a41f0c416cc5f82f2e3c7f6d2a862237217cc0f25b4780e47405df",
+      "088796941ff189714076600d1a221cc1b2247eb14c312975856a262b3cad0fde",
+      "b8a7d38045083a15b374c5481a27482a110ccd733afc21ac6c0fff64ce376ba0"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "7eefdf3cc2fbb252733340f8d3baaeefe922f68b1ccd0a78b50055381a888dce",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      4096,
+      2048
+    ],
+    "family": "splitk2",
+    "candidate_id": "splitk2@legacy",
+    "stage": "mechanisms",
+    "metadata_mode": "legacy",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q2_g1",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk2"
+    ],
+    "input_sha256": "f6fba035e48f6c5c60e5565020ab17c88a8060931c1511dcd046643ecec12598",
+    "reference_sha256": "c82a490a3d1db291944c79feaec6431baac2dc734d5440209b33cfdea6027602",
+    "header_sha256": "8bf331efec4dddb6a4e551795c934455c8a51553eba26011c39a1b13fa03297f",
+    "process_medians_us": [
+      721.1270000000001,
+      719.1374999999999,
+      720.7225000000001
+    ],
+    "observed_us": 720.7225000000001,
+    "last20_over_first20": [
+      1.0149015004422886,
+      1.0054182574382646,
+      1.0035804051536705
+    ],
+    "max_process_over_min": 1.0027665084910746,
+    "quality_flags": [],
+    "primary_scope": false,
+    "eligible_for_calibration": false,
+    "process_ids": [
+      "bfd39c0cecb13fbeac2a7ca987d81ea76a474ac46464ce7fe27beb1e9e34346c",
+      "fce019a7b397363c4eec22ac966bb5c67d802a6743a3ce685f34c0c9a96a0d52",
+      "f8c3128476318e42bae97d888cbf4ca70ddb33e4a393b3c49a216cb42e301c05"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "85cb2292c875d135692e59aab154a698776474e1d24da907471fd1b0fee07953",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      4096,
+      2048
+    ],
+    "family": "splitk2",
+    "candidate_id": "splitk2@legacy",
+    "stage": "anchors",
+    "metadata_mode": "legacy",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q2_g1",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk2"
+    ],
+    "input_sha256": "f6fba035e48f6c5c60e5565020ab17c88a8060931c1511dcd046643ecec12598",
+    "reference_sha256": "c82a490a3d1db291944c79feaec6431baac2dc734d5440209b33cfdea6027602",
+    "header_sha256": "8bf331efec4dddb6a4e551795c934455c8a51553eba26011c39a1b13fa03297f",
+    "process_medians_us": [
+      721.5425,
+      720.872,
+      718.2225
+    ],
+    "observed_us": 720.872,
+    "last20_over_first20": [
+      0.9993477575266079,
+      1.0072975115839575,
+      1.0049978595517937
+    ],
+    "max_process_over_min": 1.0046225229646801,
+    "quality_flags": [],
+    "primary_scope": false,
+    "eligible_for_calibration": false,
+    "process_ids": [
+      "6ac31756b9418e5bf4795718d4af68f7cf4905a77b5ecf4ebb798f6748f8fbae",
+      "7c03e35bfe9b1745eabf188357a753abed8ed484fd03efacfbb0f011b9c2d503",
+      "c5193349d5e03077047d08efe27341e9693e52524ad4002175a97e2299daa2ea"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "8bb5966bb9709a393a5b45e327e8b34276bc1a45b57773a1662f5387d2a699a5",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      3072,
+      512
+    ],
+    "family": "splitk2_groupedn2",
+    "candidate_id": "splitk2_groupedn2@prepared",
+    "stage": "geometry",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q2_g2_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk2"
+    ],
+    "input_sha256": "7b7e101029cb1ceeefcdeacc762ea3540d39294e11e1ccb315f27c50f4a00ce6",
+    "reference_sha256": "3c506883577e4ffdc94bc211a56d102e75a58578e3357a02df1d33d63cfb4a17",
+    "header_sha256": "7d8b883cac2dccc4c32f85c1f4b2445cbd9ac29bd7b13548783c2515aa5baa4e",
+    "process_medians_us": [
+      644.778,
+      646.8230000000001,
+      639.758
+    ],
+    "observed_us": 644.778,
+    "last20_over_first20": [
+      1.01729801932998,
+      1.006302081870907,
+      1.0062482564056219
+    ],
+    "max_process_over_min": 1.0110432382244536,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "a41c9e7924eecdcc4b32af3fbca661d4ed1018419c9a297164db3362f5b22143",
+      "b8ec25a62f111de197e9e4e0c2d5e1a19d142842ed1d908e1573ba9daa180f3d",
+      "743deb31a102d60ee8e48f2fabc189b8d87f29e302a6bd3888bf8546fa44c5df"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "8dc7017d1bf013a7d48cd9e4a0260275672a3d1c97ca7451025a8715ee805aec",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      512,
+      4096,
+      512
+    ],
+    "family": "host_merged_cutlass",
+    "candidate_id": "host_merged_cutlass@merged",
+    "stage": "mechanisms",
+    "metadata_mode": "merged",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "host_nccl_cutlass_sm80_merged_v1",
+    "algorithm_ids": [
+      "sm80_64x128x32"
+    ],
+    "input_sha256": "29100ffb1a0419f170eb21e8dce3afef85c6bc2af63ab68540e2c3673fa36f9f",
+    "reference_sha256": "7bcae5fd61c978340ffa2e8c66ac306843819eb0f0a61a2cd23112ff95710950",
+    "header_sha256": "c1fb853067b1e3a8f54d5156062765d6bee361d439d6f6f2ba622408b27c7fba",
+    "process_medians_us": [
+      654.398,
+      652.293,
+      645.1875
+    ],
+    "observed_us": 652.293,
+    "last20_over_first20": [
+      0.9999014029067034,
+      1.0035435589883943,
+      0.9965681687190516
+    ],
+    "max_process_over_min": 1.0142756950498886,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "5e2e6b667ce982186574585f67e2f7df976d6626af5f04a1448ec9d5ff208b48",
+      "ab16186fdfae497d0995308619f25dfdcaad67dff8140d2c71c00277a16a2f07",
+      "31665634b2856879b46dbe128b728c1b508575df2b9d84a5130fae0595c6a0b1"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "8ed90e2f31e15fdbb73ae2783ce49f4145ed0b06535835f59bfe90ad3b33b23c",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      512,
+      4096,
+      512
+    ],
+    "family": "splitk2",
+    "candidate_id": "splitk2@legacy",
+    "stage": "mechanisms",
+    "metadata_mode": "legacy",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q2_g1",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk2"
+    ],
+    "input_sha256": "29100ffb1a0419f170eb21e8dce3afef85c6bc2af63ab68540e2c3673fa36f9f",
+    "reference_sha256": "7bcae5fd61c978340ffa2e8c66ac306843819eb0f0a61a2cd23112ff95710950",
+    "header_sha256": "308fc4804b4606716c88128c271d48b0413d1f44a12bba740dd8bee89746dcc0",
+    "process_medians_us": [
+      1006.9915000000001,
+      1007.9015,
+      1006.4014999999999
+    ],
+    "observed_us": 1006.9915000000001,
+    "last20_over_first20": [
+      1.0217278376155647,
+      0.999841284327224,
+      1.001122487818597
+    ],
+    "max_process_over_min": 1.001490458827814,
+    "quality_flags": [],
+    "primary_scope": false,
+    "eligible_for_calibration": false,
+    "process_ids": [
+      "905a5fc115bee352c9d6805849fc979b6d69453f1fcfcb1757f62fc84a2283cb",
+      "68e2347195bf10ea431ef945a67cc3903ead45946f821f37fb0d8706a454f3f4",
+      "a0d73c99a1eeb2bbac459c4a94d20a0d0d2884f17d1ab32fff4f18cdd83420be"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "9137b6dfb622aafe6157abe64831f3e51ea8b5051d2b98ed5ebe1a8f5b18bae0",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      3072,
+      1536
+    ],
+    "family": "splitk2_groupedn2",
+    "candidate_id": "splitk2_groupedn2@prepared",
+    "stage": "geometry",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q2_g2_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk2"
+    ],
+    "input_sha256": "29971b6db6b73399e9f6f5e79379af56faf96ad57242e34d0178779c65ece344",
+    "reference_sha256": "59b39adf4ea9e6164d976faef942abb47933457976fb7ec2e57fd716121e8bf0",
+    "header_sha256": "347380a2ca328bfafb0c1315f98937aef3373c13b4b96cbebaff1d378633c275",
+    "process_medians_us": [
+      643.533,
+      642.2125,
+      642.8125
+    ],
+    "observed_us": 642.8125,
+    "last20_over_first20": [
+      1.0081993762840866,
+      1.009936578030304,
+      0.9880283181207485
+    ],
+    "max_process_over_min": 1.0020561729956985,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "bee94a18908415489ad8c4c81d5dda4cc3698fd670c29ca96ce9cd4084ab49e2",
+      "a3703cb879fe8b7911b71e17dacede57381503318b50bc03f1637eff8d938186",
+      "8fda626acd692673872dbdc0631a2eaa07ed8c5e869273cf74058d43837d67f4"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "9559f99191511728227ae105e862b194d1dcfaee52515518a2ce907d479fb774",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      512,
+      4096,
+      512
+    ],
+    "family": "splitk2",
+    "candidate_id": "splitk2@legacy",
+    "stage": "anchors",
+    "metadata_mode": "legacy",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q2_g1",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk2"
+    ],
+    "input_sha256": "29100ffb1a0419f170eb21e8dce3afef85c6bc2af63ab68540e2c3673fa36f9f",
+    "reference_sha256": "7bcae5fd61c978340ffa2e8c66ac306843819eb0f0a61a2cd23112ff95710950",
+    "header_sha256": "308fc4804b4606716c88128c271d48b0413d1f44a12bba740dd8bee89746dcc0",
+    "process_medians_us": [
+      1006.4515,
+      1007.7370000000001,
+      1009.1265000000001
+    ],
+    "observed_us": 1007.7370000000001,
+    "last20_over_first20": [
+      1.0030675166938248,
+      0.9976695096995504,
+      1.0021965685929368
+    ],
+    "max_process_over_min": 1.0026578528622592,
+    "quality_flags": [],
+    "primary_scope": false,
+    "eligible_for_calibration": false,
+    "process_ids": [
+      "28168ef029b3239be6ef792ed8d4078eda424ab8b59fd0886131a1c1cfdcff3e",
+      "cec552acb22cf0388e888b44288125c9f51c63052d858b61bbef68e3cb266190",
+      "2a648cea6a1f856b9415e537537ba5badecc3939a7af4aceaf4923addb86d845"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "9772bec9ff8bb5c85a7ff059ceaaa5c3f381e758bb65f2aa1da08b6e6ee8f667",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      1024,
+      512
+    ],
+    "family": "splitk4_groupedn2",
+    "candidate_id": "splitk4_groupedn2@prepared",
+    "stage": "mechanisms",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q4_g2_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk4"
+    ],
+    "input_sha256": "cf476691cd5ec7f2f02c3e88dc61b73b721eba1086d4004a23243dded2b92dc3",
+    "reference_sha256": "3d53f9d7dc06b868e6dec81062dd9ffa906186e4d1bb19b2a72b6f32b9a20347",
+    "header_sha256": "eacc1a25e0977a838a5513a0ceba906682a9b57545a5a04490412a95776fd4a7",
+    "process_medians_us": [
+      381.8285,
+      383.2385,
+      379.6435
+    ],
+    "observed_us": 381.8285,
+    "last20_over_first20": [
+      0.9927239251164108,
+      1.0013168404182569,
+      0.9902755013214339
+    ],
+    "max_process_over_min": 1.0094694101176498,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "81b5ea22ea80d5a714bb0be3548f5f2ba7cfac6178934dbb69a4a293accfea22",
+      "da9a2a4a478c163d79f1aaf36eab417bd527c961a91e724b1d559c192ae130a6",
+      "baf10d98afd53991184592bc2721bb12250a93e30076c6db0853237af9b39c2e"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "97cf344f698a9d3e2e32e01bffbdb408f6a142dfc2a9d9c5bfdd8b03ef413727",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      512,
+      3072,
+      512
+    ],
+    "family": "splitk4",
+    "candidate_id": "splitk4@prepared",
+    "stage": "geometry",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q4_g1_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk4"
+    ],
+    "input_sha256": "13d429bf0cae4ec105d76da576e66fe048f7dba5781563839d6628f83e65ff81",
+    "reference_sha256": "3ff99b31a9e1e1b3b810a9353f08360fbde5757441a8f08ac53a7cc312605806",
+    "header_sha256": "a5584944d746b47397c4692f5a0d0644507b42021cf23292018b8759f71c6643",
+    "process_medians_us": [
+      869.7825,
+      871.3919999999999,
+      863.3925
+    ],
+    "observed_us": 869.7825,
+    "last20_over_first20": [
+      1.0040764852048176,
+      0.9999474023403068,
+      0.999405488209619
+    ],
+    "max_process_over_min": 1.0092651951458924,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "762ca484139662772b14888086e3a480d19283aeabb14fa84ebb82726556a7f5",
+      "d027c9878999ab10d69112435212720738f80b941588679a61b093bc0e8b3424",
+      "7a0374675c938d8bbff8d62695ca63f1feac944fd1aef3e68327d68e3cf1e152"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "9885894d07cb77b7f731c59cf200c191cf858dec64182232448169d28bc2a241",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      8192,
+      512
+    ],
+    "family": "host",
+    "candidate_id": "host@prepared",
+    "stage": "mechanisms",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32"
+    ],
+    "input_sha256": "9f01da29c9bff0efd896001a4984ec6f6b68c32fd981b68e6de64d1793471e3a",
+    "reference_sha256": "1e10ae2fca27e174a966c86881defb8a39b9c97fcdd2b0fe1f250eb90810e454",
+    "header_sha256": "14bd9949dd10056a7048483d2c23b21ee86893eb8b65faef7572799ae50d8857",
+    "process_medians_us": [
+      853.877,
+      828.6075,
+      843.052
+    ],
+    "observed_us": 843.052,
+    "last20_over_first20": [
+      1.0097837415012607,
+      0.9980901474502566,
+      1.0058908517054648
+    ],
+    "max_process_over_min": 1.0304963447711974,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "de5d550c2994d083a0e2d0a4b5600c6aeac34bb4abbad56c3dfe7bb671ded101",
+      "9438321cbbc405321cc022de5004c13474bfaf42281f0d59ab08fac1ebc939c9",
+      "c770edd37d646dbf5a72c2861746ccb27c5ea7331e1febf2d288b01bc537bf84"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "9ab58cd593577addd1ff4b5c00a1cc6fe01bfefe44d8527ecf56d90b5a7b0724",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      256,
+      8192,
+      512
+    ],
+    "family": "splitk4_groupedn2",
+    "candidate_id": "splitk4_groupedn2@prepared",
+    "stage": "mechanisms",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q4_g2_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk4"
+    ],
+    "input_sha256": "393d4932a81e7f1c58fdfc0f4c7b0a6343d29f6297d7fffbe740d6ad0987d6e7",
+    "reference_sha256": "2b601ff6603aa9767fe3e5abfb8c6ef00f493b29c33dc273fef9551edccbb4d3",
+    "header_sha256": "c7a4d02d647eecba9d1755e1b5ca042c84dbe4dbc4d32110fac2328fef3411a4",
+    "process_medians_us": [
+      900.8069999999999,
+      896.192,
+      902.6015000000001
+    ],
+    "observed_us": 900.8069999999999,
+    "last20_over_first20": [
+      0.9970735257865281,
+      1.0006024150148596,
+      1.0034755302682044
+    ],
+    "max_process_over_min": 1.007151927265586,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "d47c52aef318f9d21d3fef54642924a68e34aa247f3085927b95d351e8a084d7",
+      "5e97434f5daa952554cfdbe003b0e6c363fa2915a622e84c7cef197679b56fe1",
+      "7e587bb43ffb4480a51bfb02d03f49116e2fcf1409cec4da540cad8a48e7d6ad"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "9e08915e02bf94f98423f0414ae5ff7f6c0417236810a55d8f5fffe7e9244890",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      3072,
+      1536
+    ],
+    "family": "splitk4_groupedn2",
+    "candidate_id": "splitk4_groupedn2@prepared",
+    "stage": "geometry",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q4_g2_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk4"
+    ],
+    "input_sha256": "29971b6db6b73399e9f6f5e79379af56faf96ad57242e34d0178779c65ece344",
+    "reference_sha256": "59b39adf4ea9e6164d976faef942abb47933457976fb7ec2e57fd716121e8bf0",
+    "header_sha256": "ed7153e06b0476223ced5c2d1f73ff172a17386d23a54e25388887539530fdd8",
+    "process_medians_us": [
+      530.5335,
+      532.6930000000001,
+      533.7635
+    ],
+    "observed_us": 532.6930000000001,
+    "last20_over_first20": [
+      1.003282226179338,
+      1.0053128678410044,
+      1.0035974668424552
+    ],
+    "max_process_over_min": 1.006088211206267,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "26149890fa8e347a097e4023ea81fe1062195f86b74e4b23a37ea908fa081e5b",
+      "dc8e6a69d7461028d92fd84498e17156575e02136f618f9ca96be73c082498af",
+      "3208a2e33a749b842858fda2eac0a8890dc8f6b3076ebbef6f582fed16928c6c"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "a642f7f1536b7a82e6a514b12407784e7df913f48657fa82bced0f9598e13e24",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      1024,
+      512
+    ],
+    "family": "splitk2",
+    "candidate_id": "splitk2@prepared",
+    "stage": "mechanisms",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q2_g1_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk2"
+    ],
+    "input_sha256": "cf476691cd5ec7f2f02c3e88dc61b73b721eba1086d4004a23243dded2b92dc3",
+    "reference_sha256": "3d53f9d7dc06b868e6dec81062dd9ffa906186e4d1bb19b2a72b6f32b9a20347",
+    "header_sha256": "198c42bd9a155ce6fe13a34a7095f8d6cb2967c0afdd0232b1d8f85ec7de5262",
+    "process_medians_us": [
+      323.41900000000004,
+      321.729,
+      320.35400000000004
+    ],
+    "observed_us": 321.729,
+    "last20_over_first20": [
+      0.8361794455544455,
+      1.0063667630003683,
+      1.0033473693431023
+    ],
+    "max_process_over_min": 1.0095675409078706,
+    "quality_flags": [
+      "within_process_drift"
+    ],
+    "primary_scope": true,
+    "eligible_for_calibration": false,
+    "process_ids": [
+      "be3d286ea1ac5879973792c96bc803802cca66627a1c56d8cae2bb8aafc41459",
+      "bc8ab6d394e259f57c8b586ef0a10655aac5490f950d8a6b64d7bb24f71ee182",
+      "f88df730aca9f2006fc20553ae059c5e464f25b28f132a0995ebe072ff76aa27"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "b353381c247de5dae4fe7cdde7f895e51d723d005a23ecc4dd6003cb41224ba7",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      4096,
+      2048
+    ],
+    "family": "host",
+    "candidate_id": "host@prepared",
+    "stage": "mechanisms",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32"
+    ],
+    "input_sha256": "f6fba035e48f6c5c60e5565020ab17c88a8060931c1511dcd046643ecec12598",
+    "reference_sha256": "c82a490a3d1db291944c79feaec6431baac2dc734d5440209b33cfdea6027602",
+    "header_sha256": "43a4de5dd0b2b98d30c7e77d28851fd406784908f87276d9acc9462cf14a598a",
+    "process_medians_us": [
+      577.6479999999999,
+      585.863,
+      582.048
+    ],
+    "observed_us": 582.048,
+    "last20_over_first20": [
+      1.0064761336701733,
+      1.0088692685513354,
+      0.9887100366753779
+    ],
+    "max_process_over_min": 1.0142214635902835,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "c5c8b85fac6b04a51a7f39328bb45676bfcfbdf822df5910e62480f2463c64c8",
+      "2cab78f6e854f2cd69f36ca49ea6e120564b92141399d5a3bdf21671127ae333",
+      "fd2b22b656ced6a0baff2d70657f34b241dc7943df28a97fd6631fbc74acf04b"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "b51e85d04e1c453433d9056e7f3763534e3e854f3d107d02feb015db560ccb1a",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      192,
+      3072,
+      512
+    ],
+    "family": "splitk4_groupedn2",
+    "candidate_id": "splitk4_groupedn2@prepared",
+    "stage": "geometry",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q4_g2_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk4"
+    ],
+    "input_sha256": "814847f5edb22a7fffc23c3f66612f918af925a8c38b1529d249ed41a6aa4835",
+    "reference_sha256": "8d96e6a79d4cf245ab5af0d2f281259f4181d123d9cf2612ee3bb514cfb1747f",
+    "header_sha256": "73c9098210ef2ff6534df4dbae29f5dcbec7935974b3d068ba8cdb6dbe664df2",
+    "process_medians_us": [
+      529.269,
+      527.8380000000001,
+      528.0579999999999
+    ],
+    "observed_us": 528.0579999999999,
+    "last20_over_first20": [
+      1.0055450228460612,
+      0.996356743856382,
+      0.9976341373165627
+    ],
+    "max_process_over_min": 1.0027110590749433,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "faefb2b479c17eac28a03b7bfadab8690060ccf93204988423413910b1443a69",
+      "e75b6e0e0cd5eab4f67990e120817428faf7ab1f8cf38381119415a8b60e0b56",
+      "6da9ab4e79be4d122a2f0546a89ef6e7480883111b1475bb56fe64e602ac60e4"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "b53794a42545d3ab62858b6ac2f9e628831f9a69ec614aedea4658acb4669284",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      8192,
+      512
+    ],
+    "family": "splitk4",
+    "candidate_id": "splitk4@prepared",
+    "stage": "mechanisms",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q4_g1_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk4"
+    ],
+    "input_sha256": "9f01da29c9bff0efd896001a4984ec6f6b68c32fd981b68e6de64d1793471e3a",
+    "reference_sha256": "1e10ae2fca27e174a966c86881defb8a39b9c97fcdd2b0fe1f250eb90810e454",
+    "header_sha256": "b75d3bc3db5eac24d7b948497572f05da7d021e58f036daf65ad2ee3ab1513c8",
+    "process_medians_us": [
+      709.0125,
+      708.5129999999999,
+      712.4730000000001
+    ],
+    "observed_us": 709.0125,
+    "last20_over_first20": [
+      1.0033245864039388,
+      0.9999794759284489,
+      1.0060508354807451
+    ],
+    "max_process_over_min": 1.0055891705586208,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "24af00f162290198b8c8cf0c5cb7b0931233a930a788740460f03129140f649c",
+      "a44c1c7333a3026e2e62678177031e9be7f70b44d78625578058004db84f3ab4",
+      "60a379e4d55aaaefeff659bb851daeb700cee62af5bd97e22a5a51bbb1ab0fe3"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "b9bb50aa0796b3023f2babbbeb8c8888679baef44c5c7421ffde60d5c42fbd2a",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      512,
+      4096,
+      512
+    ],
+    "family": "host_compiler_cublas",
+    "candidate_id": "host_compiler_cublas@prepared",
+    "stage": "mechanisms",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "host_nccl_cublas_per_source_v1_prepared_metadata_v2",
+    "algorithm_ids": [
+      "library_default"
+    ],
+    "input_sha256": "29100ffb1a0419f170eb21e8dce3afef85c6bc2af63ab68540e2c3673fa36f9f",
+    "reference_sha256": "7bcae5fd61c978340ffa2e8c66ac306843819eb0f0a61a2cd23112ff95710950",
+    "header_sha256": "00416f1c123daeb4230839d2181870ce147d068c31b9de13e60834181eaa5e02",
+    "process_medians_us": [
+      905.997,
+      908.2865,
+      905.122
+    ],
+    "observed_us": 905.997,
+    "last20_over_first20": [
+      1.019155112041323,
+      1.0113350455366312,
+      1.0206705068816235
+    ],
+    "max_process_over_min": 1.0034962137700776,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "75496eff4efe9a666bb30a685a24d494c8895bc53d0752909fdcdfee0c116363",
+      "ade16bfe571a339fe764b57df47cc6dab1270c79f6f433d5bd9a127adc41d06f",
+      "ab8de8e46539d57e08cc7fd42a996c5d11fbe5921bdc879709195cb31a0667b6"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "bbe78b676f97eceb736a2a629e73f075e38bc74d0bf474ff152eb358e867970f",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      8192,
+      512
+    ],
+    "family": "splitk2",
+    "candidate_id": "splitk2@legacy",
+    "stage": "mechanisms",
+    "metadata_mode": "legacy",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q2_g1",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk2"
+    ],
+    "input_sha256": "9f01da29c9bff0efd896001a4984ec6f6b68c32fd981b68e6de64d1793471e3a",
+    "reference_sha256": "1e10ae2fca27e174a966c86881defb8a39b9c97fcdd2b0fe1f250eb90810e454",
+    "header_sha256": "9a7096117f88c99bda3e4b4cea160a5800f6bc1b6a549aebb0149ce46cd1f030",
+    "process_medians_us": [
+      1071.0614999999998,
+      1081.9109999999998,
+      1072.776
+    ],
+    "observed_us": 1072.776,
+    "last20_over_first20": [
+      1.0059595680700737,
+      1.0211968793704695,
+      1.013546615742531
+    ],
+    "max_process_over_min": 1.0101296704250877,
+    "quality_flags": [],
+    "primary_scope": false,
+    "eligible_for_calibration": false,
+    "process_ids": [
+      "00952d1fce08b78a2914fcf61d8a0be2e2fed36711bac82b8439181b9384254d",
+      "5b9bf23396dccf8f920d74a97562aa2ed04c990eea099d8bd75cccaedec4162f",
+      "2256d3dd083802ca6aad8b47ef019b2b87704da120a38434acb165995808f045"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "bdb025ed1ab9ae67c3393caada0c1c1a01b0c1d8e85cf71806ce7e1104da414e",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      3072,
+      512
+    ],
+    "family": "host",
+    "candidate_id": "host@prepared",
+    "stage": "geometry",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32"
+    ],
+    "input_sha256": "7b7e101029cb1ceeefcdeacc762ea3540d39294e11e1ccb315f27c50f4a00ce6",
+    "reference_sha256": "3c506883577e4ffdc94bc211a56d102e75a58578e3357a02df1d33d63cfb4a17",
+    "header_sha256": "62a34ae4cd6f132738fa6becc1053cdce221f7c95a0f8bf7b613c83b0beaf288",
+    "process_medians_us": [
+      489.4035,
+      494.78350000000006,
+      499.2785
+    ],
+    "observed_us": 494.78350000000006,
+    "last20_over_first20": [
+      0.9994282540679365,
+      0.9110450160922692,
+      0.7600965652981366
+    ],
+    "max_process_over_min": 1.0201776243937772,
+    "quality_flags": [
+      "within_process_drift"
+    ],
+    "primary_scope": true,
+    "eligible_for_calibration": false,
+    "process_ids": [
+      "5bf81a7d2be371e175b06b646e94e3873da5d9aa1fd69fa8d31ae6e4761a8d30",
+      "557d742d24b5a4419e43fb164e867f677b2db9d781dd404572db345590984cc4",
+      "e45a2d7baaffb5600956f72eb18ce752013eda3e5e37b7121781205af8d28721"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "bfb71df5c5c889214348048640ca457d041d1fc7e872a4454fb6df23ab24b482",
+    "context_id": "853023281883e010b726671d845fa830a4947752bf157acae79dea14692b319f",
+    "shape": [
+      4,
+      64,
+      1024,
+      512
+    ],
+    "family": "host",
+    "candidate_id": "host@legacy",
+    "stage": "short_host_warmup_diagnostic",
+    "metadata_mode": "legacy",
+    "warmup": 200,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "host_nccl_cutlass_sm80_per_source_v1",
+    "algorithm_ids": [
+      "sm80_64x128x32"
+    ],
+    "input_sha256": "cf476691cd5ec7f2f02c3e88dc61b73b721eba1086d4004a23243dded2b92dc3",
+    "reference_sha256": "3d53f9d7dc06b868e6dec81062dd9ffa906186e4d1bb19b2a72b6f32b9a20347",
+    "header_sha256": "5086cdcd3538696246e138573c0317c637c46f13a3779d205a13f60b6080b3b7",
+    "process_medians_us": [
+      354.66900000000004,
+      347.57899999999995,
+      361.9535
+    ],
+    "observed_us": 354.66900000000004,
+    "last20_over_first20": [
+      1.0136157713944343,
+      0.9943940884156919,
+      0.9841399509308387
+    ],
+    "max_process_over_min": 1.0413560658152536,
+    "quality_flags": [],
+    "primary_scope": false,
+    "eligible_for_calibration": false,
+    "process_ids": [
+      "d018c8d3dd694f76c616201e9d6ab217a46df52861423a21465bd2e4b5f35f4f",
+      "c9c972039c0191fe794a6a17c118112465af21d9abf654e1f80976a4d224ccaa",
+      "bf1f84c2fc781b76c0dffdec068f10d9762828ea40d34297e68cb424e71235c2"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "c6154cc5d40d40282020be2757cea8520bf6a7ba2fc046e79a86f89cb9bed80c",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      256,
+      8192,
+      512
+    ],
+    "family": "splitk2",
+    "candidate_id": "splitk2@legacy",
+    "stage": "mechanisms",
+    "metadata_mode": "legacy",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q2_g1",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk2"
+    ],
+    "input_sha256": "393d4932a81e7f1c58fdfc0f4c7b0a6343d29f6297d7fffbe740d6ad0987d6e7",
+    "reference_sha256": "2b601ff6603aa9767fe3e5abfb8c6ef00f493b29c33dc273fef9551edccbb4d3",
+    "header_sha256": "22923f0117df27d2e9ae80d6459abbc33649d69d0b0595e8b0a5e7be71c9bc97",
+    "process_medians_us": [
+      1257.3705,
+      1255.4755,
+      1252.8809999999999
+    ],
+    "observed_us": 1255.4755,
+    "last20_over_first20": [
+      0.9986366786326709,
+      1.004849276708941,
+      1.0010859488597936
+    ],
+    "max_process_over_min": 1.0035833411153974,
+    "quality_flags": [],
+    "primary_scope": false,
+    "eligible_for_calibration": false,
+    "process_ids": [
+      "8185b36f7ca25348648736270b0b2d96ae0f7528c50d97848c4f21555bfd9558",
+      "cbe818330aad04ce196662b66f1bccb7194628932f2d760b838bd90401977b32",
+      "01988cdf30473124d5bb0add8f18feca331bd300b3211b3925ce609334a2bf58"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "c70d44b9c3e914f5581eaaf4092dd58385ed40259b661be6656a349fc1a16c72",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      8192,
+      512
+    ],
+    "family": "host",
+    "candidate_id": "host@legacy",
+    "stage": "mechanisms",
+    "metadata_mode": "legacy",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "host_nccl_cutlass_sm80_per_source_v1",
+    "algorithm_ids": [
+      "sm80_64x128x32"
+    ],
+    "input_sha256": "9f01da29c9bff0efd896001a4984ec6f6b68c32fd981b68e6de64d1793471e3a",
+    "reference_sha256": "1e10ae2fca27e174a966c86881defb8a39b9c97fcdd2b0fe1f250eb90810e454",
+    "header_sha256": "14bd9949dd10056a7048483d2c23b21ee86893eb8b65faef7572799ae50d8857",
+    "process_medians_us": [
+      844.0675,
+      838.0525,
+      833.0024999999999
+    ],
+    "observed_us": 838.0525,
+    "last20_over_first20": [
+      1.026290813487951,
+      1.0048845795685457,
+      1.0015713567551785
+    ],
+    "max_process_over_min": 1.0132832734595636,
+    "quality_flags": [],
+    "primary_scope": false,
+    "eligible_for_calibration": false,
+    "process_ids": [
+      "c443bc5712d5ff025e1aad2c522a2468379ab58fa74a6fa3ce6793d5dfcb6c2c",
+      "299b9cb52374865ce45b9a46877c27b89512377edfa160b91322b1f0e658d554",
+      "d46c59cc10daeb90c5ca4f47db0e41ac686af780f0efbe407f8e722ecf286d71"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "c9d7ff01e98490c1d12ab2f064633f1e79001d15d03ba9bd67d1ec3c100fe15f",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      3072,
+      512
+    ],
+    "family": "splitk4_groupedn2",
+    "candidate_id": "splitk4_groupedn2@prepared",
+    "stage": "geometry",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q4_g2_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk4"
+    ],
+    "input_sha256": "7b7e101029cb1ceeefcdeacc762ea3540d39294e11e1ccb315f27c50f4a00ce6",
+    "reference_sha256": "3c506883577e4ffdc94bc211a56d102e75a58578e3357a02df1d33d63cfb4a17",
+    "header_sha256": "eacb181c6564eab8a618d60080c47efd09f78afec10f0e255d9cf94aeb4c01e2",
+    "process_medians_us": [
+      519.4879999999999,
+      517.2235000000001,
+      515.683
+    ],
+    "observed_us": 517.2235000000001,
+    "last20_over_first20": [
+      1.0127426131037114,
+      1.0082554798552303,
+      1.0102676585270136
+    ],
+    "max_process_over_min": 1.0073785639627444,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "1e15682175fdb8f127f1962ae7dc726b60192559ebe149c2d93b55b95372cecd",
+      "b3c9b11f334b7e543a7cbc42f3147794e6ec1a54e73aa8f2c35926f43acf9a52",
+      "81eb0d95805e46b6c504b0986ed7429848a8f107897040aa106a05cf0189c1b3"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "cc902eda0355d1350e88f70327d0586614991d9bc82998fed9191afc6982fd90",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      256,
+      8192,
+      512
+    ],
+    "family": "host_compiler_cublas",
+    "candidate_id": "host_compiler_cublas@prepared",
+    "stage": "mechanisms",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "host_nccl_cublas_per_source_v1_prepared_metadata_v2",
+    "algorithm_ids": [
+      "library_default"
+    ],
+    "input_sha256": "393d4932a81e7f1c58fdfc0f4c7b0a6343d29f6297d7fffbe740d6ad0987d6e7",
+    "reference_sha256": "2b601ff6603aa9767fe3e5abfb8c6ef00f493b29c33dc273fef9551edccbb4d3",
+    "header_sha256": "87f905025e9a10dcd342ccbc1d20b486b2b3ac725688820588481214db996586",
+    "process_medians_us": [
+      903.112,
+      922.952,
+      902.7719999999999
+    ],
+    "observed_us": 903.112,
+    "last20_over_first20": [
+      1.013826142188744,
+      1.0040375961905876,
+      1.0170522350986908
+    ],
+    "max_process_over_min": 1.0223533738308233,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "9271cb30eb5dd43f3e6f485156eea0e122350c1a510f8f00f7799900506e8e8d",
+      "23e30ef3bc57e88e5a44896660e6070959150d57c266774342a0d996658456f2",
+      "a48320d913c82152ae21bbea21d821c2ac5f4ec5429f71b72e52e4ac60dd0d4b"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "cd2fcc259ae2a56c75dc22b8aabe6b6a115770b648767ba98fc62b15c7b2b888",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      1024,
+      512
+    ],
+    "family": "host",
+    "candidate_id": "host@prepared",
+    "stage": "short_host_warmup_diagnostic",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32"
+    ],
+    "input_sha256": "cf476691cd5ec7f2f02c3e88dc61b73b721eba1086d4004a23243dded2b92dc3",
+    "reference_sha256": "3d53f9d7dc06b868e6dec81062dd9ffa906186e4d1bb19b2a72b6f32b9a20347",
+    "header_sha256": "5086cdcd3538696246e138573c0317c637c46f13a3779d205a13f60b6080b3b7",
+    "process_medians_us": [
+      331.13899999999995,
+      368.41400000000004,
+      332.1035
+    ],
+    "observed_us": 332.1035,
+    "last20_over_first20": [
+      0.9973986191166138,
+      0.6409768380858574,
+      0.996850285049203
+    ],
+    "max_process_over_min": 1.1125660221236402,
+    "quality_flags": [
+      "within_process_drift",
+      "between_process_spread"
+    ],
+    "primary_scope": false,
+    "eligible_for_calibration": false,
+    "process_ids": [
+      "8e2e747a75915bccaf3ac21ba95593a3c85af23852747997353bbefcb352d5d6",
+      "c774bf933d50fbaba3a704171bd0b2bf4d8c2b3f4c8110c3dc6ac4cb1c130eee",
+      "c1239d7b9432c3d31eba371036515c03257aa66b45d28fec9178c29a33a73584"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "d1979f4cb6922f6376773ce9f2271eb9ef411b441d79a4cda47d01f2cafc95ec",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      256,
+      8192,
+      512
+    ],
+    "family": "splitk4",
+    "candidate_id": "splitk4@prepared",
+    "stage": "mechanisms",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q4_g1_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk4"
+    ],
+    "input_sha256": "393d4932a81e7f1c58fdfc0f4c7b0a6343d29f6297d7fffbe740d6ad0987d6e7",
+    "reference_sha256": "2b601ff6603aa9767fe3e5abfb8c6ef00f493b29c33dc273fef9551edccbb4d3",
+    "header_sha256": "a1b97a95987ec1540114b539ea2fb537775f77236449e5aaad2b4ed32618a197",
+    "process_medians_us": [
+      1070.421,
+      1079.3965,
+      1077.7009999999998
+    ],
+    "observed_us": 1077.7009999999998,
+    "last20_over_first20": [
+      1.000074729269867,
+      1.0009035178320764,
+      0.9997224798716827
+    ],
+    "max_process_over_min": 1.0083850186048293,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "3676384e5cef0bd8c7ffdc854860ff31a5cf5b05f4d8a8eb5efe9f5d7a32e5b2",
+      "002e3477bf0e80645f4465b5e7d359b083d14bf9cc3390029d5facc7e745e4b8",
+      "07cd4893fb55ac15c622163b8a801a21bc93b4ebca9f369abd90a07ba8306b35"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "d1f75d4bc04d96fb96831abf5154589c7faf8c59ab829006696662e68e86fdec",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      256,
+      8192,
+      512
+    ],
+    "family": "host_merged_cublaslt",
+    "candidate_id": "host_merged_cublaslt@merged",
+    "stage": "mechanisms",
+    "metadata_mode": "merged",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "host_nccl_cublaslt_merged_v1",
+    "algorithm_ids": [
+      "rank0:0=6;1=20;2=3;3=4;4=0;5=0;6=15;workspace=3145728;budget=33554432|rank1:0=6;1=20;2=3;3=4;4=0;5=0;6=15;workspace=3145728;budget=33554432|rank2:0=6;1=20;2=3;3=4;4=0;5=0;6=15;workspace=3145728;budget=33554432|rank3:0=6;1=20;2=3;3=4;4=0;5=0;6=15;workspace=3145728;budget=33554432|"
+    ],
+    "input_sha256": "393d4932a81e7f1c58fdfc0f4c7b0a6343d29f6297d7fffbe740d6ad0987d6e7",
+    "reference_sha256": "2b601ff6603aa9767fe3e5abfb8c6ef00f493b29c33dc273fef9551edccbb4d3",
+    "header_sha256": "e114b6a0a7d4809210dfef4ac6f7e91a3bea19c7a325e867f85a670102addfb8",
+    "process_medians_us": [
+      627.9630000000001,
+      638.1129999999999,
+      630.8430000000001
+    ],
+    "observed_us": 630.8430000000001,
+    "last20_over_first20": [
+      1.0098217379709462,
+      1.0115153173731886,
+      1.0095154822324939
+    ],
+    "max_process_over_min": 1.0161633726827852,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "0d4b5ce5a67f34e4f91c6656d2fe71357d736c1fdfffec594ad499a8d88b3515",
+      "b00d3eb8f356d8112652503cc9ef25c3dff5359b66343e3b4ec2449fd8556f40",
+      "3bf8ad36a1588a26c77066ee479a75ed41a7a4411208e1b8e2494f381c7dd538"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "d26dfdf2c04c9d494f3246ab1122d3ec152b690177d217b403bb6b3c8f4e625d",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      192,
+      3072,
+      1536
+    ],
+    "family": "splitk4_groupedn2",
+    "candidate_id": "splitk4_groupedn2@prepared",
+    "stage": "geometry",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q4_g2_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk4"
+    ],
+    "input_sha256": "b9ed929b1b13a691057ede64dd5ad36a4e7d3feb8a7a4ada62c00568a0965eb7",
+    "reference_sha256": "e319c6e27f86e048fbb118916af6c4b93db0f9f131858476049aa147f0b04134",
+    "header_sha256": "0f8c958f1b280cd52e1d5be3bbb3a4f2d586711b52cf45e29b49a5c41825c3bb",
+    "process_medians_us": [
+      671.6025,
+      674.9825000000001,
+      673.8625000000001
+    ],
+    "observed_us": 673.8625000000001,
+    "last20_over_first20": [
+      0.9969844837984541,
+      0.9982090868859278,
+      0.9989333451850536
+    ],
+    "max_process_over_min": 1.0050327388596678,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "7560c9ae1e46659c8df99cb22340b09822ad39e3ff120efb953e91405a1cfa45",
+      "78748e90d525f66cf98231855b654d93eb91f9e4c15e361b4f9e9a273906b7d0",
+      "226db7bed844f14e2008bbcce33f8caa7930174f7dfb5b8d922268bb1e354660"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "d90e8885d41655d1996113f6f883e4a5fc632a018680b1f327d51f718f1edc33",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      4096,
+      2048
+    ],
+    "family": "direct",
+    "candidate_id": "direct@legacy",
+    "stage": "anchors",
+    "metadata_mode": "legacy",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q1_g1",
+    "algorithm_ids": [
+      "sm80_64x128x32"
+    ],
+    "input_sha256": "f6fba035e48f6c5c60e5565020ab17c88a8060931c1511dcd046643ecec12598",
+    "reference_sha256": "c82a490a3d1db291944c79feaec6431baac2dc734d5440209b33cfdea6027602",
+    "header_sha256": "741df80dd05146ec586cff268495ec01ed98db5e8259e755f90015d627741984",
+    "process_medians_us": [
+      1059.326,
+      1061.7060000000001,
+      1065.696
+    ],
+    "observed_us": 1061.7060000000001,
+    "last20_over_first20": [
+      1.0106089683846942,
+      1.0034490356618966,
+      1.0131159295873708
+    ],
+    "max_process_over_min": 1.0060132574863638,
+    "quality_flags": [],
+    "primary_scope": false,
+    "eligible_for_calibration": false,
+    "process_ids": [
+      "7a8cf530778ae520442c3edc11905d55d3431cdafcca33f1d28c2fa932723516",
+      "384aa657f0780ff2b0aff4e688f780dea78c5b40270c0f6b3dacdbb400132f50",
+      "69830faee0f3957a77e3237a4b5a59a04585e0bdc912fbe477b9cad369d0b5ce"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "dcf79d8cfba9cd5c3fe0c64771d342269a8f0f26128699849f5c7bbf6e8f9d1b",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      4096,
+      2048
+    ],
+    "family": "host_merged_cublaslt",
+    "candidate_id": "host_merged_cublaslt@merged",
+    "stage": "mechanisms",
+    "metadata_mode": "merged",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "host_nccl_cublaslt_merged_v1",
+    "algorithm_ids": [
+      "rank0:0=21;1=20;2=3;3=4;4=0;5=0;6=11;workspace=3145728;budget=33554432|rank1:0=21;1=20;2=3;3=4;4=0;5=0;6=11;workspace=3145728;budget=33554432|rank2:0=21;1=20;2=3;3=4;4=0;5=0;6=11;workspace=3145728;budget=33554432|rank3:0=21;1=20;2=3;3=4;4=0;5=0;6=11;workspace=3145728;budget=33554432|"
+    ],
+    "input_sha256": "f6fba035e48f6c5c60e5565020ab17c88a8060931c1511dcd046643ecec12598",
+    "reference_sha256": "c82a490a3d1db291944c79feaec6431baac2dc734d5440209b33cfdea6027602",
+    "header_sha256": "43a4de5dd0b2b98d30c7e77d28851fd406784908f87276d9acc9462cf14a598a",
+    "process_medians_us": [
+      318.764,
+      318.139,
+      321.0045
+    ],
+    "observed_us": 318.764,
+    "last20_over_first20": [
+      0.9948265491524577,
+      0.9862863668701091,
+      1.0216896642030369
+    ],
+    "max_process_over_min": 1.0090070692370317,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "ecb58b53ea3ecf145382aac8b04e1045ec4a95b5eb1b513e2688bef84011fe0e",
+      "2ebac33fa4abc5c6a59b3511f172025074dfa0c7db65ad9c6c5d2b855c28ffcd",
+      "b967eade0d2d9db182d18fb2da60cc602dcd48a75e8019b142a23a8708409e7a"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "e12b365959d4247acba3fc5e57bb65d5ca8d7bfd0925d495c0da8983e8201f0c",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      4096,
+      2048
+    ],
+    "family": "host",
+    "candidate_id": "host@legacy",
+    "stage": "mechanisms",
+    "metadata_mode": "legacy",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "host_nccl_cutlass_sm80_per_source_v1",
+    "algorithm_ids": [
+      "sm80_64x128x32"
+    ],
+    "input_sha256": "f6fba035e48f6c5c60e5565020ab17c88a8060931c1511dcd046643ecec12598",
+    "reference_sha256": "c82a490a3d1db291944c79feaec6431baac2dc734d5440209b33cfdea6027602",
+    "header_sha256": "43a4de5dd0b2b98d30c7e77d28851fd406784908f87276d9acc9462cf14a598a",
+    "process_medians_us": [
+      576.783,
+      577.8885,
+      580.278
+    ],
+    "observed_us": 577.8885,
+    "last20_over_first20": [
+      1.0093120443541657,
+      1.0472340063067656,
+      1.056797484783862
+    ],
+    "max_process_over_min": 1.006059471239617,
+    "quality_flags": [],
+    "primary_scope": false,
+    "eligible_for_calibration": false,
+    "process_ids": [
+      "def16e9e07d409589371a19cae9ddbd2ac3fe56655d7823b7f93f21ee9298f39",
+      "93151106f754be9ba58f5cd98b2885c31bc838efc71ada8a3ec7a53191fe296d",
+      "3ebd7cfd9266a01edf71111d41b2ac28aaf18c20bdef971e8436c810c26c3d12"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "e2d85f8ea7759b6518f4667d21ecab9072475b68c75f2d14adeb287d28fcfaa3",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      4096,
+      2048
+    ],
+    "family": "splitk4",
+    "candidate_id": "splitk4@legacy",
+    "stage": "mechanisms",
+    "metadata_mode": "legacy",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q4_g1",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk4"
+    ],
+    "input_sha256": "f6fba035e48f6c5c60e5565020ab17c88a8060931c1511dcd046643ecec12598",
+    "reference_sha256": "c82a490a3d1db291944c79feaec6431baac2dc734d5440209b33cfdea6027602",
+    "header_sha256": "6b11ca3508d2fa110b050b2e9eac4769d814c7feced9aba2840f44faa56b14af",
+    "process_medians_us": [
+      716.9369999999999,
+      720.8275,
+      717.5475
+    ],
+    "observed_us": 717.5475,
+    "last20_over_first20": [
+      0.9975689691802411,
+      0.9950292974495817,
+      0.995387136162974
+    ],
+    "max_process_over_min": 1.0054265577031176,
+    "quality_flags": [],
+    "primary_scope": false,
+    "eligible_for_calibration": false,
+    "process_ids": [
+      "6c139fa1aceab8e9d99cd9835e91b75a0569b5cc8ed52428a44d71190ad6c76b",
+      "001d28e44976c84147ae63aa66c7a1701d223363af40fe097b61594ec7a1c78c",
+      "c5adb44fb092ec6050e4eec04894f549363af4a2be70ed91c3a2dcf2335f71e0"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "e5e0e60bf86b3c3f3fca5e54a7b62d4fd2b395f0884037c2aff09ea4a7f93a9c",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      1024,
+      512
+    ],
+    "family": "host_merged_cublaslt",
+    "candidate_id": "host_merged_cublaslt@merged",
+    "stage": "mechanisms",
+    "metadata_mode": "merged",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "host_nccl_cublaslt_merged_v1",
+    "algorithm_ids": [
+      "rank0:0=31;1=15;2=1;3=0;4=0;5=0;6=17;workspace=0;budget=33554432|rank1:0=31;1=15;2=1;3=0;4=0;5=0;6=17;workspace=0;budget=33554432|rank2:0=31;1=15;2=1;3=0;4=0;5=0;6=17;workspace=0;budget=33554432|rank3:0=31;1=15;2=1;3=0;4=0;5=0;6=17;workspace=0;budget=33554432|"
+    ],
+    "input_sha256": "cf476691cd5ec7f2f02c3e88dc61b73b721eba1086d4004a23243dded2b92dc3",
+    "reference_sha256": "3d53f9d7dc06b868e6dec81062dd9ffa906186e4d1bb19b2a72b6f32b9a20347",
+    "header_sha256": "5086cdcd3538696246e138573c0317c637c46f13a3779d205a13f60b6080b3b7",
+    "process_medians_us": [
+      211.654,
+      221.144,
+      210.68399999999997
+    ],
+    "observed_us": 211.654,
+    "last20_over_first20": [
+      0.9930737357566626,
+      0.9985284396026334,
+      0.9776825608849841
+    ],
+    "max_process_over_min": 1.0496478137874734,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "2d06cbe34f6b31e7eb534263f013c93226da0a2cde9482fca3cea6f8e2140e22",
+      "cd6bbf8fc52dccabfcbfc27bc98954580bb15a4b29479883037da6e87c81991f",
+      "b1e0134ae08efd5281d2f3db09a41a510652ee065ba9d3c75e77be0af9b874ce"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "e5e7ecb59f00138f1dd3f6603c4c1cdc7c38be4c25c827dfe2c98903f196d90f",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      512,
+      3072,
+      512
+    ],
+    "family": "host",
+    "candidate_id": "host@prepared",
+    "stage": "geometry",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32"
+    ],
+    "input_sha256": "13d429bf0cae4ec105d76da576e66fe048f7dba5781563839d6628f83e65ff81",
+    "reference_sha256": "3ff99b31a9e1e1b3b810a9353f08360fbde5757441a8f08ac53a7cc312605806",
+    "header_sha256": "f777bf085cbd3be0bd827c534f715dcf5537bf03a99b38c8942c7b3e942a853d",
+    "process_medians_us": [
+      892.887,
+      883.8275,
+      877.9075
+    ],
+    "observed_us": 883.8275,
+    "last20_over_first20": [
+      1.026465487828605,
+      1.0188686031786993,
+      1.016759344493148
+    ],
+    "max_process_over_min": 1.0170627315520142,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "2cd5989de67b52d8b4ed7853a21ca70c9806d5ea06e2fd962240ddbe2b665db7",
+      "9c9e1579fde8557c4bf9165b39179f1de4b29693b15947046e43fbedfb95d2c7",
+      "faba75ae23cf9617d22d055360b8ebce949a1a745d1b178f538ffaa4bcf3577a"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "e5f2e1c4be969f9af453fe984841f19673f16a21655799464cfb075244f40afe",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      512,
+      4096,
+      512
+    ],
+    "family": "host",
+    "candidate_id": "host@legacy",
+    "stage": "anchors",
+    "metadata_mode": "legacy",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "host_nccl_cutlass_sm80_per_source_v1",
+    "algorithm_ids": [
+      "sm80_64x128x32"
+    ],
+    "input_sha256": "29100ffb1a0419f170eb21e8dce3afef85c6bc2af63ab68540e2c3673fa36f9f",
+    "reference_sha256": "7bcae5fd61c978340ffa2e8c66ac306843819eb0f0a61a2cd23112ff95710950",
+    "header_sha256": "c1fb853067b1e3a8f54d5156062765d6bee361d439d6f6f2ba622408b27c7fba",
+    "process_medians_us": [
+      1085.601,
+      1076.6409999999998,
+      1100.9165
+    ],
+    "observed_us": 1085.601,
+    "last20_over_first20": [
+      1.0178193225493823,
+      1.022594470812227,
+      1.0121274383636336
+    ],
+    "max_process_over_min": 1.0225474415334361,
+    "quality_flags": [],
+    "primary_scope": false,
+    "eligible_for_calibration": false,
+    "process_ids": [
+      "0ec6fff5f7adb2423eaa28759b62d2360d5512c4c525f9455329d6d2c848f278",
+      "525f3d02fd3289a6de9ecef7b970f9d890fbf80726c9317da320adb26a2d7af9",
+      "4d4ce01862049f849957b0af22a3062d4889c55e2c2db766eb5704259900acaa"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "e7f1d9a78f02f1279cdac59346361a9f6431def090f03d93a57bd08f07a568bd",
+    "context_id": "853023281883e010b726671d845fa830a4947752bf157acae79dea14692b319f",
+    "shape": [
+      4,
+      64,
+      1024,
+      512
+    ],
+    "family": "host_merged_cublaslt",
+    "candidate_id": "host_merged_cublaslt@merged",
+    "stage": "short_host_warmup_diagnostic",
+    "metadata_mode": "merged",
+    "warmup": 200,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "host_nccl_cublaslt_merged_v1",
+    "algorithm_ids": [
+      "rank0:0=31;1=15;2=1;3=0;4=0;5=0;6=17;workspace=0;budget=33554432|rank1:0=31;1=15;2=1;3=0;4=0;5=0;6=17;workspace=0;budget=33554432|rank2:0=31;1=15;2=1;3=0;4=0;5=0;6=17;workspace=0;budget=33554432|rank3:0=31;1=15;2=1;3=0;4=0;5=0;6=17;workspace=0;budget=33554432|"
+    ],
+    "input_sha256": "cf476691cd5ec7f2f02c3e88dc61b73b721eba1086d4004a23243dded2b92dc3",
+    "reference_sha256": "3d53f9d7dc06b868e6dec81062dd9ffa906186e4d1bb19b2a72b6f32b9a20347",
+    "header_sha256": "5086cdcd3538696246e138573c0317c637c46f13a3779d205a13f60b6080b3b7",
+    "process_medians_us": [
+      206.6995,
+      205.7195,
+      202.23950000000002
+    ],
+    "observed_us": 205.7195,
+    "last20_over_first20": [
+      0.9981633106808318,
+      0.993892360118081,
+      1.0164181764778242
+    ],
+    "max_process_over_min": 1.0220530608511196,
+    "quality_flags": [],
+    "primary_scope": false,
+    "eligible_for_calibration": false,
+    "process_ids": [
+      "83a83b92a19dd8c8aa986ed3beffd298fa5fc325375d6d9b76fe4a8a340e50a8",
+      "f8b2b3f934ad574150b5e70d6028800c0d9e446d00daa788f45033158dbc52bf",
+      "b82858df598a679359b29b5f9c7834446b57b36ba22f9e808da6c9d7cb32c347"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "e8dbbdd2caaa2a1215a63e3f5d9ff7a8a009d7548ff9dda88c54613fbf309b6e",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      512,
+      4096,
+      512
+    ],
+    "family": "host_merged_cublaslt",
+    "candidate_id": "host_merged_cublaslt@merged",
+    "stage": "mechanisms",
+    "metadata_mode": "merged",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "host_nccl_cublaslt_merged_v1",
+    "algorithm_ids": [
+      "rank0:0=6;1=20;2=3;3=1;4=0;5=0;6=11;workspace=256;budget=33554432|rank1:0=6;1=20;2=3;3=1;4=0;5=0;6=11;workspace=256;budget=33554432|rank2:0=6;1=20;2=3;3=1;4=0;5=0;6=11;workspace=256;budget=33554432|rank3:0=6;1=20;2=3;3=1;4=0;5=0;6=11;workspace=256;budget=33554432|"
+    ],
+    "input_sha256": "29100ffb1a0419f170eb21e8dce3afef85c6bc2af63ab68540e2c3673fa36f9f",
+    "reference_sha256": "7bcae5fd61c978340ffa2e8c66ac306843819eb0f0a61a2cd23112ff95710950",
+    "header_sha256": "c1fb853067b1e3a8f54d5156062765d6bee361d439d6f6f2ba622408b27c7fba",
+    "process_medians_us": [
+      637.978,
+      637.6785,
+      637.5580000000001
+    ],
+    "observed_us": 637.6785,
+    "last20_over_first20": [
+      1.0098954829011413,
+      1.01532620212927,
+      1.0159616963409197
+    ],
+    "max_process_over_min": 1.0006587635948414,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "d13ab2a7f98b33054db9b0c110972aac80b6ceca4e4ed120598f672d4eb7d4c1",
+      "d0278fc21b22d2cdca55503a9daf65d24c621902aaf53be78d738b648fe54868",
+      "8dcc443a0eb682ce8ee306115a05dda4dbba8db6c0137412347ba29ba8cbe28a"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "eb38ea8ac3a18cc877a2ce4884cad135b4c18deefe022b5a2add8a1dfd3d1941",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      3072,
+      1536
+    ],
+    "family": "splitk2",
+    "candidate_id": "splitk2@prepared",
+    "stage": "geometry",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q2_g1_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk2"
+    ],
+    "input_sha256": "29971b6db6b73399e9f6f5e79379af56faf96ad57242e34d0178779c65ece344",
+    "reference_sha256": "59b39adf4ea9e6164d976faef942abb47933457976fb7ec2e57fd716121e8bf0",
+    "header_sha256": "8ce4d8fb91af47cdf6d58eea1328e70dd42fc34bbf29a03fad83abd81d53ab07",
+    "process_medians_us": [
+      557.883,
+      558.6930000000001,
+      561.528
+    ],
+    "observed_us": 558.6930000000001,
+    "last20_over_first20": [
+      1.0037573555390955,
+      0.9995434345893953,
+      1.005746735460401
+    ],
+    "max_process_over_min": 1.006533628018778,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "80daef45077dcd7f41e393bca2b2a130ea91549d5654d2f8237ce131a713725e",
+      "f9fb6db216b04ec299d45273b3b60f93127e4757ed92bc7cfe69f21cf7f225e9",
+      "21ea450f0770438cdbc3405eaf8aab1e69e0c1db72096029f88be2f92eea95d4"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "edac205951d686670194988e6740a471decf413654c6ac843ff369c2f8fa32db",
+    "context_id": "853023281883e010b726671d845fa830a4947752bf157acae79dea14692b319f",
+    "shape": [
+      4,
+      64,
+      1024,
+      512
+    ],
+    "family": "host",
+    "candidate_id": "host@prepared",
+    "stage": "short_host_warmup_diagnostic",
+    "metadata_mode": "prepared",
+    "warmup": 200,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32"
+    ],
+    "input_sha256": "cf476691cd5ec7f2f02c3e88dc61b73b721eba1086d4004a23243dded2b92dc3",
+    "reference_sha256": "3d53f9d7dc06b868e6dec81062dd9ffa906186e4d1bb19b2a72b6f32b9a20347",
+    "header_sha256": "5086cdcd3538696246e138573c0317c637c46f13a3779d205a13f60b6080b3b7",
+    "process_medians_us": [
+      330.3085,
+      334.84400000000005,
+      330.084
+    ],
+    "observed_us": 330.3085,
+    "last20_over_first20": [
+      0.9963641685034405,
+      1.0170772769450716,
+      0.9927157101880315
+    ],
+    "max_process_over_min": 1.014420571733256,
+    "quality_flags": [],
+    "primary_scope": false,
+    "eligible_for_calibration": false,
+    "process_ids": [
+      "96433e921334c1d55cc510f2775cb0a566fe806134a0bce01ee1d6716338965f",
+      "593a8bab58a0131be50d6a28280ad3f37eeccfd707977fa24bc2ea3291ce1c64",
+      "0c498ebf98f687211e53405a5aee6aff028ed783be6b8316f0d332a4993df738"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "ee81c176796303024b3b05d73bab656d36b538ef42ad6a279bf3702bbb9a248c",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      512,
+      4096,
+      512
+    ],
+    "family": "splitk4",
+    "candidate_id": "splitk4@legacy",
+    "stage": "anchors",
+    "metadata_mode": "legacy",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q4_g1",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk4"
+    ],
+    "input_sha256": "29100ffb1a0419f170eb21e8dce3afef85c6bc2af63ab68540e2c3673fa36f9f",
+    "reference_sha256": "7bcae5fd61c978340ffa2e8c66ac306843819eb0f0a61a2cd23112ff95710950",
+    "header_sha256": "71919850f057fed754ca8e55aa4540397a6ce57c52c1eb8c62a622935ff1917c",
+    "process_medians_us": [
+      1053.1809999999998,
+      1050.5010000000002,
+      1052.5865
+    ],
+    "observed_us": 1052.5865,
+    "last20_over_first20": [
+      1.0047631922400355,
+      1.0029225263955541,
+      1.0069802374714054
+    ],
+    "max_process_over_min": 1.002551163682852,
+    "quality_flags": [],
+    "primary_scope": false,
+    "eligible_for_calibration": false,
+    "process_ids": [
+      "cdd18d4e3832a177d4e50e7b697cbf6fa8ea44dff4caa2985dbfb403e649d00d",
+      "64380d000c18f9690403701253354f0e2d0d903283175eaf82ba256215cdb027",
+      "4559e518d05036559438928bb76543aded3ea2fdc4baa3c73ca9218b0d3ff62f"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "ef0fe06e0c52772f214d8094174ca1f26078569f739cbd259010e2e520ae72d7",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      1024,
+      512
+    ],
+    "family": "host_merged_cutlass",
+    "candidate_id": "host_merged_cutlass@merged",
+    "stage": "mechanisms",
+    "metadata_mode": "merged",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "host_nccl_cutlass_sm80_merged_v1",
+    "algorithm_ids": [
+      "sm80_64x128x32"
+    ],
+    "input_sha256": "cf476691cd5ec7f2f02c3e88dc61b73b721eba1086d4004a23243dded2b92dc3",
+    "reference_sha256": "3d53f9d7dc06b868e6dec81062dd9ffa906186e4d1bb19b2a72b6f32b9a20347",
+    "header_sha256": "5086cdcd3538696246e138573c0317c637c46f13a3779d205a13f60b6080b3b7",
+    "process_medians_us": [
+      302.80949999999996,
+      291.93899999999996,
+      218.54449999999997
+    ],
+    "observed_us": 291.93899999999996,
+    "last20_over_first20": [
+      0.8006188589443209,
+      0.6749005446567296,
+      0.9980773108935578
+    ],
+    "max_process_over_min": 1.385573647472254,
+    "quality_flags": [
+      "within_process_drift",
+      "between_process_spread"
+    ],
+    "primary_scope": true,
+    "eligible_for_calibration": false,
+    "process_ids": [
+      "510da4d78462ad091bfb4b93d642350d363004d952805a407ba4654cf230e402",
+      "6a0127df0a436ad5287a42e4c4b4343073f835b1d157f84df2c12a8e97e52863",
+      "b046b9e658dc453bf4df090097edbe8918f3ac4499236e2dc493af47c67eec8b"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "f0e6afc0312485d7c503c3c9d2b82b2b28c2a896a2da6a7d0ad1163274db3d8d",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      256,
+      8192,
+      512
+    ],
+    "family": "splitk8",
+    "candidate_id": "splitk8@prepared",
+    "stage": "mechanisms",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q8_g1_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk8"
+    ],
+    "input_sha256": "393d4932a81e7f1c58fdfc0f4c7b0a6343d29f6297d7fffbe740d6ad0987d6e7",
+    "reference_sha256": "2b601ff6603aa9767fe3e5abfb8c6ef00f493b29c33dc273fef9551edccbb4d3",
+    "header_sha256": "bb438c09ed987faab89302ac62d2ed005ba6c6e543c6e89f4f16ce4eed7910d7",
+    "process_medians_us": [
+      1176.456,
+      1168.261,
+      1171.8410000000001
+    ],
+    "observed_us": 1171.8410000000001,
+    "last20_over_first20": [
+      1.006214985024184,
+      1.0093411239109549,
+      1.0063928199157526
+    ],
+    "max_process_over_min": 1.0070146996261964,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "09f3854c77db0cd6bcaf41a4db3864a3377bcddbbd5d09975c2b76e161023459",
+      "eda920fec2348b51b5170b168915e5384955b1f3658ab16c34660969bc0b0ce6",
+      "5385c4d88878489321d43414e2cb8b81f3a0ce20d740d94807bd9bacf6c1275f"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "f1cd4780be6ada13c0c2232ea5a22e408d67c1bd93b0bef6b6a2939018ffd795",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      4096,
+      2048
+    ],
+    "family": "host_compiler_cublas",
+    "candidate_id": "host_compiler_cublas@prepared",
+    "stage": "mechanisms",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "host_nccl_cublas_per_source_v1_prepared_metadata_v2",
+    "algorithm_ids": [
+      "library_default"
+    ],
+    "input_sha256": "f6fba035e48f6c5c60e5565020ab17c88a8060931c1511dcd046643ecec12598",
+    "reference_sha256": "c82a490a3d1db291944c79feaec6431baac2dc734d5440209b33cfdea6027602",
+    "header_sha256": "411cce5f123825ae422220a78a308a0b3235d70182de49d548d3111c60445045",
+    "process_medians_us": [
+      482.33349999999996,
+      473.6635,
+      478.184
+    ],
+    "observed_us": 478.184,
+    "last20_over_first20": [
+      0.9623826488830584,
+      1.0211165971990488,
+      1.0058032477622714
+    ],
+    "max_process_over_min": 1.0183041336307315,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "17dbb64391f415b7d185af32f622e8ca4a95eff7e7ac034934c7c204b5c2286c",
+      "fc466de7e4b154d4481943c715f7e21dee689750100bbf9fe8e643571e1da9f9",
+      "c515dc8c114b99874deeded791ea8d54a72a39fce0a42f0250c6ef203bda79f8"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "f39a9445f9381b31dcc1024c903e395e07e856317ca28d4ff31610593f910b85",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      1024,
+      512
+    ],
+    "family": "host_compiler_cublas",
+    "candidate_id": "host_compiler_cublas@prepared",
+    "stage": "mechanisms",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "host_nccl_cublas_per_source_v1_prepared_metadata_v2",
+    "algorithm_ids": [
+      "library_default"
+    ],
+    "input_sha256": "cf476691cd5ec7f2f02c3e88dc61b73b721eba1086d4004a23243dded2b92dc3",
+    "reference_sha256": "3d53f9d7dc06b868e6dec81062dd9ffa906186e4d1bb19b2a72b6f32b9a20347",
+    "header_sha256": "3f0453f5c667101435924626126ea9d586543ce8143e04aff602143d5602c012",
+    "process_medians_us": [
+      475.223,
+      455.219,
+      447.1035
+    ],
+    "observed_us": 455.219,
+    "last20_over_first20": [
+      1.0331721406297425,
+      0.9822190251253623,
+      1.3458933498353784
+    ],
+    "max_process_over_min": 1.0628925964569724,
+    "quality_flags": [
+      "within_process_drift"
+    ],
+    "primary_scope": true,
+    "eligible_for_calibration": false,
+    "process_ids": [
+      "1b5aa2b2126907343a75656eed8e8a475720b71480eaa4706823554e76a323e4",
+      "52663c4d22239900558506015405d26bdd5f5f118f14b15ff41baef3c262cc2c",
+      "f817264cef80671cf04c685b5dca6e27853ff2f2cb7544053990f2a250cccad8"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "f64be5045b327833707bb444def427095681f8c1785da4d6b5d45c0c50b93674",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      8192,
+      512
+    ],
+    "family": "splitk2_groupedn2",
+    "candidate_id": "splitk2_groupedn2@prepared",
+    "stage": "mechanisms",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q2_g2_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk2"
+    ],
+    "input_sha256": "9f01da29c9bff0efd896001a4984ec6f6b68c32fd981b68e6de64d1793471e3a",
+    "reference_sha256": "1e10ae2fca27e174a966c86881defb8a39b9c97fcdd2b0fe1f250eb90810e454",
+    "header_sha256": "653ca7318e8ac04554067f4f98b4dd9d69c6b35b6a9bcaf721fe5fc0c3c28bb6",
+    "process_medians_us": [
+      1288.921,
+      1291.001,
+      1289.3110000000001
+    ],
+    "observed_us": 1289.3110000000001,
+    "last20_over_first20": [
+      1.0054103613619731,
+      1.0076917019284224,
+      1.0086277008793634
+    ],
+    "max_process_over_min": 1.0016137528987423,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "e19e3525c46d2a5e79d26e3a4da998309fb86764e1d88e135aaa8c7d5197b2c2",
+      "ebfeedcf114346021a0915248a6f4f860902fa2e5afbb47968da0df318f3ca7b",
+      "bc49bfd7b936fed9f1cf05f1fa68356f2f288f0ca2939801fdb08ba9daa5b040"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "fb0d7621dfcbdc08dac73ec9f0e42fb96ceddb26e3ccd6e5141ea91af499cf90",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      512,
+      4096,
+      512
+    ],
+    "family": "splitk4",
+    "candidate_id": "splitk4@prepared",
+    "stage": "mechanisms",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q4_g1_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk4"
+    ],
+    "input_sha256": "29100ffb1a0419f170eb21e8dce3afef85c6bc2af63ab68540e2c3673fa36f9f",
+    "reference_sha256": "7bcae5fd61c978340ffa2e8c66ac306843819eb0f0a61a2cd23112ff95710950",
+    "header_sha256": "71919850f057fed754ca8e55aa4540397a6ce57c52c1eb8c62a622935ff1917c",
+    "process_medians_us": [
+      1047.496,
+      1047.6464999999998,
+      1050.2715
+    ],
+    "observed_us": 1047.6464999999998,
+    "last20_over_first20": [
+      0.997784570488378,
+      1.0026898378118576,
+      1.007738579649581
+    ],
+    "max_process_over_min": 1.0026496521227766,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "5188ed6335b6875a7e01ece0ca95449721deeb4617976e6c3c9b5f660bd2e01a",
+      "b2a414c6e1a3c0bc10137e0e5899168a7ec646fb8025d132182c77c054fbd6ee",
+      "69db6af059416b2af1aa95e3ac368cf4c40032176ff99d76e13e695a20dfd16f"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "fba81d6bcc508535e94f551e94665e76efe8f0ecc4ff573be949b70059c742b7",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      256,
+      8192,
+      512
+    ],
+    "family": "splitk8_groupedn2",
+    "candidate_id": "splitk8_groupedn2@prepared",
+    "stage": "mechanisms",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q8_g2_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk8"
+    ],
+    "input_sha256": "393d4932a81e7f1c58fdfc0f4c7b0a6343d29f6297d7fffbe740d6ad0987d6e7",
+    "reference_sha256": "2b601ff6603aa9767fe3e5abfb8c6ef00f493b29c33dc273fef9551edccbb4d3",
+    "header_sha256": "a862f6503a5086717c47b0bef0cb38cc41579331fc15c70968e069eba55ecdcc",
+    "process_medians_us": [
+      872.1425,
+      882.5269999999999,
+      872.742
+    ],
+    "observed_us": 872.742,
+    "last20_over_first20": [
+      1.0054660718046207,
+      0.9867536853159989,
+      1.0060156580471127
+    ],
+    "max_process_over_min": 1.0119068844827535,
+    "quality_flags": [],
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "process_ids": [
+      "92e1fc6fe8ea335442da445b9fc0a3dc68fc05dc39594c6da43f1108e4d8f905",
+      "0dd991fa261560c9c28f0fc340ed19e3cec26bdc5b3c90261778c047e7f16e9c",
+      "30288e231f4d7171de122fd4af6ce37c5a944ba055ccf932128504c3aefac2dc"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "ff29030bea968ee8909a08fe7eb468334fc5b4f48db2bc9b346115d48db10834",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      1024,
+      512
+    ],
+    "family": "host",
+    "candidate_id": "host@prepared",
+    "stage": "mechanisms",
+    "metadata_mode": "prepared",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+    "algorithm_ids": [
+      "sm80_64x128x32"
+    ],
+    "input_sha256": "cf476691cd5ec7f2f02c3e88dc61b73b721eba1086d4004a23243dded2b92dc3",
+    "reference_sha256": "3d53f9d7dc06b868e6dec81062dd9ffa906186e4d1bb19b2a72b6f32b9a20347",
+    "header_sha256": "5086cdcd3538696246e138573c0317c637c46f13a3779d205a13f60b6080b3b7",
+    "process_medians_us": [
+      329.64899999999994,
+      364.619,
+      451.993
+    ],
+    "observed_us": 364.619,
+    "last20_over_first20": [
+      0.9931870046635858,
+      0.8735879341459822,
+      0.5703250950130865
+    ],
+    "max_process_over_min": 1.3711341457125612,
+    "quality_flags": [
+      "within_process_drift",
+      "between_process_spread"
+    ],
+    "primary_scope": true,
+    "eligible_for_calibration": false,
+    "process_ids": [
+      "b5c39692fc1cc9c664c5b969dcedf5db8836d183de7b7a63c283b93b62a4e10d",
+      "fb635a4cfc7bd95943d188f9dc18b4cfb6a23a55015ccae5e0c89356a01fd600",
+      "d803017c59603e6fc60ba63b43241ed9ca472face49417dbfa8dfffa96630b6e"
+    ],
+    "iteration_samples_retained": 300
+  },
+  {
+    "config_id": "ffde5d4f662e8c151e18d74dec9686f597e17926609bc1e3fa1f947d1cbb555b",
+    "context_id": "81ad76cb81b23883fcd5f51ddab221d2661f1e45234e73cb766c28dcff65553f",
+    "shape": [
+      4,
+      64,
+      4096,
+      2048
+    ],
+    "family": "splitk4",
+    "candidate_id": "splitk4@legacy",
+    "stage": "anchors",
+    "metadata_mode": "legacy",
+    "warmup": 20,
+    "dependency_policy": "resource_queues_v1",
+    "implementation_id": "direct_peer_cutlass_sm80_q4_g1",
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk4"
+    ],
+    "input_sha256": "f6fba035e48f6c5c60e5565020ab17c88a8060931c1511dcd046643ecec12598",
+    "reference_sha256": "c82a490a3d1db291944c79feaec6431baac2dc734d5440209b33cfdea6027602",
+    "header_sha256": "6b11ca3508d2fa110b050b2e9eac4769d814c7feced9aba2840f44faa56b14af",
+    "process_medians_us": [
+      719.6080000000001,
+      717.5469999999999,
+      717.9575
+    ],
+    "observed_us": 717.9575,
+    "last20_over_first20": [
+      0.9973948060029892,
+      0.9996029050629605,
+      0.9990602916854608
+    ],
+    "max_process_over_min": 1.0028722857178696,
+    "quality_flags": [],
+    "primary_scope": false,
+    "eligible_for_calibration": false,
+    "process_ids": [
+      "ab9b38ff2539ab1946784dc2ac8385408669d6fd6d0ad83890c0aa7e154c4288",
+      "1542b81e45d7591b9c5665e9bfeae43c10ba7290e211e439c3a879be6555b14d",
+      "f3105bce9770075536fb027930ceceda4f71e2d49355ec8297b2d6188fc44cb8"
+    ],
+    "iteration_samples_retained": 300
+  }
+]

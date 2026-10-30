@@ -1,0 +1,2937 @@
+[
+  {
+    "candidate_family": "host",
+    "shape": [
+      4,
+      64,
+      768,
+      512
+    ],
+    "execution_counts": {
+      "gemm_count": 16,
+      "actual_gemm_M": 64,
+      "remote_A_bytes": 1179648,
+      "logical_flops": 805306368
+    },
+    "count_scope": "gemm_count, remote_A_bytes and flops: whole P4 execution; actual_gemm_M: one GEMM",
+    "library_internal_geometry": "not inferred for library kernels",
+    "timing_identity": "host execute plus synchronize; CPU submission may overlap device work",
+    "separately_measured_stage_costs": null
+  },
+  {
+    "candidate_family": "host_compiler_cublas",
+    "shape": [
+      4,
+      64,
+      768,
+      512
+    ],
+    "execution_counts": {
+      "gemm_count": 16,
+      "actual_gemm_M": 64,
+      "remote_A_bytes": 1179648,
+      "logical_flops": 805306368
+    },
+    "count_scope": "gemm_count, remote_A_bytes and flops: whole P4 execution; actual_gemm_M: one GEMM",
+    "library_internal_geometry": "not inferred for library kernels",
+    "timing_identity": "host execute plus synchronize; CPU submission may overlap device work",
+    "separately_measured_stage_costs": null
+  },
+  {
+    "candidate_family": "host_merged_cublaslt",
+    "shape": [
+      4,
+      64,
+      768,
+      512
+    ],
+    "execution_counts": {
+      "gemm_count": 4,
+      "actual_gemm_M": 256,
+      "remote_A_bytes": 1179648,
+      "logical_flops": 805306368
+    },
+    "count_scope": "gemm_count, remote_A_bytes and flops: whole P4 execution; actual_gemm_M: one GEMM",
+    "library_internal_geometry": "not inferred for library kernels",
+    "timing_identity": "host execute plus synchronize; CPU submission may overlap device work",
+    "separately_measured_stage_costs": null
+  },
+  {
+    "candidate_family": "host_merged_cutlass",
+    "shape": [
+      4,
+      64,
+      768,
+      512
+    ],
+    "execution_counts": {
+      "gemm_count": 4,
+      "actual_gemm_M": 256,
+      "remote_A_bytes": 1179648,
+      "logical_flops": 805306368
+    },
+    "count_scope": "gemm_count, remote_A_bytes and flops: whole P4 execution; actual_gemm_M: one GEMM",
+    "library_internal_geometry": "not inferred for library kernels",
+    "timing_identity": "host execute plus synchronize; CPU submission may overlap device work",
+    "separately_measured_stage_costs": null
+  },
+  {
+    "candidate_family": "host",
+    "shape": [
+      4,
+      64,
+      1024,
+      512
+    ],
+    "execution_counts": {
+      "gemm_count": 16,
+      "actual_gemm_M": 64,
+      "remote_A_bytes": 1572864,
+      "logical_flops": 1073741824
+    },
+    "count_scope": "gemm_count, remote_A_bytes and flops: whole P4 execution; actual_gemm_M: one GEMM",
+    "library_internal_geometry": "not inferred for library kernels",
+    "timing_identity": "host execute plus synchronize; CPU submission may overlap device work",
+    "separately_measured_stage_costs": null
+  },
+  {
+    "candidate_family": "host_compiler_cublas",
+    "shape": [
+      4,
+      64,
+      1024,
+      512
+    ],
+    "execution_counts": {
+      "gemm_count": 16,
+      "actual_gemm_M": 64,
+      "remote_A_bytes": 1572864,
+      "logical_flops": 1073741824
+    },
+    "count_scope": "gemm_count, remote_A_bytes and flops: whole P4 execution; actual_gemm_M: one GEMM",
+    "library_internal_geometry": "not inferred for library kernels",
+    "timing_identity": "host execute plus synchronize; CPU submission may overlap device work",
+    "separately_measured_stage_costs": null
+  },
+  {
+    "candidate_family": "host_merged_cublaslt",
+    "shape": [
+      4,
+      64,
+      1024,
+      512
+    ],
+    "execution_counts": {
+      "gemm_count": 4,
+      "actual_gemm_M": 256,
+      "remote_A_bytes": 1572864,
+      "logical_flops": 1073741824
+    },
+    "count_scope": "gemm_count, remote_A_bytes and flops: whole P4 execution; actual_gemm_M: one GEMM",
+    "library_internal_geometry": "not inferred for library kernels",
+    "timing_identity": "host execute plus synchronize; CPU submission may overlap device work",
+    "separately_measured_stage_costs": null
+  },
+  {
+    "candidate_family": "host_merged_cutlass",
+    "shape": [
+      4,
+      64,
+      1024,
+      512
+    ],
+    "execution_counts": {
+      "gemm_count": 4,
+      "actual_gemm_M": 256,
+      "remote_A_bytes": 1572864,
+      "logical_flops": 1073741824
+    },
+    "count_scope": "gemm_count, remote_A_bytes and flops: whole P4 execution; actual_gemm_M: one GEMM",
+    "library_internal_geometry": "not inferred for library kernels",
+    "timing_identity": "host execute plus synchronize; CPU submission may overlap device work",
+    "separately_measured_stage_costs": null
+  },
+  {
+    "candidate_family": "splitk2",
+    "shape": [
+      4,
+      64,
+      1024,
+      512
+    ],
+    "verified_logical_counts": {
+      "ctas": 8,
+      "logical_A_replay_bytes": 524288,
+      "logical_B_replay_bytes": 1048576,
+      "extra_serial_output_bytes": 131072,
+      "partition_iterations": 16,
+      "ordered_tile_boundaries": 4
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 1,
+      "register_only_resident_block_upper_bound": 3,
+      "maximum_smem_resident_block_upper_bound": 4,
+      "combined_resident_block_upper_bound": 3,
+      "possible_active_SM_upper_bound": 8,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "splitk2_groupedn2",
+    "shape": [
+      4,
+      64,
+      1024,
+      512
+    ],
+    "verified_logical_counts": {
+      "ctas": 4,
+      "logical_A_replay_bytes": 262144,
+      "logical_B_replay_bytes": 1048576,
+      "extra_serial_output_bytes": 131072,
+      "partition_iterations": 16,
+      "ordered_tile_boundaries": 2
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 1,
+      "register_only_resident_block_upper_bound": 1,
+      "maximum_smem_resident_block_upper_bound": 2,
+      "combined_resident_block_upper_bound": 1,
+      "possible_active_SM_upper_bound": 4,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "splitk4",
+    "shape": [
+      4,
+      64,
+      1024,
+      512
+    ],
+    "verified_logical_counts": {
+      "ctas": 16,
+      "logical_A_replay_bytes": 524288,
+      "logical_B_replay_bytes": 1048576,
+      "extra_serial_output_bytes": 393216,
+      "partition_iterations": 8,
+      "ordered_tile_boundaries": 12
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 3,
+      "register_only_resident_block_upper_bound": 3,
+      "maximum_smem_resident_block_upper_bound": 4,
+      "combined_resident_block_upper_bound": 3,
+      "possible_active_SM_upper_bound": 16,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "splitk4_groupedn2",
+    "shape": [
+      4,
+      64,
+      1024,
+      512
+    ],
+    "verified_logical_counts": {
+      "ctas": 8,
+      "logical_A_replay_bytes": 262144,
+      "logical_B_replay_bytes": 1048576,
+      "extra_serial_output_bytes": 393216,
+      "partition_iterations": 8,
+      "ordered_tile_boundaries": 6
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 3,
+      "register_only_resident_block_upper_bound": 1,
+      "maximum_smem_resident_block_upper_bound": 2,
+      "combined_resident_block_upper_bound": 1,
+      "possible_active_SM_upper_bound": 8,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "host",
+    "shape": [
+      4,
+      64,
+      1536,
+      512
+    ],
+    "execution_counts": {
+      "gemm_count": 16,
+      "actual_gemm_M": 64,
+      "remote_A_bytes": 2359296,
+      "logical_flops": 1610612736
+    },
+    "count_scope": "gemm_count, remote_A_bytes and flops: whole P4 execution; actual_gemm_M: one GEMM",
+    "library_internal_geometry": "not inferred for library kernels",
+    "timing_identity": "host execute plus synchronize; CPU submission may overlap device work",
+    "separately_measured_stage_costs": null
+  },
+  {
+    "candidate_family": "host_compiler_cublas",
+    "shape": [
+      4,
+      64,
+      1536,
+      512
+    ],
+    "execution_counts": {
+      "gemm_count": 16,
+      "actual_gemm_M": 64,
+      "remote_A_bytes": 2359296,
+      "logical_flops": 1610612736
+    },
+    "count_scope": "gemm_count, remote_A_bytes and flops: whole P4 execution; actual_gemm_M: one GEMM",
+    "library_internal_geometry": "not inferred for library kernels",
+    "timing_identity": "host execute plus synchronize; CPU submission may overlap device work",
+    "separately_measured_stage_costs": null
+  },
+  {
+    "candidate_family": "host_merged_cublaslt",
+    "shape": [
+      4,
+      64,
+      1536,
+      512
+    ],
+    "execution_counts": {
+      "gemm_count": 4,
+      "actual_gemm_M": 256,
+      "remote_A_bytes": 2359296,
+      "logical_flops": 1610612736
+    },
+    "count_scope": "gemm_count, remote_A_bytes and flops: whole P4 execution; actual_gemm_M: one GEMM",
+    "library_internal_geometry": "not inferred for library kernels",
+    "timing_identity": "host execute plus synchronize; CPU submission may overlap device work",
+    "separately_measured_stage_costs": null
+  },
+  {
+    "candidate_family": "host_merged_cutlass",
+    "shape": [
+      4,
+      64,
+      1536,
+      512
+    ],
+    "execution_counts": {
+      "gemm_count": 4,
+      "actual_gemm_M": 256,
+      "remote_A_bytes": 2359296,
+      "logical_flops": 1610612736
+    },
+    "count_scope": "gemm_count, remote_A_bytes and flops: whole P4 execution; actual_gemm_M: one GEMM",
+    "library_internal_geometry": "not inferred for library kernels",
+    "timing_identity": "host execute plus synchronize; CPU submission may overlap device work",
+    "separately_measured_stage_costs": null
+  },
+  {
+    "candidate_family": "host",
+    "shape": [
+      4,
+      64,
+      3072,
+      512
+    ],
+    "execution_counts": {
+      "gemm_count": 16,
+      "actual_gemm_M": 64,
+      "remote_A_bytes": 4718592,
+      "logical_flops": 3221225472
+    },
+    "count_scope": "gemm_count, remote_A_bytes and flops: whole P4 execution; actual_gemm_M: one GEMM",
+    "library_internal_geometry": "not inferred for library kernels",
+    "timing_identity": "host execute plus synchronize; CPU submission may overlap device work",
+    "separately_measured_stage_costs": null
+  },
+  {
+    "candidate_family": "splitk2",
+    "shape": [
+      4,
+      64,
+      3072,
+      512
+    ],
+    "verified_logical_counts": {
+      "ctas": 8,
+      "logical_A_replay_bytes": 1572864,
+      "logical_B_replay_bytes": 3145728,
+      "extra_serial_output_bytes": 131072,
+      "partition_iterations": 48,
+      "ordered_tile_boundaries": 4
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 1,
+      "register_only_resident_block_upper_bound": 3,
+      "maximum_smem_resident_block_upper_bound": 4,
+      "combined_resident_block_upper_bound": 3,
+      "possible_active_SM_upper_bound": 8,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "splitk2_groupedn2",
+    "shape": [
+      4,
+      64,
+      3072,
+      512
+    ],
+    "verified_logical_counts": {
+      "ctas": 4,
+      "logical_A_replay_bytes": 786432,
+      "logical_B_replay_bytes": 3145728,
+      "extra_serial_output_bytes": 131072,
+      "partition_iterations": 48,
+      "ordered_tile_boundaries": 2
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 1,
+      "register_only_resident_block_upper_bound": 1,
+      "maximum_smem_resident_block_upper_bound": 2,
+      "combined_resident_block_upper_bound": 1,
+      "possible_active_SM_upper_bound": 4,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "splitk4",
+    "shape": [
+      4,
+      64,
+      3072,
+      512
+    ],
+    "verified_logical_counts": {
+      "ctas": 16,
+      "logical_A_replay_bytes": 1572864,
+      "logical_B_replay_bytes": 3145728,
+      "extra_serial_output_bytes": 393216,
+      "partition_iterations": 24,
+      "ordered_tile_boundaries": 12
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 3,
+      "register_only_resident_block_upper_bound": 3,
+      "maximum_smem_resident_block_upper_bound": 4,
+      "combined_resident_block_upper_bound": 3,
+      "possible_active_SM_upper_bound": 16,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "splitk4_groupedn2",
+    "shape": [
+      4,
+      64,
+      3072,
+      512
+    ],
+    "verified_logical_counts": {
+      "ctas": 8,
+      "logical_A_replay_bytes": 786432,
+      "logical_B_replay_bytes": 3145728,
+      "extra_serial_output_bytes": 393216,
+      "partition_iterations": 24,
+      "ordered_tile_boundaries": 6
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 3,
+      "register_only_resident_block_upper_bound": 1,
+      "maximum_smem_resident_block_upper_bound": 2,
+      "combined_resident_block_upper_bound": 1,
+      "possible_active_SM_upper_bound": 8,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "host",
+    "shape": [
+      4,
+      64,
+      3072,
+      1536
+    ],
+    "execution_counts": {
+      "gemm_count": 16,
+      "actual_gemm_M": 64,
+      "remote_A_bytes": 4718592,
+      "logical_flops": 9663676416
+    },
+    "count_scope": "gemm_count, remote_A_bytes and flops: whole P4 execution; actual_gemm_M: one GEMM",
+    "library_internal_geometry": "not inferred for library kernels",
+    "timing_identity": "host execute plus synchronize; CPU submission may overlap device work",
+    "separately_measured_stage_costs": null
+  },
+  {
+    "candidate_family": "host_merged_cublaslt",
+    "shape": [
+      4,
+      64,
+      3072,
+      1536
+    ],
+    "execution_counts": {
+      "gemm_count": 4,
+      "actual_gemm_M": 256,
+      "remote_A_bytes": 4718592,
+      "logical_flops": 9663676416
+    },
+    "count_scope": "gemm_count, remote_A_bytes and flops: whole P4 execution; actual_gemm_M: one GEMM",
+    "library_internal_geometry": "not inferred for library kernels",
+    "timing_identity": "host execute plus synchronize; CPU submission may overlap device work",
+    "separately_measured_stage_costs": null
+  },
+  {
+    "candidate_family": "host_merged_cutlass",
+    "shape": [
+      4,
+      64,
+      3072,
+      1536
+    ],
+    "execution_counts": {
+      "gemm_count": 4,
+      "actual_gemm_M": 256,
+      "remote_A_bytes": 4718592,
+      "logical_flops": 9663676416
+    },
+    "count_scope": "gemm_count, remote_A_bytes and flops: whole P4 execution; actual_gemm_M: one GEMM",
+    "library_internal_geometry": "not inferred for library kernels",
+    "timing_identity": "host execute plus synchronize; CPU submission may overlap device work",
+    "separately_measured_stage_costs": null
+  },
+  {
+    "candidate_family": "splitk2",
+    "shape": [
+      4,
+      64,
+      3072,
+      1536
+    ],
+    "verified_logical_counts": {
+      "ctas": 24,
+      "logical_A_replay_bytes": 4718592,
+      "logical_B_replay_bytes": 9437184,
+      "extra_serial_output_bytes": 393216,
+      "partition_iterations": 48,
+      "ordered_tile_boundaries": 12
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 1,
+      "register_only_resident_block_upper_bound": 3,
+      "maximum_smem_resident_block_upper_bound": 4,
+      "combined_resident_block_upper_bound": 3,
+      "possible_active_SM_upper_bound": 24,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "splitk2_groupedn2",
+    "shape": [
+      4,
+      64,
+      3072,
+      1536
+    ],
+    "verified_logical_counts": {
+      "ctas": 12,
+      "logical_A_replay_bytes": 2359296,
+      "logical_B_replay_bytes": 9437184,
+      "extra_serial_output_bytes": 393216,
+      "partition_iterations": 48,
+      "ordered_tile_boundaries": 6
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 1,
+      "register_only_resident_block_upper_bound": 1,
+      "maximum_smem_resident_block_upper_bound": 2,
+      "combined_resident_block_upper_bound": 1,
+      "possible_active_SM_upper_bound": 12,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "splitk4",
+    "shape": [
+      4,
+      64,
+      3072,
+      1536
+    ],
+    "verified_logical_counts": {
+      "ctas": 48,
+      "logical_A_replay_bytes": 4718592,
+      "logical_B_replay_bytes": 9437184,
+      "extra_serial_output_bytes": 1179648,
+      "partition_iterations": 24,
+      "ordered_tile_boundaries": 36
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 3,
+      "register_only_resident_block_upper_bound": 3,
+      "maximum_smem_resident_block_upper_bound": 4,
+      "combined_resident_block_upper_bound": 3,
+      "possible_active_SM_upper_bound": 48,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "splitk4_groupedn2",
+    "shape": [
+      4,
+      64,
+      3072,
+      1536
+    ],
+    "verified_logical_counts": {
+      "ctas": 24,
+      "logical_A_replay_bytes": 2359296,
+      "logical_B_replay_bytes": 9437184,
+      "extra_serial_output_bytes": 1179648,
+      "partition_iterations": 24,
+      "ordered_tile_boundaries": 18
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 3,
+      "register_only_resident_block_upper_bound": 1,
+      "maximum_smem_resident_block_upper_bound": 2,
+      "combined_resident_block_upper_bound": 1,
+      "possible_active_SM_upper_bound": 24,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "host",
+    "shape": [
+      4,
+      64,
+      4096,
+      2048
+    ],
+    "execution_counts": {
+      "gemm_count": 16,
+      "actual_gemm_M": 64,
+      "remote_A_bytes": 6291456,
+      "logical_flops": 17179869184
+    },
+    "count_scope": "gemm_count, remote_A_bytes and flops: whole P4 execution; actual_gemm_M: one GEMM",
+    "library_internal_geometry": "not inferred for library kernels",
+    "timing_identity": "host execute plus synchronize; CPU submission may overlap device work",
+    "separately_measured_stage_costs": null
+  },
+  {
+    "candidate_family": "host_compiler_cublas",
+    "shape": [
+      4,
+      64,
+      4096,
+      2048
+    ],
+    "execution_counts": {
+      "gemm_count": 16,
+      "actual_gemm_M": 64,
+      "remote_A_bytes": 6291456,
+      "logical_flops": 17179869184
+    },
+    "count_scope": "gemm_count, remote_A_bytes and flops: whole P4 execution; actual_gemm_M: one GEMM",
+    "library_internal_geometry": "not inferred for library kernels",
+    "timing_identity": "host execute plus synchronize; CPU submission may overlap device work",
+    "separately_measured_stage_costs": null
+  },
+  {
+    "candidate_family": "host_merged_cublaslt",
+    "shape": [
+      4,
+      64,
+      4096,
+      2048
+    ],
+    "execution_counts": {
+      "gemm_count": 4,
+      "actual_gemm_M": 256,
+      "remote_A_bytes": 6291456,
+      "logical_flops": 17179869184
+    },
+    "count_scope": "gemm_count, remote_A_bytes and flops: whole P4 execution; actual_gemm_M: one GEMM",
+    "library_internal_geometry": "not inferred for library kernels",
+    "timing_identity": "host execute plus synchronize; CPU submission may overlap device work",
+    "separately_measured_stage_costs": null
+  },
+  {
+    "candidate_family": "host_merged_cutlass",
+    "shape": [
+      4,
+      64,
+      4096,
+      2048
+    ],
+    "execution_counts": {
+      "gemm_count": 4,
+      "actual_gemm_M": 256,
+      "remote_A_bytes": 6291456,
+      "logical_flops": 17179869184
+    },
+    "count_scope": "gemm_count, remote_A_bytes and flops: whole P4 execution; actual_gemm_M: one GEMM",
+    "library_internal_geometry": "not inferred for library kernels",
+    "timing_identity": "host execute plus synchronize; CPU submission may overlap device work",
+    "separately_measured_stage_costs": null
+  },
+  {
+    "candidate_family": "splitk2",
+    "shape": [
+      4,
+      64,
+      4096,
+      2048
+    ],
+    "verified_logical_counts": {
+      "ctas": 32,
+      "logical_A_replay_bytes": 8388608,
+      "logical_B_replay_bytes": 16777216,
+      "extra_serial_output_bytes": 524288,
+      "partition_iterations": 64,
+      "ordered_tile_boundaries": 16
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 1,
+      "register_only_resident_block_upper_bound": 3,
+      "maximum_smem_resident_block_upper_bound": 4,
+      "combined_resident_block_upper_bound": 3,
+      "possible_active_SM_upper_bound": 32,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "splitk2_groupedn2",
+    "shape": [
+      4,
+      64,
+      4096,
+      2048
+    ],
+    "verified_logical_counts": {
+      "ctas": 16,
+      "logical_A_replay_bytes": 4194304,
+      "logical_B_replay_bytes": 16777216,
+      "extra_serial_output_bytes": 524288,
+      "partition_iterations": 64,
+      "ordered_tile_boundaries": 8
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 1,
+      "register_only_resident_block_upper_bound": 1,
+      "maximum_smem_resident_block_upper_bound": 2,
+      "combined_resident_block_upper_bound": 1,
+      "possible_active_SM_upper_bound": 16,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "splitk4",
+    "shape": [
+      4,
+      64,
+      4096,
+      2048
+    ],
+    "verified_logical_counts": {
+      "ctas": 64,
+      "logical_A_replay_bytes": 8388608,
+      "logical_B_replay_bytes": 16777216,
+      "extra_serial_output_bytes": 1572864,
+      "partition_iterations": 32,
+      "ordered_tile_boundaries": 48
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 3,
+      "register_only_resident_block_upper_bound": 3,
+      "maximum_smem_resident_block_upper_bound": 4,
+      "combined_resident_block_upper_bound": 3,
+      "possible_active_SM_upper_bound": 64,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "splitk4_groupedn2",
+    "shape": [
+      4,
+      64,
+      4096,
+      2048
+    ],
+    "verified_logical_counts": {
+      "ctas": 32,
+      "logical_A_replay_bytes": 4194304,
+      "logical_B_replay_bytes": 16777216,
+      "extra_serial_output_bytes": 1572864,
+      "partition_iterations": 32,
+      "ordered_tile_boundaries": 24
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 3,
+      "register_only_resident_block_upper_bound": 1,
+      "maximum_smem_resident_block_upper_bound": 2,
+      "combined_resident_block_upper_bound": 1,
+      "possible_active_SM_upper_bound": 32,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "host",
+    "shape": [
+      4,
+      64,
+      8192,
+      512
+    ],
+    "execution_counts": {
+      "gemm_count": 16,
+      "actual_gemm_M": 64,
+      "remote_A_bytes": 12582912,
+      "logical_flops": 8589934592
+    },
+    "count_scope": "gemm_count, remote_A_bytes and flops: whole P4 execution; actual_gemm_M: one GEMM",
+    "library_internal_geometry": "not inferred for library kernels",
+    "timing_identity": "host execute plus synchronize; CPU submission may overlap device work",
+    "separately_measured_stage_costs": null
+  },
+  {
+    "candidate_family": "host_compiler_cublas",
+    "shape": [
+      4,
+      64,
+      8192,
+      512
+    ],
+    "execution_counts": {
+      "gemm_count": 16,
+      "actual_gemm_M": 64,
+      "remote_A_bytes": 12582912,
+      "logical_flops": 8589934592
+    },
+    "count_scope": "gemm_count, remote_A_bytes and flops: whole P4 execution; actual_gemm_M: one GEMM",
+    "library_internal_geometry": "not inferred for library kernels",
+    "timing_identity": "host execute plus synchronize; CPU submission may overlap device work",
+    "separately_measured_stage_costs": null
+  },
+  {
+    "candidate_family": "host_merged_cublaslt",
+    "shape": [
+      4,
+      64,
+      8192,
+      512
+    ],
+    "execution_counts": {
+      "gemm_count": 4,
+      "actual_gemm_M": 256,
+      "remote_A_bytes": 12582912,
+      "logical_flops": 8589934592
+    },
+    "count_scope": "gemm_count, remote_A_bytes and flops: whole P4 execution; actual_gemm_M: one GEMM",
+    "library_internal_geometry": "not inferred for library kernels",
+    "timing_identity": "host execute plus synchronize; CPU submission may overlap device work",
+    "separately_measured_stage_costs": null
+  },
+  {
+    "candidate_family": "host_merged_cutlass",
+    "shape": [
+      4,
+      64,
+      8192,
+      512
+    ],
+    "execution_counts": {
+      "gemm_count": 4,
+      "actual_gemm_M": 256,
+      "remote_A_bytes": 12582912,
+      "logical_flops": 8589934592
+    },
+    "count_scope": "gemm_count, remote_A_bytes and flops: whole P4 execution; actual_gemm_M: one GEMM",
+    "library_internal_geometry": "not inferred for library kernels",
+    "timing_identity": "host execute plus synchronize; CPU submission may overlap device work",
+    "separately_measured_stage_costs": null
+  },
+  {
+    "candidate_family": "splitk2",
+    "shape": [
+      4,
+      64,
+      8192,
+      512
+    ],
+    "verified_logical_counts": {
+      "ctas": 8,
+      "logical_A_replay_bytes": 4194304,
+      "logical_B_replay_bytes": 8388608,
+      "extra_serial_output_bytes": 131072,
+      "partition_iterations": 128,
+      "ordered_tile_boundaries": 4
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 1,
+      "register_only_resident_block_upper_bound": 3,
+      "maximum_smem_resident_block_upper_bound": 4,
+      "combined_resident_block_upper_bound": 3,
+      "possible_active_SM_upper_bound": 8,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "splitk2_groupedn2",
+    "shape": [
+      4,
+      64,
+      8192,
+      512
+    ],
+    "verified_logical_counts": {
+      "ctas": 4,
+      "logical_A_replay_bytes": 2097152,
+      "logical_B_replay_bytes": 8388608,
+      "extra_serial_output_bytes": 131072,
+      "partition_iterations": 128,
+      "ordered_tile_boundaries": 2
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 1,
+      "register_only_resident_block_upper_bound": 1,
+      "maximum_smem_resident_block_upper_bound": 2,
+      "combined_resident_block_upper_bound": 1,
+      "possible_active_SM_upper_bound": 4,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "splitk4",
+    "shape": [
+      4,
+      64,
+      8192,
+      512
+    ],
+    "verified_logical_counts": {
+      "ctas": 16,
+      "logical_A_replay_bytes": 4194304,
+      "logical_B_replay_bytes": 8388608,
+      "extra_serial_output_bytes": 393216,
+      "partition_iterations": 64,
+      "ordered_tile_boundaries": 12
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 3,
+      "register_only_resident_block_upper_bound": 3,
+      "maximum_smem_resident_block_upper_bound": 4,
+      "combined_resident_block_upper_bound": 3,
+      "possible_active_SM_upper_bound": 16,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "splitk4_groupedn2",
+    "shape": [
+      4,
+      64,
+      8192,
+      512
+    ],
+    "verified_logical_counts": {
+      "ctas": 8,
+      "logical_A_replay_bytes": 2097152,
+      "logical_B_replay_bytes": 8388608,
+      "extra_serial_output_bytes": 393216,
+      "partition_iterations": 64,
+      "ordered_tile_boundaries": 6
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 3,
+      "register_only_resident_block_upper_bound": 1,
+      "maximum_smem_resident_block_upper_bound": 2,
+      "combined_resident_block_upper_bound": 1,
+      "possible_active_SM_upper_bound": 8,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "splitk8",
+    "shape": [
+      4,
+      64,
+      8192,
+      512
+    ],
+    "verified_logical_counts": {
+      "ctas": 32,
+      "logical_A_replay_bytes": 4194304,
+      "logical_B_replay_bytes": 8388608,
+      "extra_serial_output_bytes": 917504,
+      "partition_iterations": 32,
+      "ordered_tile_boundaries": 28
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 7,
+      "register_only_resident_block_upper_bound": 3,
+      "maximum_smem_resident_block_upper_bound": 4,
+      "combined_resident_block_upper_bound": 3,
+      "possible_active_SM_upper_bound": 32,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "splitk8_groupedn2",
+    "shape": [
+      4,
+      64,
+      8192,
+      512
+    ],
+    "verified_logical_counts": {
+      "ctas": 16,
+      "logical_A_replay_bytes": 2097152,
+      "logical_B_replay_bytes": 8388608,
+      "extra_serial_output_bytes": 917504,
+      "partition_iterations": 32,
+      "ordered_tile_boundaries": 14
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 7,
+      "register_only_resident_block_upper_bound": 1,
+      "maximum_smem_resident_block_upper_bound": 2,
+      "combined_resident_block_upper_bound": 1,
+      "possible_active_SM_upper_bound": 16,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "host",
+    "shape": [
+      4,
+      192,
+      3072,
+      512
+    ],
+    "execution_counts": {
+      "gemm_count": 16,
+      "actual_gemm_M": 192,
+      "remote_A_bytes": 14155776,
+      "logical_flops": 9663676416
+    },
+    "count_scope": "gemm_count, remote_A_bytes and flops: whole P4 execution; actual_gemm_M: one GEMM",
+    "library_internal_geometry": "not inferred for library kernels",
+    "timing_identity": "host execute plus synchronize; CPU submission may overlap device work",
+    "separately_measured_stage_costs": null
+  },
+  {
+    "candidate_family": "host_merged_cublaslt",
+    "shape": [
+      4,
+      192,
+      3072,
+      512
+    ],
+    "execution_counts": {
+      "gemm_count": 4,
+      "actual_gemm_M": 768,
+      "remote_A_bytes": 14155776,
+      "logical_flops": 9663676416
+    },
+    "count_scope": "gemm_count, remote_A_bytes and flops: whole P4 execution; actual_gemm_M: one GEMM",
+    "library_internal_geometry": "not inferred for library kernels",
+    "timing_identity": "host execute plus synchronize; CPU submission may overlap device work",
+    "separately_measured_stage_costs": null
+  },
+  {
+    "candidate_family": "host_merged_cutlass",
+    "shape": [
+      4,
+      192,
+      3072,
+      512
+    ],
+    "execution_counts": {
+      "gemm_count": 4,
+      "actual_gemm_M": 768,
+      "remote_A_bytes": 14155776,
+      "logical_flops": 9663676416
+    },
+    "count_scope": "gemm_count, remote_A_bytes and flops: whole P4 execution; actual_gemm_M: one GEMM",
+    "library_internal_geometry": "not inferred for library kernels",
+    "timing_identity": "host execute plus synchronize; CPU submission may overlap device work",
+    "separately_measured_stage_costs": null
+  },
+  {
+    "candidate_family": "splitk2",
+    "shape": [
+      4,
+      192,
+      3072,
+      512
+    ],
+    "verified_logical_counts": {
+      "ctas": 24,
+      "logical_A_replay_bytes": 4718592,
+      "logical_B_replay_bytes": 9437184,
+      "extra_serial_output_bytes": 393216,
+      "partition_iterations": 48,
+      "ordered_tile_boundaries": 12
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 1,
+      "register_only_resident_block_upper_bound": 3,
+      "maximum_smem_resident_block_upper_bound": 4,
+      "combined_resident_block_upper_bound": 3,
+      "possible_active_SM_upper_bound": 24,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "splitk2_groupedn2",
+    "shape": [
+      4,
+      192,
+      3072,
+      512
+    ],
+    "verified_logical_counts": {
+      "ctas": 12,
+      "logical_A_replay_bytes": 2359296,
+      "logical_B_replay_bytes": 9437184,
+      "extra_serial_output_bytes": 393216,
+      "partition_iterations": 48,
+      "ordered_tile_boundaries": 6
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 1,
+      "register_only_resident_block_upper_bound": 1,
+      "maximum_smem_resident_block_upper_bound": 2,
+      "combined_resident_block_upper_bound": 1,
+      "possible_active_SM_upper_bound": 12,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "splitk4",
+    "shape": [
+      4,
+      192,
+      3072,
+      512
+    ],
+    "verified_logical_counts": {
+      "ctas": 48,
+      "logical_A_replay_bytes": 4718592,
+      "logical_B_replay_bytes": 9437184,
+      "extra_serial_output_bytes": 1179648,
+      "partition_iterations": 24,
+      "ordered_tile_boundaries": 36
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 3,
+      "register_only_resident_block_upper_bound": 3,
+      "maximum_smem_resident_block_upper_bound": 4,
+      "combined_resident_block_upper_bound": 3,
+      "possible_active_SM_upper_bound": 48,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "splitk4_groupedn2",
+    "shape": [
+      4,
+      192,
+      3072,
+      512
+    ],
+    "verified_logical_counts": {
+      "ctas": 24,
+      "logical_A_replay_bytes": 2359296,
+      "logical_B_replay_bytes": 9437184,
+      "extra_serial_output_bytes": 1179648,
+      "partition_iterations": 24,
+      "ordered_tile_boundaries": 18
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 3,
+      "register_only_resident_block_upper_bound": 1,
+      "maximum_smem_resident_block_upper_bound": 2,
+      "combined_resident_block_upper_bound": 1,
+      "possible_active_SM_upper_bound": 24,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "host",
+    "shape": [
+      4,
+      192,
+      3072,
+      1536
+    ],
+    "execution_counts": {
+      "gemm_count": 16,
+      "actual_gemm_M": 192,
+      "remote_A_bytes": 14155776,
+      "logical_flops": 28991029248
+    },
+    "count_scope": "gemm_count, remote_A_bytes and flops: whole P4 execution; actual_gemm_M: one GEMM",
+    "library_internal_geometry": "not inferred for library kernels",
+    "timing_identity": "host execute plus synchronize; CPU submission may overlap device work",
+    "separately_measured_stage_costs": null
+  },
+  {
+    "candidate_family": "splitk2",
+    "shape": [
+      4,
+      192,
+      3072,
+      1536
+    ],
+    "verified_logical_counts": {
+      "ctas": 72,
+      "logical_A_replay_bytes": 14155776,
+      "logical_B_replay_bytes": 28311552,
+      "extra_serial_output_bytes": 1179648,
+      "partition_iterations": 48,
+      "ordered_tile_boundaries": 36
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 1,
+      "register_only_resident_block_upper_bound": 3,
+      "maximum_smem_resident_block_upper_bound": 4,
+      "combined_resident_block_upper_bound": 3,
+      "possible_active_SM_upper_bound": 72,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "splitk2_groupedn2",
+    "shape": [
+      4,
+      192,
+      3072,
+      1536
+    ],
+    "verified_logical_counts": {
+      "ctas": 36,
+      "logical_A_replay_bytes": 7077888,
+      "logical_B_replay_bytes": 28311552,
+      "extra_serial_output_bytes": 1179648,
+      "partition_iterations": 48,
+      "ordered_tile_boundaries": 18
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 1,
+      "register_only_resident_block_upper_bound": 1,
+      "maximum_smem_resident_block_upper_bound": 2,
+      "combined_resident_block_upper_bound": 1,
+      "possible_active_SM_upper_bound": 36,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "splitk4",
+    "shape": [
+      4,
+      192,
+      3072,
+      1536
+    ],
+    "verified_logical_counts": {
+      "ctas": 144,
+      "logical_A_replay_bytes": 14155776,
+      "logical_B_replay_bytes": 28311552,
+      "extra_serial_output_bytes": 3538944,
+      "partition_iterations": 24,
+      "ordered_tile_boundaries": 108
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 3,
+      "register_only_resident_block_upper_bound": 3,
+      "maximum_smem_resident_block_upper_bound": 4,
+      "combined_resident_block_upper_bound": 3,
+      "possible_active_SM_upper_bound": 108,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "splitk4_groupedn2",
+    "shape": [
+      4,
+      192,
+      3072,
+      1536
+    ],
+    "verified_logical_counts": {
+      "ctas": 72,
+      "logical_A_replay_bytes": 7077888,
+      "logical_B_replay_bytes": 28311552,
+      "extra_serial_output_bytes": 3538944,
+      "partition_iterations": 24,
+      "ordered_tile_boundaries": 54
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 3,
+      "register_only_resident_block_upper_bound": 1,
+      "maximum_smem_resident_block_upper_bound": 2,
+      "combined_resident_block_upper_bound": 1,
+      "possible_active_SM_upper_bound": 72,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "splitk2",
+    "shape": [
+      4,
+      192,
+      8192,
+      512
+    ],
+    "verified_logical_counts": {
+      "ctas": 24,
+      "logical_A_replay_bytes": 12582912,
+      "logical_B_replay_bytes": 25165824,
+      "extra_serial_output_bytes": 393216,
+      "partition_iterations": 128,
+      "ordered_tile_boundaries": 12
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 1,
+      "register_only_resident_block_upper_bound": 3,
+      "maximum_smem_resident_block_upper_bound": 4,
+      "combined_resident_block_upper_bound": 3,
+      "possible_active_SM_upper_bound": 24,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "splitk4",
+    "shape": [
+      4,
+      192,
+      8192,
+      512
+    ],
+    "verified_logical_counts": {
+      "ctas": 48,
+      "logical_A_replay_bytes": 12582912,
+      "logical_B_replay_bytes": 25165824,
+      "extra_serial_output_bytes": 1179648,
+      "partition_iterations": 64,
+      "ordered_tile_boundaries": 36
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 3,
+      "register_only_resident_block_upper_bound": 3,
+      "maximum_smem_resident_block_upper_bound": 4,
+      "combined_resident_block_upper_bound": 3,
+      "possible_active_SM_upper_bound": 48,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "splitk4_groupedn2",
+    "shape": [
+      4,
+      192,
+      8192,
+      512
+    ],
+    "verified_logical_counts": {
+      "ctas": 24,
+      "logical_A_replay_bytes": 6291456,
+      "logical_B_replay_bytes": 25165824,
+      "extra_serial_output_bytes": 1179648,
+      "partition_iterations": 64,
+      "ordered_tile_boundaries": 18
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 3,
+      "register_only_resident_block_upper_bound": 1,
+      "maximum_smem_resident_block_upper_bound": 2,
+      "combined_resident_block_upper_bound": 1,
+      "possible_active_SM_upper_bound": 24,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "splitk8",
+    "shape": [
+      4,
+      192,
+      8192,
+      512
+    ],
+    "verified_logical_counts": {
+      "ctas": 96,
+      "logical_A_replay_bytes": 12582912,
+      "logical_B_replay_bytes": 25165824,
+      "extra_serial_output_bytes": 2752512,
+      "partition_iterations": 32,
+      "ordered_tile_boundaries": 84
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 7,
+      "register_only_resident_block_upper_bound": 3,
+      "maximum_smem_resident_block_upper_bound": 4,
+      "combined_resident_block_upper_bound": 3,
+      "possible_active_SM_upper_bound": 96,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "splitk8_groupedn2",
+    "shape": [
+      4,
+      192,
+      8192,
+      512
+    ],
+    "verified_logical_counts": {
+      "ctas": 48,
+      "logical_A_replay_bytes": 6291456,
+      "logical_B_replay_bytes": 25165824,
+      "extra_serial_output_bytes": 2752512,
+      "partition_iterations": 32,
+      "ordered_tile_boundaries": 42
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 7,
+      "register_only_resident_block_upper_bound": 1,
+      "maximum_smem_resident_block_upper_bound": 2,
+      "combined_resident_block_upper_bound": 1,
+      "possible_active_SM_upper_bound": 48,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "splitk2",
+    "shape": [
+      4,
+      256,
+      3072,
+      512
+    ],
+    "verified_logical_counts": {
+      "ctas": 32,
+      "logical_A_replay_bytes": 6291456,
+      "logical_B_replay_bytes": 12582912,
+      "extra_serial_output_bytes": 524288,
+      "partition_iterations": 48,
+      "ordered_tile_boundaries": 16
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 1,
+      "register_only_resident_block_upper_bound": 3,
+      "maximum_smem_resident_block_upper_bound": 4,
+      "combined_resident_block_upper_bound": 3,
+      "possible_active_SM_upper_bound": 32,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "splitk2_groupedn2",
+    "shape": [
+      4,
+      256,
+      3072,
+      512
+    ],
+    "verified_logical_counts": {
+      "ctas": 16,
+      "logical_A_replay_bytes": 3145728,
+      "logical_B_replay_bytes": 12582912,
+      "extra_serial_output_bytes": 524288,
+      "partition_iterations": 48,
+      "ordered_tile_boundaries": 8
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 1,
+      "register_only_resident_block_upper_bound": 1,
+      "maximum_smem_resident_block_upper_bound": 2,
+      "combined_resident_block_upper_bound": 1,
+      "possible_active_SM_upper_bound": 16,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "host",
+    "shape": [
+      4,
+      256,
+      8192,
+      512
+    ],
+    "execution_counts": {
+      "gemm_count": 16,
+      "actual_gemm_M": 256,
+      "remote_A_bytes": 50331648,
+      "logical_flops": 34359738368
+    },
+    "count_scope": "gemm_count, remote_A_bytes and flops: whole P4 execution; actual_gemm_M: one GEMM",
+    "library_internal_geometry": "not inferred for library kernels",
+    "timing_identity": "host execute plus synchronize; CPU submission may overlap device work",
+    "separately_measured_stage_costs": null
+  },
+  {
+    "candidate_family": "host_compiler_cublas",
+    "shape": [
+      4,
+      256,
+      8192,
+      512
+    ],
+    "execution_counts": {
+      "gemm_count": 16,
+      "actual_gemm_M": 256,
+      "remote_A_bytes": 50331648,
+      "logical_flops": 34359738368
+    },
+    "count_scope": "gemm_count, remote_A_bytes and flops: whole P4 execution; actual_gemm_M: one GEMM",
+    "library_internal_geometry": "not inferred for library kernels",
+    "timing_identity": "host execute plus synchronize; CPU submission may overlap device work",
+    "separately_measured_stage_costs": null
+  },
+  {
+    "candidate_family": "host_merged_cublaslt",
+    "shape": [
+      4,
+      256,
+      8192,
+      512
+    ],
+    "execution_counts": {
+      "gemm_count": 4,
+      "actual_gemm_M": 1024,
+      "remote_A_bytes": 50331648,
+      "logical_flops": 34359738368
+    },
+    "count_scope": "gemm_count, remote_A_bytes and flops: whole P4 execution; actual_gemm_M: one GEMM",
+    "library_internal_geometry": "not inferred for library kernels",
+    "timing_identity": "host execute plus synchronize; CPU submission may overlap device work",
+    "separately_measured_stage_costs": null
+  },
+  {
+    "candidate_family": "host_merged_cutlass",
+    "shape": [
+      4,
+      256,
+      8192,
+      512
+    ],
+    "execution_counts": {
+      "gemm_count": 4,
+      "actual_gemm_M": 1024,
+      "remote_A_bytes": 50331648,
+      "logical_flops": 34359738368
+    },
+    "count_scope": "gemm_count, remote_A_bytes and flops: whole P4 execution; actual_gemm_M: one GEMM",
+    "library_internal_geometry": "not inferred for library kernels",
+    "timing_identity": "host execute plus synchronize; CPU submission may overlap device work",
+    "separately_measured_stage_costs": null
+  },
+  {
+    "candidate_family": "splitk2",
+    "shape": [
+      4,
+      256,
+      8192,
+      512
+    ],
+    "verified_logical_counts": {
+      "ctas": 32,
+      "logical_A_replay_bytes": 16777216,
+      "logical_B_replay_bytes": 33554432,
+      "extra_serial_output_bytes": 524288,
+      "partition_iterations": 128,
+      "ordered_tile_boundaries": 16
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 1,
+      "register_only_resident_block_upper_bound": 3,
+      "maximum_smem_resident_block_upper_bound": 4,
+      "combined_resident_block_upper_bound": 3,
+      "possible_active_SM_upper_bound": 32,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "splitk2_groupedn2",
+    "shape": [
+      4,
+      256,
+      8192,
+      512
+    ],
+    "verified_logical_counts": {
+      "ctas": 16,
+      "logical_A_replay_bytes": 8388608,
+      "logical_B_replay_bytes": 33554432,
+      "extra_serial_output_bytes": 524288,
+      "partition_iterations": 128,
+      "ordered_tile_boundaries": 8
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 1,
+      "register_only_resident_block_upper_bound": 1,
+      "maximum_smem_resident_block_upper_bound": 2,
+      "combined_resident_block_upper_bound": 1,
+      "possible_active_SM_upper_bound": 16,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "splitk4",
+    "shape": [
+      4,
+      256,
+      8192,
+      512
+    ],
+    "verified_logical_counts": {
+      "ctas": 64,
+      "logical_A_replay_bytes": 16777216,
+      "logical_B_replay_bytes": 33554432,
+      "extra_serial_output_bytes": 1572864,
+      "partition_iterations": 64,
+      "ordered_tile_boundaries": 48
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 3,
+      "register_only_resident_block_upper_bound": 3,
+      "maximum_smem_resident_block_upper_bound": 4,
+      "combined_resident_block_upper_bound": 3,
+      "possible_active_SM_upper_bound": 64,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "splitk4_groupedn2",
+    "shape": [
+      4,
+      256,
+      8192,
+      512
+    ],
+    "verified_logical_counts": {
+      "ctas": 32,
+      "logical_A_replay_bytes": 8388608,
+      "logical_B_replay_bytes": 33554432,
+      "extra_serial_output_bytes": 1572864,
+      "partition_iterations": 64,
+      "ordered_tile_boundaries": 24
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 3,
+      "register_only_resident_block_upper_bound": 1,
+      "maximum_smem_resident_block_upper_bound": 2,
+      "combined_resident_block_upper_bound": 1,
+      "possible_active_SM_upper_bound": 32,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "splitk8",
+    "shape": [
+      4,
+      256,
+      8192,
+      512
+    ],
+    "verified_logical_counts": {
+      "ctas": 128,
+      "logical_A_replay_bytes": 16777216,
+      "logical_B_replay_bytes": 33554432,
+      "extra_serial_output_bytes": 3670016,
+      "partition_iterations": 32,
+      "ordered_tile_boundaries": 112
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 7,
+      "register_only_resident_block_upper_bound": 3,
+      "maximum_smem_resident_block_upper_bound": 4,
+      "combined_resident_block_upper_bound": 3,
+      "possible_active_SM_upper_bound": 108,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "splitk8_groupedn2",
+    "shape": [
+      4,
+      256,
+      8192,
+      512
+    ],
+    "verified_logical_counts": {
+      "ctas": 64,
+      "logical_A_replay_bytes": 8388608,
+      "logical_B_replay_bytes": 33554432,
+      "extra_serial_output_bytes": 3670016,
+      "partition_iterations": 32,
+      "ordered_tile_boundaries": 56
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 7,
+      "register_only_resident_block_upper_bound": 1,
+      "maximum_smem_resident_block_upper_bound": 2,
+      "combined_resident_block_upper_bound": 1,
+      "possible_active_SM_upper_bound": 64,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "splitk2",
+    "shape": [
+      4,
+      320,
+      3072,
+      512
+    ],
+    "verified_logical_counts": {
+      "ctas": 40,
+      "logical_A_replay_bytes": 7864320,
+      "logical_B_replay_bytes": 15728640,
+      "extra_serial_output_bytes": 655360,
+      "partition_iterations": 48,
+      "ordered_tile_boundaries": 20
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 1,
+      "register_only_resident_block_upper_bound": 3,
+      "maximum_smem_resident_block_upper_bound": 4,
+      "combined_resident_block_upper_bound": 3,
+      "possible_active_SM_upper_bound": 40,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "splitk2_groupedn2",
+    "shape": [
+      4,
+      320,
+      3072,
+      512
+    ],
+    "verified_logical_counts": {
+      "ctas": 20,
+      "logical_A_replay_bytes": 3932160,
+      "logical_B_replay_bytes": 15728640,
+      "extra_serial_output_bytes": 655360,
+      "partition_iterations": 48,
+      "ordered_tile_boundaries": 10
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 1,
+      "register_only_resident_block_upper_bound": 1,
+      "maximum_smem_resident_block_upper_bound": 2,
+      "combined_resident_block_upper_bound": 1,
+      "possible_active_SM_upper_bound": 20,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "splitk2",
+    "shape": [
+      4,
+      320,
+      8192,
+      512
+    ],
+    "verified_logical_counts": {
+      "ctas": 40,
+      "logical_A_replay_bytes": 20971520,
+      "logical_B_replay_bytes": 41943040,
+      "extra_serial_output_bytes": 655360,
+      "partition_iterations": 128,
+      "ordered_tile_boundaries": 20
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 1,
+      "register_only_resident_block_upper_bound": 3,
+      "maximum_smem_resident_block_upper_bound": 4,
+      "combined_resident_block_upper_bound": 3,
+      "possible_active_SM_upper_bound": 40,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "splitk4",
+    "shape": [
+      4,
+      320,
+      8192,
+      512
+    ],
+    "verified_logical_counts": {
+      "ctas": 80,
+      "logical_A_replay_bytes": 20971520,
+      "logical_B_replay_bytes": 41943040,
+      "extra_serial_output_bytes": 1966080,
+      "partition_iterations": 64,
+      "ordered_tile_boundaries": 60
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 3,
+      "register_only_resident_block_upper_bound": 3,
+      "maximum_smem_resident_block_upper_bound": 4,
+      "combined_resident_block_upper_bound": 3,
+      "possible_active_SM_upper_bound": 80,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "splitk4_groupedn2",
+    "shape": [
+      4,
+      320,
+      8192,
+      512
+    ],
+    "verified_logical_counts": {
+      "ctas": 40,
+      "logical_A_replay_bytes": 10485760,
+      "logical_B_replay_bytes": 41943040,
+      "extra_serial_output_bytes": 1966080,
+      "partition_iterations": 64,
+      "ordered_tile_boundaries": 30
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 3,
+      "register_only_resident_block_upper_bound": 1,
+      "maximum_smem_resident_block_upper_bound": 2,
+      "combined_resident_block_upper_bound": 1,
+      "possible_active_SM_upper_bound": 40,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "splitk8",
+    "shape": [
+      4,
+      320,
+      8192,
+      512
+    ],
+    "verified_logical_counts": {
+      "ctas": 160,
+      "logical_A_replay_bytes": 20971520,
+      "logical_B_replay_bytes": 41943040,
+      "extra_serial_output_bytes": 4587520,
+      "partition_iterations": 32,
+      "ordered_tile_boundaries": 140
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 7,
+      "register_only_resident_block_upper_bound": 3,
+      "maximum_smem_resident_block_upper_bound": 4,
+      "combined_resident_block_upper_bound": 3,
+      "possible_active_SM_upper_bound": 108,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "splitk8_groupedn2",
+    "shape": [
+      4,
+      320,
+      8192,
+      512
+    ],
+    "verified_logical_counts": {
+      "ctas": 80,
+      "logical_A_replay_bytes": 10485760,
+      "logical_B_replay_bytes": 41943040,
+      "extra_serial_output_bytes": 4587520,
+      "partition_iterations": 32,
+      "ordered_tile_boundaries": 70
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 7,
+      "register_only_resident_block_upper_bound": 1,
+      "maximum_smem_resident_block_upper_bound": 2,
+      "combined_resident_block_upper_bound": 1,
+      "possible_active_SM_upper_bound": 80,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "host",
+    "shape": [
+      4,
+      512,
+      3072,
+      512
+    ],
+    "execution_counts": {
+      "gemm_count": 16,
+      "actual_gemm_M": 512,
+      "remote_A_bytes": 37748736,
+      "logical_flops": 25769803776
+    },
+    "count_scope": "gemm_count, remote_A_bytes and flops: whole P4 execution; actual_gemm_M: one GEMM",
+    "library_internal_geometry": "not inferred for library kernels",
+    "timing_identity": "host execute plus synchronize; CPU submission may overlap device work",
+    "separately_measured_stage_costs": null
+  },
+  {
+    "candidate_family": "splitk2",
+    "shape": [
+      4,
+      512,
+      3072,
+      512
+    ],
+    "verified_logical_counts": {
+      "ctas": 64,
+      "logical_A_replay_bytes": 12582912,
+      "logical_B_replay_bytes": 25165824,
+      "extra_serial_output_bytes": 1048576,
+      "partition_iterations": 48,
+      "ordered_tile_boundaries": 32
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 1,
+      "register_only_resident_block_upper_bound": 3,
+      "maximum_smem_resident_block_upper_bound": 4,
+      "combined_resident_block_upper_bound": 3,
+      "possible_active_SM_upper_bound": 64,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "splitk2_groupedn2",
+    "shape": [
+      4,
+      512,
+      3072,
+      512
+    ],
+    "verified_logical_counts": {
+      "ctas": 32,
+      "logical_A_replay_bytes": 6291456,
+      "logical_B_replay_bytes": 25165824,
+      "extra_serial_output_bytes": 1048576,
+      "partition_iterations": 48,
+      "ordered_tile_boundaries": 16
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 1,
+      "register_only_resident_block_upper_bound": 1,
+      "maximum_smem_resident_block_upper_bound": 2,
+      "combined_resident_block_upper_bound": 1,
+      "possible_active_SM_upper_bound": 32,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "splitk4",
+    "shape": [
+      4,
+      512,
+      3072,
+      512
+    ],
+    "verified_logical_counts": {
+      "ctas": 128,
+      "logical_A_replay_bytes": 12582912,
+      "logical_B_replay_bytes": 25165824,
+      "extra_serial_output_bytes": 3145728,
+      "partition_iterations": 24,
+      "ordered_tile_boundaries": 96
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 3,
+      "register_only_resident_block_upper_bound": 3,
+      "maximum_smem_resident_block_upper_bound": 4,
+      "combined_resident_block_upper_bound": 3,
+      "possible_active_SM_upper_bound": 108,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "splitk4_groupedn2",
+    "shape": [
+      4,
+      512,
+      3072,
+      512
+    ],
+    "verified_logical_counts": {
+      "ctas": 64,
+      "logical_A_replay_bytes": 6291456,
+      "logical_B_replay_bytes": 25165824,
+      "extra_serial_output_bytes": 3145728,
+      "partition_iterations": 24,
+      "ordered_tile_boundaries": 48
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 3,
+      "register_only_resident_block_upper_bound": 1,
+      "maximum_smem_resident_block_upper_bound": 2,
+      "combined_resident_block_upper_bound": 1,
+      "possible_active_SM_upper_bound": 64,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "host",
+    "shape": [
+      4,
+      512,
+      4096,
+      512
+    ],
+    "execution_counts": {
+      "gemm_count": 16,
+      "actual_gemm_M": 512,
+      "remote_A_bytes": 50331648,
+      "logical_flops": 34359738368
+    },
+    "count_scope": "gemm_count, remote_A_bytes and flops: whole P4 execution; actual_gemm_M: one GEMM",
+    "library_internal_geometry": "not inferred for library kernels",
+    "timing_identity": "host execute plus synchronize; CPU submission may overlap device work",
+    "separately_measured_stage_costs": null
+  },
+  {
+    "candidate_family": "host_compiler_cublas",
+    "shape": [
+      4,
+      512,
+      4096,
+      512
+    ],
+    "execution_counts": {
+      "gemm_count": 16,
+      "actual_gemm_M": 512,
+      "remote_A_bytes": 50331648,
+      "logical_flops": 34359738368
+    },
+    "count_scope": "gemm_count, remote_A_bytes and flops: whole P4 execution; actual_gemm_M: one GEMM",
+    "library_internal_geometry": "not inferred for library kernels",
+    "timing_identity": "host execute plus synchronize; CPU submission may overlap device work",
+    "separately_measured_stage_costs": null
+  },
+  {
+    "candidate_family": "host_merged_cublaslt",
+    "shape": [
+      4,
+      512,
+      4096,
+      512
+    ],
+    "execution_counts": {
+      "gemm_count": 4,
+      "actual_gemm_M": 2048,
+      "remote_A_bytes": 50331648,
+      "logical_flops": 34359738368
+    },
+    "count_scope": "gemm_count, remote_A_bytes and flops: whole P4 execution; actual_gemm_M: one GEMM",
+    "library_internal_geometry": "not inferred for library kernels",
+    "timing_identity": "host execute plus synchronize; CPU submission may overlap device work",
+    "separately_measured_stage_costs": null
+  },
+  {
+    "candidate_family": "host_merged_cutlass",
+    "shape": [
+      4,
+      512,
+      4096,
+      512
+    ],
+    "execution_counts": {
+      "gemm_count": 4,
+      "actual_gemm_M": 2048,
+      "remote_A_bytes": 50331648,
+      "logical_flops": 34359738368
+    },
+    "count_scope": "gemm_count, remote_A_bytes and flops: whole P4 execution; actual_gemm_M: one GEMM",
+    "library_internal_geometry": "not inferred for library kernels",
+    "timing_identity": "host execute plus synchronize; CPU submission may overlap device work",
+    "separately_measured_stage_costs": null
+  },
+  {
+    "candidate_family": "splitk2",
+    "shape": [
+      4,
+      512,
+      4096,
+      512
+    ],
+    "verified_logical_counts": {
+      "ctas": 64,
+      "logical_A_replay_bytes": 16777216,
+      "logical_B_replay_bytes": 33554432,
+      "extra_serial_output_bytes": 1048576,
+      "partition_iterations": 64,
+      "ordered_tile_boundaries": 32
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 1,
+      "register_only_resident_block_upper_bound": 3,
+      "maximum_smem_resident_block_upper_bound": 4,
+      "combined_resident_block_upper_bound": 3,
+      "possible_active_SM_upper_bound": 64,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "splitk2_groupedn2",
+    "shape": [
+      4,
+      512,
+      4096,
+      512
+    ],
+    "verified_logical_counts": {
+      "ctas": 32,
+      "logical_A_replay_bytes": 8388608,
+      "logical_B_replay_bytes": 33554432,
+      "extra_serial_output_bytes": 1048576,
+      "partition_iterations": 64,
+      "ordered_tile_boundaries": 16
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 1,
+      "register_only_resident_block_upper_bound": 1,
+      "maximum_smem_resident_block_upper_bound": 2,
+      "combined_resident_block_upper_bound": 1,
+      "possible_active_SM_upper_bound": 32,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "splitk4",
+    "shape": [
+      4,
+      512,
+      4096,
+      512
+    ],
+    "verified_logical_counts": {
+      "ctas": 128,
+      "logical_A_replay_bytes": 16777216,
+      "logical_B_replay_bytes": 33554432,
+      "extra_serial_output_bytes": 3145728,
+      "partition_iterations": 32,
+      "ordered_tile_boundaries": 96
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 3,
+      "register_only_resident_block_upper_bound": 3,
+      "maximum_smem_resident_block_upper_bound": 4,
+      "combined_resident_block_upper_bound": 3,
+      "possible_active_SM_upper_bound": 108,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "splitk4_groupedn2",
+    "shape": [
+      4,
+      512,
+      4096,
+      512
+    ],
+    "verified_logical_counts": {
+      "ctas": 64,
+      "logical_A_replay_bytes": 8388608,
+      "logical_B_replay_bytes": 33554432,
+      "extra_serial_output_bytes": 3145728,
+      "partition_iterations": 32,
+      "ordered_tile_boundaries": 48
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 3,
+      "register_only_resident_block_upper_bound": 1,
+      "maximum_smem_resident_block_upper_bound": 2,
+      "combined_resident_block_upper_bound": 1,
+      "possible_active_SM_upper_bound": 64,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "splitk2",
+    "shape": [
+      4,
+      576,
+      3072,
+      512
+    ],
+    "verified_logical_counts": {
+      "ctas": 72,
+      "logical_A_replay_bytes": 14155776,
+      "logical_B_replay_bytes": 28311552,
+      "extra_serial_output_bytes": 1179648,
+      "partition_iterations": 48,
+      "ordered_tile_boundaries": 36
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 1,
+      "register_only_resident_block_upper_bound": 3,
+      "maximum_smem_resident_block_upper_bound": 4,
+      "combined_resident_block_upper_bound": 3,
+      "possible_active_SM_upper_bound": 72,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "splitk2_groupedn2",
+    "shape": [
+      4,
+      576,
+      3072,
+      512
+    ],
+    "verified_logical_counts": {
+      "ctas": 36,
+      "logical_A_replay_bytes": 7077888,
+      "logical_B_replay_bytes": 28311552,
+      "extra_serial_output_bytes": 1179648,
+      "partition_iterations": 48,
+      "ordered_tile_boundaries": 18
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 1,
+      "register_only_resident_block_upper_bound": 1,
+      "maximum_smem_resident_block_upper_bound": 2,
+      "combined_resident_block_upper_bound": 1,
+      "possible_active_SM_upper_bound": 36,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "splitk2",
+    "shape": [
+      4,
+      640,
+      3072,
+      512
+    ],
+    "verified_logical_counts": {
+      "ctas": 80,
+      "logical_A_replay_bytes": 15728640,
+      "logical_B_replay_bytes": 31457280,
+      "extra_serial_output_bytes": 1310720,
+      "partition_iterations": 48,
+      "ordered_tile_boundaries": 40
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 1,
+      "register_only_resident_block_upper_bound": 3,
+      "maximum_smem_resident_block_upper_bound": 4,
+      "combined_resident_block_upper_bound": 3,
+      "possible_active_SM_upper_bound": 80,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  },
+  {
+    "candidate_family": "splitk2_groupedn2",
+    "shape": [
+      4,
+      640,
+      3072,
+      512
+    ],
+    "verified_logical_counts": {
+      "ctas": 40,
+      "logical_A_replay_bytes": 7864320,
+      "logical_B_replay_bytes": 31457280,
+      "extra_serial_output_bytes": 1310720,
+      "partition_iterations": 48,
+      "ordered_tile_boundaries": 20
+    },
+    "enumeration_matches": true,
+    "scope": "per GEMM; valid-element logical accesses, not memory transactions",
+    "static_resource_bounds": {
+      "ordered_boundaries_per_output_tile": 1,
+      "register_only_resident_block_upper_bound": 1,
+      "maximum_smem_resident_block_upper_bound": 2,
+      "combined_resident_block_upper_bound": 1,
+      "possible_active_SM_upper_bound": 40,
+      "resource_capacity_round_lower_bound": 1
+    },
+    "unidentified_hardware_metrics": {
+      "HBM_bytes": null,
+      "NVLink_bytes": null,
+      "L2_sectors": null,
+      "achieved_occupancy": null,
+      "semaphore_stall_us": null,
+      "CPU_submission_exposure_us": null
+    },
+    "validation_level": "counts only; hardware metrics and causal latency not validated"
+  }
+]

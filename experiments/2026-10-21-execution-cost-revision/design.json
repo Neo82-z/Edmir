@@ -1,0 +1,23 @@
+{
+  "schema": "edmir.execution-cost-revision-design.v1",
+  "date": "2026-10-21",
+  "status": "Declared before this revision's results; retrospective development",
+  "dataset": "experiments/2026-10-20-offline-predictor/data",
+  "scope": "P4 only; four existing priority shapes; CPU-only development",
+  "variants": [
+    {"name": "coupled_group", "execution_terms": false, "balanced_host": false},
+    {"name": "execution_geometry", "execution_terms": true, "balanced_host": false},
+    {"name": "execution_balanced", "execution_terms": true, "balanced_host": true}
+  ],
+  "proposed_model": "execution_balanced",
+  "controls": ["train_best_fixed", "relative_supported", "existing_waves_separate", "interactions_joint"],
+  "group_features": ["grouped_indicator", "grouped_log_K_over_4096", "grouped_log_q", "grouped_log_plain_grid_over_64", "grouped_log_q_x_log_plain_grid_over_64"],
+  "execution_features": ["ideal_round_work_log_ratio", "log_q", "log_q_x_log_K_over_4096", "log_q_x_log_actual_grid_over_64", "log_q_x_log_valid_output_tile_fraction", "extra_ctas_over_108", "extra_serial_tile_elements_over_131072", "log1p_extra_output_bytes_over_tensor_footprint", "inverse_K_iteration_depth_delta"],
+  "execution_interpretation": "Counts come from the archived SM80 64x(128*g)x32 serial-split-K implementation. CTA rounds are a one-CTA-per-SM proxy, not measured occupancy. Output bytes are logical tensor accesses, not HBM traffic. Coefficients remain empirical log-ratio parameters, not identified physical service times.",
+  "fit": {"ridge": 1.0, "search": false, "joint_host_relative_scores": true, "workload_pair_weight": 1.0, "balanced_host_pair_mass": 0.5, "balanced_fused_pair_mass": 0.5, "scaling": "training-only, workload-equal; only gate columns centered"},
+  "inference": {"host_score": 0.0, "additional_advantage_threshold": 0.0, "group_support": "unchanged exact M/q plus observed K/N bounds", "baseline": "host_nccl_cutlass_sm80_per_source_v1", "compiler_admission": false},
+  "evaluation": {"primary": "leave original M/N sweep group out", "stress": "leave entire K value out", "priority_max_regret": 0.05, "direction_error_ratio": 1.05, "mean_and_max": "no worse than fixed, old relative and previous joint model", "host_regressions": "no more than old relative", "stress_max": "no worse than fixed policy", "sensitivity": "exact linear-response LP and independent refit; diagnostic, no assumed noise distribution"},
+  "stop_rule": "Evaluate these three variants once. Do not tune features, ridge, thresholds or choose a different proposed model after viewing results. Preserve failures.",
+  "new_independent_performance_labels": 0,
+  "gpu_operations": 0
+}

@@ -1,0 +1,380 @@
+{
+  "schema": "edmir.budget-subset-analysis.v1",
+  "subset_plan_sha256": "74b47f684567e4f76ddf56521fa70a89e7e4cfb52a1a101b2914f8e1bb1f7bf1",
+  "independent_validation": false,
+  "compiler_admission": false,
+  "full_candidate_oracle": false,
+  "training_performed": false,
+  "frozen_six_used": false,
+  "valid_subset_processes": 20,
+  "failed_subset_processes": 0,
+  "full_matrix_partial": {
+    "valid_rows": 7,
+    "failure": {
+      "job": {
+        "stage": "shape5",
+        "workload_id": "w005",
+        "shape": [
+          8,
+          64,
+          4096,
+          2048
+        ],
+        "family": "splitk16",
+        "candidate_id": "splitk16@prepared_immutable",
+        "metadata_mode": "prepared",
+        "dependency_policy": "uniform_immutable_peer_v1",
+        "primary": true,
+        "implementation_id": "direct_peer_cutlass_sm80_q16_g1_prepared_metadata_v2_uniform_immutable_peer_v1",
+        "executable": "p8_w005_splitk16_immutable",
+        "repetition": 0,
+        "trial_order": 214,
+        "ordinal": 214
+      },
+      "job_index": 7,
+      "reason": "CalledProcessError",
+      "detail": "Command '['/root/2026-10-25-p8-gpu-collection/work/build/p8_w005_splitk16_immutable', 'splitk16', '/root/2026-10-25-p8-gpu-collection/bundle/data/w005/inputs.bin', '/root/2026-10-25-p8-gpu-collection/bundle/data/w005/reference.bin', '20', '100', 'prepared']' returned non-zero exit status 1.",
+      "timeout_seconds": 90
+    },
+    "included_in_subset_statistics": false
+  },
+  "shapes": [
+    {
+      "stage": "shape5",
+      "shape": [
+        8,
+        64,
+        4096,
+        2048
+      ],
+      "planned_processes": 18,
+      "valid_processes": 18,
+      "failed_processes": 0,
+      "all_jobs_attempted": true,
+      "all_jobs_passed": true,
+      "failures": [],
+      "candidates": {
+        "host@prepared": {
+          "complete_and_correct": true,
+          "valid_processes": 3,
+          "failed_processes": 0,
+          "repetitions": [
+            0,
+            1,
+            2
+          ],
+          "process_medians_us": [
+            2024.8435000000002,
+            2031.3509999999999,
+            2030.8200000000004
+          ],
+          "median_us": 2030.8200000000004,
+          "max_over_min": 1.0032138286242862,
+          "drift_review": false,
+          "max_abs_error": 0.0078125,
+          "max_rel_error": 0.0004880429477794046,
+          "median_process_wall_seconds": 10.229976177215576
+        },
+        "host_merged_cublaslt@merged": {
+          "complete_and_correct": true,
+          "valid_processes": 3,
+          "failed_processes": 0,
+          "repetitions": [
+            0,
+            1,
+            2
+          ],
+          "process_medians_us": [
+            1237.239,
+            1236.9685000000002,
+            1237.5595
+          ],
+          "median_us": 1237.239,
+          "max_over_min": 1.000477780962086,
+          "drift_review": false,
+          "max_abs_error": 0.0234375,
+          "max_rel_error": 0.0078125,
+          "median_process_wall_seconds": 10.483335733413696
+        },
+        "host_merged_cutlass@merged": {
+          "complete_and_correct": true,
+          "valid_processes": 3,
+          "failed_processes": 0,
+          "repetitions": [
+            0,
+            1,
+            2
+          ],
+          "process_medians_us": [
+            1241.4070000000002,
+            1240.2145,
+            1246.822
+          ],
+          "median_us": 1241.4070000000002,
+          "max_over_min": 1.0053277074248042,
+          "drift_review": false,
+          "max_abs_error": 0.0078125,
+          "max_rel_error": 0.0004880429477794046,
+          "median_process_wall_seconds": 9.979888916015625
+        },
+        "splitk4@prepared_immutable": {
+          "complete_and_correct": true,
+          "valid_processes": 3,
+          "failed_processes": 0,
+          "repetitions": [
+            0,
+            1,
+            2
+          ],
+          "process_medians_us": [
+            720.082,
+            717.0265,
+            708.8455
+          ],
+          "median_us": 717.0265,
+          "max_over_min": 1.015851832310426,
+          "drift_review": false,
+          "max_abs_error": 0.0234375,
+          "max_rel_error": 0.0078125,
+          "median_process_wall_seconds": 17.39207172393799
+        },
+        "splitk4_groupedn2@prepared_immutable": {
+          "complete_and_correct": true,
+          "valid_processes": 3,
+          "failed_processes": 0,
+          "repetitions": [
+            0,
+            1,
+            2
+          ],
+          "process_medians_us": [
+            708.0600000000001,
+            709.607,
+            702.6589999999999
+          ],
+          "median_us": 708.0600000000001,
+          "max_over_min": 1.009888153428619,
+          "drift_review": false,
+          "max_abs_error": 0.0234375,
+          "max_rel_error": 0.0078125,
+          "median_process_wall_seconds": 17.7436306476593
+        },
+        "splitk8_groupedn2@prepared_immutable": {
+          "complete_and_correct": true,
+          "valid_processes": 3,
+          "failed_processes": 0,
+          "repetitions": [
+            0,
+            1,
+            2
+          ],
+          "process_medians_us": [
+            721.5095,
+            718.995,
+            716.0845
+          ],
+          "median_us": 718.995,
+          "max_over_min": 1.0075759215567437,
+          "drift_review": false,
+          "max_abs_error": 0.03125,
+          "max_rel_error": 0.0146484375,
+          "median_process_wall_seconds": 18.343860864639282
+        }
+      },
+      "comparison": {
+        "best_measured_host": "host_merged_cublaslt@merged",
+        "best_measured_fused": "splitk4_groupedn2@prepared_immutable",
+        "host_us": 1237.239,
+        "fused_us": 708.0600000000001,
+        "host_over_fused": 1.7473646301160917,
+        "paired_fused_minus_host_us": [
+          -529.179,
+          -527.3615000000002,
+          -534.9005000000002
+        ],
+        "per_block_fastest_host": [
+          "host_merged_cublaslt@merged",
+          "host_merged_cublaslt@merged",
+          "host_merged_cublaslt@merged"
+        ],
+        "per_block_fastest_fused": [
+          "splitk4_groupedn2@prepared_immutable",
+          "splitk4_groupedn2@prepared_immutable",
+          "splitk4_groupedn2@prepared_immutable"
+        ],
+        "warning": "Descriptive best of correct, completely measured subset. Post-measurement selection; no full oracle, confidence bound or predictor accuracy claim."
+      }
+    },
+    {
+      "stage": "shape6",
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "planned_processes": 18,
+      "valid_processes": 2,
+      "failed_processes": 0,
+      "all_jobs_attempted": false,
+      "all_jobs_passed": false,
+      "failures": [],
+      "candidates": {
+        "host@prepared": {
+          "complete_and_correct": false,
+          "valid_processes": 1,
+          "failed_processes": 0,
+          "repetitions": [
+            0
+          ],
+          "process_medians_us": [
+            2646.8495000000003
+          ]
+        },
+        "host_merged_cublaslt@merged": {
+          "complete_and_correct": false,
+          "valid_processes": 1,
+          "failed_processes": 0,
+          "repetitions": [
+            0
+          ],
+          "process_medians_us": [
+            1282.169
+          ]
+        },
+        "host_merged_cutlass@merged": {
+          "complete_and_correct": false,
+          "valid_processes": 0,
+          "failed_processes": 0,
+          "repetitions": [],
+          "process_medians_us": []
+        },
+        "splitk16_groupedn2@prepared_immutable": {
+          "complete_and_correct": false,
+          "valid_processes": 0,
+          "failed_processes": 0,
+          "repetitions": [],
+          "process_medians_us": []
+        },
+        "splitk8@prepared_immutable": {
+          "complete_and_correct": false,
+          "valid_processes": 0,
+          "failed_processes": 0,
+          "repetitions": [],
+          "process_medians_us": []
+        },
+        "splitk8_groupedn2@prepared_immutable": {
+          "complete_and_correct": false,
+          "valid_processes": 0,
+          "failed_processes": 0,
+          "repetitions": [],
+          "process_medians_us": []
+        }
+      }
+    },
+    {
+      "stage": "shape3",
+      "shape": [
+        8,
+        256,
+        8192,
+        512
+      ],
+      "planned_processes": 15,
+      "valid_processes": 0,
+      "failed_processes": 0,
+      "all_jobs_attempted": false,
+      "all_jobs_passed": false,
+      "failures": [],
+      "candidates": {
+        "host@prepared": {
+          "complete_and_correct": false,
+          "valid_processes": 0,
+          "failed_processes": 0,
+          "repetitions": [],
+          "process_medians_us": []
+        },
+        "host_merged_cublaslt@merged": {
+          "complete_and_correct": false,
+          "valid_processes": 0,
+          "failed_processes": 0,
+          "repetitions": [],
+          "process_medians_us": []
+        },
+        "host_merged_cutlass@merged": {
+          "complete_and_correct": false,
+          "valid_processes": 0,
+          "failed_processes": 0,
+          "repetitions": [],
+          "process_medians_us": []
+        },
+        "splitk2@prepared_immutable": {
+          "complete_and_correct": false,
+          "valid_processes": 0,
+          "failed_processes": 0,
+          "repetitions": [],
+          "process_medians_us": []
+        },
+        "splitk8@prepared_immutable": {
+          "complete_and_correct": false,
+          "valid_processes": 0,
+          "failed_processes": 0,
+          "repetitions": [],
+          "process_medians_us": []
+        }
+      }
+    },
+    {
+      "stage": "shape7",
+      "shape": [
+        8,
+        512,
+        8192,
+        512
+      ],
+      "planned_processes": 15,
+      "valid_processes": 0,
+      "failed_processes": 0,
+      "all_jobs_attempted": false,
+      "all_jobs_passed": false,
+      "failures": [],
+      "candidates": {
+        "host@prepared": {
+          "complete_and_correct": false,
+          "valid_processes": 0,
+          "failed_processes": 0,
+          "repetitions": [],
+          "process_medians_us": []
+        },
+        "host_merged_cublaslt@merged": {
+          "complete_and_correct": false,
+          "valid_processes": 0,
+          "failed_processes": 0,
+          "repetitions": [],
+          "process_medians_us": []
+        },
+        "host_merged_cutlass@merged": {
+          "complete_and_correct": false,
+          "valid_processes": 0,
+          "failed_processes": 0,
+          "repetitions": [],
+          "process_medians_us": []
+        },
+        "splitk16_groupedn2@prepared_immutable": {
+          "complete_and_correct": false,
+          "valid_processes": 0,
+          "failed_processes": 0,
+          "repetitions": [],
+          "process_medians_us": []
+        },
+        "splitk8_groupedn2@prepared_immutable": {
+          "complete_and_correct": false,
+          "valid_processes": 0,
+          "failed_processes": 0,
+          "repetitions": [],
+          "process_medians_us": []
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,83 @@
+{
+  "schema": "edmir.boundary-local-verification.v1",
+  "date": "2026-10-21",
+  "status": "local_package_complete_gpu_validation_pending",
+  "package_sha256": "3569fb7a6fa01ca05b84c9addac73823bb4ba2d25b7e5386e3614cbb3308a8a1",
+  "programs": 35,
+  "process_runs_planned": 105,
+  "frozen_source_files": 124,
+  "input_and_reference_bytes": 448790528,
+  "python_tests_passed": {
+    "tests.log": 6,
+    "base_tests.log": 11
+  },
+  "cpp_cpu_tests_passed": 72,
+  "independent_integer_reference_elements_checked": 1008,
+  "sampled_fp16_max_abs_error": 0.01171875,
+  "gpu_operations": 0,
+  "cuda_compilation_verified": false,
+  "gpu_correctness_verified": false,
+  "new_gpu_timing_labels": 0,
+  "fit_operations": 0,
+  "compiler_admission": false,
+  "limitations": [
+    "CPU tests use CUDA API test doubles",
+    "reference arithmetic is sampled",
+    "new measurements are development diagnosis, not independent validation",
+    "M512 and large-N model instability is still unresolved"
+  ],
+  "local_environment": {
+    "python": "3.12.14",
+    "platform": "macOS-15.6-arm64-arm-64bit",
+    "machine": "arm64"
+  },
+  "prior_artifacts": {
+    "reviews": [
+      {
+        "review": "2026-10-21-additive-selector-repair",
+        "decision_sha256": "fb19ced0db57b430e739f534bd62029bbab000742b31d971c0aa593b94c03ad2",
+        "sources_verified": 17,
+        "evidence_files_verified": 26
+      },
+      {
+        "review": "2026-10-21-host-boundary-repair",
+        "decision_sha256": "81f0f78fa6597d1e7c6a78be008c6f7139987406604d6c1640356a4475572d11",
+        "sources_verified": 20,
+        "evidence_files_verified": 26
+      },
+      {
+        "review": "2026-10-21-structural-identifiability",
+        "decision_sha256": "dbfca6dd200d899c3c857f30e9ddc5d1706ad7c56b112137ea8c74b73bd8ca8b",
+        "sources_verified": 14,
+        "evidence_files_verified": 29
+      }
+    ],
+    "old_gpu_package": {
+      "package_sha256": "20e4df1a58ab838541d4212f4d99035b6312cf7ce93ae348327c138e2df4d1c5",
+      "sources_verified": 110,
+      "generated_files_verified": 145,
+      "input_sets_verified": 4
+    }
+  },
+  "source_sha256": {
+    "EDM-IR/tools/prepare_boundary_gpu.py": "391a624cf71e13f671104167103fde9aad20a4d372512c08bf7fd4e3a436829a",
+    "EDM-IR/tools/run_boundary_gpu.py": "5daa79d064b4ab5fcfc950b528d10ea72ec8456f8284e9b702d312c7bee69556",
+    "EDM-IR/tools/freeze_boundary_predictions.py": "08ffd5880d2982660c0ab07571ca6dad62d07002310739999bee5028ffa5af3b",
+    "EDM-IR/tools/validate_boundary_inputs.py": "91402fce918d3bd9bedb2805ef85edbcd2b220a5cdb941fea9943b4bd0becc03",
+    "EDM-IR/tests/boundary_gpu_package_test.py": "69d533a8e12e98525875b5f03dad244443772e916f2ffa3c8b46707f8af4d1d6",
+    "EDM-IR/tests/selector_gpu_package_test.py": "af5d049713835efcf017a83f9c5d135c9c042fa7a43a7f05be914a0391be7bdb",
+    "EDM-IR/tests/selector_runner_safety_test.py": "8e6bc2c8d47128102699fc6487208e99639e366863d5dc90a38d696b3b8395e4"
+  },
+  "evidence_sha256": {
+    "tests.log": "a7b2821e82cbe6ae34314487a0649772a3994dabb2e3af0b539a0f260e2e5bd2",
+    "base_tests.log": "9d420e8efb2e99d825ca2978d0ca297fc8576bbda7d5b84b732455d2e022d6b7",
+    "cpp_tests.log": "e72484b1057080ebb7b6cd1b827e39ad792ed64cd4f3d9fc8b4af1d80dbe6653",
+    "cpp_build.log": "d2242fc43489dbd4c4d084025325bf0e13efb0c40fdece3e2dac2777875b4b9b",
+    "cmake_configure.log": "8aec095281993d4b48e026f3096b9fbaee748a168a2c84be13f16bf534a6d1c5",
+    "input_checks.json": "9ca9544227e091488e4d69988e6383b189e1ba5a9bf90f530f8553de811cbb65",
+    "prepare.log": "ee5dc8718f9bbf8c302e5895a0ef797ab4f14a2b0d566350ad4a2fd6ac3f14ba"
+  },
+  "readme_sha256": "041af2daff6a48ae1c5b0e1c58cf2eff9de5110c9abaf82543f7df40da6fbcf4",
+  "assembly_script_sha256": "7e78e5f2c08d53035ee6a079d6cf9c9f69aaff0ffb6a5a7955ace9a21e3206b1",
+  "git_diff_check": true
+}

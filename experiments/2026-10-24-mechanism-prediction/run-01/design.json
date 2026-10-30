@@ -1,0 +1,65 @@
+{
+  "schema": "edmir.mechanism-prediction-design.v1",
+  "status": "Development analysis; data already inspected. Not blind preregistration or independent validation.",
+  "data": "2026-10-21 RunPod frozen package; current repaired runtime has no timing labels",
+  "primary": "mechanisms/geometry, prepared/merged, 20 warmups, 3 processes x 100 retained iterations",
+  "quality_rule": "Exclude whole configuration from calibration if any process last20/first20 outside [0.9,1.1], process max/min >1.10, or algorithm differs. Retain all raw rows and sensitivity results.",
+  "target": "median of three process medians in microseconds; iterations are not independent repeats",
+  "models": {
+    "reduced_counts": [
+      "fixed",
+      "partition_depth_64",
+      "ctas_over_108"
+    ],
+    "coupled_counts": [
+      "fixed",
+      "partition_depth_64",
+      "grouped_partition_depth_64",
+      "ctas_over_108",
+      "unique_A_MiB",
+      "logical_A_replay_MiB",
+      "extra_serial_output_MiB"
+    ],
+    "four_separate_host_models": [
+      "fixed",
+      "remote_A_MiB",
+      "logical_work_Gflop"
+    ]
+  },
+  "loss": "Nonnegative least squares in microseconds; total candidate weight one per shape within an implementation model. Fixed 1e-6 ridge on training-RMS-scaled coefficients, including intercept. No search.",
+  "validation": "Leave all candidates, stages and repetitions of one complete shape out. Score every primary configuration, flag unstable ones separately. Also show all-primary-label sensitivity without claiming stable labels.",
+  "report": [
+    "calibration residuals",
+    "whole-shape held-out predictions",
+    "direction errors and actual regret",
+    "q and grouped-N contrasts",
+    "strong-host coverage",
+    "quality and feature extrapolation",
+    "KKT and unregularized rank",
+    "profile-only edge exposure"
+  ],
+  "development_acceptance": {
+    "macro_shape_mean_absolute_percentage_error_max": 0.1,
+    "max_candidate_absolute_percentage_error_max": 0.25,
+    "wrong_pair_decisions_with_over_10_percent_loss_max": 0,
+    "compiler_admission_even_if_passed": false
+  },
+  "new_policy_scenarios": {
+    "formula": "T_new = T_old * [a + (1-a) * (4/11) * b]",
+    "a": [
+      0.0,
+      0.25,
+      0.5
+    ],
+    "b": [
+      1.0,
+      1.25,
+      1.5
+    ],
+    "status": "Unidentified sensitivity scenarios; not confidence bounds or calibrated forecasts. Larger contention can erase the gain. Current readiness changes also require new measurements."
+  },
+  "no_gpu": true,
+  "no_neural_training": true,
+  "no_hyperparameter_search": true,
+  "no_automatic_selector_change": true
+}

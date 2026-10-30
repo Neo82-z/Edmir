@@ -1,0 +1,89 @@
+{
+  "protected_file_count": 22,
+  "protected_unchanged": true,
+  "frozen_six_used": false,
+  "gpu_started": false,
+  "data_scope": "P4 FP16 repeated development; not independent validation; no BF16/P8 claim",
+  "compiler_admission": false,
+  "default_policy_unchanged": true,
+  "new_variants_require_explicit_selection": true,
+  "new_model_variants": [
+    "fixed",
+    "intercept"
+  ],
+  "chosen_experimental_variant": "intercept",
+  "development_fit_jobs": 16,
+  "identical_final_replay_fit_jobs": 16,
+  "stress_fit_jobs": 9,
+  "tests": [
+    {
+      "path": "EDM-IR/tests/curvature_transfer_selection_test.py",
+      "passed": 10
+    },
+    {
+      "path": "EDM-IR/tests/split_stage_selection_test.py",
+      "passed": 9
+    },
+    {
+      "path": "EDM-IR/tests/conditional_curve_selection_test.py",
+      "passed": 12
+    },
+    {
+      "path": "EDM-IR/tests/parallel_depth_selection_test.py",
+      "passed": 13
+    },
+    {
+      "path": "EDM-IR/tests/calibrated_candidate_selection_test.py",
+      "passed": 9
+    }
+  ],
+  "total_tests_passed": 53,
+  "failed_tests": 0,
+  "design_hashes_verified": {
+    "run-01": true,
+    "final-validation": true,
+    "audit": true
+  },
+  "original_control_scores_unchanged": true,
+  "first_final_all_scores_identical": true,
+  "no_new_development_wrong_choices": true,
+  "fixed_vs_intercept_development_choices_identical": true,
+  "saved_score_replay_max_difference": 0.0,
+  "full_traversal_41_shapes_ms": {
+    "median": 20.48510406166315,
+    "max": 21.033208002336323,
+    "repetitions": 20
+  },
+  "fragile_grouped_q8_margin_us": 0.036815946256751886,
+  "accepted_subset_regret_improved": false,
+  "source_hashes": {
+    "EDM-IR/edmir/compiler/curvature_transfer_selection.py": "1c68655b39327d52c04cd6a1fd115c1f2fa25f69aa2c61a0624450b364dd60cb",
+    "EDM-IR/edmir/compiler/split_stage_selection.py": "da6ae9a9522e5c69d1539bd796771565ab2c0c3e28af14448a4bcf059350cd55",
+    "EDM-IR/edmir/compiler/conditional_curve_selection.py": "f014049bad1f864b92375ed8fad1fb6410539c346fbd4be24b256fddc706c4f7",
+    "EDM-IR/tests/curvature_transfer_selection_test.py": "8ec842f475be66f42e8537c91911883cabcf04b3600e2ca9626378c2cb6ce3ef",
+    "experiments/2026-10-28-depth-cause-review/run_review.py": "0c55fedf55c88822fa3d494f3b56efa8888f382f5f289d9ae049d22c3432fa98",
+    "experiments/2026-10-28-depth-cause-review/audit_review.py": "ea9f12a14010bd241a8d366b60784623bb55b0fc06f483742b2f06c7a0099b16",
+    "experiments/2026-10-28-depth-cause-review/attribute_gains.py": "e9be5273199844787d5b4abefaad41bcfc846a5838fc943ed24d06b5cc51b447"
+  },
+  "input_hashes": {
+    "experiments/2026-10-28-precision-scoring/datasets-with-evidence-contracts.json": "de3b53d2b70ba7af8a354a03d84565a68c7119f950a04b964a35baffd68f4cc7",
+    "experiments/2026-10-28-host-decision-audit/support-and-prior/prior-fold-0.json": "83e28d7d2351062c6a8be5ff63788c7b0c4e6ddeb77ef3efaa1e8e69e7c3274d",
+    "experiments/2026-10-28-host-decision-audit/support-and-prior/prior-fold-1.json": "dc5d30c25bc0cf4c416d65862b4ea0cf113be2bb493e6580456187f27d438f74",
+    "experiments/2026-10-28-host-decision-audit/support-and-prior/prior-fold-2.json": "5ad153f937e995ccf03abb1e8758c66669d18d0e97f2c9210fac04fbfd4209a0",
+    "experiments/2026-10-28-host-decision-audit/support-and-prior/prior-fold-3.json": "b560f59b5b38a94bf3beb7c81da18e7a2a14a5bee0356c3eac54ed78c0b2768d",
+    "experiments/2026-10-28-host-decision-audit/stress/all_M512.json": "f16e758be2f525b34f6a6acdc400c150aaa9eb3985fe340fda1a5c246de7a67b",
+    "experiments/2026-10-28-host-decision-audit/stress/all_N2048.json": "eaded88f4a51b216897a552f2bdefeccaa96c7f24fb88badede510a9fba53080",
+    "experiments/2026-10-28-host-decision-audit/stress/all_host_winners.json": "d419af2ca8edd67aefcf5070d6bc190b5489864a44aa1cd2c0ec56162018a69b"
+  },
+  "result_hashes": {
+    "README.md": "9374f0ac6e8c43419c987dae664843af67e9f89619b65183a8dd0c85efa17c71",
+    "attribution.json": "03c2545a96135e1fdc2b91b6e0d57c519d79895851e1ebb0011938b6c8e95038",
+    "final-validation/results.json": "9ca9ecd33d09d4b0693f7fc00dc34828ef9844d804f61f23c05a0627a97ae2f4",
+    "audit/results.json": "5d421fea66f06f5b8529dd3d9103ee0557afb72aacb70714fd43b9057244a8f4"
+  },
+  "environment": {
+    "python": "3.12.14",
+    "numpy": "2.3.5",
+    "scipy": "1.18.1"
+  }
+}

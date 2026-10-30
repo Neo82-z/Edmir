@@ -1,0 +1,49 @@
+{
+  "schema": "edmir.selector-decision-audit-design.v1",
+  "status": "local retrospective development only",
+  "server_policy": "Do not rent, connect to, build on, or run a GPU server until local decision gates pass and remaining validation scope is reviewed.",
+  "dataset": "experiments/2026-10-20-offline-predictor/data",
+  "primary_protocol": "P4 leave original M/N group out; identical to previous comparison",
+  "stress_protocol": "P4 leave K value out; diagnostic, no model selection",
+  "variants": [
+    {"name": "existing_waves_separate", "joint": false, "depth_grid_interactions": false},
+    {"name": "interactions_separate", "joint": false, "depth_grid_interactions": true},
+    {"name": "waves_joint", "joint": true, "depth_grid_interactions": false},
+    {"name": "interactions_joint", "joint": true, "depth_grid_interactions": true}
+  ],
+  "new_features": [
+    "log2(q) * log2(K/4096)",
+    "log2(q) * log2(base_CTA_grid/64)"
+  ],
+  "feature_interpretation": "Kernel geometry interactions, not measured occupancy or a physical latency law. Exact q=1 zero reference retained.",
+  "fit": {
+    "loss": "weighted squared measured log-ratio differences",
+    "ridge": 1.0,
+    "hyperparameter_search": false,
+    "solver_for_new_controls": "NumPy augmented least squares",
+    "workload_total_pair_weight": 1.0
+  },
+  "unchanged": [
+    "historical measured labels and source identities",
+    "per-source CUTLASS host baseline",
+    "grouped-N support restriction",
+    "zero extra host/fused advantage threshold",
+    "four priority GPU shapes",
+    "runtime and frozen GPU packages"
+  ],
+  "local_readiness_gate": {
+    "mean_regret": "<= both old supported-relative and train-best-fixed",
+    "max_regret": "<= both old supported-relative and train-best-fixed",
+    "slower_than_host_count": "<= old supported-relative",
+    "priority_shapes": "No host choice when the observed best eligible fused candidate is at least 5% faster; retrospective regression check only",
+    "interpretation": "Passing permits discussion of minimal hardware validation, not compiler admission or proof of independent generalization",
+    "on_failure": "keep server work blocked; retain failures and do not change thresholds after seeing results"
+  },
+  "audit": [
+    "exact feature collisions and measured label spread",
+    "counterfactual replacement of gate/split/group with observed ratios, diagnosis only",
+    "independent numerical objective checks",
+    "score inputs contain no measured latency",
+    "runtime of full local audit"
+  ]
+}

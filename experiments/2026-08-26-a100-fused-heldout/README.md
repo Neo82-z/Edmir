@@ -74,3 +74,8 @@ The follow-up selector is now implemented in
 device/software fingerprint and the 45 measured M/N/K points above, requires
 an explicit `--allow-experimental-fused`, and otherwise emits an auditable host
 fallback. The source measurements and evaluation artifact remain unchanged.
+
+2026-10-20 correction: compiler admission additionally requires the measured
+host implementation to match its cuBLAS fallback. This archive measured
+per-source CUTLASS, so the retained profile now falls back even when explicitly
+enabled. Its old timing and accuracy results are not evidence against cuBLAS.

@@ -1,0 +1,287 @@
+{
+  "stage": "shape5",
+  "workloads": [
+    {
+      "id": "w005",
+      "shape": [
+        8,
+        64,
+        4096,
+        2048
+      ],
+      "process_medians_ms": {
+        "host@prepared": [
+          2.0248435000000002,
+          2.031351,
+          2.0308200000000003
+        ],
+        "host_merged_cublaslt@merged": [
+          1.237239,
+          1.2369685000000001,
+          1.2375595000000001
+        ],
+        "host_merged_cutlass@merged": [
+          1.2414070000000001,
+          1.2402145,
+          1.2468219999999999
+        ],
+        "splitk4@prepared_immutable": [
+          0.720082,
+          0.7170265,
+          0.7088455
+        ],
+        "splitk4_groupedn2@prepared_immutable": [
+          0.70806,
+          0.709607,
+          0.7026589999999999
+        ],
+        "splitk8_groupedn2@prepared_immutable": [
+          0.7215095,
+          0.718995,
+          0.7160845
+        ]
+      },
+      "median_of_process_medians_ms": {
+        "host@prepared": 2.0308200000000003,
+        "host_merged_cublaslt@merged": 1.237239,
+        "host_merged_cutlass@merged": 1.2414070000000001,
+        "splitk4@prepared_immutable": 0.7170265,
+        "splitk4_groupedn2@prepared_immutable": 0.70806,
+        "splitk8_groupedn2@prepared_immutable": 0.718995
+      },
+      "best_of_measured_subset": "splitk4_groupedn2@prepared_immutable",
+      "paired_contrasts": [
+        {
+          "a": "host@prepared",
+          "b": "host_merged_cublaslt@merged",
+          "b_minus_a_us": [
+            -787.6045000000003,
+            -794.3824999999998,
+            -793.2605000000001
+          ],
+          "b_over_a": [
+            0.6110294449916746,
+            0.6089388293800531,
+            0.6093890645158113
+          ]
+        },
+        {
+          "a": "host@prepared",
+          "b": "host_merged_cutlass@merged",
+          "b_minus_a_us": [
+            -783.4365000000001,
+            -791.1365,
+            -783.9980000000004
+          ],
+          "b_over_a": [
+            0.6130878756802687,
+            0.6105367806942277,
+            0.6139500300371277
+          ]
+        },
+        {
+          "a": "host@prepared",
+          "b": "splitk4@prepared_immutable",
+          "b_minus_a_us": [
+            -1304.7615,
+            -1314.3245,
+            -1321.9745000000003
+          ],
+          "b_over_a": [
+            0.35562353337430763,
+            0.35298011028128573,
+            0.34904398223377747
+          ]
+        },
+        {
+          "a": "host@prepared",
+          "b": "splitk4_groupedn2@prepared_immutable",
+          "b_minus_a_us": [
+            -1316.7835,
+            -1321.744,
+            -1328.1610000000003
+          ],
+          "b_over_a": [
+            0.3496862843967941,
+            0.34932761497151404,
+            0.34599767581568025
+          ]
+        },
+        {
+          "a": "host@prepared",
+          "b": "splitk8_groupedn2@prepared_immutable",
+          "b_minus_a_us": [
+            -1303.3340000000003,
+            -1312.3559999999998,
+            -1314.7355000000002
+          ],
+          "b_over_a": [
+            0.35632852613053795,
+            0.353949169788973,
+            0.35260855221043713
+          ]
+        },
+        {
+          "a": "host_merged_cublaslt@merged",
+          "b": "host_merged_cutlass@merged",
+          "b_minus_a_us": [
+            4.168000000000172,
+            3.24599999999986,
+            9.26249999999973
+          ],
+          "b_over_a": [
+            1.003368791316795,
+            1.0026241573653654,
+            1.007484488624587
+          ]
+        },
+        {
+          "a": "host_merged_cublaslt@merged",
+          "b": "splitk4@prepared_immutable",
+          "b_minus_a_us": [
+            -517.1569999999999,
+            -519.9420000000001,
+            -528.7140000000002
+          ],
+          "b_over_a": [
+            0.5820071950528556,
+            0.5796643164316633,
+            0.5727769048680084
+          ]
+        },
+        {
+          "a": "host_merged_cublaslt@merged",
+          "b": "splitk4_groupedn2@prepared_immutable",
+          "b_minus_a_us": [
+            -529.179,
+            -527.3615000000002,
+            -534.9005000000002
+          ],
+          "b_over_a": [
+            0.572290398217321,
+            0.5736661847088264,
+            0.5677779533024472
+          ]
+        },
+        {
+          "a": "host_merged_cublaslt@merged",
+          "b": "splitk8_groupedn2@prepared_immutable",
+          "b_minus_a_us": [
+            -515.7294999999999,
+            -517.9735000000001,
+            -521.4750000000001
+          ],
+          "b_over_a": [
+            0.5831609737488068,
+            0.5812557069965807,
+            0.5786263205930704
+          ]
+        },
+        {
+          "a": "host_merged_cutlass@merged",
+          "b": "splitk4@prepared_immutable",
+          "b_minus_a_us": [
+            -521.3250000000002,
+            -523.188,
+            -537.9764999999999
+          ],
+          "b_over_a": [
+            0.5800531171485258,
+            0.578147167284369,
+            0.5685218098493611
+          ]
+        },
+        {
+          "a": "host_merged_cutlass@merged",
+          "b": "splitk4_groupedn2@prepared_immutable",
+          "b_minus_a_us": [
+            -533.3470000000001,
+            -530.6075,
+            -544.1629999999999
+          ],
+          "b_over_a": [
+            0.570368944270493,
+            0.5721647344068305,
+            0.5635599949311129
+          ]
+        },
+        {
+          "a": "host_merged_cutlass@merged",
+          "b": "splitk8_groupedn2@prepared_immutable",
+          "b_minus_a_us": [
+            -519.8975000000002,
+            -521.2194999999999,
+            -530.7374999999998
+          ],
+          "b_over_a": [
+            0.5812030220548136,
+            0.5797343927199691,
+            0.5743277709247993
+          ]
+        },
+        {
+          "a": "splitk4@prepared_immutable",
+          "b": "splitk4_groupedn2@prepared_immutable",
+          "b_minus_a_us": [
+            -12.021999999999977,
+            -7.419500000000023,
+            -6.186500000000095
+          ],
+          "b_over_a": [
+            0.9833046791893146,
+            0.9896524047577042,
+            0.9912724281948604
+          ]
+        },
+        {
+          "a": "splitk4@prepared_immutable",
+          "b": "splitk8_groupedn2@prepared_immutable",
+          "b_minus_a_us": [
+            1.427500000000026,
+            1.9685000000000397,
+            7.238999999999995
+          ],
+          "b_over_a": [
+            1.001982413114062,
+            1.0027453657570538,
+            1.0102123805540135
+          ]
+        },
+        {
+          "a": "splitk4_groupedn2@prepared_immutable",
+          "b": "splitk8_groupedn2@prepared_immutable",
+          "b_minus_a_us": [
+            13.449500000000004,
+            9.388000000000062,
+            13.42550000000009
+          ],
+          "b_over_a": [
+            1.0189948591927238,
+            1.013229858217295,
+            1.0191067075210025
+          ]
+        }
+      ],
+      "process_max_over_min": {
+        "host@prepared": 1.0032138286242862,
+        "host_merged_cublaslt@merged": 1.000477780962086,
+        "host_merged_cutlass@merged": 1.0053277074248042,
+        "splitk4@prepared_immutable": 1.015851832310426,
+        "splitk4_groupedn2@prepared_immutable": 1.009888153428619,
+        "splitk8_groupedn2@prepared_immutable": 1.0075759215567437
+      },
+      "review_drift_candidates": []
+    }
+  ],
+  "geometry_contrasts": [],
+  "independent_validation": false,
+  "compiler_admission": false,
+  "full_candidate_oracle": false,
+  "primary_candidate_subset_complete": true,
+  "unit_of_repetition": "fresh process block; iterations are not independent repeats",
+  "drift_rule": "max/min > 1.10 requests review; all observations retained; not a confidence bound",
+  "causal_limit": "Timing contrasts do not identify physical traffic or semaphore stall time.",
+  "scope": "declared budget subset only; excludes unmeasured original candidates",
+  "original_candidate_count": 17,
+  "declared_candidate_count": 6
+}

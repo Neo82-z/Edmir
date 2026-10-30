@@ -1,0 +1,40 @@
+{
+  "kind": "CPU numerical counterfactual on one observed FP16 error witness",
+  "reference": 0.8623046875,
+  "input_note": "Original integer/32 inputs are exactly representable in FP16 and BF16; this witness isolates intermediate rounding. No BF16 GPU latency or whole-kernel correctness is established.",
+  "rounding": "round-to-nearest ties-to-even; exact FP32 dyadic partition sums for this input only",
+  "results": [
+    {
+      "input": "fp16",
+      "partition_accumulator": "fp32",
+      "partial": "fp16",
+      "output": "fp16",
+      "simulated_result": 0.841796875,
+      "error": 0.0205078125
+    },
+    {
+      "input": "fp16",
+      "partition_accumulator": "fp32",
+      "partial": "fp32",
+      "output": "fp16",
+      "simulated_result": 0.8623046875,
+      "error": 0.0
+    },
+    {
+      "input": "bf16",
+      "partition_accumulator": "fp32",
+      "partial": "bf16",
+      "output": "bf16",
+      "simulated_result": 0.8515625,
+      "error": 0.0107421875
+    },
+    {
+      "input": "bf16",
+      "partition_accumulator": "fp32",
+      "partial": "fp32",
+      "output": "bf16",
+      "simulated_result": 0.86328125,
+      "error": 0.0009765625
+    }
+  ]
+}

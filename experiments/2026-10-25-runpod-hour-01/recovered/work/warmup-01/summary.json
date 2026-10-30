@@ -1,0 +1,143 @@
+{
+  "stage": "warmup",
+  "workloads": [
+    {
+      "id": "w001",
+      "shape": [
+        4,
+        64,
+        1024,
+        512
+      ],
+      "process_medians_ms": {
+        "host@prepared": [
+          0.42280399999999996,
+          0.4124595,
+          0.4115375
+        ],
+        "host_compiler_cublas@prepared": [
+          0.560755,
+          0.5431665,
+          0.547004
+        ],
+        "host_merged_cublaslt@merged": [
+          0.23330099999999998,
+          0.235049,
+          0.236617
+        ],
+        "host_merged_cutlass@merged": [
+          0.2389965,
+          0.239648,
+          0.239713
+        ]
+      },
+      "median_of_process_medians_ms": {
+        "host@prepared": 0.4124595,
+        "host_compiler_cublas@prepared": 0.547004,
+        "host_merged_cublaslt@merged": 0.235049,
+        "host_merged_cutlass@merged": 0.239648
+      },
+      "best_of_measured_subset": "host_merged_cublaslt@merged",
+      "paired_contrasts": [
+        {
+          "a": "host@prepared",
+          "b": "host_compiler_cublas@prepared",
+          "b_minus_a_us": [
+            137.95100000000005,
+            130.70700000000002,
+            135.46650000000005
+          ],
+          "b_over_a": [
+            1.3262764779898015,
+            1.316896568026679,
+            1.329171703672205
+          ]
+        },
+        {
+          "a": "host@prepared",
+          "b": "host_merged_cublaslt@merged",
+          "b_minus_a_us": [
+            -189.503,
+            -177.41049999999998,
+            -174.9205
+          ],
+          "b_over_a": [
+            0.5517946850077105,
+            0.5698717086162399,
+            0.5749585396227561
+          ]
+        },
+        {
+          "a": "host@prepared",
+          "b": "host_merged_cutlass@merged",
+          "b_minus_a_us": [
+            -183.80749999999995,
+            -172.81149999999997,
+            -171.8245
+          ],
+          "b_over_a": [
+            0.5652654657950257,
+            0.5810218942708315,
+            0.5824815478540838
+          ]
+        },
+        {
+          "a": "host_compiler_cublas@prepared",
+          "b": "host_merged_cublaslt@merged",
+          "b_minus_a_us": [
+            -327.454,
+            -308.1175,
+            -310.38700000000006
+          ],
+          "b_over_a": [
+            0.41604800670524555,
+            0.43273839605351216,
+            0.4325690488552186
+          ]
+        },
+        {
+          "a": "host_compiler_cublas@prepared",
+          "b": "host_merged_cutlass@merged",
+          "b_minus_a_us": [
+            -321.7585,
+            -303.5185,
+            -307.29100000000005
+          ],
+          "b_over_a": [
+            0.4262048488198946,
+            0.4412054130731553,
+            0.43822897090332064
+          ]
+        },
+        {
+          "a": "host_merged_cublaslt@merged",
+          "b": "host_merged_cutlass@merged",
+          "b_minus_a_us": [
+            5.69550000000002,
+            4.598999999999992,
+            3.096000000000015
+          ],
+          "b_over_a": [
+            1.0244126686126507,
+            1.0195661330190726,
+            1.013084436029533
+          ]
+        }
+      ],
+      "process_max_over_min": {
+        "host@prepared": 1.0273766060201075,
+        "host_compiler_cublas@prepared": 1.0323814152750583,
+        "host_merged_cublaslt@merged": 1.014213398142314,
+        "host_merged_cutlass@merged": 1.0029979518528513
+      },
+      "review_drift_candidates": []
+    }
+  ],
+  "geometry_contrasts": [],
+  "independent_validation": false,
+  "compiler_admission": false,
+  "full_candidate_oracle": false,
+  "unit_of_repetition": "fresh process block; iterations are not independent repeats",
+  "drift_rule": "max/min > 1.10 requests review; all observations retained; not a confidence bound",
+  "causal_limit": "Timing contrasts do not identify physical traffic or semaphore stall time."
+}

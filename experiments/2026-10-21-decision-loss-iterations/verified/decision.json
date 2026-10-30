@@ -1,0 +1,147 @@
+{
+  "schema": "edmir.decision-loss-review.v1",
+  "date": "2026-10-21",
+  "exact_replay": true,
+  "local_accepted": false,
+  "accepted_variants": [],
+  "compiler_admission": false,
+  "gpu_operations": 0,
+  "new_independent_labels": 0,
+  "tests": {
+    "decision_tests": 10,
+    "old_shared_tests": 12,
+    "integrity_tests": 2,
+    "additive_tests": 10,
+    "traffic_tests": 7,
+    "resource_tests": 6
+  },
+  "total_tests": 47,
+  "old_evidence_and_gpu_package_unchanged": true,
+  "performance": [
+    {
+      "method": "log_gap",
+      "uncached_fit_seconds": 0.24718370800837874,
+      "decisions": 4100,
+      "mean_ms_per_41_shapes": 6.1993404309032485,
+      "max_ms_per_41_shapes": 6.70087500475347
+    },
+    {
+      "method": "traffic_gap",
+      "uncached_fit_seconds": 0.13667674997122958,
+      "decisions": 4100,
+      "mean_ms_per_41_shapes": 6.505387112847529,
+      "max_ms_per_41_shapes": 6.9260839954949915
+    },
+    {
+      "method": "traffic_nested",
+      "uncached_fit_seconds": 2.026608959014993,
+      "decisions": 4100,
+      "mean_ms_per_41_shapes": 6.513275056495331,
+      "max_ms_per_41_shapes": 6.787875026930124
+    }
+  ],
+  "candidate_assessments": {
+    "log_gap": {
+      "candidate_accepted": false,
+      "checks": {
+        "unchanged_primary_gates_and_M512_exact_choices": false,
+        "M512_all_training_deletions_preserve_best": false,
+        "N_all_training_deletions_preserve_host": true,
+        "N_previous_attack_resisted": true,
+        "N_one_percent_stress_all_correct": true
+      },
+      "interpretation": "Retrospective engineering checks only. Passing is not independent GPU validation."
+    },
+    "traffic_gap": {
+      "candidate_accepted": false,
+      "checks": {
+        "unchanged_primary_gates_and_M512_exact_choices": false,
+        "M512_all_training_deletions_preserve_best": false,
+        "N_all_training_deletions_preserve_host": false,
+        "N_previous_attack_resisted": true,
+        "N_one_percent_stress_all_correct": false
+      },
+      "interpretation": "Retrospective engineering checks only. Passing is not independent GPU validation."
+    },
+    "traffic_nested": {
+      "candidate_accepted": false,
+      "checks": {
+        "unchanged_primary_gates_and_M512_exact_choices": false,
+        "M512_all_training_deletions_preserve_best": false,
+        "N_all_training_deletions_preserve_host": false,
+        "N_previous_attack_resisted": true,
+        "N_one_percent_stress_all_correct": false
+      },
+      "interpretation": "Retrospective engineering checks only. Passing is not independent GPU validation."
+    }
+  },
+  "optimization": {
+    "log_gap": {
+      "fits_including_cache_hits": 125,
+      "max_projected_gradient": 3.762421935535131e-07,
+      "all_success": true
+    },
+    "traffic_gap": {
+      "fits_including_cache_hits": 125,
+      "max_projected_gradient": 9.237976800368557e-07,
+      "all_success": true
+    },
+    "traffic_nested": {
+      "fits_including_cache_hits": 125,
+      "max_projected_gradient": 4.803478080372221e-07,
+      "all_success": true
+    }
+  },
+  "source_sha256": {
+    "experiments/2026-10-21-decision-loss-iterations/evaluate.py": "2bd5ee471b66d11070e32cde1445c949625d74d99cb218a0e07b0fc29c766e66",
+    "experiments/2026-10-21-decision-loss-iterations/design.json": "b1d50a5c9ba337c7d7ae9f827111e119a988af7f796c44c26428e42e1657ec02",
+    "experiments/2026-10-21-host-boundary-repair/review.py": "513d9217510692b06feba9f2984b9cfe729f22537d45cb72300ed4f60d47f08f",
+    "experiments/2026-10-21-host-boundary-repair/assessment.py": "735627940c9e9b09f19ee19e0a407897311bb955cc4e58bea7146a851e408373",
+    "EDM-IR/tools/evaluate_traffic_selector.py": "6b28660533c8f31a725f1c5e09c38f3be64d9127782a953d9b8976052760ffe3",
+    "EDM-IR/tools/evaluate_execution_cost_selector.py": "0b8fc94a5c275e034197607cc8aa22f82ef522e4cecb9b1db13ee43bc0265740",
+    "EDM-IR/edmir/compiler/decision_loss_selection.py": "f815de3dc3ee4ea96597ce27c08bef2515a55b5de3a22a0f208c8ecdc582c340",
+    "EDM-IR/edmir/compiler/shared_candidate_selection.py": "c6a05a9b353197c21e9ad9750988460c801123be385aead2d6425af7ffa456c0",
+    "EDM-IR/edmir/compiler/additive_latency_selection.py": "af3ed191421c6eae474110c0a3022265f2a3a1f321d9dab8d1b85ff0ccd4c522",
+    "EDM-IR/edmir/compiler/traffic_latency_selection.py": "f036089962bc01ab489f98669b061386ca978a2b72c4fcb7ab9571f898231fde",
+    "EDM-IR/edmir/compiler/factorized_selection.py": "fb695e1615ff7a22b7e7bcd8d9e9fcaf4d4d173be25159c7aba0daeb0f41c1d1",
+    "EDM-IR/edmir/compiler/relative_selection.py": "47e425ce32d60577b1ee38e1e7a4f7f542dab06599b2ae1a8b694d7d09aed4c9",
+    "EDM-IR/edmir/compiler/measurement_dataset.py": "c28fd8a8e79dd222612581e6b9c85f84ee21afabb8c42b58ccdc4c30851c50bf",
+    "EDM-IR/edmir/compiler/host_baseline.py": "e335c5a38dbbfd661fe4828aa1867fcb14bd4f82984f9dbcb8a20c805b9e2b75",
+    "EDM-IR/edmir/compiler/two_stage_selection.py": "4d875a82ca57fbd07ce538a4fecf4db0d306c963945c010bcbe6cc05a2e8a8d2",
+    "EDM-IR/edmir/compiler/execution_cost_selection.py": "30d8d2b2d69893a70a20f0775f11177d075304cea72183c94b46f7bf77b00e7f",
+    "experiments/2026-10-21-decision-loss-iterations/run_review.py": "45d2645efc11ae6b62e528b761932e84f85c849d2551e51b04497f500a2e448c",
+    "experiments/2026-10-21-decision-loss-iterations/test_review.py": "812ec5fa7bf934166777ea4e02f2d55fe4d5ae040b26916e0dfc89e54c7ca27d",
+    "EDM-IR/tests/decision_loss_selection_test.py": "ef447d2aa365778bf15768e30911c74f82442448db2c43fcbeb0c8ff9432d15e",
+    "EDM-IR/tools/predict_decision_schedule.py": "03969ce1c0d9bb5b89b4d3c9cfb7facdfa749168fbcabd0a0cf7248532058a25"
+  },
+  "versions": {
+    "python": "3.12.14",
+    "numpy": "2.3.5",
+    "scipy": "1.16.3"
+  },
+  "evidence_sha256": {
+    "additive_tests.stderr.txt": "53a46fa9bf696c7672140886efa69b440b33d2612e8b14aed19fc9dfad37eb6e",
+    "additive_tests.stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "decision_tests.stderr.txt": "8466d716f01f05acdc87ee35f7bb8f44d5cba2e5e0ac2ae9cc8dfe917b878314",
+    "decision_tests.stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "evaluate.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "evaluate.stdout.txt": "c7c99302ef9bf5247e56e8502374d78563a6d6b7f1aa34a3e2724a8f5f716748",
+    "integrity_tests.stderr.txt": "0c749d55c3ac791f55ed00ac77443fd7da46fd2718544d219e2da16f78200a98",
+    "integrity_tests.stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "models/log_gap.json": "6619bbbf462ab77e94ac201a0ef3811f6187313a0ca5177c36a4adfc0d1690cc",
+    "models/traffic_gap.json": "328ce96c16bd602e0e99665a01092267df038c38cd0110c5a37ce85e7287d415",
+    "models/traffic_nested.json": "db528a7108bc4d1b33971ed2dd8969c610da05831f33ffc6d36f85fb11b6d49e",
+    "old_shared_tests.stderr.txt": "06dd52dc8de029d1ed881db5be68e374cd3c8962158eee7624eabfe24ae61093",
+    "old_shared_tests.stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "performance.json": "6d5b68f21e0e1f7201efc902799d76752eebed05ca1f3c808bd33e741e75b7d2",
+    "replay/log_gap.json": "bb0e47b32f48430adce5a6691e8b325f7924721c8c34f61224cb4a4399e91ae7",
+    "replay/results.json": "a706e2d79b28e2d98240f78d2895a544de27d66512c472ec059d89f00233b30a",
+    "replay/traffic_gap.json": "841c50bff58a493688a5c8ffab1a6cc50e01e4b8ee323c4fee5fe620bdc0af7b",
+    "replay/traffic_nested.json": "3bb15383cf6867136cecc5cce19eef2c7c1252c1dfe6e1d7f25f6518b1fca15e",
+    "resource_tests.stderr.txt": "f071fda39377566bd443bececb12ced6ea0fe12eafbcba0b5dd1bea2bea210fc",
+    "resource_tests.stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "traffic_tests.stderr.txt": "5d9dfbd2ca50f6d9b24c9d82726fffe66aa52d9342b1c0396eef7e31986f3e44",
+    "traffic_tests.stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "elapsed_seconds": 142.30649804201676
+}

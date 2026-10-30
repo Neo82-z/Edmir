@@ -1,0 +1,2484 @@
+{
+  "package_sha256": "3569fb7a6fa01ca05b84c9addac73823bb4ba2d25b7e5386e3614cbb3308a8a1",
+  "package": {
+    "schema": "edmir.boundary-gpu-package.v1",
+    "mode": "boundary_diagnosis_development",
+    "status": "local_package_not_gpu_validated",
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "baseline_contracts": {
+      "host": {
+        "baseline_id": "host_nccl_cutlass_sm80_per_source_v1",
+        "gemm_provider": "cutlass",
+        "gemm_kernel": "sm80_64x128x32",
+        "partition": "P_sequential_M_gemms",
+        "communication": "host_nccl_send_recv_and_local_copy",
+        "schedule": "materialize_then_gemm",
+        "dtype": "float16",
+        "layout": "row_major",
+        "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()"
+      }
+    },
+    "measurement_policy": {
+      "profiler": false,
+      "nvtx": false,
+      "discarded_samples": 0
+    },
+    "warmup": 20,
+    "iterations": 100,
+    "repetitions": 3,
+    "process_timeout_seconds": 120,
+    "workloads": [
+      {
+        "id": "w000",
+        "shape": [
+          4,
+          512,
+          4096,
+          512
+        ]
+      },
+      {
+        "id": "w001",
+        "shape": [
+          4,
+          64,
+          4096,
+          2048
+        ]
+      },
+      {
+        "id": "w002",
+        "shape": [
+          4,
+          64,
+          3072,
+          512
+        ]
+      },
+      {
+        "id": "w003",
+        "shape": [
+          4,
+          64,
+          3072,
+          1536
+        ]
+      },
+      {
+        "id": "w004",
+        "shape": [
+          4,
+          192,
+          3072,
+          512
+        ]
+      },
+      {
+        "id": "w005",
+        "shape": [
+          4,
+          192,
+          3072,
+          1536
+        ]
+      },
+      {
+        "id": "w006",
+        "shape": [
+          4,
+          512,
+          3072,
+          512
+        ]
+      }
+    ],
+    "programs": {
+      "boundary_w000_host": {
+        "shape": [
+          4,
+          512,
+          4096,
+          512
+        ],
+        "compiled_family": "host",
+        "header": "generated/boundary_w000_host/edmir_program.hpp"
+      },
+      "boundary_w000_direct": {
+        "shape": [
+          4,
+          512,
+          4096,
+          512
+        ],
+        "compiled_family": "direct",
+        "header": "generated/boundary_w000_direct/edmir_program.hpp"
+      },
+      "boundary_w000_splitk2": {
+        "shape": [
+          4,
+          512,
+          4096,
+          512
+        ],
+        "compiled_family": "splitk2",
+        "header": "generated/boundary_w000_splitk2/edmir_program.hpp"
+      },
+      "boundary_w000_splitk4": {
+        "shape": [
+          4,
+          512,
+          4096,
+          512
+        ],
+        "compiled_family": "splitk4",
+        "header": "generated/boundary_w000_splitk4/edmir_program.hpp"
+      },
+      "boundary_w000_splitk8": {
+        "shape": [
+          4,
+          512,
+          4096,
+          512
+        ],
+        "compiled_family": "splitk8",
+        "header": "generated/boundary_w000_splitk8/edmir_program.hpp"
+      },
+      "boundary_w001_host": {
+        "shape": [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        "compiled_family": "host",
+        "header": "generated/boundary_w001_host/edmir_program.hpp"
+      },
+      "boundary_w001_direct": {
+        "shape": [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        "compiled_family": "direct",
+        "header": "generated/boundary_w001_direct/edmir_program.hpp"
+      },
+      "boundary_w001_splitk2": {
+        "shape": [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        "compiled_family": "splitk2",
+        "header": "generated/boundary_w001_splitk2/edmir_program.hpp"
+      },
+      "boundary_w001_splitk4": {
+        "shape": [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        "compiled_family": "splitk4",
+        "header": "generated/boundary_w001_splitk4/edmir_program.hpp"
+      },
+      "boundary_w001_splitk8": {
+        "shape": [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        "compiled_family": "splitk8",
+        "header": "generated/boundary_w001_splitk8/edmir_program.hpp"
+      },
+      "boundary_w002_host": {
+        "shape": [
+          4,
+          64,
+          3072,
+          512
+        ],
+        "compiled_family": "host",
+        "header": "generated/boundary_w002_host/edmir_program.hpp"
+      },
+      "boundary_w002_direct": {
+        "shape": [
+          4,
+          64,
+          3072,
+          512
+        ],
+        "compiled_family": "direct",
+        "header": "generated/boundary_w002_direct/edmir_program.hpp"
+      },
+      "boundary_w002_splitk2": {
+        "shape": [
+          4,
+          64,
+          3072,
+          512
+        ],
+        "compiled_family": "splitk2",
+        "header": "generated/boundary_w002_splitk2/edmir_program.hpp"
+      },
+      "boundary_w002_splitk4": {
+        "shape": [
+          4,
+          64,
+          3072,
+          512
+        ],
+        "compiled_family": "splitk4",
+        "header": "generated/boundary_w002_splitk4/edmir_program.hpp"
+      },
+      "boundary_w002_splitk8": {
+        "shape": [
+          4,
+          64,
+          3072,
+          512
+        ],
+        "compiled_family": "splitk8",
+        "header": "generated/boundary_w002_splitk8/edmir_program.hpp"
+      },
+      "boundary_w003_host": {
+        "shape": [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        "compiled_family": "host",
+        "header": "generated/boundary_w003_host/edmir_program.hpp"
+      },
+      "boundary_w003_direct": {
+        "shape": [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        "compiled_family": "direct",
+        "header": "generated/boundary_w003_direct/edmir_program.hpp"
+      },
+      "boundary_w003_splitk2": {
+        "shape": [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        "compiled_family": "splitk2",
+        "header": "generated/boundary_w003_splitk2/edmir_program.hpp"
+      },
+      "boundary_w003_splitk4": {
+        "shape": [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        "compiled_family": "splitk4",
+        "header": "generated/boundary_w003_splitk4/edmir_program.hpp"
+      },
+      "boundary_w003_splitk8": {
+        "shape": [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        "compiled_family": "splitk8",
+        "header": "generated/boundary_w003_splitk8/edmir_program.hpp"
+      },
+      "boundary_w004_host": {
+        "shape": [
+          4,
+          192,
+          3072,
+          512
+        ],
+        "compiled_family": "host",
+        "header": "generated/boundary_w004_host/edmir_program.hpp"
+      },
+      "boundary_w004_direct": {
+        "shape": [
+          4,
+          192,
+          3072,
+          512
+        ],
+        "compiled_family": "direct",
+        "header": "generated/boundary_w004_direct/edmir_program.hpp"
+      },
+      "boundary_w004_splitk2": {
+        "shape": [
+          4,
+          192,
+          3072,
+          512
+        ],
+        "compiled_family": "splitk2",
+        "header": "generated/boundary_w004_splitk2/edmir_program.hpp"
+      },
+      "boundary_w004_splitk4": {
+        "shape": [
+          4,
+          192,
+          3072,
+          512
+        ],
+        "compiled_family": "splitk4",
+        "header": "generated/boundary_w004_splitk4/edmir_program.hpp"
+      },
+      "boundary_w004_splitk8": {
+        "shape": [
+          4,
+          192,
+          3072,
+          512
+        ],
+        "compiled_family": "splitk8",
+        "header": "generated/boundary_w004_splitk8/edmir_program.hpp"
+      },
+      "boundary_w005_host": {
+        "shape": [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        "compiled_family": "host",
+        "header": "generated/boundary_w005_host/edmir_program.hpp"
+      },
+      "boundary_w005_direct": {
+        "shape": [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        "compiled_family": "direct",
+        "header": "generated/boundary_w005_direct/edmir_program.hpp"
+      },
+      "boundary_w005_splitk2": {
+        "shape": [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        "compiled_family": "splitk2",
+        "header": "generated/boundary_w005_splitk2/edmir_program.hpp"
+      },
+      "boundary_w005_splitk4": {
+        "shape": [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        "compiled_family": "splitk4",
+        "header": "generated/boundary_w005_splitk4/edmir_program.hpp"
+      },
+      "boundary_w005_splitk8": {
+        "shape": [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        "compiled_family": "splitk8",
+        "header": "generated/boundary_w005_splitk8/edmir_program.hpp"
+      },
+      "boundary_w006_host": {
+        "shape": [
+          4,
+          512,
+          3072,
+          512
+        ],
+        "compiled_family": "host",
+        "header": "generated/boundary_w006_host/edmir_program.hpp"
+      },
+      "boundary_w006_direct": {
+        "shape": [
+          4,
+          512,
+          3072,
+          512
+        ],
+        "compiled_family": "direct",
+        "header": "generated/boundary_w006_direct/edmir_program.hpp"
+      },
+      "boundary_w006_splitk2": {
+        "shape": [
+          4,
+          512,
+          3072,
+          512
+        ],
+        "compiled_family": "splitk2",
+        "header": "generated/boundary_w006_splitk2/edmir_program.hpp"
+      },
+      "boundary_w006_splitk4": {
+        "shape": [
+          4,
+          512,
+          3072,
+          512
+        ],
+        "compiled_family": "splitk4",
+        "header": "generated/boundary_w006_splitk4/edmir_program.hpp"
+      },
+      "boundary_w006_splitk8": {
+        "shape": [
+          4,
+          512,
+          3072,
+          512
+        ],
+        "compiled_family": "splitk8",
+        "header": "generated/boundary_w006_splitk8/edmir_program.hpp"
+      }
+    },
+    "jobs": [
+      {
+        "workload_id": "w005",
+        "shape": [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        "family": "host",
+        "repetition": 0,
+        "trial_order": 0,
+        "ordinal": 0,
+        "executable": "boundary_w005_host",
+        "candidate_id": "host@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "host_nccl_cutlass_sm80_per_source_v1"
+      },
+      {
+        "workload_id": "w003",
+        "shape": [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        "family": "direct",
+        "repetition": 0,
+        "trial_order": 1,
+        "ordinal": 1,
+        "executable": "boundary_w003_direct",
+        "candidate_id": "direct@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q1_g1"
+      },
+      {
+        "workload_id": "w004",
+        "shape": [
+          4,
+          192,
+          3072,
+          512
+        ],
+        "family": "direct",
+        "repetition": 0,
+        "trial_order": 2,
+        "ordinal": 2,
+        "executable": "boundary_w004_direct",
+        "candidate_id": "direct@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q1_g1"
+      },
+      {
+        "workload_id": "w001",
+        "shape": [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        "family": "splitk8",
+        "repetition": 0,
+        "trial_order": 3,
+        "ordinal": 3,
+        "executable": "boundary_w001_splitk8",
+        "candidate_id": "splitk8@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q8_g1"
+      },
+      {
+        "workload_id": "w001",
+        "shape": [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        "family": "host",
+        "repetition": 0,
+        "trial_order": 4,
+        "ordinal": 4,
+        "executable": "boundary_w001_host",
+        "candidate_id": "host@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "host_nccl_cutlass_sm80_per_source_v1"
+      },
+      {
+        "workload_id": "w005",
+        "shape": [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        "family": "splitk2",
+        "repetition": 0,
+        "trial_order": 5,
+        "ordinal": 5,
+        "executable": "boundary_w005_splitk2",
+        "candidate_id": "splitk2@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q2_g1"
+      },
+      {
+        "workload_id": "w004",
+        "shape": [
+          4,
+          192,
+          3072,
+          512
+        ],
+        "family": "splitk4",
+        "repetition": 0,
+        "trial_order": 6,
+        "ordinal": 6,
+        "executable": "boundary_w004_splitk4",
+        "candidate_id": "splitk4@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q4_g1"
+      },
+      {
+        "workload_id": "w001",
+        "shape": [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        "family": "splitk4",
+        "repetition": 0,
+        "trial_order": 7,
+        "ordinal": 7,
+        "executable": "boundary_w001_splitk4",
+        "candidate_id": "splitk4@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q4_g1"
+      },
+      {
+        "workload_id": "w000",
+        "shape": [
+          4,
+          512,
+          4096,
+          512
+        ],
+        "family": "splitk2",
+        "repetition": 0,
+        "trial_order": 8,
+        "ordinal": 8,
+        "executable": "boundary_w000_splitk2",
+        "candidate_id": "splitk2@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q2_g1"
+      },
+      {
+        "workload_id": "w002",
+        "shape": [
+          4,
+          64,
+          3072,
+          512
+        ],
+        "family": "direct",
+        "repetition": 0,
+        "trial_order": 9,
+        "ordinal": 9,
+        "executable": "boundary_w002_direct",
+        "candidate_id": "direct@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q1_g1"
+      },
+      {
+        "workload_id": "w005",
+        "shape": [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        "family": "splitk8",
+        "repetition": 0,
+        "trial_order": 10,
+        "ordinal": 10,
+        "executable": "boundary_w005_splitk8",
+        "candidate_id": "splitk8@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q8_g1"
+      },
+      {
+        "workload_id": "w000",
+        "shape": [
+          4,
+          512,
+          4096,
+          512
+        ],
+        "family": "splitk8",
+        "repetition": 0,
+        "trial_order": 11,
+        "ordinal": 11,
+        "executable": "boundary_w000_splitk8",
+        "candidate_id": "splitk8@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q8_g1"
+      },
+      {
+        "workload_id": "w002",
+        "shape": [
+          4,
+          64,
+          3072,
+          512
+        ],
+        "family": "splitk4",
+        "repetition": 0,
+        "trial_order": 12,
+        "ordinal": 12,
+        "executable": "boundary_w002_splitk4",
+        "candidate_id": "splitk4@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q4_g1"
+      },
+      {
+        "workload_id": "w003",
+        "shape": [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        "family": "splitk2",
+        "repetition": 0,
+        "trial_order": 13,
+        "ordinal": 13,
+        "executable": "boundary_w003_splitk2",
+        "candidate_id": "splitk2@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q2_g1"
+      },
+      {
+        "workload_id": "w001",
+        "shape": [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        "family": "direct",
+        "repetition": 0,
+        "trial_order": 14,
+        "ordinal": 14,
+        "executable": "boundary_w001_direct",
+        "candidate_id": "direct@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q1_g1"
+      },
+      {
+        "workload_id": "w002",
+        "shape": [
+          4,
+          64,
+          3072,
+          512
+        ],
+        "family": "splitk8",
+        "repetition": 0,
+        "trial_order": 15,
+        "ordinal": 15,
+        "executable": "boundary_w002_splitk8",
+        "candidate_id": "splitk8@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q8_g1"
+      },
+      {
+        "workload_id": "w000",
+        "shape": [
+          4,
+          512,
+          4096,
+          512
+        ],
+        "family": "splitk4",
+        "repetition": 0,
+        "trial_order": 16,
+        "ordinal": 16,
+        "executable": "boundary_w000_splitk4",
+        "candidate_id": "splitk4@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q4_g1"
+      },
+      {
+        "workload_id": "w003",
+        "shape": [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        "family": "splitk8",
+        "repetition": 0,
+        "trial_order": 17,
+        "ordinal": 17,
+        "executable": "boundary_w003_splitk8",
+        "candidate_id": "splitk8@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q8_g1"
+      },
+      {
+        "workload_id": "w003",
+        "shape": [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        "family": "splitk4",
+        "repetition": 0,
+        "trial_order": 18,
+        "ordinal": 18,
+        "executable": "boundary_w003_splitk4",
+        "candidate_id": "splitk4@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q4_g1"
+      },
+      {
+        "workload_id": "w000",
+        "shape": [
+          4,
+          512,
+          4096,
+          512
+        ],
+        "family": "direct",
+        "repetition": 0,
+        "trial_order": 19,
+        "ordinal": 19,
+        "executable": "boundary_w000_direct",
+        "candidate_id": "direct@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q1_g1"
+      },
+      {
+        "workload_id": "w004",
+        "shape": [
+          4,
+          192,
+          3072,
+          512
+        ],
+        "family": "splitk2",
+        "repetition": 0,
+        "trial_order": 20,
+        "ordinal": 20,
+        "executable": "boundary_w004_splitk2",
+        "candidate_id": "splitk2@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q2_g1"
+      },
+      {
+        "workload_id": "w005",
+        "shape": [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        "family": "direct",
+        "repetition": 0,
+        "trial_order": 21,
+        "ordinal": 21,
+        "executable": "boundary_w005_direct",
+        "candidate_id": "direct@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q1_g1"
+      },
+      {
+        "workload_id": "w006",
+        "shape": [
+          4,
+          512,
+          3072,
+          512
+        ],
+        "family": "splitk2",
+        "repetition": 0,
+        "trial_order": 22,
+        "ordinal": 22,
+        "executable": "boundary_w006_splitk2",
+        "candidate_id": "splitk2@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q2_g1"
+      },
+      {
+        "workload_id": "w006",
+        "shape": [
+          4,
+          512,
+          3072,
+          512
+        ],
+        "family": "direct",
+        "repetition": 0,
+        "trial_order": 23,
+        "ordinal": 23,
+        "executable": "boundary_w006_direct",
+        "candidate_id": "direct@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q1_g1"
+      },
+      {
+        "workload_id": "w006",
+        "shape": [
+          4,
+          512,
+          3072,
+          512
+        ],
+        "family": "host",
+        "repetition": 0,
+        "trial_order": 24,
+        "ordinal": 24,
+        "executable": "boundary_w006_host",
+        "candidate_id": "host@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "host_nccl_cutlass_sm80_per_source_v1"
+      },
+      {
+        "workload_id": "w003",
+        "shape": [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        "family": "host",
+        "repetition": 0,
+        "trial_order": 25,
+        "ordinal": 25,
+        "executable": "boundary_w003_host",
+        "candidate_id": "host@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "host_nccl_cutlass_sm80_per_source_v1"
+      },
+      {
+        "workload_id": "w001",
+        "shape": [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        "family": "splitk2",
+        "repetition": 0,
+        "trial_order": 26,
+        "ordinal": 26,
+        "executable": "boundary_w001_splitk2",
+        "candidate_id": "splitk2@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q2_g1"
+      },
+      {
+        "workload_id": "w005",
+        "shape": [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        "family": "splitk4",
+        "repetition": 0,
+        "trial_order": 27,
+        "ordinal": 27,
+        "executable": "boundary_w005_splitk4",
+        "candidate_id": "splitk4@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q4_g1"
+      },
+      {
+        "workload_id": "w004",
+        "shape": [
+          4,
+          192,
+          3072,
+          512
+        ],
+        "family": "host",
+        "repetition": 0,
+        "trial_order": 28,
+        "ordinal": 28,
+        "executable": "boundary_w004_host",
+        "candidate_id": "host@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "host_nccl_cutlass_sm80_per_source_v1"
+      },
+      {
+        "workload_id": "w002",
+        "shape": [
+          4,
+          64,
+          3072,
+          512
+        ],
+        "family": "host",
+        "repetition": 0,
+        "trial_order": 29,
+        "ordinal": 29,
+        "executable": "boundary_w002_host",
+        "candidate_id": "host@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "host_nccl_cutlass_sm80_per_source_v1"
+      },
+      {
+        "workload_id": "w002",
+        "shape": [
+          4,
+          64,
+          3072,
+          512
+        ],
+        "family": "splitk2",
+        "repetition": 0,
+        "trial_order": 30,
+        "ordinal": 30,
+        "executable": "boundary_w002_splitk2",
+        "candidate_id": "splitk2@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q2_g1"
+      },
+      {
+        "workload_id": "w006",
+        "shape": [
+          4,
+          512,
+          3072,
+          512
+        ],
+        "family": "splitk4",
+        "repetition": 0,
+        "trial_order": 31,
+        "ordinal": 31,
+        "executable": "boundary_w006_splitk4",
+        "candidate_id": "splitk4@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q4_g1"
+      },
+      {
+        "workload_id": "w000",
+        "shape": [
+          4,
+          512,
+          4096,
+          512
+        ],
+        "family": "host",
+        "repetition": 0,
+        "trial_order": 32,
+        "ordinal": 32,
+        "executable": "boundary_w000_host",
+        "candidate_id": "host@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "host_nccl_cutlass_sm80_per_source_v1"
+      },
+      {
+        "workload_id": "w004",
+        "shape": [
+          4,
+          192,
+          3072,
+          512
+        ],
+        "family": "splitk8",
+        "repetition": 0,
+        "trial_order": 33,
+        "ordinal": 33,
+        "executable": "boundary_w004_splitk8",
+        "candidate_id": "splitk8@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q8_g1"
+      },
+      {
+        "workload_id": "w006",
+        "shape": [
+          4,
+          512,
+          3072,
+          512
+        ],
+        "family": "splitk8",
+        "repetition": 0,
+        "trial_order": 34,
+        "ordinal": 34,
+        "executable": "boundary_w006_splitk8",
+        "candidate_id": "splitk8@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q8_g1"
+      },
+      {
+        "workload_id": "w003",
+        "shape": [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        "family": "direct",
+        "repetition": 1,
+        "trial_order": 35,
+        "ordinal": 35,
+        "executable": "boundary_w003_direct",
+        "candidate_id": "direct@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q1_g1"
+      },
+      {
+        "workload_id": "w002",
+        "shape": [
+          4,
+          64,
+          3072,
+          512
+        ],
+        "family": "host",
+        "repetition": 1,
+        "trial_order": 36,
+        "ordinal": 36,
+        "executable": "boundary_w002_host",
+        "candidate_id": "host@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "host_nccl_cutlass_sm80_per_source_v1"
+      },
+      {
+        "workload_id": "w006",
+        "shape": [
+          4,
+          512,
+          3072,
+          512
+        ],
+        "family": "splitk2",
+        "repetition": 1,
+        "trial_order": 37,
+        "ordinal": 37,
+        "executable": "boundary_w006_splitk2",
+        "candidate_id": "splitk2@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q2_g1"
+      },
+      {
+        "workload_id": "w002",
+        "shape": [
+          4,
+          64,
+          3072,
+          512
+        ],
+        "family": "splitk2",
+        "repetition": 1,
+        "trial_order": 38,
+        "ordinal": 38,
+        "executable": "boundary_w002_splitk2",
+        "candidate_id": "splitk2@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q2_g1"
+      },
+      {
+        "workload_id": "w000",
+        "shape": [
+          4,
+          512,
+          4096,
+          512
+        ],
+        "family": "splitk2",
+        "repetition": 1,
+        "trial_order": 39,
+        "ordinal": 39,
+        "executable": "boundary_w000_splitk2",
+        "candidate_id": "splitk2@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q2_g1"
+      },
+      {
+        "workload_id": "w003",
+        "shape": [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        "family": "host",
+        "repetition": 1,
+        "trial_order": 40,
+        "ordinal": 40,
+        "executable": "boundary_w003_host",
+        "candidate_id": "host@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "host_nccl_cutlass_sm80_per_source_v1"
+      },
+      {
+        "workload_id": "w002",
+        "shape": [
+          4,
+          64,
+          3072,
+          512
+        ],
+        "family": "splitk8",
+        "repetition": 1,
+        "trial_order": 41,
+        "ordinal": 41,
+        "executable": "boundary_w002_splitk8",
+        "candidate_id": "splitk8@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q8_g1"
+      },
+      {
+        "workload_id": "w001",
+        "shape": [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        "family": "host",
+        "repetition": 1,
+        "trial_order": 42,
+        "ordinal": 42,
+        "executable": "boundary_w001_host",
+        "candidate_id": "host@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "host_nccl_cutlass_sm80_per_source_v1"
+      },
+      {
+        "workload_id": "w002",
+        "shape": [
+          4,
+          64,
+          3072,
+          512
+        ],
+        "family": "splitk4",
+        "repetition": 1,
+        "trial_order": 43,
+        "ordinal": 43,
+        "executable": "boundary_w002_splitk4",
+        "candidate_id": "splitk4@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q4_g1"
+      },
+      {
+        "workload_id": "w005",
+        "shape": [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        "family": "host",
+        "repetition": 1,
+        "trial_order": 44,
+        "ordinal": 44,
+        "executable": "boundary_w005_host",
+        "candidate_id": "host@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "host_nccl_cutlass_sm80_per_source_v1"
+      },
+      {
+        "workload_id": "w005",
+        "shape": [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        "family": "splitk8",
+        "repetition": 1,
+        "trial_order": 45,
+        "ordinal": 45,
+        "executable": "boundary_w005_splitk8",
+        "candidate_id": "splitk8@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q8_g1"
+      },
+      {
+        "workload_id": "w006",
+        "shape": [
+          4,
+          512,
+          3072,
+          512
+        ],
+        "family": "splitk4",
+        "repetition": 1,
+        "trial_order": 46,
+        "ordinal": 46,
+        "executable": "boundary_w006_splitk4",
+        "candidate_id": "splitk4@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q4_g1"
+      },
+      {
+        "workload_id": "w004",
+        "shape": [
+          4,
+          192,
+          3072,
+          512
+        ],
+        "family": "splitk4",
+        "repetition": 1,
+        "trial_order": 47,
+        "ordinal": 47,
+        "executable": "boundary_w004_splitk4",
+        "candidate_id": "splitk4@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q4_g1"
+      },
+      {
+        "workload_id": "w004",
+        "shape": [
+          4,
+          192,
+          3072,
+          512
+        ],
+        "family": "direct",
+        "repetition": 1,
+        "trial_order": 48,
+        "ordinal": 48,
+        "executable": "boundary_w004_direct",
+        "candidate_id": "direct@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q1_g1"
+      },
+      {
+        "workload_id": "w001",
+        "shape": [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        "family": "splitk4",
+        "repetition": 1,
+        "trial_order": 49,
+        "ordinal": 49,
+        "executable": "boundary_w001_splitk4",
+        "candidate_id": "splitk4@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q4_g1"
+      },
+      {
+        "workload_id": "w004",
+        "shape": [
+          4,
+          192,
+          3072,
+          512
+        ],
+        "family": "splitk8",
+        "repetition": 1,
+        "trial_order": 50,
+        "ordinal": 50,
+        "executable": "boundary_w004_splitk8",
+        "candidate_id": "splitk8@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q8_g1"
+      },
+      {
+        "workload_id": "w003",
+        "shape": [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        "family": "splitk8",
+        "repetition": 1,
+        "trial_order": 51,
+        "ordinal": 51,
+        "executable": "boundary_w003_splitk8",
+        "candidate_id": "splitk8@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q8_g1"
+      },
+      {
+        "workload_id": "w006",
+        "shape": [
+          4,
+          512,
+          3072,
+          512
+        ],
+        "family": "direct",
+        "repetition": 1,
+        "trial_order": 52,
+        "ordinal": 52,
+        "executable": "boundary_w006_direct",
+        "candidate_id": "direct@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q1_g1"
+      },
+      {
+        "workload_id": "w001",
+        "shape": [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        "family": "splitk8",
+        "repetition": 1,
+        "trial_order": 53,
+        "ordinal": 53,
+        "executable": "boundary_w001_splitk8",
+        "candidate_id": "splitk8@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q8_g1"
+      },
+      {
+        "workload_id": "w004",
+        "shape": [
+          4,
+          192,
+          3072,
+          512
+        ],
+        "family": "host",
+        "repetition": 1,
+        "trial_order": 54,
+        "ordinal": 54,
+        "executable": "boundary_w004_host",
+        "candidate_id": "host@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "host_nccl_cutlass_sm80_per_source_v1"
+      },
+      {
+        "workload_id": "w001",
+        "shape": [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        "family": "direct",
+        "repetition": 1,
+        "trial_order": 55,
+        "ordinal": 55,
+        "executable": "boundary_w001_direct",
+        "candidate_id": "direct@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q1_g1"
+      },
+      {
+        "workload_id": "w000",
+        "shape": [
+          4,
+          512,
+          4096,
+          512
+        ],
+        "family": "direct",
+        "repetition": 1,
+        "trial_order": 56,
+        "ordinal": 56,
+        "executable": "boundary_w000_direct",
+        "candidate_id": "direct@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q1_g1"
+      },
+      {
+        "workload_id": "w000",
+        "shape": [
+          4,
+          512,
+          4096,
+          512
+        ],
+        "family": "splitk8",
+        "repetition": 1,
+        "trial_order": 57,
+        "ordinal": 57,
+        "executable": "boundary_w000_splitk8",
+        "candidate_id": "splitk8@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q8_g1"
+      },
+      {
+        "workload_id": "w003",
+        "shape": [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        "family": "splitk2",
+        "repetition": 1,
+        "trial_order": 58,
+        "ordinal": 58,
+        "executable": "boundary_w003_splitk2",
+        "candidate_id": "splitk2@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q2_g1"
+      },
+      {
+        "workload_id": "w006",
+        "shape": [
+          4,
+          512,
+          3072,
+          512
+        ],
+        "family": "splitk8",
+        "repetition": 1,
+        "trial_order": 59,
+        "ordinal": 59,
+        "executable": "boundary_w006_splitk8",
+        "candidate_id": "splitk8@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q8_g1"
+      },
+      {
+        "workload_id": "w000",
+        "shape": [
+          4,
+          512,
+          4096,
+          512
+        ],
+        "family": "host",
+        "repetition": 1,
+        "trial_order": 60,
+        "ordinal": 60,
+        "executable": "boundary_w000_host",
+        "candidate_id": "host@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "host_nccl_cutlass_sm80_per_source_v1"
+      },
+      {
+        "workload_id": "w005",
+        "shape": [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        "family": "splitk2",
+        "repetition": 1,
+        "trial_order": 61,
+        "ordinal": 61,
+        "executable": "boundary_w005_splitk2",
+        "candidate_id": "splitk2@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q2_g1"
+      },
+      {
+        "workload_id": "w005",
+        "shape": [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        "family": "splitk4",
+        "repetition": 1,
+        "trial_order": 62,
+        "ordinal": 62,
+        "executable": "boundary_w005_splitk4",
+        "candidate_id": "splitk4@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q4_g1"
+      },
+      {
+        "workload_id": "w001",
+        "shape": [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        "family": "splitk2",
+        "repetition": 1,
+        "trial_order": 63,
+        "ordinal": 63,
+        "executable": "boundary_w001_splitk2",
+        "candidate_id": "splitk2@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q2_g1"
+      },
+      {
+        "workload_id": "w005",
+        "shape": [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        "family": "direct",
+        "repetition": 1,
+        "trial_order": 64,
+        "ordinal": 64,
+        "executable": "boundary_w005_direct",
+        "candidate_id": "direct@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q1_g1"
+      },
+      {
+        "workload_id": "w006",
+        "shape": [
+          4,
+          512,
+          3072,
+          512
+        ],
+        "family": "host",
+        "repetition": 1,
+        "trial_order": 65,
+        "ordinal": 65,
+        "executable": "boundary_w006_host",
+        "candidate_id": "host@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "host_nccl_cutlass_sm80_per_source_v1"
+      },
+      {
+        "workload_id": "w000",
+        "shape": [
+          4,
+          512,
+          4096,
+          512
+        ],
+        "family": "splitk4",
+        "repetition": 1,
+        "trial_order": 66,
+        "ordinal": 66,
+        "executable": "boundary_w000_splitk4",
+        "candidate_id": "splitk4@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q4_g1"
+      },
+      {
+        "workload_id": "w002",
+        "shape": [
+          4,
+          64,
+          3072,
+          512
+        ],
+        "family": "direct",
+        "repetition": 1,
+        "trial_order": 67,
+        "ordinal": 67,
+        "executable": "boundary_w002_direct",
+        "candidate_id": "direct@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q1_g1"
+      },
+      {
+        "workload_id": "w003",
+        "shape": [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        "family": "splitk4",
+        "repetition": 1,
+        "trial_order": 68,
+        "ordinal": 68,
+        "executable": "boundary_w003_splitk4",
+        "candidate_id": "splitk4@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q4_g1"
+      },
+      {
+        "workload_id": "w004",
+        "shape": [
+          4,
+          192,
+          3072,
+          512
+        ],
+        "family": "splitk2",
+        "repetition": 1,
+        "trial_order": 69,
+        "ordinal": 69,
+        "executable": "boundary_w004_splitk2",
+        "candidate_id": "splitk2@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q2_g1"
+      },
+      {
+        "workload_id": "w003",
+        "shape": [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        "family": "host",
+        "repetition": 2,
+        "trial_order": 70,
+        "ordinal": 70,
+        "executable": "boundary_w003_host",
+        "candidate_id": "host@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "host_nccl_cutlass_sm80_per_source_v1"
+      },
+      {
+        "workload_id": "w002",
+        "shape": [
+          4,
+          64,
+          3072,
+          512
+        ],
+        "family": "host",
+        "repetition": 2,
+        "trial_order": 71,
+        "ordinal": 71,
+        "executable": "boundary_w002_host",
+        "candidate_id": "host@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "host_nccl_cutlass_sm80_per_source_v1"
+      },
+      {
+        "workload_id": "w001",
+        "shape": [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        "family": "host",
+        "repetition": 2,
+        "trial_order": 72,
+        "ordinal": 72,
+        "executable": "boundary_w001_host",
+        "candidate_id": "host@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "host_nccl_cutlass_sm80_per_source_v1"
+      },
+      {
+        "workload_id": "w000",
+        "shape": [
+          4,
+          512,
+          4096,
+          512
+        ],
+        "family": "splitk4",
+        "repetition": 2,
+        "trial_order": 73,
+        "ordinal": 73,
+        "executable": "boundary_w000_splitk4",
+        "candidate_id": "splitk4@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q4_g1"
+      },
+      {
+        "workload_id": "w003",
+        "shape": [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        "family": "splitk8",
+        "repetition": 2,
+        "trial_order": 74,
+        "ordinal": 74,
+        "executable": "boundary_w003_splitk8",
+        "candidate_id": "splitk8@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q8_g1"
+      },
+      {
+        "workload_id": "w006",
+        "shape": [
+          4,
+          512,
+          3072,
+          512
+        ],
+        "family": "splitk4",
+        "repetition": 2,
+        "trial_order": 75,
+        "ordinal": 75,
+        "executable": "boundary_w006_splitk4",
+        "candidate_id": "splitk4@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q4_g1"
+      },
+      {
+        "workload_id": "w003",
+        "shape": [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        "family": "splitk2",
+        "repetition": 2,
+        "trial_order": 76,
+        "ordinal": 76,
+        "executable": "boundary_w003_splitk2",
+        "candidate_id": "splitk2@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q2_g1"
+      },
+      {
+        "workload_id": "w002",
+        "shape": [
+          4,
+          64,
+          3072,
+          512
+        ],
+        "family": "splitk8",
+        "repetition": 2,
+        "trial_order": 77,
+        "ordinal": 77,
+        "executable": "boundary_w002_splitk8",
+        "candidate_id": "splitk8@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q8_g1"
+      },
+      {
+        "workload_id": "w000",
+        "shape": [
+          4,
+          512,
+          4096,
+          512
+        ],
+        "family": "splitk8",
+        "repetition": 2,
+        "trial_order": 78,
+        "ordinal": 78,
+        "executable": "boundary_w000_splitk8",
+        "candidate_id": "splitk8@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q8_g1"
+      },
+      {
+        "workload_id": "w005",
+        "shape": [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        "family": "direct",
+        "repetition": 2,
+        "trial_order": 79,
+        "ordinal": 79,
+        "executable": "boundary_w005_direct",
+        "candidate_id": "direct@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q1_g1"
+      },
+      {
+        "workload_id": "w004",
+        "shape": [
+          4,
+          192,
+          3072,
+          512
+        ],
+        "family": "splitk4",
+        "repetition": 2,
+        "trial_order": 80,
+        "ordinal": 80,
+        "executable": "boundary_w004_splitk4",
+        "candidate_id": "splitk4@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q4_g1"
+      },
+      {
+        "workload_id": "w004",
+        "shape": [
+          4,
+          192,
+          3072,
+          512
+        ],
+        "family": "host",
+        "repetition": 2,
+        "trial_order": 81,
+        "ordinal": 81,
+        "executable": "boundary_w004_host",
+        "candidate_id": "host@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "host_nccl_cutlass_sm80_per_source_v1"
+      },
+      {
+        "workload_id": "w006",
+        "shape": [
+          4,
+          512,
+          3072,
+          512
+        ],
+        "family": "host",
+        "repetition": 2,
+        "trial_order": 82,
+        "ordinal": 82,
+        "executable": "boundary_w006_host",
+        "candidate_id": "host@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "host_nccl_cutlass_sm80_per_source_v1"
+      },
+      {
+        "workload_id": "w005",
+        "shape": [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        "family": "host",
+        "repetition": 2,
+        "trial_order": 83,
+        "ordinal": 83,
+        "executable": "boundary_w005_host",
+        "candidate_id": "host@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "host_nccl_cutlass_sm80_per_source_v1"
+      },
+      {
+        "workload_id": "w005",
+        "shape": [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        "family": "splitk2",
+        "repetition": 2,
+        "trial_order": 84,
+        "ordinal": 84,
+        "executable": "boundary_w005_splitk2",
+        "candidate_id": "splitk2@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q2_g1"
+      },
+      {
+        "workload_id": "w004",
+        "shape": [
+          4,
+          192,
+          3072,
+          512
+        ],
+        "family": "splitk8",
+        "repetition": 2,
+        "trial_order": 85,
+        "ordinal": 85,
+        "executable": "boundary_w004_splitk8",
+        "candidate_id": "splitk8@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q8_g1"
+      },
+      {
+        "workload_id": "w000",
+        "shape": [
+          4,
+          512,
+          4096,
+          512
+        ],
+        "family": "direct",
+        "repetition": 2,
+        "trial_order": 86,
+        "ordinal": 86,
+        "executable": "boundary_w000_direct",
+        "candidate_id": "direct@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q1_g1"
+      },
+      {
+        "workload_id": "w004",
+        "shape": [
+          4,
+          192,
+          3072,
+          512
+        ],
+        "family": "direct",
+        "repetition": 2,
+        "trial_order": 87,
+        "ordinal": 87,
+        "executable": "boundary_w004_direct",
+        "candidate_id": "direct@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q1_g1"
+      },
+      {
+        "workload_id": "w001",
+        "shape": [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        "family": "splitk4",
+        "repetition": 2,
+        "trial_order": 88,
+        "ordinal": 88,
+        "executable": "boundary_w001_splitk4",
+        "candidate_id": "splitk4@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q4_g1"
+      },
+      {
+        "workload_id": "w005",
+        "shape": [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        "family": "splitk8",
+        "repetition": 2,
+        "trial_order": 89,
+        "ordinal": 89,
+        "executable": "boundary_w005_splitk8",
+        "candidate_id": "splitk8@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q8_g1"
+      },
+      {
+        "workload_id": "w006",
+        "shape": [
+          4,
+          512,
+          3072,
+          512
+        ],
+        "family": "direct",
+        "repetition": 2,
+        "trial_order": 90,
+        "ordinal": 90,
+        "executable": "boundary_w006_direct",
+        "candidate_id": "direct@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q1_g1"
+      },
+      {
+        "workload_id": "w005",
+        "shape": [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        "family": "splitk4",
+        "repetition": 2,
+        "trial_order": 91,
+        "ordinal": 91,
+        "executable": "boundary_w005_splitk4",
+        "candidate_id": "splitk4@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q4_g1"
+      },
+      {
+        "workload_id": "w001",
+        "shape": [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        "family": "splitk8",
+        "repetition": 2,
+        "trial_order": 92,
+        "ordinal": 92,
+        "executable": "boundary_w001_splitk8",
+        "candidate_id": "splitk8@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q8_g1"
+      },
+      {
+        "workload_id": "w001",
+        "shape": [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        "family": "direct",
+        "repetition": 2,
+        "trial_order": 93,
+        "ordinal": 93,
+        "executable": "boundary_w001_direct",
+        "candidate_id": "direct@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q1_g1"
+      },
+      {
+        "workload_id": "w006",
+        "shape": [
+          4,
+          512,
+          3072,
+          512
+        ],
+        "family": "splitk2",
+        "repetition": 2,
+        "trial_order": 94,
+        "ordinal": 94,
+        "executable": "boundary_w006_splitk2",
+        "candidate_id": "splitk2@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q2_g1"
+      },
+      {
+        "workload_id": "w000",
+        "shape": [
+          4,
+          512,
+          4096,
+          512
+        ],
+        "family": "splitk2",
+        "repetition": 2,
+        "trial_order": 95,
+        "ordinal": 95,
+        "executable": "boundary_w000_splitk2",
+        "candidate_id": "splitk2@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q2_g1"
+      },
+      {
+        "workload_id": "w002",
+        "shape": [
+          4,
+          64,
+          3072,
+          512
+        ],
+        "family": "splitk4",
+        "repetition": 2,
+        "trial_order": 96,
+        "ordinal": 96,
+        "executable": "boundary_w002_splitk4",
+        "candidate_id": "splitk4@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q4_g1"
+      },
+      {
+        "workload_id": "w000",
+        "shape": [
+          4,
+          512,
+          4096,
+          512
+        ],
+        "family": "host",
+        "repetition": 2,
+        "trial_order": 97,
+        "ordinal": 97,
+        "executable": "boundary_w000_host",
+        "candidate_id": "host@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "host_nccl_cutlass_sm80_per_source_v1"
+      },
+      {
+        "workload_id": "w002",
+        "shape": [
+          4,
+          64,
+          3072,
+          512
+        ],
+        "family": "direct",
+        "repetition": 2,
+        "trial_order": 98,
+        "ordinal": 98,
+        "executable": "boundary_w002_direct",
+        "candidate_id": "direct@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q1_g1"
+      },
+      {
+        "workload_id": "w003",
+        "shape": [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        "family": "splitk4",
+        "repetition": 2,
+        "trial_order": 99,
+        "ordinal": 99,
+        "executable": "boundary_w003_splitk4",
+        "candidate_id": "splitk4@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q4_g1"
+      },
+      {
+        "workload_id": "w001",
+        "shape": [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        "family": "splitk2",
+        "repetition": 2,
+        "trial_order": 100,
+        "ordinal": 100,
+        "executable": "boundary_w001_splitk2",
+        "candidate_id": "splitk2@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q2_g1"
+      },
+      {
+        "workload_id": "w004",
+        "shape": [
+          4,
+          192,
+          3072,
+          512
+        ],
+        "family": "splitk2",
+        "repetition": 2,
+        "trial_order": 101,
+        "ordinal": 101,
+        "executable": "boundary_w004_splitk2",
+        "candidate_id": "splitk2@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q2_g1"
+      },
+      {
+        "workload_id": "w002",
+        "shape": [
+          4,
+          64,
+          3072,
+          512
+        ],
+        "family": "splitk2",
+        "repetition": 2,
+        "trial_order": 102,
+        "ordinal": 102,
+        "executable": "boundary_w002_splitk2",
+        "candidate_id": "splitk2@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q2_g1"
+      },
+      {
+        "workload_id": "w006",
+        "shape": [
+          4,
+          512,
+          3072,
+          512
+        ],
+        "family": "splitk8",
+        "repetition": 2,
+        "trial_order": 103,
+        "ordinal": 103,
+        "executable": "boundary_w006_splitk8",
+        "candidate_id": "splitk8@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q8_g1"
+      },
+      {
+        "workload_id": "w003",
+        "shape": [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        "family": "direct",
+        "repetition": 2,
+        "trial_order": 104,
+        "ordinal": 104,
+        "executable": "boundary_w003_direct",
+        "candidate_id": "direct@legacy",
+        "metadata_mode": "legacy",
+        "implementation_id": "direct_peer_cutlass_sm80_q1_g1"
+      }
+    ],
+    "sources": {
+      "EDM-IR/edmir/__init__.py": "fada70c72fa7e572c7de6c5d8d083142bef7c7b151cdd081e1a2032fb89ecd5b",
+      "EDM-IR/edmir/__main__.py": "935a1c1166b0c1ea35a82256345000bf2c73ded718d77773bc27a71ecce28f7d",
+      "EDM-IR/edmir/analysis.py": "2157bdc73611809aa606a7e287df1ccbcc35b682d6460715e6eaf7dbfe03c324",
+      "EDM-IR/edmir/benchmark/__init__.py": "06f2a2f888a22eab2def0aba0fdf2a4c9940df855b044e94efe1640700b84d01",
+      "EDM-IR/edmir/benchmark/measurement.py": "e78a36ca5bdc31792619fce46a62c133398a39cdac903dd5869bce05f5bc78f9",
+      "EDM-IR/edmir/benchmark/routed_reference.py": "2901e8ace2b582be530cf37e6d796dd1c9dc8b23332e9f720e706c096f513c58",
+      "EDM-IR/edmir/builder.py": "30f64d9d3a0f4f23a9e5094267a4a72c9077cf3aed33a965b911fc0e9b13d76d",
+      "EDM-IR/edmir/cli.py": "9c3ca5d45e88b0c57e07d65c9e6ef13908315cc4888f738261d3c3db323dea74",
+      "EDM-IR/edmir/compiler/__init__.py": "9063df11cb7d9245f9f3c7882487d977b20b6ff53f351bfbc15d93aa7576a43d",
+      "EDM-IR/edmir/compiler/additive_latency_selection.py": "af3ed191421c6eae474110c0a3022265f2a3a1f321d9dab8d1b85ff0ccd4c522",
+      "EDM-IR/edmir/compiler/assurance.py": "5d5e8a986a351bf3ccfaa2cc15b19add3ceec6f973e92acafb71109b845e8425",
+      "EDM-IR/edmir/compiler/backends/__init__.py": "68c1d71edab796eb77a1ad8af5eb6259e8b6f6b083e0500e870bdf7d318acdc6",
+      "EDM-IR/edmir/compiler/backends/base.py": "92dbbaf024f5c238ba8867e46b54d6b88a477a89405d632b88b939ba350fd2c4",
+      "EDM-IR/edmir/compiler/backends/cpp_backend.py": "1f80f71d60f0dadb1a98d5d48d8aab6c15c6e729b80e2a15d6cbb27c678152e2",
+      "EDM-IR/edmir/compiler/backends/json_backend.py": "17bce42a0d92a6ff2b1cbbc9590ee7108b35eb5b699c6f966f8053dc20220b1e",
+      "EDM-IR/edmir/compiler/calibration.py": "b03b47aa9edb6c3fcb0354e8c87967d6fb41c94cf842d1fd8506b38c5c520ae6",
+      "EDM-IR/edmir/compiler/compile.py": "08a6e9080ee43a72cb2fa22ddef98c13514cd4f14e57852bf25703ce23452d74",
+      "EDM-IR/edmir/compiler/dataflow.py": "01517526cb9b3d44a5d4513076877e1da4df9f5ac921d2ec19411d9800b25cc5",
+      "EDM-IR/edmir/compiler/dependence.py": "5f78141f7376b6b312592380743067343623b0248b27f0fee306951a12654450",
+      "EDM-IR/edmir/compiler/evaluation.py": "2cf8e2a0d53553408dfbe44775a18ee51669e207bc599049e0d9dfc30c109cf4",
+      "EDM-IR/edmir/compiler/execution_cost_selection.py": "30d8d2b2d69893a70a20f0775f11177d075304cea72183c94b46f7bf77b00e7f",
+      "EDM-IR/edmir/compiler/factorized_selection.py": "fb695e1615ff7a22b7e7bcd8d9e9fcaf4d4d173be25159c7aba0daeb0f41c1d1",
+      "EDM-IR/edmir/compiler/frontend.py": "347f13e8250979b621ce36ee64d5d3756fe35bbdd529ac8f4121b9b82ff19889",
+      "EDM-IR/edmir/compiler/fused_evaluation.py": "c279cc23a070bda79a68913bac38690ebdf4e72253088958b38f2a3fe9e2fb12",
+      "EDM-IR/edmir/compiler/fused_selection.py": "20bc75f9a69f5179bd5acdb8b74c52dcba04ab0294e9fc55171aa8ceef025ae0",
+      "EDM-IR/edmir/compiler/host_baseline.py": "e335c5a38dbbfd661fe4828aa1867fcb14bd4f82984f9dbcb8a20c805b9e2b75",
+      "EDM-IR/edmir/compiler/lowering.py": "6433c88d2f06dc9e976ed6c21ebe18123f0210a0d649fa05d82884f2642f01fd",
+      "EDM-IR/edmir/compiler/measurement_dataset.py": "c28fd8a8e79dd222612581e6b9c85f84ee21afabb8c42b58ccdc4c30851c50bf",
+      "EDM-IR/edmir/compiler/model.py": "6da0b9dfb88160c373c1e688eeb7c55b5efeddc4bf8325da71337a9f5a96b0e9",
+      "EDM-IR/edmir/compiler/passes.py": "f9c6c233c0e360f254595129db8b361b044a32ff116c98691a44acc65d6bfea4",
+      "EDM-IR/edmir/compiler/pipeline.py": "46bf5635912874220cd56006705316e1e5ce29229a5b83d62db0d85f71eb5355",
+      "EDM-IR/edmir/compiler/relative_selection.py": "47e425ce32d60577b1ee38e1e7a4f7f542dab06599b2ae1a8b694d7d09aed4c9",
+      "EDM-IR/edmir/compiler/remote_publication.py": "82fa8c42b951bf525a78269a538ab1fb0f0c618bf70fe5d49cdc51bc29d169cf",
+      "EDM-IR/edmir/compiler/resource_geometry.py": "64fb43ec6fc1cc6b2d3f4a706522d7b8e8a33e50244e4f3cbcdc33356bb422da",
+      "EDM-IR/edmir/compiler/roofline_accounting.py": "6d4201a9f33fd42af5425825ef4b3307a6eb02181ab5f024ee0cd0922fb6bc48",
+      "EDM-IR/edmir/compiler/routed_contract.py": "c71266082e16f2d75e2bb7ccfaf321745db6d4b4f97826d9c605fb647814f070",
+      "EDM-IR/edmir/compiler/schedule.py": "c7dcbe3f7fd818c1f036afa2161449da8f18d56290db715bbd6331e55d8bfc97",
+      "EDM-IR/edmir/compiler/schedule_space.py": "e95f88f88b84e1361373558cef4a8500878bae3372505a1fef84af26958beb8b",
+      "EDM-IR/edmir/compiler/simulate.py": "af9729c62bce3ef3b0b4bd57bdad174e8b22d280cb46ca2a1eadd2e8643557db",
+      "EDM-IR/edmir/compiler/slot_protocol.py": "b258abd070ea994f59868772bdbbb483ef7204891d4f8191fd3a69a1b3512c42",
+      "EDM-IR/edmir/compiler/splitk_revision.py": "d980a8c173694d8cd29829cf0dc232df1097398ed12a221abdbb30b2aa18b7a6",
+      "EDM-IR/edmir/compiler/target.py": "e611a335fc37c36f9fa4fcc5cd73abcf2856194b4569d0f84dbbc4d8cac205a4",
+      "EDM-IR/edmir/compiler/traffic_latency_selection.py": "f036089962bc01ab489f98669b061386ca978a2b72c4fcb7ab9571f898231fde",
+      "EDM-IR/edmir/compiler/two_stage_selection.py": "4d875a82ca57fbd07ce538a4fecf4db0d306c963945c010bcbe6cc05a2e8a8d2",
+      "EDM-IR/edmir/compiler/verify.py": "f9c19b2a3995a90149e0661a9bf48dcc350feb0528f91fe4ea737a9845ed9e31",
+      "EDM-IR/edmir/debug_protocol.py": "dd0cb9ac4a438a6492eb776affb014f76902ecf9edcf53457ed35c399ea02cf9",
+      "EDM-IR/edmir/device.py": "d2615539c5e9bfb6d36529f60fc44d7934ba870c6380142459f47d79da395959",
+      "EDM-IR/edmir/graph.py": "8dcf36aec8e35468c2b1da41075afd88817a51b5bb7418066c81a39b8c8e05a4",
+      "EDM-IR/edmir/nsys_export.py": "199fbe959fd46b20fa540398f3d700ac9b8afbbf305891face9b60fba5f6ad06",
+      "EDM-IR/edmir/nsys_sqlite.py": "1ac7fa38e843ae18b7111a3a9e5d0026edd5adf67477e19f324314f2eb9000ab",
+      "EDM-IR/edmir/ops.py": "1995fb8370bd435dc5d8b8891f7091daaa41d400a1fbb547023aac37dbc7dd68",
+      "EDM-IR/edmir/printing.py": "47326540d174fce5902c6e352938649852b66cb9cd88c463b38bb2711d51653b",
+      "EDM-IR/edmir/runtime_capabilities.py": "f95df1427c0c4fb0825444d99d0d1df32f62f59646ba2ea2c19ce20b5495644c",
+      "EDM-IR/edmir/serialization.py": "05311c716dee2f4f68485c8dd717335288cd74494114c0816da037efa148256b",
+      "EDM-IR/edmir/topology.py": "c31dba45ca4d293d67b126c17791437cbd0e953baf8c933bce45d4e45916916e",
+      "EDM-IR/edmir/trace.py": "5a787ba6badd0dd4147e2d05e7e489358e1be6b91aabac7b65571afd526d6881",
+      "EDM-IR/edmir/trace_validation.py": "59ec94df8d0613df11490684c5cf44103681c4f881a23186486d7bf3c5b6928a",
+      "EDM-IR/edmir/uop.py": "9ab684c49f218871853197e37bab535da7881717a7f360b672135ee9feaae1bc",
+      "EDM-IR/runtime/src/cuda_backend.cpp": "7f3cb4935d5170096acbe9d23c02a917feb1029d40f4741951ffc39630fa14cb",
+      "EDM-IR/runtime/src/merged_host_backend.cpp": "3d9b235a7b2f11e61ba719a9f62c70c3b81a78e8b4564d7df4898d09bf4766f8",
+      "EDM-IR/runtime/src/prepared_execution.cpp": "491c6ceb9349fc919dced43cd36d5d963eb173616ad8b009cb9ad34f712ba35f",
+      "EDM-IR/runtime/src/uniform_workload.cpp": "a4dc7ffcd86514e3b76b557892f81eb162a098dc86db5e6ad1113e54e4a18e4e",
+      "EDM-IR/runtime/src/validate.cpp": "9dccf171bc695b57f548d16233f8ed26889a3fb1e21e4953ffb77f25c830d8c4",
+      "EDM-IR/runtime/tests/cuda_api_trace_stubs.cpp": "075aebdc1f4895a71ca75abb912cc791b6d6fec37df3c806a2746ac6f98a2b99",
+      "EDM-IR/runtime/tests/cuda_api_trace_test.cpp": "ffdde223d6d22f1baf2fd4a42cb5759aa77b7ea289b69d618d27b0e571658aa0",
+      "EDM-IR/runtime/tests/prepared_graph_test.cpp": "019f74e3af45eae6ca988d7d896b39cdcf3bae47f17142b0adce67f6eb4c77a4",
+      "EDM-IR/runtime/tests/program_test.cpp": "f15c7df9fd12899c2e051adcd574db4e9aa5a260c91126fa84aba17f71418bf2",
+      "EDM-IR/runtime/tools/benchmark_copy.cpp": "8e4bb1cf71fb06403ef19e6d2092d26c410b768ea2a31669aead06fbb5f885f3",
+      "EDM-IR/runtime/tools/benchmark_cutlass_gemm.cpp": "a3ae7c9cdbefef59b72cae7badb4e7159cc0e989357aa5e3149c8c8939542e9c",
+      "EDM-IR/runtime/tools/benchmark_gemm.cpp": "83dd9e525532f0f7ea037c84f488c031d6d73b49f5ccbdad7e9367d1e03d9e79",
+      "EDM-IR/runtime/tools/benchmark_generated.cpp": "4c9e705ae5bee2d5c03db6cf5c7c1cdb7a9264d665de24486a002b380ae7853c",
+      "EDM-IR/runtime/tools/benchmark_selector.cpp": "1a9ff0f3cea4cfdf35d88b129793d6d24da8d90bafb637e3dccd26443cf8b26b",
+      "EDM-IR/runtime/tools/check_selector_layout.cpp": "e4f4842fe406056a6c08fc7ea0fc0165b8ce7f802d8ae264eebbcdabe3b9b159",
+      "EDM-IR/runtime/tools/run_generated.cpp": "188bc3354291e6ff2e94884eba75604bd59918966c240e4a87d1975819d4fe1b",
+      "EDM-IR/runtime/tools/validate_generated.cpp": "4bd7d678d7cfebf1f46556bee245a4f74ec5d97724f85de41d9f0f4a3c0ce6fd",
+      "EDM-IR/runtime/src/cutlass_gemm.cu": "5cd55bea876b7b7b6cc55fba13b94ac60f20011a59e6c5d3a9866f97417b7f98",
+      "EDM-IR/runtime/src/nccl_device_fused.cu": "b4963db5fda8b8836969b31b27e259f2cc9f6aa82bf4a1b853b442f62b33212a",
+      "EDM-IR/runtime/src/nccl_device_fused_cutlass.cu": "0301fad59dfa9c8d2b7ddb8c9622cc75b6fccdaa9c6450a2d51fdbaf59a3f47a",
+      "EDM-IR/runtime/src/cutlass_sm80_gemm.cuh": "3dfe30701dc6b0de406ea224aa49de5e571bba58e7a20fd6c875f7fd9f64f6e0",
+      "EDM-IR/runtime/include/edmir/runtime/cuda_backend.hpp": "0b4190411d396c042b668ff13446965cd8193f426238fe83bf43ca0abce6ce5c",
+      "EDM-IR/runtime/include/edmir/runtime/cutlass_gemm.hpp": "7ba82e2c138837e9bd244028e9f0f9379646479a65507fbed62bd53ad1a27e2e",
+      "EDM-IR/runtime/include/edmir/runtime/merged_host_backend.hpp": "4cfac502042b97f1868a5a7ae5034cb6b3a06836b910ec1c7345498028c452b4",
+      "EDM-IR/runtime/include/edmir/runtime/nccl_device_fused.hpp": "bc6f8e888cc77de477c2a8d67e00b8eed880431e6659ef0f770913d1e375ba10",
+      "EDM-IR/runtime/include/edmir/runtime/prepared_execution.hpp": "f8849e43a0ddf7f2e96d2f56b7bb38a971e088c471af862e89aedf426e1278f0",
+      "EDM-IR/runtime/include/edmir/runtime/program.hpp": "356e8dd5c8db54c461bcbd7b29e73a3303496bf0412839198a2768e396558127",
+      "EDM-IR/runtime/include/edmir/runtime/uniform_workload.hpp": "617a1642c43780cdf8e382eb4dd482872fcbd976f5649cb570f13edd01463557",
+      "EDM-IR/runtime/include/edmir/runtime/validate.hpp": "93a111cf24afcf511647a953ed763d5c1e97e0a39fdae5dc09f330e673843023",
+      "EDM-IR/runtime/tests/cuda_api_trace.hpp": "0a0403454af2620d194afd3ca22916b224f0a39c32a7523efb5b76bfd1f69993",
+      "EDM-IR/tools/audit_public_selector_sources.py": "02d48c8c81fcdeba7a6f51f3fae5dcffe436c1320f33cd3a5202cc5086b13303",
+      "EDM-IR/tools/audit_splitk_fit.py": "f4b784ef79bbeef49548cb521e8d0f563f3d3248acd6aec68c7cc1cc33c8b378",
+      "EDM-IR/tools/build_numerical_ledger.py": "ad2949fba77623a15aebb9fb74542be2bd93eb443a3299580f3b8f92dc1634bd",
+      "EDM-IR/tools/debug_relative_selector.py": "9655d209066ecbc81908f082c74b556ea5a7b080ce8db56fa434a3db736869a8",
+      "EDM-IR/tools/evaluate_additive_selector.py": "db34c3033517f05cd13df6045ee45adb81bdba468cd071776fee2d1a0ffc634f",
+      "EDM-IR/tools/evaluate_execution_cost_selector.py": "0b8fc94a5c275e034197607cc8aa22f82ef522e4cecb9b1db13ee43bc0265740",
+      "EDM-IR/tools/evaluate_factorized_selector.py": "bb745667319d15d28bb99a93f5b2d8b562c3f8669199607340af43376f873bcb",
+      "EDM-IR/tools/evaluate_relative_selector.py": "d6ca3ded41e67082666b3f225948e85c8f7ae2f17009dc4f4a0ec786062f19bf",
+      "EDM-IR/tools/evaluate_selector_interactions.py": "e3d8a5b273a41ebe0d4bab5ea5d65d8f6ccad90502abb600af094da56b3e4d9c",
+      "EDM-IR/tools/evaluate_splitk_revision.py": "78e5da9559646b48265587e87f1a0205bf00428fdf24c192e7b8c0359576860b",
+      "EDM-IR/tools/evaluate_traffic_selector.py": "6b28660533c8f31a725f1c5e09c38f3be64d9127782a953d9b8976052760ffe3",
+      "EDM-IR/tools/evaluate_two_stage_selector.py": "7041ec16564512a798eb639f104dd786ae2a179b1774d9839f26bb41cf42e2c8",
+      "EDM-IR/tools/export_routed_measurements.py": "482a39b00785408f7b5e2f789be0b4ad3a2a24d4232284ae1e8b7dca0ec92b88",
+      "EDM-IR/tools/freeze_boundary_predictions.py": "08ffd5880d2982660c0ab07571ca6dad62d07002310739999bee5028ffa5af3b",
+      "EDM-IR/tools/freeze_transfer_predictions.py": "f32b766451c03a2ce6a59e5edb77de58d0bd950c7c5e8ecab644bdee01a59774",
+      "EDM-IR/tools/independent_selector_validation.py": "a9144709ceb8337ce7334b5f0d27bc9c6a021df0573eb70f318947bb2d8c0885",
+      "EDM-IR/tools/plan_grouped_n_sweep.py": "be78ed084f1a7d08b6873ad35d79c0ac0c528b387fab4c251361107305cf7b82",
+      "EDM-IR/tools/predict_additive_schedule.py": "03b740488bb55e633c3e666d24167f9448b28207b3ae5f9c8e645e3af073a580",
+      "EDM-IR/tools/predict_traffic_schedule.py": "fbc3bd67aaedaf3add21ff505a638d8b86a086d49a6037f405edd68cb2760c7c",
+      "EDM-IR/tools/prepare_boundary_gpu.py": "391a624cf71e13f671104167103fde9aad20a4d372512c08bf7fd4e3a436829a",
+      "EDM-IR/tools/prepare_cost_model_experiment.py": "97d5ae0b60ed5183b9c5cd020085fd245e342974d46d7304d1f7bbdf5f11fe5f",
+      "EDM-IR/tools/prepare_routed_benchmark.py": "ac21ef526c4b4fd1c0c40f74d5a5c96216e9e6915c09d74e68f3141e69380ecd",
+      "EDM-IR/tools/prepare_selector_dataset.py": "6ac85f8e6dbabdc7169c2a9f90f4879d8a2c50cff9f0218318395a85ca056569",
+      "EDM-IR/tools/prepare_selector_gpu.py": "ea2dc97da136e969489206dd23b1e9868175305a8f13507a90603e556454f0fd",
+      "EDM-IR/tools/run_4090_debug.py": "a1980115bd691f04080284b01286f9b6657b4b8f693ecb90ac600d0017cd3c45",
+      "EDM-IR/tools/run_boundary_gpu.py": "5daa79d064b4ab5fcfc950b528d10ea72ec8456f8284e9b702d312c7bee69556",
+      "EDM-IR/tools/run_cost_model_experiment.py": "216927c3e15945741f37eda55f2ab3f36cdf5e79367835a920627227d6c4b71b",
+      "EDM-IR/tools/run_frozen_fused_experiment.py": "4ed975e8b5f3c92c7ec58d6f839c916caa493c210f151bde2415b8b8ffd49953",
+      "EDM-IR/tools/run_fused_kernel_sweep.py": "c5b4d4efbf71a757b9bc560d684369e597e56d1d18107f9f0dc8e90650e70c0b",
+      "EDM-IR/tools/run_publication_tlc.py": "2e54bf203afc8bddc28d2663df9c03f2b9962424899521ffa1aa9dc570e5a33d",
+      "EDM-IR/tools/run_selector_gpu.py": "1fb0880a905eb12676a52889ccd3e458be7818f165ae4f59e7ae3860606b0d12",
+      "EDM-IR/tools/run_tlc.py": "9cc9d24b88615170221b11b8ba97a7b97e5f71337f53a9970523224965faadc2",
+      "EDM-IR/tools/summarize_splitk_sweep.py": "e3f9ce8f4b5ef30f8d4ff431aea9e2b863378a0dc267b3d6ae0b36b1a1afe6ee",
+      "EDM-IR/tools/validate_boundary_inputs.py": "91402fce918d3bd9bedb2805ef85edbcd2b220a5cdb941fea9943b4bd0becc03",
+      "EDM-IR/runtime/CMakeLists.txt": "47218298031f29491ba673ff2e29f799334db26f5aa37f83e96247ee4bbc3500",
+      "experiments/2026-10-21-structural-identifiability/candidate.py": "ea0f4c8fea56e47af71a7838773106b87fc3702187b0a2201acc67ca469a3e57"
+    },
+    "collector_sha256": "b4c2e370d1f2ffe2b69e69d0d2d3447c98d2c5e745706c26aa5a9abef2dce4de",
+    "files": {
+      "frozen_predictions.json": "9af82d80a2114559c4828366b3c51e2eb95d0f0b6b77f08d88309df824d5ca9a",
+      "generated/boundary_w000_direct/edmir_program.hpp": "6fed0c170888e89f27e76b4346c6debf1e20b20c7dd63fa07198e2d878039af0",
+      "generated/boundary_w000_direct/program.json": "e84efe6ce8b5e82a8c113920025260f7b51df8d0cf913244ba3c81d21f273404",
+      "generated/boundary_w000_direct/target.json": "3ce6e8938e67cc2528629e1460cd5099fcb032a1d5b487e3fe1a830f301dff74",
+      "generated/boundary_w000_host/edmir_program.hpp": "c1fb853067b1e3a8f54d5156062765d6bee361d439d6f6f2ba622408b27c7fba",
+      "generated/boundary_w000_host/program.json": "868c987508911724d2ca16114b6aac81541e847a57b82676cd027907edf2a3e6",
+      "generated/boundary_w000_host/target.json": "7ce124e458febb4f501d349e80fd79deb4170ceca32f06244aea1a2d75878a42",
+      "generated/boundary_w000_splitk2/edmir_program.hpp": "308fc4804b4606716c88128c271d48b0413d1f44a12bba740dd8bee89746dcc0",
+      "generated/boundary_w000_splitk2/program.json": "e84efe6ce8b5e82a8c113920025260f7b51df8d0cf913244ba3c81d21f273404",
+      "generated/boundary_w000_splitk2/target.json": "130f15133b6b19e04f005b1e5bb97aed2f1ee6ac65916a4793b5539580bab7d2",
+      "generated/boundary_w000_splitk4/edmir_program.hpp": "71919850f057fed754ca8e55aa4540397a6ce57c52c1eb8c62a622935ff1917c",
+      "generated/boundary_w000_splitk4/program.json": "e84efe6ce8b5e82a8c113920025260f7b51df8d0cf913244ba3c81d21f273404",
+      "generated/boundary_w000_splitk4/target.json": "45d123e5c5b922d4e7ee83e148664b23834060fc0202dc73e03b02c4d0cb13b4",
+      "generated/boundary_w000_splitk8/edmir_program.hpp": "8ae25e92f4ae4fdab12f1ccb944a12add225b38cf12ae3d7c5490b1a368069ad",
+      "generated/boundary_w000_splitk8/program.json": "e84efe6ce8b5e82a8c113920025260f7b51df8d0cf913244ba3c81d21f273404",
+      "generated/boundary_w000_splitk8/target.json": "b6bbc6fefba0f184d3d407c7da60064f56d0ef57906aec437c7f2da6a6676722",
+      "generated/boundary_w001_direct/edmir_program.hpp": "741df80dd05146ec586cff268495ec01ed98db5e8259e755f90015d627741984",
+      "generated/boundary_w001_direct/program.json": "f675612773c74c0f3791ad484fdedd684d48499741947bb587dfd37aa45ec2e6",
+      "generated/boundary_w001_direct/target.json": "3ce6e8938e67cc2528629e1460cd5099fcb032a1d5b487e3fe1a830f301dff74",
+      "generated/boundary_w001_host/edmir_program.hpp": "43a4de5dd0b2b98d30c7e77d28851fd406784908f87276d9acc9462cf14a598a",
+      "generated/boundary_w001_host/program.json": "147e91d46552113e42febc994cb4eb151e1ac130de48f4c624d43eaa1fb4dde8",
+      "generated/boundary_w001_host/target.json": "7ce124e458febb4f501d349e80fd79deb4170ceca32f06244aea1a2d75878a42",
+      "generated/boundary_w001_splitk2/edmir_program.hpp": "8bf331efec4dddb6a4e551795c934455c8a51553eba26011c39a1b13fa03297f",
+      "generated/boundary_w001_splitk2/program.json": "f675612773c74c0f3791ad484fdedd684d48499741947bb587dfd37aa45ec2e6",
+      "generated/boundary_w001_splitk2/target.json": "130f15133b6b19e04f005b1e5bb97aed2f1ee6ac65916a4793b5539580bab7d2",
+      "generated/boundary_w001_splitk4/edmir_program.hpp": "6b11ca3508d2fa110b050b2e9eac4769d814c7feced9aba2840f44faa56b14af",
+      "generated/boundary_w001_splitk4/program.json": "f675612773c74c0f3791ad484fdedd684d48499741947bb587dfd37aa45ec2e6",
+      "generated/boundary_w001_splitk4/target.json": "45d123e5c5b922d4e7ee83e148664b23834060fc0202dc73e03b02c4d0cb13b4",
+      "generated/boundary_w001_splitk8/edmir_program.hpp": "0e547f5027f62c929db17b6e3872420acf8e857d8df4ddfb2a9703bed4190daa",
+      "generated/boundary_w001_splitk8/program.json": "f675612773c74c0f3791ad484fdedd684d48499741947bb587dfd37aa45ec2e6",
+      "generated/boundary_w001_splitk8/target.json": "b6bbc6fefba0f184d3d407c7da60064f56d0ef57906aec437c7f2da6a6676722",
+      "generated/boundary_w002_direct/edmir_program.hpp": "e79ea37750ced5150ce487535b9b3cee7f4a68c64b3f8f3ba56e8a9dce7ae378",
+      "generated/boundary_w002_direct/program.json": "0b2ebcc3d7499fd2de43f770146566f8c5ec22b4f275f0e24a85601ec5196a34",
+      "generated/boundary_w002_direct/target.json": "3ce6e8938e67cc2528629e1460cd5099fcb032a1d5b487e3fe1a830f301dff74",
+      "generated/boundary_w002_host/edmir_program.hpp": "62a34ae4cd6f132738fa6becc1053cdce221f7c95a0f8bf7b613c83b0beaf288",
+      "generated/boundary_w002_host/program.json": "9ac57fb169a9535ae30154508380ec3d101df4cc0009ad1f2cebc794bff5704f",
+      "generated/boundary_w002_host/target.json": "7ce124e458febb4f501d349e80fd79deb4170ceca32f06244aea1a2d75878a42",
+      "generated/boundary_w002_splitk2/edmir_program.hpp": "def04ab538e593ee8105cc2f5d811d796e63ef51e1bc5b16e70df6f3871e390a",
+      "generated/boundary_w002_splitk2/program.json": "0b2ebcc3d7499fd2de43f770146566f8c5ec22b4f275f0e24a85601ec5196a34",
+      "generated/boundary_w002_splitk2/target.json": "130f15133b6b19e04f005b1e5bb97aed2f1ee6ac65916a4793b5539580bab7d2",
+      "generated/boundary_w002_splitk4/edmir_program.hpp": "71955ed9fd96eaee67f8c0b7b3795128520b5567752b0344f9c9511658e46f8c",
+      "generated/boundary_w002_splitk4/program.json": "0b2ebcc3d7499fd2de43f770146566f8c5ec22b4f275f0e24a85601ec5196a34",
+      "generated/boundary_w002_splitk4/target.json": "45d123e5c5b922d4e7ee83e148664b23834060fc0202dc73e03b02c4d0cb13b4",
+      "generated/boundary_w002_splitk8/edmir_program.hpp": "7d2a7eee93c7ce60ed951ebc5921ba3205c869895e10b21c7cb4ff4ac3196819",
+      "generated/boundary_w002_splitk8/program.json": "0b2ebcc3d7499fd2de43f770146566f8c5ec22b4f275f0e24a85601ec5196a34",
+      "generated/boundary_w002_splitk8/target.json": "b6bbc6fefba0f184d3d407c7da60064f56d0ef57906aec437c7f2da6a6676722",
+      "generated/boundary_w003_direct/edmir_program.hpp": "9e6341195348e9cd1136d6219931dfc5326c180304ea44e5ee91015fb364ff4d",
+      "generated/boundary_w003_direct/program.json": "c83d08f76531db49fd17f927a908e479446258f2fe30f24a9da16c33360ffc17",
+      "generated/boundary_w003_direct/target.json": "3ce6e8938e67cc2528629e1460cd5099fcb032a1d5b487e3fe1a830f301dff74",
+      "generated/boundary_w003_host/edmir_program.hpp": "09183d537da354740bfc254d42f4ce65cbe77b29e992f48deefb8101292ca374",
+      "generated/boundary_w003_host/program.json": "4097c914a49e131bad0dcbdd9fcfda93ab363e2ece7d85838720321d2eed199a",
+      "generated/boundary_w003_host/target.json": "7ce124e458febb4f501d349e80fd79deb4170ceca32f06244aea1a2d75878a42",
+      "generated/boundary_w003_splitk2/edmir_program.hpp": "8ce4d8fb91af47cdf6d58eea1328e70dd42fc34bbf29a03fad83abd81d53ab07",
+      "generated/boundary_w003_splitk2/program.json": "c83d08f76531db49fd17f927a908e479446258f2fe30f24a9da16c33360ffc17",
+      "generated/boundary_w003_splitk2/target.json": "130f15133b6b19e04f005b1e5bb97aed2f1ee6ac65916a4793b5539580bab7d2",
+      "generated/boundary_w003_splitk4/edmir_program.hpp": "5fdb534b8c313830dbbcd7b13e35f86a344938c7b7e4c41237565af8465ebaa5",
+      "generated/boundary_w003_splitk4/program.json": "c83d08f76531db49fd17f927a908e479446258f2fe30f24a9da16c33360ffc17",
+      "generated/boundary_w003_splitk4/target.json": "45d123e5c5b922d4e7ee83e148664b23834060fc0202dc73e03b02c4d0cb13b4",
+      "generated/boundary_w003_splitk8/edmir_program.hpp": "744bc2b9555df03a85759fdc606842fe8c147710308d512c14d1646cd473ef51",
+      "generated/boundary_w003_splitk8/program.json": "c83d08f76531db49fd17f927a908e479446258f2fe30f24a9da16c33360ffc17",
+      "generated/boundary_w003_splitk8/target.json": "b6bbc6fefba0f184d3d407c7da60064f56d0ef57906aec437c7f2da6a6676722",
+      "generated/boundary_w004_direct/edmir_program.hpp": "56cc8c1d6b3745c8a5954ba44652037427cd41d4f551f5e92f96a16ed6e45e52",
+      "generated/boundary_w004_direct/program.json": "2953441d7d6dc9c9d64a32f6ad504d9fdae87e62ac831b8efef1b291b60f7964",
+      "generated/boundary_w004_direct/target.json": "3ce6e8938e67cc2528629e1460cd5099fcb032a1d5b487e3fe1a830f301dff74",
+      "generated/boundary_w004_host/edmir_program.hpp": "fec4549ff5acfc4317398a71f1b97a615b5ed1e627c19abb0eac5567dc75851f",
+      "generated/boundary_w004_host/program.json": "b3d599cc7e8c88c09bb5ae1ec59bb6ba53b06d4e62ebd682dba95fc93c87867b",
+      "generated/boundary_w004_host/target.json": "7ce124e458febb4f501d349e80fd79deb4170ceca32f06244aea1a2d75878a42",
+      "generated/boundary_w004_splitk2/edmir_program.hpp": "d6b6524684b2075bf71d4dc8e2a72c0c6b455aba65877e5da7e56294bbca75c9",
+      "generated/boundary_w004_splitk2/program.json": "2953441d7d6dc9c9d64a32f6ad504d9fdae87e62ac831b8efef1b291b60f7964",
+      "generated/boundary_w004_splitk2/target.json": "130f15133b6b19e04f005b1e5bb97aed2f1ee6ac65916a4793b5539580bab7d2",
+      "generated/boundary_w004_splitk4/edmir_program.hpp": "9d3e95bef35d3613edc2ddf37703a157b90bb5b4e72ad301289485419b123e4b",
+      "generated/boundary_w004_splitk4/program.json": "2953441d7d6dc9c9d64a32f6ad504d9fdae87e62ac831b8efef1b291b60f7964",
+      "generated/boundary_w004_splitk4/target.json": "45d123e5c5b922d4e7ee83e148664b23834060fc0202dc73e03b02c4d0cb13b4",
+      "generated/boundary_w004_splitk8/edmir_program.hpp": "682de12bab3a8d71a4a488526abf8aca868654644f9d41393ba4b84c47d2fc5e",
+      "generated/boundary_w004_splitk8/program.json": "2953441d7d6dc9c9d64a32f6ad504d9fdae87e62ac831b8efef1b291b60f7964",
+      "generated/boundary_w004_splitk8/target.json": "b6bbc6fefba0f184d3d407c7da60064f56d0ef57906aec437c7f2da6a6676722",
+      "generated/boundary_w005_direct/edmir_program.hpp": "1c9a37b3fe5e6d5cf50af81276768d64283e516c499ac7e40a0a4e6a9c945ec4",
+      "generated/boundary_w005_direct/program.json": "043ec3be996f50fc5dbdb57579f74e215c98e597e4caedace4bf24a02f381e3c",
+      "generated/boundary_w005_direct/target.json": "3ce6e8938e67cc2528629e1460cd5099fcb032a1d5b487e3fe1a830f301dff74",
+      "generated/boundary_w005_host/edmir_program.hpp": "df9bc8d2f558f594b2bc4bf32db07ee5f32cb3d60473c4890d2139adf3b3b824",
+      "generated/boundary_w005_host/program.json": "d0d61697d861443a6bf1db5731149b487ebf98616a4550caca5f47688836823d",
+      "generated/boundary_w005_host/target.json": "7ce124e458febb4f501d349e80fd79deb4170ceca32f06244aea1a2d75878a42",
+      "generated/boundary_w005_splitk2/edmir_program.hpp": "5ff8ce42ed15ca1a487fcd9e601e89fa4c69060225dac4fbc748caccd6b226a3",
+      "generated/boundary_w005_splitk2/program.json": "043ec3be996f50fc5dbdb57579f74e215c98e597e4caedace4bf24a02f381e3c",
+      "generated/boundary_w005_splitk2/target.json": "130f15133b6b19e04f005b1e5bb97aed2f1ee6ac65916a4793b5539580bab7d2",
+      "generated/boundary_w005_splitk4/edmir_program.hpp": "1af4a74d02d04e14558fcd618c730c91143f2eaeef9b6a0cd298bbb0cedf906f",
+      "generated/boundary_w005_splitk4/program.json": "043ec3be996f50fc5dbdb57579f74e215c98e597e4caedace4bf24a02f381e3c",
+      "generated/boundary_w005_splitk4/target.json": "45d123e5c5b922d4e7ee83e148664b23834060fc0202dc73e03b02c4d0cb13b4",
+      "generated/boundary_w005_splitk8/edmir_program.hpp": "b74495e9aed492fd5e85a6e9eb4877eb417da09df7e446277333fade59771158",
+      "generated/boundary_w005_splitk8/program.json": "043ec3be996f50fc5dbdb57579f74e215c98e597e4caedace4bf24a02f381e3c",
+      "generated/boundary_w005_splitk8/target.json": "b6bbc6fefba0f184d3d407c7da60064f56d0ef57906aec437c7f2da6a6676722",
+      "generated/boundary_w006_direct/edmir_program.hpp": "3581dfeab36a8561503fbc83884b8e4bc2d7de1cd0272736d97a22b72a79cbbb",
+      "generated/boundary_w006_direct/program.json": "63cc9c6b52441b51bea99256f808c71d978b4e4e022e935258c6d24df47e9928",
+      "generated/boundary_w006_direct/target.json": "3ce6e8938e67cc2528629e1460cd5099fcb032a1d5b487e3fe1a830f301dff74",
+      "generated/boundary_w006_host/edmir_program.hpp": "f777bf085cbd3be0bd827c534f715dcf5537bf03a99b38c8942c7b3e942a853d",
+      "generated/boundary_w006_host/program.json": "e68d139983b7dff3efc820a240a56704401e6898290ddfb3b74e9768cba42135",
+      "generated/boundary_w006_host/target.json": "7ce124e458febb4f501d349e80fd79deb4170ceca32f06244aea1a2d75878a42",
+      "generated/boundary_w006_splitk2/edmir_program.hpp": "c64a3a4880f43374d0621aa1b50d02e13fb239e50303681fcc98330c018b4f66",
+      "generated/boundary_w006_splitk2/program.json": "63cc9c6b52441b51bea99256f808c71d978b4e4e022e935258c6d24df47e9928",
+      "generated/boundary_w006_splitk2/target.json": "130f15133b6b19e04f005b1e5bb97aed2f1ee6ac65916a4793b5539580bab7d2",
+      "generated/boundary_w006_splitk4/edmir_program.hpp": "a5584944d746b47397c4692f5a0d0644507b42021cf23292018b8759f71c6643",
+      "generated/boundary_w006_splitk4/program.json": "63cc9c6b52441b51bea99256f808c71d978b4e4e022e935258c6d24df47e9928",
+      "generated/boundary_w006_splitk4/target.json": "45d123e5c5b922d4e7ee83e148664b23834060fc0202dc73e03b02c4d0cb13b4",
+      "generated/boundary_w006_splitk8/edmir_program.hpp": "6db2976fea5a9cdeee45da8e8eec0dc18348badda636e4030dce3eef007f9c5b",
+      "generated/boundary_w006_splitk8/program.json": "63cc9c6b52441b51bea99256f808c71d978b4e4e022e935258c6d24df47e9928",
+      "generated/boundary_w006_splitk8/target.json": "b6bbc6fefba0f184d3d407c7da60064f56d0ef57906aec437c7f2da6a6676722",
+      "generated_targets.cmake": "06f56fdd6f434b8bcc2484a865659269762c36b956b53cb01e6b0ec67976e4d3",
+      "model_context/additive_decision.json": "fb19ced0db57b430e739f534bd62029bbab000742b31d971c0aa593b94c03ad2",
+      "model_context/additive_selector.json": "de5928b0d0caaab2f8d41037c1726416752b79f6afba6ddcfd09b109699abceb",
+      "model_context/separate_resources.json": "42f76e46e3586e1e98f7658502579692c30a3f227f4c2d75efb8bf55365007fc",
+      "model_context/separate_resources_average.json": "420ea47bb66a00c5c07e0abc214f134031472d5ab20318feef69f558961ae0cd",
+      "model_context/traffic_decision.json": "81f0f78fa6597d1e7c6a78be008c6f7139987406604d6c1640356a4475572d11",
+      "model_context/traffic_selector.json": "f25a169deba476f79381490c4d6c0d42571f00b8f95c719cb1861e76e08a477a",
+      "plan.json": "3b40a4d2b9d4aeb1e660d013109b2b0d93595154d69cc0242998b7ac163977c0"
+    },
+    "plan_sha256": "3b40a4d2b9d4aeb1e660d013109b2b0d93595154d69cc0242998b7ac163977c0",
+    "source_root": "source",
+    "independent_validation": false,
+    "hardware_contract": "A100-SXM4-80GB x4, SM80/108 SM, NV12 peer links",
+    "full_candidate_oracle": false,
+    "compiler_admission": false
+  }
+}

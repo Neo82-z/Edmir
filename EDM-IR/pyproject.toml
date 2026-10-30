@@ -9,6 +9,13 @@ description = "Layered dataflow and multi-GPU communication-compute research com
 requires-python = ">=3.10"
 dependencies = []
 
+[project.optional-dependencies]
+selector-fit = ["numpy>=2.0,<3", "scipy>=1.13,<2"]
+selector-neural = [
+    "numpy>=2.0,<3", "scipy>=1.13,<2", "torch>=2.7,<3",
+    "dion @ git+https://github.com/microsoft/dion.git@7692479288f928a3d61d1cc58137b4dbe4f71000",
+]
+
 [project.scripts]
 edmir = "edmir.cli:main"
 

@@ -1,0 +1,26 @@
+{
+  "job": {
+    "stage": "shape5",
+    "workload_id": "w005",
+    "shape": [
+      8,
+      64,
+      4096,
+      2048
+    ],
+    "family": "splitk16",
+    "candidate_id": "splitk16@prepared_immutable",
+    "metadata_mode": "prepared",
+    "dependency_policy": "uniform_immutable_peer_v1",
+    "primary": true,
+    "implementation_id": "direct_peer_cutlass_sm80_q16_g1_prepared_metadata_v2_uniform_immutable_peer_v1",
+    "executable": "p8_w005_splitk16_immutable",
+    "repetition": 0,
+    "trial_order": 214,
+    "ordinal": 214
+  },
+  "job_index": 7,
+  "reason": "CalledProcessError",
+  "detail": "Command '['/root/2026-10-25-p8-gpu-collection/work/build/p8_w005_splitk16_immutable', 'splitk16', '/root/2026-10-25-p8-gpu-collection/bundle/data/w005/inputs.bin', '/root/2026-10-25-p8-gpu-collection/bundle/data/w005/reference.bin', '20', '100', 'prepared']' returned non-zero exit status 1.",
+  "timeout_seconds": 90
+}

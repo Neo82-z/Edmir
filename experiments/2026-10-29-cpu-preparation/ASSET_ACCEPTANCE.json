@@ -1,0 +1,137 @@
+{
+  "models": [
+    {
+      "id": "zai-org/GLM-4.7-Flash",
+      "revision": "7dd20894a642a0aa287e9827cb1a1f7f91386b67",
+      "snapshot": "/workspace/edmir-assets/hf-hub/models--zai-org--GLM-4.7-Flash/snapshots/7dd20894a642a0aa287e9827cb1a1f7f91386b67",
+      "verified_shards": 48
+    },
+    {
+      "id": "Qwen/Qwen3.6-35B-A3B",
+      "revision": "995ad96eacd98c81ed38be0c5b274b04031597b0",
+      "snapshot": "/workspace/edmir-assets/hf-hub/models--Qwen--Qwen3.6-35B-A3B/snapshots/995ad96eacd98c81ed38be0c5b274b04031597b0",
+      "verified_shards": 26
+    },
+    {
+      "id": "deepseek-ai/DeepSeek-V2-Lite-Chat",
+      "revision": "85864749cd611b4353ce1decdb286193298f64c7",
+      "snapshot": "/workspace/edmir-assets/hf-hub/models--deepseek-ai--DeepSeek-V2-Lite-Chat/snapshots/85864749cd611b4353ce1decdb286193298f64c7",
+      "verified_shards": 4
+    }
+  ],
+  "weight_bytes": 165761578856,
+  "shards_sha256_verified": 78,
+  "software": {
+    "stage": "wheel_cache_verified",
+    "started_unix": 1793262913.313037,
+    "target": "Ubuntu 24.04 x86_64 / CPython 3.12 / NVIDIA GPU",
+    "runtime_installed": false,
+    "GPU_validated": false,
+    "completed_unix": 1793262960.2319891,
+    "wheels": 186,
+    "total_bytes": 3743420993,
+    "offline_dependency_resolution_passed": true
+  },
+  "nsys_cpu_report_sqlite_integrity": "ok",
+  "network_volume": {
+    "id": "zyw8svwb4a",
+    "region": "US-NE-1",
+    "gb": 500,
+    "usd_month": 35
+  },
+  "asset_root": "/workspace/edmir-assets",
+  "gpu_started": false,
+  "gpu_execution_validated": false,
+  "remaining": [
+    "GPU driver/CUDA and actual vLLM import/model support",
+    "GLM tokenizer regex warning in Transformers 4.57.6: no forced regex change",
+    "GPU routing hooks, communication, counters and performance",
+    "Cross-region copy if final GPU is outside US-NE-1"
+  ],
+  "platform": {
+    "pod_id": "66t5tzsexfmegv",
+    "stopped_observed_utc": "2026-10-29T08:59:00Z",
+    "exact_stop_event_time_verified": false,
+    "compute_usd_hour_now": 0,
+    "start_utc_approx": "2026-10-29T08:18:53Z",
+    "estimated_compute_and_container_usd": 0.17,
+    "estimate_not_invoice": true,
+    "network_volume_retained": true,
+    "heartbeat_gpu": "deleted"
+  },
+  "tokenizer_checks": [
+    {
+      "id": "zai-org/GLM-4.7-Flash",
+      "revision": "7dd20894a642a0aa287e9827cb1a1f7f91386b67",
+      "transformers": "4.57.6",
+      "remote_code_enabled": false,
+      "gpu_used": false,
+      "scope": "asset loading and template smoke only; not tokenizer equivalence or model execution",
+      "status": "passed",
+      "tokenizer_class": "PreTrainedTokenizerFast",
+      "text_tokens": 8,
+      "chat_tokens": 6,
+      "checked_unix": 1793264093.9981644,
+      "auxiliary_hashes": {
+        "chat_template.jinja": "d63ad536c3c81880043e22ec7fd08db42b4d8fb7c89c7138bc562bfa25281375",
+        "tokenizer_config.json": "31a173e2797ddc8b72ac996803513e627fc28d7aad02cfcce321a431d865c86d",
+        "tokenizer.json": "19e773648cb4e65de8660ea6365e10acca112d42a854923df93db4a6f333a82d",
+        "model.safetensors.index.json": "91e6e95ca21700f50904a680c8c4212f5aa16dc7c10a013f01c906957c889791",
+        "generation_config.json": "e19f4eb8be12cdb62a3737b52a332c7c142cbf5ee24a5de7d806f6132b782425",
+        "config.json": "dc9b97c7c9bed726a2e6939da4234d5c43abb3edec8812068c9a1af1dbc13acb"
+      },
+      "warnings": [
+        "The tokenizer you are loading from '/workspace/edmir-assets/hf-hub/models--zai-org--GLM-4.7-Flash/snapshots/7dd20894a642a0aa287e9827cb1a1f7f91386b67' with an incorrect regex pattern: https://huggingface.co/mistralai/Mistral-Small-3.1-24B-Instruct-2503/discussions/84#69121093e8b480e709447d5e. This will lead to incorrect tokenization. You should set the `fix_mistral_regex=True` flag when loading this tokenizer to fix this issue."
+      ]
+    },
+    {
+      "id": "Qwen/Qwen3.6-35B-A3B",
+      "revision": "995ad96eacd98c81ed38be0c5b274b04031597b0",
+      "transformers": "4.57.6",
+      "remote_code_enabled": false,
+      "gpu_used": false,
+      "scope": "asset loading and template smoke only; not tokenizer equivalence or model execution",
+      "status": "passed",
+      "tokenizer_class": "Qwen2TokenizerFast",
+      "text_tokens": 7,
+      "chat_tokens": 11,
+      "checked_unix": 1793264094.7946823,
+      "auxiliary_hashes": {
+        "chat_template.jinja": "e84f32a23fdda27689f868aa4a1a5621f41133e51a48d7f3efcbea2839574259",
+        "vocab.json": "ce99b4cb2983d118806ce0a8b777a35b093e2000a503ebde25853284c9dfa003",
+        "video_preprocessor_config.json": "7768af27c1fafa9cc9011c1dc20067e03f8915e03b63504550e11d5066986d13",
+        "tokenizer_config.json": "5186f0defcd7f232382c7f0aebcd2252d073bb921ab240e407b7ae8745d2b29b",
+        "tokenizer.json": "5f9e4d4901a92b997e463c1f46055088b6cca5ca61a6522d1b9f64c4bb81cb42",
+        "preprocessor_config.json": "27225450ac9c6529872ee1924fcb0962ff5634834f817040f444118116f4e516",
+        "model.safetensors.index.json": "41b9356101ebf8e7519e150dc811f80c4226e727301fbb032b890f006ed0be83",
+        "merges.txt": "a9d356d7bdf1ef4949e3e748e95b8e10ad9d4e2e838eddc38a0a7b6b94d1db8d",
+        "generation_config.json": "e70c136c1b78ddc1fb0905bac8e733a4dc448d4f852a5dd75143fffc70be550e",
+        "configuration.json": "c1b09db419119513247e9b8b912c4b9897106c9b20c6cada7e107d993c5435eb",
+        "config.json": "93a4693fa9d8392fbfccd4b3c9873f4bfdcb14fdede978b123d07d19675efe99"
+      },
+      "warnings": []
+    },
+    {
+      "id": "deepseek-ai/DeepSeek-V2-Lite-Chat",
+      "revision": "85864749cd611b4353ce1decdb286193298f64c7",
+      "transformers": "4.57.6",
+      "remote_code_enabled": false,
+      "gpu_used": false,
+      "scope": "asset loading and template smoke only; not tokenizer equivalence or model execution",
+      "status": "passed",
+      "tokenizer_class": "LlamaTokenizerFast",
+      "text_tokens": 8,
+      "chat_tokens": 9,
+      "checked_unix": 1793264095.6375053,
+      "auxiliary_hashes": {
+        "tokenizer_config.json": "31181eaf79394ea26728d95ecb54fe7c8413e6f56085dbabc8b0818134380ec8",
+        "tokenizer.json": "41f3bf64213da8c012d8bd0871a58a1fdf70463e8f08f110ddbb1082f529f669",
+        "model.safetensors.index.json": "d2cdb2f325f6682cf3ad1ad2526a9f979d857390b579380c0331d975136e0acf",
+        "generation_config.json": "63ec07f6cb36bd8359b44f671123518dd6fbf55007e0c74aa96c296a75def8b5",
+        "config.json": "f346286b0f1c8b044252fd54cb4fa78b9fab6472a6e8bebb9edfe03d414ea03d"
+      },
+      "warnings": []
+    }
+  ],
+  "protected_files_unchanged": 22
+}

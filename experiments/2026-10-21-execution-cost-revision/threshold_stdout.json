@@ -1,0 +1,88 @@
+{
+  "schema": "edmir.host-threshold-obstruction.v1",
+  "rule": "choose fused iff best_fused_score < threshold",
+  "constraints": [
+    {
+      "shape": [
+        4,
+        256,
+        8192,
+        512
+      ],
+      "desired_direction": "fused",
+      "best_fused_predicted": "splitk4",
+      "score": 0.022175500536376104,
+      "necessary_condition": "threshold > score",
+      "best_observed_fused_over_host": 0.846547919293821
+    },
+    {
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      "desired_direction": "host",
+      "best_fused_predicted": "splitk4",
+      "score": -0.11016493520163989,
+      "necessary_condition": "threshold <= score",
+      "best_observed_fused_over_host": 1.1171548117154813
+    },
+    {
+      "shape": [
+        4,
+        64,
+        1024,
+        512
+      ],
+      "desired_direction": "fused",
+      "best_fused_predicted": "splitk2",
+      "score": -0.35865028133189,
+      "necessary_condition": "threshold > score",
+      "best_observed_fused_over_host": 0.5895715023231802
+    },
+    {
+      "shape": [
+        4,
+        64,
+        8192,
+        512
+      ],
+      "desired_direction": "fused",
+      "best_fused_predicted": "splitk8",
+      "score": -0.08973360855638102,
+      "necessary_condition": "threshold > score",
+      "best_observed_fused_over_host": 0.7779755547644476
+    }
+  ],
+  "strict_lower_bound": {
+    "shape": [
+      4,
+      256,
+      8192,
+      512
+    ],
+    "desired_direction": "fused",
+    "best_fused_predicted": "splitk4",
+    "score": 0.022175500536376104,
+    "necessary_condition": "threshold > score",
+    "best_observed_fused_over_host": 0.846547919293821
+  },
+  "inclusive_upper_bound": {
+    "shape": [
+      4,
+      64,
+      4096,
+      2048
+    ],
+    "desired_direction": "host",
+    "best_fused_predicted": "splitk4",
+    "score": -0.11016493520163989,
+    "necessary_condition": "threshold <= score",
+    "best_observed_fused_over_host": 1.1171548117154813
+  },
+  "single_threshold_possible": false,
+  "use": "retrospective diagnosis only; no threshold tuning or inference change",
+  "results_sha256": "b7cd9cb54a2f95fc4e07e9afd51dfd8e7394acc4bb459559782be13f15e94e90",
+  "source_sha256": "836f14426d4735470de62719fb6b00cf8b4f1cf7f6220b1a3de830a14c08b3bb"
+}

@@ -193,6 +193,19 @@ struct FusedScheduleDesc {
   std::int32_t n_tiles_per_cta = 1;
 };
 
+enum class DependencyPolicy : std::uint8_t {
+  kResourceQueuesV1,
+  kUniformImmutablePeerV1,
+};
+
+constexpr std::string_view dependency_policy_name(DependencyPolicy policy) {
+  switch (policy) {
+    case DependencyPolicy::kResourceQueuesV1: return "resource_queues_v1";
+    case DependencyPolicy::kUniformImmutablePeerV1: return "uniform_immutable_peer_v1";
+  }
+  return "unknown";
+}
+
 struct ProgramView {
   std::string_view target;
   std::string_view arch;
@@ -208,6 +221,7 @@ struct ProgramView {
   std::span<const AccessDesc> accesses;
   std::span<const DependencyDesc> dependencies;
   FusedScheduleDesc fused_schedule{};
+  DependencyPolicy dependency_policy = DependencyPolicy::kResourceQueuesV1;
 };
 
 constexpr std::size_t dtype_size(DType dtype) {

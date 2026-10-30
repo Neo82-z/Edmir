@@ -1,0 +1,15 @@
+Traceback (most recent call last):
+  File "/workspace/2026-10-25-regime-gpu-validation/server.py", line 53, in <module>
+    elif a.action=='build-deps':dependencies(work,a.jobs)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/2026-10-25-regime-gpu-validation/server.py", line 20, in dependencies
+    if runner.base.git_commit(path)!=expected: raise ValueError('dependency revision changed')
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/2026-10-25-regime-gpu-validation/bundle/source/EDM-IR/tools/run_selector_gpu.py", line 90, in git_commit
+    return command(["git", "-C", path, "rev-parse", "HEAD"], capture_output=True).stdout.strip()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/2026-10-25-regime-gpu-validation/bundle/source/EDM-IR/tools/run_selector_gpu.py", line 68, in command
+    result.check_returncode()
+  File "/usr/lib/python3.12/subprocess.py", line 502, in check_returncode
+    raise CalledProcessError(self.returncode, self.args, self.stdout,
+subprocess.CalledProcessError: Command '['git', '-C', '/workspace/2026-10-25-regime-gpu-validation/dependencies/cutlass', 'rev-parse', 'HEAD']' returned non-zero exit status 128.

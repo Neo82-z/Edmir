@@ -1,0 +1,369 @@
+{"method": "traffic_joint_mean", "stage": "primary", "elapsed_seconds": 0.283730374998413}
+{"method": "traffic_joint_mean", "stage": "leave_K", "elapsed_seconds": 1.1927535000140779}
+{"method": "traffic_joint_mean", "stage": "group_deletion", "elapsed_seconds": 1.710342500009574}
+{"method": "traffic_joint_mean", "stage": "previous_attacks", "elapsed_seconds": 4.543756667000707}
+{"method": "traffic_joint_mean", "stage": "one_percent_stress", "elapsed_seconds": 4.950166333990637}
+{"method": "traffic_joint_mean", "stage": "variant_complete", "elapsed_seconds": 8.606446084042545}
+{
+  "method": "traffic_joint_mean",
+  "assessment": {
+    "candidate_accepted": false,
+    "checks": {
+      "unchanged_primary_gates_and_M512_exact_choices": false,
+      "M512_all_training_deletions_preserve_best": true,
+      "N_all_training_deletions_preserve_host": false,
+      "N_previous_attack_resisted": false,
+      "N_one_percent_stress_all_correct": false
+    },
+    "interpretation": "Retrospective engineering checks only. Passing is not independent GPU validation."
+  },
+  "primary": {
+    "workloads": 41,
+    "mean_regret": 0.004722676600116125,
+    "max_regret": 0.12319851231985135,
+    "host_regressions": 1,
+    "false_host_over_five_percent": 0,
+    "false_fused_over_five_percent": 1
+  },
+  "stress": {
+    "workloads": 41,
+    "mean_regret": 0.0019466833349353985,
+    "max_regret": 0.026315789473684292,
+    "host_regressions": 0,
+    "false_host_over_five_percent": 0,
+    "false_fused_over_five_percent": 0
+  },
+  "priority_deletions": [
+    {
+      "shape": [
+        4,
+        256,
+        8192,
+        512
+      ],
+      "counts": {
+        "splitk4": 8
+      },
+      "worst": 0.0
+    },
+    {
+      "shape": [
+        4,
+        512,
+        2048,
+        512
+      ],
+      "counts": {
+        "splitk2": 8
+      },
+      "worst": 0.0
+    },
+    {
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ],
+      "counts": {
+        "splitk2": 8
+      },
+      "worst": 0.0
+    },
+    {
+      "shape": [
+        4,
+        512,
+        8192,
+        512
+      ],
+      "counts": {
+        "host": 8
+      },
+      "worst": 0.0
+    },
+    {
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      "counts": {
+        "splitk2": 5,
+        "host": 3
+      },
+      "worst": 0.12319851231985135
+    },
+    {
+      "shape": [
+        4,
+        64,
+        1024,
+        512
+      ],
+      "counts": {
+        "splitk2": 8
+      },
+      "worst": 0.0
+    },
+    {
+      "shape": [
+        4,
+        64,
+        8192,
+        512
+      ],
+      "counts": {
+        "splitk8": 8
+      },
+      "worst": 0.0
+    }
+  ]
+}
+{"method": "resource_joint_mean", "stage": "primary", "elapsed_seconds": 8.60700000001816}
+{"method": "resource_joint_mean", "stage": "leave_K", "elapsed_seconds": 10.693917084019631}
+{"method": "resource_joint_mean", "stage": "group_deletion", "elapsed_seconds": 11.892203208990395}
+{"method": "resource_joint_mean", "stage": "previous_attacks", "elapsed_seconds": 18.36721837503137}
+{"method": "resource_joint_mean", "stage": "one_percent_stress", "elapsed_seconds": 19.309271250036545}
+{"method": "resource_joint_mean", "stage": "variant_complete", "elapsed_seconds": 27.784617667028215}
+{
+  "method": "resource_joint_mean",
+  "assessment": {
+    "candidate_accepted": false,
+    "checks": {
+      "unchanged_primary_gates_and_M512_exact_choices": false,
+      "M512_all_training_deletions_preserve_best": false,
+      "N_all_training_deletions_preserve_host": false,
+      "N_previous_attack_resisted": true,
+      "N_one_percent_stress_all_correct": false
+    },
+    "interpretation": "Retrospective engineering checks only. Passing is not independent GPU validation."
+  },
+  "primary": {
+    "workloads": 41,
+    "mean_regret": 0.0037409750625231196,
+    "max_regret": 0.07356596083109657,
+    "host_regressions": 0,
+    "false_host_over_five_percent": 1,
+    "false_fused_over_five_percent": 0
+  },
+  "stress": {
+    "workloads": 41,
+    "mean_regret": 0.008902573332057882,
+    "max_regret": 0.11962100276352139,
+    "host_regressions": 0,
+    "false_host_over_five_percent": 1,
+    "false_fused_over_five_percent": 0
+  },
+  "priority_deletions": [
+    {
+      "shape": [
+        4,
+        256,
+        8192,
+        512
+      ],
+      "counts": {
+        "splitk4": 8
+      },
+      "worst": 0.0
+    },
+    {
+      "shape": [
+        4,
+        512,
+        2048,
+        512
+      ],
+      "counts": {
+        "splitk2": 8
+      },
+      "worst": 0.0
+    },
+    {
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ],
+      "counts": {
+        "host": 8
+      },
+      "worst": 0.07356596083109657
+    },
+    {
+      "shape": [
+        4,
+        512,
+        8192,
+        512
+      ],
+      "counts": {
+        "host": 8
+      },
+      "worst": 0.0
+    },
+    {
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      "counts": {
+        "splitk4": 1,
+        "host": 7
+      },
+      "worst": 0.11715481171548126
+    },
+    {
+      "shape": [
+        4,
+        64,
+        1024,
+        512
+      ],
+      "counts": {
+        "splitk2": 8
+      },
+      "worst": 0.0
+    },
+    {
+      "shape": [
+        4,
+        64,
+        8192,
+        512
+      ],
+      "counts": {
+        "splitk8": 8
+      },
+      "worst": 0.0
+    }
+  ]
+}
+{"method": "resource_joint_worst", "stage": "primary", "elapsed_seconds": 27.785595041990746}
+{"method": "resource_joint_worst", "stage": "leave_K", "elapsed_seconds": 27.839624334010296}
+{"method": "resource_joint_worst", "stage": "group_deletion", "elapsed_seconds": 27.86325225001201}
+{"method": "resource_joint_worst", "stage": "previous_attacks", "elapsed_seconds": 28.07535654201638}
+{"method": "resource_joint_worst", "stage": "one_percent_stress", "elapsed_seconds": 28.094605792022776}
+{"method": "resource_joint_worst", "stage": "variant_complete", "elapsed_seconds": 28.296324542025104}
+{
+  "method": "resource_joint_worst",
+  "assessment": {
+    "candidate_accepted": false,
+    "checks": {
+      "unchanged_primary_gates_and_M512_exact_choices": false,
+      "M512_all_training_deletions_preserve_best": false,
+      "N_all_training_deletions_preserve_host": false,
+      "N_previous_attack_resisted": true,
+      "N_one_percent_stress_all_correct": false
+    },
+    "interpretation": "Retrospective engineering checks only. Passing is not independent GPU validation."
+  },
+  "primary": {
+    "workloads": 41,
+    "mean_regret": 0.0037409750625231196,
+    "max_regret": 0.07356596083109657,
+    "host_regressions": 0,
+    "false_host_over_five_percent": 1,
+    "false_fused_over_five_percent": 0
+  },
+  "stress": {
+    "workloads": 41,
+    "mean_regret": 0.008902573332057882,
+    "max_regret": 0.11962100276352139,
+    "host_regressions": 0,
+    "false_host_over_five_percent": 1,
+    "false_fused_over_five_percent": 0
+  },
+  "priority_deletions": [
+    {
+      "shape": [
+        4,
+        256,
+        8192,
+        512
+      ],
+      "counts": {
+        "splitk4": 8
+      },
+      "worst": 0.0
+    },
+    {
+      "shape": [
+        4,
+        512,
+        2048,
+        512
+      ],
+      "counts": {
+        "splitk2": 8
+      },
+      "worst": 0.0
+    },
+    {
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ],
+      "counts": {
+        "host": 8
+      },
+      "worst": 0.07356596083109657
+    },
+    {
+      "shape": [
+        4,
+        512,
+        8192,
+        512
+      ],
+      "counts": {
+        "host": 8
+      },
+      "worst": 0.0
+    },
+    {
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      "counts": {
+        "splitk4": 1,
+        "host": 7
+      },
+      "worst": 0.11715481171548126
+    },
+    {
+      "shape": [
+        4,
+        64,
+        1024,
+        512
+      ],
+      "counts": {
+        "splitk2": 8
+      },
+      "worst": 0.0
+    },
+    {
+      "shape": [
+        4,
+        64,
+        8192,
+        512
+      ],
+      "counts": {
+        "splitk8": 8
+      },
+      "worst": 0.0
+    }
+  ]
+}

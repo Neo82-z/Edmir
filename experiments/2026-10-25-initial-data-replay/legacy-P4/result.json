@@ -1,0 +1,6385 @@
+{
+  "scope": "historical P4 expression refit, not frozen model transfer",
+  "original_full_counts": {
+    "selector_rows": 599,
+    "selector_shapes": 64,
+    "historical_roles": {
+      "development": 346,
+      "calibration": 44,
+      "heldout": 209
+    },
+    "scoring_overrides": 10,
+    "repeat_observations": 12,
+    "component_rows": 156,
+    "component_scopes": {
+      "standalone_gemm": 72,
+      "standalone_collective": 84
+    }
+  },
+  "common_candidates": 224,
+  "common_shapes": 41,
+  "original_P4_rows": 346,
+  "excluded_rows": 122,
+  "full_best_excluded_shapes": 5,
+  "oracle_loss_from_exclusion_mean": 0.00158623857355117,
+  "oracle_loss_from_exclusion_max": 0.026315789473684292,
+  "P8_current_model_refusal": "only bounded P4 geometry is described",
+  "scores": {
+    "original_full_log": {
+      "configurations": 224,
+      "shapes": 41,
+      "macro_shape_MAPE": 0.11772051886745709,
+      "max_APE": 0.46319104405652056,
+      "wrong_pairs": 89,
+      "pairs": 546,
+      "selection": {
+        "1": {
+          "mean_loss": 0.04127848501697227,
+          "max_loss": 0.2924451665312753,
+          "exact_winners": 23
+        },
+        "2": {
+          "mean_loss": 0.010962217236599417,
+          "max_loss": 0.18178846908092572,
+          "exact_winners": 35
+        },
+        "3": {
+          "mean_loss": 0.004580033347632944,
+          "max_loss": 0.11715481171548126,
+          "exact_winners": 36
+        }
+      },
+      "decisions": [
+        {
+          "shape": [
+            4,
+            32,
+            512,
+            512
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk2",
+          "loss": 0.10606060606060619
+        },
+        {
+          "shape": [
+            4,
+            32,
+            512,
+            512
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4",
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            32,
+            512,
+            512
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4",
+            "splitk2",
+            "splitk8"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            32,
+            1024,
+            512
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0282401902497027
+        },
+        {
+          "shape": [
+            4,
+            32,
+            1024,
+            512
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4",
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            32,
+            1024,
+            512
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4",
+            "splitk2",
+            "splitk8"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            32,
+            2048,
+            512
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            32,
+            2048,
+            512
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4",
+            "splitk8"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            32,
+            2048,
+            512
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4",
+            "splitk8",
+            "splitk2"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            32,
+            4096,
+            512
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            32,
+            4096,
+            512
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4",
+            "splitk8"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            32,
+            4096,
+            512
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4",
+            "splitk8",
+            "host"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            32,
+            8192,
+            512
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "host"
+          ],
+          "winner": "host",
+          "measured_subset_best": "splitk8",
+          "loss": 0.2924451665312753
+        },
+        {
+          "shape": [
+            4,
+            32,
+            8192,
+            512
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "host",
+            "splitk8"
+          ],
+          "winner": "splitk8",
+          "measured_subset_best": "splitk8",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            32,
+            8192,
+            512
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "host",
+            "splitk8",
+            "splitk4"
+          ],
+          "winner": "splitk8",
+          "measured_subset_best": "splitk8",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            512,
+            128
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4_groupedn2"
+          ],
+          "winner": "splitk4_groupedn2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.08621794871794863
+        },
+        {
+          "shape": [
+            4,
+            64,
+            512,
+            128
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4_groupedn2",
+            "splitk2_groupedn2"
+          ],
+          "winner": "splitk2_groupedn2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.014102564102564275
+        },
+        {
+          "shape": [
+            4,
+            64,
+            512,
+            128
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4_groupedn2",
+            "splitk2_groupedn2",
+            "splitk4"
+          ],
+          "winner": "splitk2_groupedn2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.014102564102564275
+        },
+        {
+          "shape": [
+            4,
+            64,
+            512,
+            256
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk2",
+          "loss": 0.06649616368286448
+        },
+        {
+          "shape": [
+            4,
+            64,
+            512,
+            256
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            512,
+            256
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk2",
+            "splitk4_groupedn2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            512,
+            512
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            512,
+            512
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2",
+            "splitk4"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            512,
+            512
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2",
+            "splitk4",
+            "splitk4_groupedn2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            512,
+            1024
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            512,
+            1024
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2",
+            "splitk4"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            512,
+            1024
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2",
+            "splitk4",
+            "splitk2_groupedn2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            512,
+            2048
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            512,
+            2048
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            512,
+            2048
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4",
+            "splitk8"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            1024,
+            128
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4_groupedn2"
+          ],
+          "winner": "splitk4_groupedn2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.06654835847382423
+        },
+        {
+          "shape": [
+            4,
+            64,
+            1024,
+            128
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4_groupedn2",
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0209997042295178
+        },
+        {
+          "shape": [
+            4,
+            64,
+            1024,
+            128
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4_groupedn2",
+            "splitk4",
+            "splitk2_groupedn2"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0209997042295178
+        },
+        {
+          "shape": [
+            4,
+            64,
+            1024,
+            256
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk2",
+          "loss": 0.030728709394205467
+        },
+        {
+          "shape": [
+            4,
+            64,
+            1024,
+            256
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            1024,
+            256
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk2",
+            "splitk8"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            1024,
+            512
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk2",
+          "loss": 0.01926444833625207
+        },
+        {
+          "shape": [
+            4,
+            64,
+            1024,
+            512
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            1024,
+            512
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk2",
+            "splitk4_groupedn2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            1024,
+            1024
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk2",
+          "loss": 0.052797704447632654
+        },
+        {
+          "shape": [
+            4,
+            64,
+            1024,
+            1024
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            1024,
+            1024
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk2",
+            "splitk4_groupedn2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            1024,
+            2048
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            1024,
+            2048
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            1024,
+            2048
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4",
+            "splitk8"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            2048,
+            128
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4_groupedn2"
+          ],
+          "winner": "splitk4_groupedn2",
+          "measured_subset_best": "splitk4",
+          "loss": 0.10320562939796729
+        },
+        {
+          "shape": [
+            4,
+            64,
+            2048,
+            128
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4_groupedn2",
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            2048,
+            128
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4_groupedn2",
+            "splitk4",
+            "splitk8_groupedn2"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            2048,
+            256
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            2048,
+            256
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk8"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            2048,
+            256
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk8",
+            "splitk2"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            2048,
+            512
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            2048,
+            512
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk2"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            2048,
+            512
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk2",
+            "splitk4_groupedn2"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            2048,
+            1024
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            2048,
+            1024
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk2"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            2048,
+            1024
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk2",
+            "splitk4_groupedn2"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            2048,
+            2048
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk2",
+          "loss": 0.056791693155329614
+        },
+        {
+          "shape": [
+            4,
+            64,
+            2048,
+            2048
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4",
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            2048,
+            2048
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4",
+            "splitk2",
+            "splitk8"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            128
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk8_groupedn2"
+          ],
+          "winner": "splitk8_groupedn2",
+          "measured_subset_best": "splitk4",
+          "loss": 0.1324083250743313
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            128
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk8_groupedn2",
+            "splitk4_groupedn2"
+          ],
+          "winner": "splitk4_groupedn2",
+          "measured_subset_best": "splitk4",
+          "loss": 0.11000991080277522
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            128
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk8_groupedn2",
+            "splitk4_groupedn2",
+            "splitk8"
+          ],
+          "winner": "splitk8",
+          "measured_subset_best": "splitk4",
+          "loss": 0.030128840436075555
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            256
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            256
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk8"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            256
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk8",
+            "splitk4_groupedn2"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            512
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            512
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk8"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            512
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk8",
+            "splitk4_groupedn2"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            1024
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            1024
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk4_groupedn2"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            1024
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk4_groupedn2",
+            "splitk2"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            2048
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "host",
+          "loss": 0.11715481171548126
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            2048
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4",
+            "splitk2"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "host",
+          "loss": 0.11715481171548126
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            2048
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4",
+            "splitk2",
+            "splitk8"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "host",
+          "loss": 0.11715481171548126
+        },
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            128
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk8_groupedn2"
+          ],
+          "winner": "splitk8_groupedn2",
+          "measured_subset_best": "splitk8",
+          "loss": 0.09205607476635502
+        },
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            128
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk8_groupedn2",
+            "splitk8"
+          ],
+          "winner": "splitk8",
+          "measured_subset_best": "splitk8",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            128
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk8_groupedn2",
+            "splitk8",
+            "splitk4_groupedn2"
+          ],
+          "winner": "splitk8",
+          "measured_subset_best": "splitk8",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            256
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk8"
+          ],
+          "winner": "splitk8",
+          "measured_subset_best": "splitk8",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            256
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk8",
+            "splitk4"
+          ],
+          "winner": "splitk8",
+          "measured_subset_best": "splitk8",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            256
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk8",
+            "splitk4",
+            "host"
+          ],
+          "winner": "splitk8",
+          "measured_subset_best": "splitk8",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            512
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk8",
+          "loss": 0.1003660768761443
+        },
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            512
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk8"
+          ],
+          "winner": "splitk8",
+          "measured_subset_best": "splitk8",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            512
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk8",
+            "host"
+          ],
+          "winner": "splitk8",
+          "measured_subset_best": "splitk8",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            1024
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk8_groupedn2",
+          "loss": 0.005395446769311807
+        },
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            1024
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "host"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk8_groupedn2",
+          "loss": 0.005395446769311807
+        },
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            1024
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "host",
+            "splitk8"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk8_groupedn2",
+          "loss": 0.005395446769311807
+        },
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            2048
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "host",
+          "loss": 0.14000573011173723
+        },
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            2048
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4",
+            "host"
+          ],
+          "winner": "host",
+          "measured_subset_best": "host",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            2048
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4",
+            "host",
+            "splitk8"
+          ],
+          "winner": "host",
+          "measured_subset_best": "host",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            128,
+            512,
+            512
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            128,
+            512,
+            512
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            128,
+            512,
+            512
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4",
+            "splitk8"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            128,
+            1024,
+            512
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            128,
+            1024,
+            512
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            128,
+            1024,
+            512
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4",
+            "splitk8"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            128,
+            2048,
+            512
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            128,
+            2048,
+            512
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4",
+            "splitk2"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            128,
+            2048,
+            512
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4",
+            "splitk2",
+            "splitk8"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            128,
+            4096,
+            512
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            128,
+            4096,
+            512
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4",
+            "splitk2"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            128,
+            4096,
+            512
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4",
+            "splitk2",
+            "splitk8"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            128,
+            8192,
+            512
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            128,
+            8192,
+            512
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4",
+            "splitk8"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            128,
+            8192,
+            512
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4",
+            "splitk8",
+            "host"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            256,
+            2048,
+            512
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            256,
+            2048,
+            512
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            256,
+            2048,
+            512
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4",
+            "host"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            256,
+            4096,
+            512
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            256,
+            4096,
+            512
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            256,
+            4096,
+            512
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4",
+            "host"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            256,
+            8192,
+            512
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            256,
+            8192,
+            512
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4",
+            "splitk2"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            256,
+            8192,
+            512
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4",
+            "splitk2",
+            "host"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            512,
+            2048,
+            512
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            512,
+            2048,
+            512
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            512,
+            2048,
+            512
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4",
+            "host"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            512,
+            4096,
+            512
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            512,
+            4096,
+            512
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            512,
+            4096,
+            512
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4",
+            "host"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            512,
+            8192,
+            512
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "host",
+          "loss": 0.1962348019348934
+        },
+        {
+          "shape": [
+            4,
+            512,
+            8192,
+            512
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "host",
+          "loss": 0.18178846908092572
+        },
+        {
+          "shape": [
+            4,
+            512,
+            8192,
+            512
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4",
+            "host"
+          ],
+          "winner": "host",
+          "measured_subset_best": "host",
+          "loss": 0.0
+        }
+      ]
+    },
+    "regime_max_refit": {
+      "configurations": 224,
+      "shapes": 41,
+      "macro_shape_MAPE": 0.04079831666152651,
+      "max_APE": 0.19834759909190525,
+      "wrong_pairs": 28,
+      "pairs": 546,
+      "selection": {
+        "1": {
+          "mean_loss": 0.0030048417638988134,
+          "max_loss": 0.12319851231985135,
+          "exact_winners": 40
+        },
+        "2": {
+          "mean_loss": 0.0028574344320849085,
+          "max_loss": 0.11715481171548126,
+          "exact_winners": 40
+        },
+        "3": {
+          "mean_loss": 0.0,
+          "max_loss": 0.0,
+          "exact_winners": 41
+        }
+      },
+      "decisions": [
+        {
+          "shape": [
+            4,
+            32,
+            512,
+            512
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            32,
+            512,
+            512
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            32,
+            512,
+            512
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4",
+            "splitk8"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            32,
+            1024,
+            512
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            32,
+            1024,
+            512
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            32,
+            1024,
+            512
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4",
+            "splitk8"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            32,
+            2048,
+            512
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            32,
+            2048,
+            512
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4",
+            "splitk2"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            32,
+            2048,
+            512
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4",
+            "splitk2",
+            "splitk8"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            32,
+            4096,
+            512
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            32,
+            4096,
+            512
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4",
+            "splitk8"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            32,
+            4096,
+            512
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4",
+            "splitk8",
+            "host"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            32,
+            8192,
+            512
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk8"
+          ],
+          "winner": "splitk8",
+          "measured_subset_best": "splitk8",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            32,
+            8192,
+            512
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk8",
+            "splitk4"
+          ],
+          "winner": "splitk8",
+          "measured_subset_best": "splitk8",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            32,
+            8192,
+            512
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk8",
+            "splitk4",
+            "host"
+          ],
+          "winner": "splitk8",
+          "measured_subset_best": "splitk8",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            512,
+            128
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            512,
+            128
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2",
+            "splitk4"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            512,
+            128
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2",
+            "splitk4",
+            "splitk2_groupedn2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            512,
+            256
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            512,
+            256
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2",
+            "splitk4"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            512,
+            256
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2",
+            "splitk4",
+            "splitk2_groupedn2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            512,
+            512
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            512,
+            512
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2",
+            "splitk4"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            512,
+            512
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2",
+            "splitk4",
+            "splitk2_groupedn2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            512,
+            1024
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            512,
+            1024
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2",
+            "splitk4"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            512,
+            1024
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2",
+            "splitk4",
+            "splitk2_groupedn2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            512,
+            2048
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            512,
+            2048
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            512,
+            2048
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4",
+            "splitk8"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            1024,
+            128
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            1024,
+            128
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2",
+            "splitk4"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            1024,
+            128
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2",
+            "splitk4",
+            "splitk4_groupedn2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            1024,
+            256
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            1024,
+            256
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2",
+            "splitk4"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            1024,
+            256
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2",
+            "splitk4",
+            "splitk2_groupedn2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            1024,
+            512
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            1024,
+            512
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2",
+            "splitk4"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            1024,
+            512
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2",
+            "splitk4",
+            "splitk2_groupedn2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            1024,
+            1024
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            1024,
+            1024
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2",
+            "splitk4"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            1024,
+            1024
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2",
+            "splitk4",
+            "splitk2_groupedn2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            1024,
+            2048
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            1024,
+            2048
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            1024,
+            2048
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4",
+            "splitk8"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            2048,
+            128
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            2048,
+            128
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk2"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            2048,
+            128
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk2",
+            "splitk4_groupedn2"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            2048,
+            256
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            2048,
+            256
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk4_groupedn2"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            2048,
+            256
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk4_groupedn2",
+            "splitk2"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            2048,
+            512
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            2048,
+            512
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk4_groupedn2"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            2048,
+            512
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk4_groupedn2",
+            "splitk2"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            2048,
+            1024
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            2048,
+            1024
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk4_groupedn2"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            2048,
+            1024
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk4_groupedn2",
+            "splitk2"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            2048,
+            2048
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            2048,
+            2048
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            2048,
+            2048
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4",
+            "splitk8"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            128
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            128
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk8"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            128
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk8",
+            "splitk8_groupedn2"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            256
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            256
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk8"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            256
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk8",
+            "splitk4_groupedn2"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            512
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            512
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk8"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            512
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk8",
+            "splitk4_groupedn2"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            1024
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            1024
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk4_groupedn2"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            1024
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk4_groupedn2",
+            "splitk8_groupedn2"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            2048
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "host",
+          "loss": 0.12319851231985135
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            2048
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "host",
+          "loss": 0.11715481171548126
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            2048
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4",
+            "host"
+          ],
+          "winner": "host",
+          "measured_subset_best": "host",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            128
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk8"
+          ],
+          "winner": "splitk8",
+          "measured_subset_best": "splitk8",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            128
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk8",
+            "splitk8_groupedn2"
+          ],
+          "winner": "splitk8",
+          "measured_subset_best": "splitk8",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            128
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk8",
+            "splitk8_groupedn2",
+            "splitk4"
+          ],
+          "winner": "splitk8",
+          "measured_subset_best": "splitk8",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            256
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk8"
+          ],
+          "winner": "splitk8",
+          "measured_subset_best": "splitk8",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            256
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk8",
+            "splitk8_groupedn2"
+          ],
+          "winner": "splitk8",
+          "measured_subset_best": "splitk8",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            256
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk8",
+            "splitk8_groupedn2",
+            "splitk4"
+          ],
+          "winner": "splitk8",
+          "measured_subset_best": "splitk8",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            512
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk8"
+          ],
+          "winner": "splitk8",
+          "measured_subset_best": "splitk8",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            512
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk8",
+            "splitk8_groupedn2"
+          ],
+          "winner": "splitk8",
+          "measured_subset_best": "splitk8",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            512
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk8",
+            "splitk8_groupedn2",
+            "splitk4"
+          ],
+          "winner": "splitk8",
+          "measured_subset_best": "splitk8",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            1024
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk8_groupedn2"
+          ],
+          "winner": "splitk8_groupedn2",
+          "measured_subset_best": "splitk8_groupedn2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            1024
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk8_groupedn2",
+            "splitk4"
+          ],
+          "winner": "splitk8_groupedn2",
+          "measured_subset_best": "splitk8_groupedn2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            1024
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk8_groupedn2",
+            "splitk4",
+            "splitk8"
+          ],
+          "winner": "splitk8_groupedn2",
+          "measured_subset_best": "splitk8_groupedn2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            2048
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "host"
+          ],
+          "winner": "host",
+          "measured_subset_best": "host",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            2048
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "host",
+            "splitk4"
+          ],
+          "winner": "host",
+          "measured_subset_best": "host",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            2048
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "host",
+            "splitk4",
+            "splitk2"
+          ],
+          "winner": "host",
+          "measured_subset_best": "host",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            128,
+            512,
+            512
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            128,
+            512,
+            512
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            128,
+            512,
+            512
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4",
+            "splitk8"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            128,
+            1024,
+            512
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            128,
+            1024,
+            512
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            128,
+            1024,
+            512
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4",
+            "splitk8"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            128,
+            2048,
+            512
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            128,
+            2048,
+            512
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4",
+            "splitk2"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            128,
+            2048,
+            512
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4",
+            "splitk2",
+            "splitk8"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            128,
+            4096,
+            512
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            128,
+            4096,
+            512
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4",
+            "splitk8"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            128,
+            4096,
+            512
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4",
+            "splitk8",
+            "splitk2"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            128,
+            8192,
+            512
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            128,
+            8192,
+            512
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4",
+            "splitk8"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            128,
+            8192,
+            512
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4",
+            "splitk8",
+            "host"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            256,
+            2048,
+            512
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            256,
+            2048,
+            512
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            256,
+            2048,
+            512
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4",
+            "splitk8"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            256,
+            4096,
+            512
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            256,
+            4096,
+            512
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            256,
+            4096,
+            512
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4",
+            "host"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            256,
+            8192,
+            512
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            256,
+            8192,
+            512
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4",
+            "splitk2"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            256,
+            8192,
+            512
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4",
+            "splitk2",
+            "host"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            512,
+            2048,
+            512
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            512,
+            2048,
+            512
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            512,
+            2048,
+            512
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4",
+            "host"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            512,
+            4096,
+            512
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            512,
+            4096,
+            512
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            512,
+            4096,
+            512
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4",
+            "host"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            512,
+            8192,
+            512
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "host"
+          ],
+          "winner": "host",
+          "measured_subset_best": "host",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            512,
+            8192,
+            512
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "host",
+            "splitk2"
+          ],
+          "winner": "host",
+          "measured_subset_best": "host",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            512,
+            8192,
+            512
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "host",
+            "splitk2",
+            "splitk4"
+          ],
+          "winner": "host",
+          "measured_subset_best": "host",
+          "loss": 0.0
+        }
+      ]
+    },
+    "retained_0.25_refit": {
+      "configurations": 224,
+      "shapes": 41,
+      "macro_shape_MAPE": 0.03649686720829273,
+      "max_APE": 0.19834759909190525,
+      "wrong_pairs": 25,
+      "pairs": 546,
+      "selection": {
+        "1": {
+          "mean_loss": 0.0030862829308030007,
+          "max_loss": 0.11715481171548126,
+          "exact_winners": 39
+        },
+        "2": {
+          "mean_loss": 0.0028574344320849085,
+          "max_loss": 0.11715481171548126,
+          "exact_winners": 40
+        },
+        "3": {
+          "mean_loss": 0.0,
+          "max_loss": 0.0,
+          "exact_winners": 41
+        }
+      },
+      "decisions": [
+        {
+          "shape": [
+            4,
+            32,
+            512,
+            512
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            32,
+            512,
+            512
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            32,
+            512,
+            512
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4",
+            "splitk8"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            32,
+            1024,
+            512
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            32,
+            1024,
+            512
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            32,
+            1024,
+            512
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4",
+            "splitk8"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            32,
+            2048,
+            512
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            32,
+            2048,
+            512
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4",
+            "splitk2"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            32,
+            2048,
+            512
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4",
+            "splitk2",
+            "splitk8"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            32,
+            4096,
+            512
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            32,
+            4096,
+            512
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4",
+            "splitk8"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            32,
+            4096,
+            512
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4",
+            "splitk8",
+            "splitk2"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            32,
+            8192,
+            512
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk8"
+          ],
+          "winner": "splitk8",
+          "measured_subset_best": "splitk8",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            32,
+            8192,
+            512
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk8",
+            "splitk4"
+          ],
+          "winner": "splitk8",
+          "measured_subset_best": "splitk8",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            32,
+            8192,
+            512
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk8",
+            "splitk4",
+            "host"
+          ],
+          "winner": "splitk8",
+          "measured_subset_best": "splitk8",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            512,
+            128
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            512,
+            128
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2",
+            "splitk4"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            512,
+            128
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2",
+            "splitk4",
+            "splitk2_groupedn2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            512,
+            256
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            512,
+            256
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2",
+            "splitk2_groupedn2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            512,
+            256
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2",
+            "splitk2_groupedn2",
+            "splitk4"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            512,
+            512
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            512,
+            512
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2",
+            "splitk2_groupedn2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            512,
+            512
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2",
+            "splitk2_groupedn2",
+            "splitk4"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            512,
+            1024
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            512,
+            1024
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2",
+            "splitk2_groupedn2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            512,
+            1024
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2",
+            "splitk2_groupedn2",
+            "splitk4"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            512,
+            2048
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            512,
+            2048
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            512,
+            2048
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4",
+            "splitk8"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            1024,
+            128
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            1024,
+            128
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2",
+            "splitk4"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            1024,
+            128
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2",
+            "splitk4",
+            "splitk2_groupedn2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            1024,
+            256
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            1024,
+            256
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2",
+            "splitk4"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            1024,
+            256
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2",
+            "splitk4",
+            "splitk2_groupedn2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            1024,
+            512
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            1024,
+            512
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2",
+            "splitk4"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            1024,
+            512
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2",
+            "splitk4",
+            "splitk2_groupedn2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            1024,
+            1024
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            1024,
+            1024
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2",
+            "splitk4"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            1024,
+            1024
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk2",
+            "splitk4",
+            "splitk2_groupedn2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            1024,
+            2048
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            1024,
+            2048
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            1024,
+            2048
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4",
+            "splitk8"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            2048,
+            128
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            2048,
+            128
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk2"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            2048,
+            128
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk2",
+            "splitk4_groupedn2"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            2048,
+            256
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            2048,
+            256
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk2"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            2048,
+            256
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk2",
+            "splitk4_groupedn2"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            2048,
+            512
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            2048,
+            512
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk2"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            2048,
+            512
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk2",
+            "splitk4_groupedn2"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            2048,
+            1024
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            2048,
+            1024
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk2"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            2048,
+            1024
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk2",
+            "splitk4_groupedn2"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            2048,
+            2048
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            2048,
+            2048
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            2048,
+            2048
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4",
+            "splitk8"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            128
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            128
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk8"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            128
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk8",
+            "splitk4_groupedn2"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            256
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            256
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk8"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            256
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk8",
+            "splitk4_groupedn2"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            512
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            512
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk8"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            512
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk8",
+            "splitk4_groupedn2"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            1024
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            1024
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk4_groupedn2"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            1024
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk4",
+            "splitk4_groupedn2",
+            "splitk8_groupedn2"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            2048
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "host",
+          "loss": 0.11715481171548126
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            2048
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4",
+            "splitk2"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "host",
+          "loss": 0.11715481171548126
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            2048
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4",
+            "splitk2",
+            "host"
+          ],
+          "winner": "host",
+          "measured_subset_best": "host",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            128
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk8"
+          ],
+          "winner": "splitk8",
+          "measured_subset_best": "splitk8",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            128
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk8",
+            "splitk4"
+          ],
+          "winner": "splitk8",
+          "measured_subset_best": "splitk8",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            128
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk8",
+            "splitk4",
+            "splitk8_groupedn2"
+          ],
+          "winner": "splitk8",
+          "measured_subset_best": "splitk8",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            256
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk8"
+          ],
+          "winner": "splitk8",
+          "measured_subset_best": "splitk8",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            256
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk8",
+            "splitk8_groupedn2"
+          ],
+          "winner": "splitk8",
+          "measured_subset_best": "splitk8",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            256
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk8",
+            "splitk8_groupedn2",
+            "splitk4"
+          ],
+          "winner": "splitk8",
+          "measured_subset_best": "splitk8",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            512
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk8"
+          ],
+          "winner": "splitk8",
+          "measured_subset_best": "splitk8",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            512
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk8",
+            "splitk8_groupedn2"
+          ],
+          "winner": "splitk8",
+          "measured_subset_best": "splitk8",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            512
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk8",
+            "splitk8_groupedn2",
+            "splitk4"
+          ],
+          "winner": "splitk8",
+          "measured_subset_best": "splitk8",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            1024
+          ],
+          "budget": 1,
+          "candidates": 7,
+          "shortlist": [
+            "splitk8_groupedn2"
+          ],
+          "winner": "splitk8_groupedn2",
+          "measured_subset_best": "splitk8_groupedn2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            1024
+          ],
+          "budget": 2,
+          "candidates": 7,
+          "shortlist": [
+            "splitk8_groupedn2",
+            "splitk4"
+          ],
+          "winner": "splitk8_groupedn2",
+          "measured_subset_best": "splitk8_groupedn2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            1024
+          ],
+          "budget": 3,
+          "candidates": 7,
+          "shortlist": [
+            "splitk8_groupedn2",
+            "splitk4",
+            "splitk8"
+          ],
+          "winner": "splitk8_groupedn2",
+          "measured_subset_best": "splitk8_groupedn2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            2048
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "host"
+          ],
+          "winner": "host",
+          "measured_subset_best": "host",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            2048
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "host",
+            "splitk4"
+          ],
+          "winner": "host",
+          "measured_subset_best": "host",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            2048
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "host",
+            "splitk4",
+            "splitk8"
+          ],
+          "winner": "host",
+          "measured_subset_best": "host",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            128,
+            512,
+            512
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            128,
+            512,
+            512
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            128,
+            512,
+            512
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4",
+            "splitk8"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            128,
+            1024,
+            512
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            128,
+            1024,
+            512
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            128,
+            1024,
+            512
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4",
+            "splitk8"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            128,
+            2048,
+            512
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            128,
+            2048,
+            512
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4",
+            "splitk2"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            128,
+            2048,
+            512
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4",
+            "splitk2",
+            "splitk8"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            128,
+            4096,
+            512
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            128,
+            4096,
+            512
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4",
+            "splitk8"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            128,
+            4096,
+            512
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4",
+            "splitk8",
+            "splitk2"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            128,
+            8192,
+            512
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            128,
+            8192,
+            512
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4",
+            "splitk8"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            128,
+            8192,
+            512
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4",
+            "splitk8",
+            "host"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            256,
+            2048,
+            512
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            256,
+            2048,
+            512
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            256,
+            2048,
+            512
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4",
+            "splitk8"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            256,
+            4096,
+            512
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk2",
+          "loss": 0.009382788447441781
+        },
+        {
+          "shape": [
+            4,
+            256,
+            4096,
+            512
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4",
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            256,
+            4096,
+            512
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4",
+            "splitk2",
+            "host"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            256,
+            8192,
+            512
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            256,
+            8192,
+            512
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4",
+            "host"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            256,
+            8192,
+            512
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk4",
+            "host",
+            "splitk8"
+          ],
+          "winner": "splitk4",
+          "measured_subset_best": "splitk4",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            512,
+            2048,
+            512
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            512,
+            2048,
+            512
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            512,
+            2048,
+            512
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4",
+            "host"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            512,
+            4096,
+            512
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            512,
+            4096,
+            512
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            512,
+            4096,
+            512
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "splitk2",
+            "splitk4",
+            "host"
+          ],
+          "winner": "splitk2",
+          "measured_subset_best": "splitk2",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            512,
+            8192,
+            512
+          ],
+          "budget": 1,
+          "candidates": 4,
+          "shortlist": [
+            "host"
+          ],
+          "winner": "host",
+          "measured_subset_best": "host",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            512,
+            8192,
+            512
+          ],
+          "budget": 2,
+          "candidates": 4,
+          "shortlist": [
+            "host",
+            "splitk4"
+          ],
+          "winner": "host",
+          "measured_subset_best": "host",
+          "loss": 0.0
+        },
+        {
+          "shape": [
+            4,
+            512,
+            8192,
+            512
+          ],
+          "budget": 3,
+          "candidates": 4,
+          "shortlist": [
+            "host",
+            "splitk4",
+            "splitk2"
+          ],
+          "winner": "host",
+          "measured_subset_best": "host",
+          "loss": 0.0
+        }
+      ]
+    }
+  },
+  "independent_validation": false,
+  "compiler_admission": false
+}

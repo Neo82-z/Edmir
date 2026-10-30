@@ -1,0 +1,87 @@
+{
+  "origin": "synthetic_test",
+  "diagnostic_only": true,
+  "world_size": 4,
+  "num_experts": 4,
+  "top_k": 2,
+  "expected_layers": [
+    0
+  ],
+  "provenance": {
+    "model_id": "synthetic_unit_test",
+    "model_revision": "synthetic_unit_test",
+    "engine_revision": "synthetic_unit_test",
+    "run_id": "synthetic_unit_test",
+    "workload_id": "synthetic_unit_test",
+    "request_corpus_sha256": "synthetic_unit_test",
+    "dtype": "synthetic_unit_test",
+    "sampling_rule": "synthetic_unit_test",
+    "router_hook_source": "synthetic_unit_test"
+  },
+  "projections": [
+    {
+      "name": "gate_up",
+      "K": 4,
+      "N": 8
+    },
+    {
+      "name": "down",
+      "K": 4,
+      "N": 4
+    }
+  ],
+  "records": [
+    {
+      "step": 0,
+      "layer": 0,
+      "phase": "prefill",
+      "source_rank": 0,
+      "token_count": 2,
+      "expert_counts": [
+        2,
+        1,
+        1,
+        0
+      ]
+    },
+    {
+      "step": 0,
+      "layer": 0,
+      "phase": "prefill",
+      "source_rank": 1,
+      "token_count": 1,
+      "expert_counts": [
+        0,
+        1,
+        0,
+        1
+      ]
+    },
+    {
+      "step": 0,
+      "layer": 0,
+      "phase": "prefill",
+      "source_rank": 2,
+      "token_count": 0,
+      "expert_counts": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "step": 0,
+      "layer": 0,
+      "phase": "prefill",
+      "source_rank": 3,
+      "token_count": 1,
+      "expert_counts": [
+        0,
+        0,
+        1,
+        1
+      ]
+    }
+  ]
+}

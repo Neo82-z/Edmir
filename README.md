@@ -2,6 +2,21 @@
 
 Edmir 是一个面向多 GPU 通信—计算流水的编译研究原型。
 
+**最新交付（2026-10-30）**：[源码入口与状态](DELIVERY_README.txt)；
+[精简参考论文 TXT](papers/REFERENCES_2026-10-30.txt)。保留开发评分器在 P4/FP16
+回放中为 3/41 误选，后续依赖/复用模型仍属诊断，未替换默认策略。
+三个真实 MoE 候选的权重和软件缓存已在无 GPU 环境准备完成，计算实例已停机；
+BF16 子图接入、真实引擎 A/B 和冻结六形状独立评价尚未完成。
+下列较早日期的记录保留其历史语境，不能当作新的验收结果。
+
+**当前工作（2026-10-25）**：已在 4×A100 SXM4 80GB / NV12 完成 390 次独立进程采集、39,000 个计时样本，并将完整归档校验回本地。M256 与大 N 的主要错序重复出现；补充的合并 host 基线明显更强，模型仍未获得自动选择资格。见[本轮验收报告](experiments/2026-10-25-runpod-hour-01/README.md)、[本轮后的修改方案](paper/POST_GPU_REVISION_PLAN.md)、[论文与实验边界](paper/BOUNDED_SELECTION_PLAN.md)、[旧数据检查](experiments/2026-10-25-bounded-candidate-selection/README.md)及[冻结 GPU 包](experiments/2026-10-25-regime-gpu-validation/README.md)。本轮使用冻结的 10/21 执行身份，没有验证后来修复的 runtime；下文早期 v0.1 实现与历史结果不代表新模型已通过。
+
+最新[本地修订结果](experiments/2026-10-25-post-gpu-revision/README.md)：已实现中间量审查和有限组合修订；新表达有改善但未获晋升。单独补入已有 host 标签后，M512 合并 CUTLASS 的留出误差从 36.28% 降到 6.63%。没有新增 GPU 采集，后续转向定向阶段诊断。
+
+**八卡主验证更新**：已实现显式 P4/P8 计数与成本表达，保留论文原始 11 候选和 P8 四形状标定/十九形状评价划分。历史回放中，P8 标定后的平均选择损失从 15.02% 降至 0%，P4→P8 直接迁移仍有 24.13% 最大损失；不代表独立泛化或强基线加速通过。见[完整对照与代码](experiments/2026-10-25-initial-data-replay/README.md)及[论文推进计划](paper/P8_PUBLICATION_PLAN.md)。
+
+**收尾范围**：八卡算子验证之后完成一个真实 MoE 模型的八卡推理对照。权重和引擎先在无卡环境准备；固定一个模型、一个引擎、四个负载点，完成后进入成稿，不再增加研究方向。[真实 MoE 收尾方案](paper/P8_MOE_CLOSEOUT_PLAN.md)记录资产、接入、指标和停止条件；当前尚未创建准备节点或完成真实 GPU MoE 接入。
+
 当前仓库只推进一个可验证问题：
 
 > 给定单节点拓扑和一个静态 `All2All -> GEMM` 数据流，能否生成正确的顺序执行与 tile-level 流水 Program，并解释它们在什么条件下值得使用？
@@ -86,7 +101,7 @@ v0.1 不包含：
 
 ```bash
 cd EDM-IR
-python -m unittest discover -s tests -p '*_test.py' -v
+for test in tests/*_test.py; do PYTHONPATH=. python "$test" || exit 1; done
 
 python -m edmir compile examples/a2a_gemm_problem.json \
   --profile examples/synthetic_profile.json \
@@ -124,10 +139,10 @@ templates/    paper note 与 experiment record 模板
 
 ## 下一阶段
 
-- 已在 4x A100 SXM 上完成 6-pair NCCL、精确 cuBLAS/local-copy 曲线和冻结的 27-row train / 23-row heldout cost-model sweep；
-- 当前 heldout MAPE 为 7.97%，policy direction accuracy 为 95.24%，selection regret 为 0；
-- 保留 NCCL+cuBLAS 作为 reference backend，下一步加入一个受控的 CuTe/CUTLASS lowering，而不是扩大 IR；
-- 只在预注册表格填入可复现数据，无法匹配的机制或 baseline 明确记为不适用。
+- 以八卡 A100 为主验证规模，先核对修复 runtime 的八卡执行账本、数值正确性与基线身份；
+- 补齐八卡合并 CUTLASS/cuBLASLt 强基线，四卡子集用于机制与迁移对照；
+- 针对 grouped-N 迁移、大 N 和 M512 的残留错误做定向诊断，再执行冻结的新增形状与选择成本比较；
+- 7.97% MAPE、95.24% 方向准确率和零选择损失属于 2026-08 的早期 host 调度实验，不能沿用为当前 fused 选择器的验收结论。
 
 ## 工作规则
 

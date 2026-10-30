@@ -1,0 +1,20 @@
+{
+  "schema": "edmir.bounded-candidate-evaluation.v1",
+  "status": "declared_before_this_evaluation_of_existing_development_data",
+  "new_fit": false,
+  "budgets": [1, 2, 3],
+  "near_optimal_loss_fraction": 0.05,
+  "near_optimal_threshold_is_diagnostic_not_a_pass_gate": true,
+  "models": ["regime_max", "residual_depth", "row_service"],
+  "primary_model": "regime_max",
+  "baselines": ["uniform_random_without_replacement_exact_expectation", "training_only_common_candidate_order", "always_splitk4", "always_host_merged_cublaslt"],
+  "protected_host_policy": "Reserve one budget slot for host_merged_cublaslt@merged, then fill by regime_max order; report only shapes with this host measured and stable.",
+  "quality_rule": "Use the unchanged stable subset. Retain and enumerate every excluded candidate; never impute a label.",
+  "tie_rule": "Candidate identity lexicographic order for exactly equal scores; no measured timing tie-break for model ranking.",
+  "scoring": "Minimum observed latency within the proposed shortlist, relative to minimum over the same measured stable candidate set. This is an ideal retrospective shortlist score, not a deployed noisy measurement policy.",
+  "sample_savings": "Candidate-label count only, not GPU wall time. Calibration, compilation, prediction, repetition and profiler costs are not measured here.",
+  "no_automatic_k_selection_or_model_promotion": true,
+  "old_top1_metrics_remain_required": true,
+  "independent_validation": false,
+  "GPU_package_unchanged": true
+}

@@ -1,0 +1,110 @@
+{
+  "CUTLASS_revision": "dcf215af68a2d08d305076c152a06f201728cd53",
+  "sources": {
+    "experiments/2026-10-28-paired-gpu-readiness/dependencies/cutlass/include/cutlass/gemm/device/gemm.h": {
+      "sha256": "5561969760c09e2d1d385f60f20195e387fef66c0a95cc212e12dc184ecae07d",
+      "markers": {
+        "SharedMemoryClearOption::kNone": 284
+      }
+    },
+    "experiments/2026-10-28-paired-gpu-readiness/dependencies/cutlass/include/cutlass/gemm/threadblock/default_mma.h": {
+      "sha256": "37d4f83b71c89ce13692e77dba20545ec41915c5c6e2aee432b44eaf7d94f5b1",
+      "markers": {
+        "((sizeof_bits<ElementA>::value * kAlignmentA) == 128)": 525,
+        "? cutlass::arch::CacheOperation::Global": 526,
+        "Stages, SharedMemoryClear>": 561
+      }
+    },
+    "experiments/2026-10-28-paired-gpu-readiness/dependencies/cutlass/include/cutlass/gemm/threadblock/default_mma_core_sm80.h": {
+      "sha256": "9232dff7ae96901cc5d0dd88ece693a9198d8fb147e1a7bcbfe1f44fdbfab8ea",
+      "markers": {
+        "layout::RowMajor, ElementB_, layout::RowMajor, ElementC_": 1671,
+        "kCacheOpA = CacheOpA": 1264,
+        "PitchLinearWarpRakedThreadMap": 173
+      }
+    },
+    "experiments/2026-10-28-paired-gpu-readiness/dependencies/cutlass/include/cutlass/gemm/threadblock/mma_base.h": {
+      "sha256": "4415a4b0a409ce1837708670bf3f344f527313a0a87d7489bbc9c6aefdb0295b",
+      "markers": {
+        "(WarpGemm::kK / Operator::Policy::MmaShape::kK)": 117
+      }
+    },
+    "experiments/2026-10-28-paired-gpu-readiness/dependencies/cutlass/include/cutlass/gemm/warp/default_mma_tensor_op.h": {
+      "sha256": "99ac7271292f9fa4c7e3fa064b566b922c759a959be6080161d3d5fa05b82ccd",
+      "markers": {
+        "cutlass::arch::Mma<InstructionShape_, 32, ElementA": 101
+      }
+    },
+    "experiments/2026-10-28-paired-gpu-readiness/dependencies/cutlass/include/cutlass/transform/pitch_linear_thread_map.h": {
+      "sha256": "dce63f0724bbbfd4820097f145e7b3207d63aef8f10cd8fd3f03a6a567ff3f03",
+      "markers": {
+        "struct PitchLinearWarpRakedThreadMap": 221,
+        "Detail::WarpAccessIterations::kStrided / Detail::kWarpsStrided": 295
+      }
+    },
+    "experiments/2026-10-28-paired-gpu-readiness/dependencies/cutlass/include/cutlass/gemm/threadblock/mma_multistage.h": {
+      "sha256": "f762ee08aeb8201b8f2c1cd537de8f766dc6674a57a80641c258e08946543400",
+      "markers": {
+        "stage < Base::kStages - 1": 370,
+        "cp_async_wait<Base::kStages - 2>()": 489,
+        "warp_mma_k + 2 == Base::kWarpGemmIterations": 567,
+        "gemm_k_iterations > (-Base::kStages + 1)": 649,
+        "cp_async_wait<0>()": 665
+      }
+    },
+    "experiments/2026-10-28-paired-gpu-readiness/dependencies/cutlass/include/cutlass/gemm/kernel/gemm.h": {
+      "sha256": "8e293ca5a8b3cf3e891d83a404e16de654998a2a497f8156114c4c7d14a4e237",
+      "markers": {
+        "semaphore.wait(threadblock_tile_offset.k())": 346,
+        "semaphore.release(lock)": 370,
+        "mma(gemm_k_iterations, accumulators, iterator_A, iterator_B, accumulators)": 275
+      }
+    },
+    "experiments/2026-10-28-paired-gpu-readiness/dependencies/cutlass/include/cutlass/arch/memory_sm80.h": {
+      "sha256": "e0aede1b96a9fd8bdd25e04afb58a4d33da97170c3aa224423b9cc68292b9d4b",
+      "markers": {
+        "cp.async.cg.shared.global": 337,
+        "cp.async.wait_group %0": 454,
+        "cp.async.wait_all;": 463
+      }
+    },
+    "experiments/2026-10-28-shape-transfer-review/source-audit/cutlass_sm80_gemm.cuh": {
+      "sha256": "3dfe30701dc6b0de406ea224aa49de5e571bba58e7a20fd6c875f7fd9f64f6e0"
+    },
+    "experiments/2026-10-28-shape-transfer-review/source-audit/nccl_device_fused_cutlass.cu": {
+      "sha256": "0301fad59dfa9c8d2b7ddb8c9622cc75b6fccdaa9c6450a2d51fdbaf59a3f47a"
+    }
+  },
+  "source_template": {
+    "stages": 3,
+    "warp_shape": [
+      32,
+      64,
+      32
+    ],
+    "instruction_shape": [
+      16,
+      8,
+      16
+    ],
+    "warp_k_groups": 2,
+    "alignment_elements": 8,
+    "element_bits": 16,
+    "cache_policy_A_B": "Global -> cp.async.cg",
+    "clear_policy": "kNone",
+    "prologue_copy_groups": 2,
+    "mainloop_copy_subgroups": 2,
+    "wait_location": "after first warp-k MMA and both copy subgroups; before second warp-k MMA",
+    "last_drain": "explicit commit then wait_all (implicit empty commit), then CTA barrier",
+    "mainloops_serialized_by_semaphore": false
+  },
+  "unverified": [
+    "actual historical binary and PTX/SASS",
+    "registers and launch occupancy",
+    "per-warp issue time",
+    "cache residency and peer placement",
+    "full-program service times"
+  ],
+  "official_reference": "https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#data-movement-and-conversion-instructions-cp-async-wait-group-cp-async-wait-all",
+  "compiler_admission": false
+}

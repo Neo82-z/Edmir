@@ -1,0 +1,671 @@
+{
+  "schema": "edmir.bounded-baseline-extension.v1",
+  "declared_utc": "2026-10-25T06:00:26.770415+00:00",
+  "adaptive_after_anchor_review": true,
+  "purpose": "Fill missing merged host coverage on four anchor shapes, with per-source host controls",
+  "new_shapes": false,
+  "new_execution_code": false,
+  "new_fit": false,
+  "independent_generalization": false,
+  "warmup": 20,
+  "iterations": 100,
+  "fresh_process_repetitions": 3,
+  "process_timeout_seconds": 120,
+  "source_plan_sha256": "57165de0e527819c820ea36924936b14e22f56666d9acd3721d236ab6c016d1f",
+  "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+  "measurement_policy": {
+    "profiler": false,
+    "nvtx": false,
+    "discarded_samples": 0
+  },
+  "jobs": [
+    {
+      "stage": "baseline_extension",
+      "workload_id": "w002",
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      "family": "host_merged_cutlass",
+      "candidate_id": "host_merged_cutlass@merged",
+      "metadata_mode": "merged",
+      "executable": "mechanism_w002_host",
+      "implementation_id": "host_nccl_cutlass_sm80_merged_v1",
+      "repetition": 0,
+      "trial_order": 0,
+      "ordinal": 0
+    },
+    {
+      "stage": "baseline_extension",
+      "workload_id": "w006",
+      "shape": [
+        4,
+        192,
+        3072,
+        512
+      ],
+      "family": "host",
+      "candidate_id": "host@prepared",
+      "metadata_mode": "prepared",
+      "executable": "mechanism_w006_host",
+      "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+      "repetition": 0,
+      "trial_order": 1,
+      "ordinal": 1
+    },
+    {
+      "stage": "baseline_extension",
+      "workload_id": "w003",
+      "shape": [
+        4,
+        64,
+        3072,
+        1536
+      ],
+      "family": "host_merged_cublaslt",
+      "candidate_id": "host_merged_cublaslt@merged",
+      "metadata_mode": "merged",
+      "executable": "mechanism_w003_host",
+      "implementation_id": "host_nccl_cublaslt_merged_v1",
+      "repetition": 0,
+      "trial_order": 2,
+      "ordinal": 2
+    },
+    {
+      "stage": "baseline_extension",
+      "workload_id": "w003",
+      "shape": [
+        4,
+        64,
+        3072,
+        1536
+      ],
+      "family": "host_merged_cutlass",
+      "candidate_id": "host_merged_cutlass@merged",
+      "metadata_mode": "merged",
+      "executable": "mechanism_w003_host",
+      "implementation_id": "host_nccl_cutlass_sm80_merged_v1",
+      "repetition": 0,
+      "trial_order": 3,
+      "ordinal": 3
+    },
+    {
+      "stage": "baseline_extension",
+      "workload_id": "w004",
+      "shape": [
+        4,
+        64,
+        8192,
+        512
+      ],
+      "family": "host",
+      "candidate_id": "host@prepared",
+      "metadata_mode": "prepared",
+      "executable": "mechanism_w004_host",
+      "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+      "repetition": 0,
+      "trial_order": 4,
+      "ordinal": 4
+    },
+    {
+      "stage": "baseline_extension",
+      "workload_id": "w006",
+      "shape": [
+        4,
+        192,
+        3072,
+        512
+      ],
+      "family": "host_merged_cublaslt",
+      "candidate_id": "host_merged_cublaslt@merged",
+      "metadata_mode": "merged",
+      "executable": "mechanism_w006_host",
+      "implementation_id": "host_nccl_cublaslt_merged_v1",
+      "repetition": 0,
+      "trial_order": 5,
+      "ordinal": 5
+    },
+    {
+      "stage": "baseline_extension",
+      "workload_id": "w003",
+      "shape": [
+        4,
+        64,
+        3072,
+        1536
+      ],
+      "family": "host",
+      "candidate_id": "host@prepared",
+      "metadata_mode": "prepared",
+      "executable": "mechanism_w003_host",
+      "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+      "repetition": 0,
+      "trial_order": 6,
+      "ordinal": 6
+    },
+    {
+      "stage": "baseline_extension",
+      "workload_id": "w002",
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      "family": "host",
+      "candidate_id": "host@prepared",
+      "metadata_mode": "prepared",
+      "executable": "mechanism_w002_host",
+      "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+      "repetition": 0,
+      "trial_order": 7,
+      "ordinal": 7
+    },
+    {
+      "stage": "baseline_extension",
+      "workload_id": "w006",
+      "shape": [
+        4,
+        192,
+        3072,
+        512
+      ],
+      "family": "host_merged_cutlass",
+      "candidate_id": "host_merged_cutlass@merged",
+      "metadata_mode": "merged",
+      "executable": "mechanism_w006_host",
+      "implementation_id": "host_nccl_cutlass_sm80_merged_v1",
+      "repetition": 0,
+      "trial_order": 8,
+      "ordinal": 8
+    },
+    {
+      "stage": "baseline_extension",
+      "workload_id": "w004",
+      "shape": [
+        4,
+        64,
+        8192,
+        512
+      ],
+      "family": "host_merged_cutlass",
+      "candidate_id": "host_merged_cutlass@merged",
+      "metadata_mode": "merged",
+      "executable": "mechanism_w004_host",
+      "implementation_id": "host_nccl_cutlass_sm80_merged_v1",
+      "repetition": 0,
+      "trial_order": 9,
+      "ordinal": 9
+    },
+    {
+      "stage": "baseline_extension",
+      "workload_id": "w002",
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      "family": "host_merged_cublaslt",
+      "candidate_id": "host_merged_cublaslt@merged",
+      "metadata_mode": "merged",
+      "executable": "mechanism_w002_host",
+      "implementation_id": "host_nccl_cublaslt_merged_v1",
+      "repetition": 0,
+      "trial_order": 10,
+      "ordinal": 10
+    },
+    {
+      "stage": "baseline_extension",
+      "workload_id": "w004",
+      "shape": [
+        4,
+        64,
+        8192,
+        512
+      ],
+      "family": "host_merged_cublaslt",
+      "candidate_id": "host_merged_cublaslt@merged",
+      "metadata_mode": "merged",
+      "executable": "mechanism_w004_host",
+      "implementation_id": "host_nccl_cublaslt_merged_v1",
+      "repetition": 0,
+      "trial_order": 11,
+      "ordinal": 11
+    },
+    {
+      "stage": "baseline_extension",
+      "workload_id": "w003",
+      "shape": [
+        4,
+        64,
+        3072,
+        1536
+      ],
+      "family": "host_merged_cublaslt",
+      "candidate_id": "host_merged_cublaslt@merged",
+      "metadata_mode": "merged",
+      "executable": "mechanism_w003_host",
+      "implementation_id": "host_nccl_cublaslt_merged_v1",
+      "repetition": 1,
+      "trial_order": 12,
+      "ordinal": 12
+    },
+    {
+      "stage": "baseline_extension",
+      "workload_id": "w004",
+      "shape": [
+        4,
+        64,
+        8192,
+        512
+      ],
+      "family": "host_merged_cutlass",
+      "candidate_id": "host_merged_cutlass@merged",
+      "metadata_mode": "merged",
+      "executable": "mechanism_w004_host",
+      "implementation_id": "host_nccl_cutlass_sm80_merged_v1",
+      "repetition": 1,
+      "trial_order": 13,
+      "ordinal": 13
+    },
+    {
+      "stage": "baseline_extension",
+      "workload_id": "w002",
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      "family": "host",
+      "candidate_id": "host@prepared",
+      "metadata_mode": "prepared",
+      "executable": "mechanism_w002_host",
+      "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+      "repetition": 1,
+      "trial_order": 14,
+      "ordinal": 14
+    },
+    {
+      "stage": "baseline_extension",
+      "workload_id": "w006",
+      "shape": [
+        4,
+        192,
+        3072,
+        512
+      ],
+      "family": "host",
+      "candidate_id": "host@prepared",
+      "metadata_mode": "prepared",
+      "executable": "mechanism_w006_host",
+      "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+      "repetition": 1,
+      "trial_order": 15,
+      "ordinal": 15
+    },
+    {
+      "stage": "baseline_extension",
+      "workload_id": "w006",
+      "shape": [
+        4,
+        192,
+        3072,
+        512
+      ],
+      "family": "host_merged_cutlass",
+      "candidate_id": "host_merged_cutlass@merged",
+      "metadata_mode": "merged",
+      "executable": "mechanism_w006_host",
+      "implementation_id": "host_nccl_cutlass_sm80_merged_v1",
+      "repetition": 1,
+      "trial_order": 16,
+      "ordinal": 16
+    },
+    {
+      "stage": "baseline_extension",
+      "workload_id": "w002",
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      "family": "host_merged_cutlass",
+      "candidate_id": "host_merged_cutlass@merged",
+      "metadata_mode": "merged",
+      "executable": "mechanism_w002_host",
+      "implementation_id": "host_nccl_cutlass_sm80_merged_v1",
+      "repetition": 1,
+      "trial_order": 17,
+      "ordinal": 17
+    },
+    {
+      "stage": "baseline_extension",
+      "workload_id": "w002",
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      "family": "host_merged_cublaslt",
+      "candidate_id": "host_merged_cublaslt@merged",
+      "metadata_mode": "merged",
+      "executable": "mechanism_w002_host",
+      "implementation_id": "host_nccl_cublaslt_merged_v1",
+      "repetition": 1,
+      "trial_order": 18,
+      "ordinal": 18
+    },
+    {
+      "stage": "baseline_extension",
+      "workload_id": "w004",
+      "shape": [
+        4,
+        64,
+        8192,
+        512
+      ],
+      "family": "host",
+      "candidate_id": "host@prepared",
+      "metadata_mode": "prepared",
+      "executable": "mechanism_w004_host",
+      "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+      "repetition": 1,
+      "trial_order": 19,
+      "ordinal": 19
+    },
+    {
+      "stage": "baseline_extension",
+      "workload_id": "w003",
+      "shape": [
+        4,
+        64,
+        3072,
+        1536
+      ],
+      "family": "host_merged_cutlass",
+      "candidate_id": "host_merged_cutlass@merged",
+      "metadata_mode": "merged",
+      "executable": "mechanism_w003_host",
+      "implementation_id": "host_nccl_cutlass_sm80_merged_v1",
+      "repetition": 1,
+      "trial_order": 20,
+      "ordinal": 20
+    },
+    {
+      "stage": "baseline_extension",
+      "workload_id": "w003",
+      "shape": [
+        4,
+        64,
+        3072,
+        1536
+      ],
+      "family": "host",
+      "candidate_id": "host@prepared",
+      "metadata_mode": "prepared",
+      "executable": "mechanism_w003_host",
+      "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+      "repetition": 1,
+      "trial_order": 21,
+      "ordinal": 21
+    },
+    {
+      "stage": "baseline_extension",
+      "workload_id": "w004",
+      "shape": [
+        4,
+        64,
+        8192,
+        512
+      ],
+      "family": "host_merged_cublaslt",
+      "candidate_id": "host_merged_cublaslt@merged",
+      "metadata_mode": "merged",
+      "executable": "mechanism_w004_host",
+      "implementation_id": "host_nccl_cublaslt_merged_v1",
+      "repetition": 1,
+      "trial_order": 22,
+      "ordinal": 22
+    },
+    {
+      "stage": "baseline_extension",
+      "workload_id": "w006",
+      "shape": [
+        4,
+        192,
+        3072,
+        512
+      ],
+      "family": "host_merged_cublaslt",
+      "candidate_id": "host_merged_cublaslt@merged",
+      "metadata_mode": "merged",
+      "executable": "mechanism_w006_host",
+      "implementation_id": "host_nccl_cublaslt_merged_v1",
+      "repetition": 1,
+      "trial_order": 23,
+      "ordinal": 23
+    },
+    {
+      "stage": "baseline_extension",
+      "workload_id": "w004",
+      "shape": [
+        4,
+        64,
+        8192,
+        512
+      ],
+      "family": "host",
+      "candidate_id": "host@prepared",
+      "metadata_mode": "prepared",
+      "executable": "mechanism_w004_host",
+      "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+      "repetition": 2,
+      "trial_order": 24,
+      "ordinal": 24
+    },
+    {
+      "stage": "baseline_extension",
+      "workload_id": "w003",
+      "shape": [
+        4,
+        64,
+        3072,
+        1536
+      ],
+      "family": "host_merged_cutlass",
+      "candidate_id": "host_merged_cutlass@merged",
+      "metadata_mode": "merged",
+      "executable": "mechanism_w003_host",
+      "implementation_id": "host_nccl_cutlass_sm80_merged_v1",
+      "repetition": 2,
+      "trial_order": 25,
+      "ordinal": 25
+    },
+    {
+      "stage": "baseline_extension",
+      "workload_id": "w002",
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      "family": "host_merged_cublaslt",
+      "candidate_id": "host_merged_cublaslt@merged",
+      "metadata_mode": "merged",
+      "executable": "mechanism_w002_host",
+      "implementation_id": "host_nccl_cublaslt_merged_v1",
+      "repetition": 2,
+      "trial_order": 26,
+      "ordinal": 26
+    },
+    {
+      "stage": "baseline_extension",
+      "workload_id": "w002",
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      "family": "host_merged_cutlass",
+      "candidate_id": "host_merged_cutlass@merged",
+      "metadata_mode": "merged",
+      "executable": "mechanism_w002_host",
+      "implementation_id": "host_nccl_cutlass_sm80_merged_v1",
+      "repetition": 2,
+      "trial_order": 27,
+      "ordinal": 27
+    },
+    {
+      "stage": "baseline_extension",
+      "workload_id": "w006",
+      "shape": [
+        4,
+        192,
+        3072,
+        512
+      ],
+      "family": "host_merged_cutlass",
+      "candidate_id": "host_merged_cutlass@merged",
+      "metadata_mode": "merged",
+      "executable": "mechanism_w006_host",
+      "implementation_id": "host_nccl_cutlass_sm80_merged_v1",
+      "repetition": 2,
+      "trial_order": 28,
+      "ordinal": 28
+    },
+    {
+      "stage": "baseline_extension",
+      "workload_id": "w003",
+      "shape": [
+        4,
+        64,
+        3072,
+        1536
+      ],
+      "family": "host_merged_cublaslt",
+      "candidate_id": "host_merged_cublaslt@merged",
+      "metadata_mode": "merged",
+      "executable": "mechanism_w003_host",
+      "implementation_id": "host_nccl_cublaslt_merged_v1",
+      "repetition": 2,
+      "trial_order": 29,
+      "ordinal": 29
+    },
+    {
+      "stage": "baseline_extension",
+      "workload_id": "w006",
+      "shape": [
+        4,
+        192,
+        3072,
+        512
+      ],
+      "family": "host",
+      "candidate_id": "host@prepared",
+      "metadata_mode": "prepared",
+      "executable": "mechanism_w006_host",
+      "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+      "repetition": 2,
+      "trial_order": 30,
+      "ordinal": 30
+    },
+    {
+      "stage": "baseline_extension",
+      "workload_id": "w006",
+      "shape": [
+        4,
+        192,
+        3072,
+        512
+      ],
+      "family": "host_merged_cublaslt",
+      "candidate_id": "host_merged_cublaslt@merged",
+      "metadata_mode": "merged",
+      "executable": "mechanism_w006_host",
+      "implementation_id": "host_nccl_cublaslt_merged_v1",
+      "repetition": 2,
+      "trial_order": 31,
+      "ordinal": 31
+    },
+    {
+      "stage": "baseline_extension",
+      "workload_id": "w004",
+      "shape": [
+        4,
+        64,
+        8192,
+        512
+      ],
+      "family": "host_merged_cublaslt",
+      "candidate_id": "host_merged_cublaslt@merged",
+      "metadata_mode": "merged",
+      "executable": "mechanism_w004_host",
+      "implementation_id": "host_nccl_cublaslt_merged_v1",
+      "repetition": 2,
+      "trial_order": 32,
+      "ordinal": 32
+    },
+    {
+      "stage": "baseline_extension",
+      "workload_id": "w002",
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      "family": "host",
+      "candidate_id": "host@prepared",
+      "metadata_mode": "prepared",
+      "executable": "mechanism_w002_host",
+      "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+      "repetition": 2,
+      "trial_order": 33,
+      "ordinal": 33
+    },
+    {
+      "stage": "baseline_extension",
+      "workload_id": "w003",
+      "shape": [
+        4,
+        64,
+        3072,
+        1536
+      ],
+      "family": "host",
+      "candidate_id": "host@prepared",
+      "metadata_mode": "prepared",
+      "executable": "mechanism_w003_host",
+      "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+      "repetition": 2,
+      "trial_order": 34,
+      "ordinal": 34
+    },
+    {
+      "stage": "baseline_extension",
+      "workload_id": "w004",
+      "shape": [
+        4,
+        64,
+        8192,
+        512
+      ],
+      "family": "host_merged_cutlass",
+      "candidate_id": "host_merged_cutlass@merged",
+      "metadata_mode": "merged",
+      "executable": "mechanism_w004_host",
+      "implementation_id": "host_nccl_cutlass_sm80_merged_v1",
+      "repetition": 2,
+      "trial_order": 35,
+      "ordinal": 35
+    }
+  ]
+}

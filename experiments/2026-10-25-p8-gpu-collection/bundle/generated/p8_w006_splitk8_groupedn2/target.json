@@ -1,0 +1,110 @@
+{
+  "arch": "sm_80",
+  "communication_api": "nccl_device",
+  "fused_schedule": {
+    "n_tiles_per_cta": 2
+  },
+  "gemm_kernel": "sm80_64x128x32_splitk8",
+  "gemm_provider": "cutlass",
+  "kind": "cuda",
+  "name": "selector-experiment",
+  "schema": "edmir.target.v1",
+  "topology": {
+    "devices": [
+      "planned-A100",
+      "planned-A100",
+      "planned-A100",
+      "planned-A100",
+      "planned-A100",
+      "planned-A100",
+      "planned-A100",
+      "planned-A100"
+    ],
+    "link_labels": [],
+    "p2p": [
+      [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ]
+    ],
+    "raw_topology": "",
+    "schema": "edmir.topology.v1",
+    "world_size": 8
+  }
+}

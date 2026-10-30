@@ -1,0 +1,281 @@
+{
+  "schema": "edmir.budget-subset-analysis.v1",
+  "subset_plan_sha256": "74b47f684567e4f76ddf56521fa70a89e7e4cfb52a1a101b2914f8e1bb1f7bf1",
+  "independent_validation": false,
+  "compiler_admission": false,
+  "full_candidate_oracle": false,
+  "training_performed": false,
+  "frozen_six_used": false,
+  "valid_subset_processes": 4,
+  "failed_subset_processes": 0,
+  "full_matrix_partial": {
+    "valid_rows": 7,
+    "failure": {
+      "job": {
+        "stage": "shape5",
+        "workload_id": "w005",
+        "shape": [
+          8,
+          64,
+          4096,
+          2048
+        ],
+        "family": "splitk16",
+        "candidate_id": "splitk16@prepared_immutable",
+        "metadata_mode": "prepared",
+        "dependency_policy": "uniform_immutable_peer_v1",
+        "primary": true,
+        "implementation_id": "direct_peer_cutlass_sm80_q16_g1_prepared_metadata_v2_uniform_immutable_peer_v1",
+        "executable": "p8_w005_splitk16_immutable",
+        "repetition": 0,
+        "trial_order": 214,
+        "ordinal": 214
+      },
+      "job_index": 7,
+      "reason": "CalledProcessError",
+      "detail": "Command '['/root/2026-10-25-p8-gpu-collection/work/build/p8_w005_splitk16_immutable', 'splitk16', '/root/2026-10-25-p8-gpu-collection/bundle/data/w005/inputs.bin', '/root/2026-10-25-p8-gpu-collection/bundle/data/w005/reference.bin', '20', '100', 'prepared']' returned non-zero exit status 1.",
+      "timeout_seconds": 90
+    },
+    "included_in_subset_statistics": false
+  },
+  "shapes": [
+    {
+      "stage": "shape5",
+      "shape": [
+        8,
+        64,
+        4096,
+        2048
+      ],
+      "planned_processes": 18,
+      "valid_processes": 4,
+      "failed_processes": 0,
+      "all_jobs_attempted": false,
+      "all_jobs_passed": false,
+      "failures": [],
+      "candidates": {
+        "host@prepared": {
+          "complete_and_correct": false,
+          "valid_processes": 1,
+          "failed_processes": 0,
+          "repetitions": [
+            0
+          ],
+          "process_medians_us": [
+            2024.8435000000002
+          ]
+        },
+        "host_merged_cublaslt@merged": {
+          "complete_and_correct": false,
+          "valid_processes": 1,
+          "failed_processes": 0,
+          "repetitions": [
+            0
+          ],
+          "process_medians_us": [
+            1237.239
+          ]
+        },
+        "host_merged_cutlass@merged": {
+          "complete_and_correct": false,
+          "valid_processes": 1,
+          "failed_processes": 0,
+          "repetitions": [
+            0
+          ],
+          "process_medians_us": [
+            1241.4070000000002
+          ]
+        },
+        "splitk4@prepared_immutable": {
+          "complete_and_correct": false,
+          "valid_processes": 0,
+          "failed_processes": 0,
+          "repetitions": [],
+          "process_medians_us": []
+        },
+        "splitk4_groupedn2@prepared_immutable": {
+          "complete_and_correct": false,
+          "valid_processes": 0,
+          "failed_processes": 0,
+          "repetitions": [],
+          "process_medians_us": []
+        },
+        "splitk8_groupedn2@prepared_immutable": {
+          "complete_and_correct": false,
+          "valid_processes": 1,
+          "failed_processes": 0,
+          "repetitions": [
+            0
+          ],
+          "process_medians_us": [
+            721.5095
+          ]
+        }
+      }
+    },
+    {
+      "stage": "shape6",
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "planned_processes": 18,
+      "valid_processes": 0,
+      "failed_processes": 0,
+      "all_jobs_attempted": false,
+      "all_jobs_passed": false,
+      "failures": [],
+      "candidates": {
+        "host@prepared": {
+          "complete_and_correct": false,
+          "valid_processes": 0,
+          "failed_processes": 0,
+          "repetitions": [],
+          "process_medians_us": []
+        },
+        "host_merged_cublaslt@merged": {
+          "complete_and_correct": false,
+          "valid_processes": 0,
+          "failed_processes": 0,
+          "repetitions": [],
+          "process_medians_us": []
+        },
+        "host_merged_cutlass@merged": {
+          "complete_and_correct": false,
+          "valid_processes": 0,
+          "failed_processes": 0,
+          "repetitions": [],
+          "process_medians_us": []
+        },
+        "splitk16_groupedn2@prepared_immutable": {
+          "complete_and_correct": false,
+          "valid_processes": 0,
+          "failed_processes": 0,
+          "repetitions": [],
+          "process_medians_us": []
+        },
+        "splitk8@prepared_immutable": {
+          "complete_and_correct": false,
+          "valid_processes": 0,
+          "failed_processes": 0,
+          "repetitions": [],
+          "process_medians_us": []
+        },
+        "splitk8_groupedn2@prepared_immutable": {
+          "complete_and_correct": false,
+          "valid_processes": 0,
+          "failed_processes": 0,
+          "repetitions": [],
+          "process_medians_us": []
+        }
+      }
+    },
+    {
+      "stage": "shape3",
+      "shape": [
+        8,
+        256,
+        8192,
+        512
+      ],
+      "planned_processes": 15,
+      "valid_processes": 0,
+      "failed_processes": 0,
+      "all_jobs_attempted": false,
+      "all_jobs_passed": false,
+      "failures": [],
+      "candidates": {
+        "host@prepared": {
+          "complete_and_correct": false,
+          "valid_processes": 0,
+          "failed_processes": 0,
+          "repetitions": [],
+          "process_medians_us": []
+        },
+        "host_merged_cublaslt@merged": {
+          "complete_and_correct": false,
+          "valid_processes": 0,
+          "failed_processes": 0,
+          "repetitions": [],
+          "process_medians_us": []
+        },
+        "host_merged_cutlass@merged": {
+          "complete_and_correct": false,
+          "valid_processes": 0,
+          "failed_processes": 0,
+          "repetitions": [],
+          "process_medians_us": []
+        },
+        "splitk2@prepared_immutable": {
+          "complete_and_correct": false,
+          "valid_processes": 0,
+          "failed_processes": 0,
+          "repetitions": [],
+          "process_medians_us": []
+        },
+        "splitk8@prepared_immutable": {
+          "complete_and_correct": false,
+          "valid_processes": 0,
+          "failed_processes": 0,
+          "repetitions": [],
+          "process_medians_us": []
+        }
+      }
+    },
+    {
+      "stage": "shape7",
+      "shape": [
+        8,
+        512,
+        8192,
+        512
+      ],
+      "planned_processes": 15,
+      "valid_processes": 0,
+      "failed_processes": 0,
+      "all_jobs_attempted": false,
+      "all_jobs_passed": false,
+      "failures": [],
+      "candidates": {
+        "host@prepared": {
+          "complete_and_correct": false,
+          "valid_processes": 0,
+          "failed_processes": 0,
+          "repetitions": [],
+          "process_medians_us": []
+        },
+        "host_merged_cublaslt@merged": {
+          "complete_and_correct": false,
+          "valid_processes": 0,
+          "failed_processes": 0,
+          "repetitions": [],
+          "process_medians_us": []
+        },
+        "host_merged_cutlass@merged": {
+          "complete_and_correct": false,
+          "valid_processes": 0,
+          "failed_processes": 0,
+          "repetitions": [],
+          "process_medians_us": []
+        },
+        "splitk16_groupedn2@prepared_immutable": {
+          "complete_and_correct": false,
+          "valid_processes": 0,
+          "failed_processes": 0,
+          "repetitions": [],
+          "process_medians_us": []
+        },
+        "splitk8_groupedn2@prepared_immutable": {
+          "complete_and_correct": false,
+          "valid_processes": 0,
+          "failed_processes": 0,
+          "repetitions": [],
+          "process_medians_us": []
+        }
+      }
+    }
+  ]
+}

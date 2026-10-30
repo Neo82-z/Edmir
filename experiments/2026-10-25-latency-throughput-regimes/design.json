@@ -1,0 +1,56 @@
+{
+  "schema": "edmir.regime-design.v1",
+  "status": "Declared before fitting this hypothesis; data previously inspected, development evidence only.",
+  "variants": [
+    "cutlass_depth",
+    "row_service",
+    "regime_sum",
+    "regime_max"
+  ],
+  "formula": "common(x) + a*L(x) + b*W(x) versus common(x) + max(a*L(x),b*W(x))",
+  "common": [
+    "fixed",
+    "grouped_partition_depth_64",
+    "dynamic_smem_optins_over_16",
+    "SM_spread_deficit",
+    "ordered_epilogue_boundaries",
+    "extra_serial_output_MiB"
+  ],
+  "L": "K/(32*q)/64: per-CTA mainloop depth proxy, not measured isolated latency",
+  "W": "2*M*K*ceil(N/(128*g))/2^20: total logical A reads per GEMM, not physical HBM/NVLink bytes",
+  "parameters": 8,
+  "scope": "Shared fused coefficients, unchanged four host models. Per-execution statistical estimates under the old frozen policy. Not a hardware roofline.",
+  "solver": "Sort W/L training ratios, enumerate all <= rows+1 switch intervals. In each interval a/b lies in a 2D cone, parameterize nonnegative extreme rays and solve convex nonnegative quadratic. Fixed original normalized-coefficient ridge=1e-6 across intervals. Compare feasible objectives globally; no initial guesses or stochastic optimizer.",
+  "limits": {
+    "rows": 512,
+    "features": 8,
+    "intervals": 513,
+    "seconds_per_fit": 10,
+    "whole_run_seconds": 180
+  },
+  "validation": [
+    "whole-shape leave-out",
+    "leave-all-same-M-out fused stress",
+    "in-sample residuals",
+    "paired ordering and regret",
+    "branch and crossover stability across folds",
+    "quality-flagged sensitivity",
+    "no host identity changes"
+  ],
+  "focus": [
+    "M192/K3072/N512 two severe pairs",
+    "M512/K4096/N512",
+    "M64/K8192/N512 q8/g2",
+    "M64/K4096/N2048 with all M64 left out"
+  ],
+  "development_acceptance": {
+    "macro_shape_mean_absolute_percentage_error_max": 0.1,
+    "max_candidate_absolute_percentage_error_max": 0.25,
+    "wrong_pair_decisions_with_over_10_percent_loss_max": 0,
+    "compiler_admission_even_if_passed": false
+  },
+  "promotion": "No automatic compiler change even if development thresholds pass. Report all variants and regressions; no independent test set available.",
+  "no_gpu": true,
+  "no_neural_training": true,
+  "no_hyperparameter_search": true
+}

@@ -1,0 +1,488 @@
+{
+  "purpose": "Frozen conditional forecasts from old-environment fits, not measured results or an admitted model",
+  "old_environment_id": "a100-sxm4-80gb-p4-2026-08-29",
+  "new_environment_prediction_supported": false,
+  "note": "New hardware/software identity is recorded separately. Anchor drift must be reviewed before interpreting prediction errors. No inference-domain bypass for the crossed shape.",
+  "models": [
+    {
+      "model": "additive",
+      "compiler_admission": false,
+      "forecasts": [
+        {
+          "shape": [
+            4,
+            512,
+            4096,
+            512
+          ],
+          "status": "conditional_forecast_in_old_environment",
+          "choice": "host",
+          "predicted_ms": {
+            "direct": 1.2246611004364563,
+            "host": 0.9576131646609997,
+            "splitk2": 1.0763303149045012,
+            "splitk4": 1.0617497825667723,
+            "splitk8": 1.173629237254406
+          }
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            2048
+          ],
+          "status": "conditional_forecast_in_old_environment",
+          "choice": "host",
+          "predicted_ms": {
+            "direct": 1.1179384983850977,
+            "host": 0.6796595531919851,
+            "splitk2": 0.7406420184868514,
+            "splitk4": 0.7184077218904676,
+            "splitk8": 0.8149796480607908
+          }
+        },
+        {
+          "shape": [
+            4,
+            64,
+            3072,
+            512
+          ],
+          "status": "conditional_forecast_in_old_environment",
+          "choice": "splitk4",
+          "predicted_ms": {
+            "direct": 0.8248691453242429,
+            "host": 0.5990895345454534,
+            "splitk2": 0.5480007133426055,
+            "splitk4": 0.45910579219055075,
+            "splitk8": 0.5137369212920516
+          }
+        },
+        {
+          "shape": [
+            4,
+            64,
+            3072,
+            1536
+          ],
+          "status": "conditional_forecast_in_old_environment",
+          "choice": "splitk4",
+          "predicted_ms": {
+            "direct": 0.8653684813596684,
+            "host": 0.6177814817683386,
+            "splitk2": 0.5904134904426946,
+            "splitk4": 0.5475589787143981,
+            "splitk8": 0.6520573993689848
+          }
+        },
+        {
+          "shape": [
+            4,
+            192,
+            3072,
+            512
+          ],
+          "status": "conditional_forecast_in_old_environment",
+          "choice": "splitk4",
+          "predicted_ms": {
+            "direct": 0.8653684813596684,
+            "host": 0.7278651865894342,
+            "splitk2": 0.5904134904426946,
+            "splitk4": 0.5475589787143981,
+            "splitk8": 0.6520573993689848
+          }
+        },
+        {
+          "shape": [
+            4,
+            192,
+            3072,
+            1536
+          ],
+          "status": "outside_model_domain",
+          "choice": null
+        },
+        {
+          "shape": [
+            4,
+            512,
+            3072,
+            512
+          ],
+          "status": "conditional_forecast_in_old_environment",
+          "choice": "host",
+          "predicted_ms": {
+            "direct": 0.9666168214482318,
+            "host": 0.8428347057757911,
+            "splitk2": 0.8652995423706402,
+            "splitk4": 0.8742257632600933,
+            "splitk8": 0.9978585945613176
+          }
+        }
+      ]
+    },
+    {
+      "model": "traffic",
+      "compiler_admission": false,
+      "forecasts": [
+        {
+          "shape": [
+            4,
+            512,
+            4096,
+            512
+          ],
+          "status": "conditional_forecast_in_old_environment",
+          "choice": "splitk2",
+          "predicted_ms": {
+            "direct": 1.0799794753439884,
+            "host": 1.0499055212696364,
+            "splitk2": 0.9926226640295848,
+            "splitk4": 1.0100995271710675,
+            "splitk8": 1.1411484963391783
+          }
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            2048
+          ],
+          "status": "conditional_forecast_in_old_environment",
+          "choice": "splitk2",
+          "predicted_ms": {
+            "direct": 1.0541259620106003,
+            "host": 0.6907273404459006,
+            "splitk2": 0.6753294983180814,
+            "splitk4": 0.6823794888565747,
+            "splitk8": 0.7925747128187064
+          }
+        },
+        {
+          "shape": [
+            4,
+            64,
+            3072,
+            512
+          ],
+          "status": "conditional_forecast_in_old_environment",
+          "choice": "splitk4",
+          "predicted_ms": {
+            "direct": 0.8275592237154856,
+            "host": 0.6149794520610496,
+            "splitk2": 0.5484409844443825,
+            "splitk4": 0.45635186331609184,
+            "splitk8": 0.5052472997664683
+          }
+        },
+        {
+          "shape": [
+            4,
+            64,
+            3072,
+            1536
+          ],
+          "status": "conditional_forecast_in_old_environment",
+          "choice": "splitk4",
+          "predicted_ms": {
+            "direct": 0.8404859803821797,
+            "host": 0.6286116416933922,
+            "splitk2": 0.563974459261824,
+            "splitk4": 0.5307661899493944,
+            "splitk8": 0.6437559145171267
+          }
+        },
+        {
+          "shape": [
+            4,
+            192,
+            3072,
+            512
+          ],
+          "status": "conditional_forecast_in_old_environment",
+          "choice": "splitk4",
+          "predicted_ms": {
+            "direct": 0.8404859803821797,
+            "host": 0.6651793192598748,
+            "splitk2": 0.563974459261824,
+            "splitk4": 0.5307661899493944,
+            "splitk8": 0.6437559145171267
+          }
+        },
+        {
+          "shape": [
+            4,
+            192,
+            3072,
+            1536
+          ],
+          "status": "outside_model_domain",
+          "choice": null
+        },
+        {
+          "shape": [
+            4,
+            512,
+            3072,
+            512
+          ],
+          "status": "conditional_forecast_in_old_environment",
+          "choice": "splitk2",
+          "predicted_ms": {
+            "direct": 0.8728028720489149,
+            "host": 0.9213802784755716,
+            "splitk2": 0.8174778083628929,
+            "splitk4": 0.8509705453185665,
+            "splitk8": 0.9900274513937726
+          }
+        }
+      ]
+    },
+    {
+      "model": "separate_resources",
+      "compiler_admission": false,
+      "forecasts": [
+        {
+          "shape": [
+            4,
+            512,
+            4096,
+            512
+          ],
+          "status": "conditional_forecast_in_old_environment",
+          "choice": "splitk2",
+          "predicted_ms": {
+            "direct": 1.1319067823263536,
+            "host": 1.0499055212696364,
+            "splitk2": 1.0180413836957267,
+            "splitk4": 1.0249854280716661,
+            "splitk8": 1.1562109376421412
+          }
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            2048
+          ],
+          "status": "conditional_forecast_in_old_environment",
+          "choice": "host",
+          "predicted_ms": {
+            "direct": 1.0913242011468816,
+            "host": 0.6907273404459006,
+            "splitk2": 0.721484040586142,
+            "splitk4": 0.7158363936980803,
+            "splitk8": 0.8218785207405532
+          }
+        },
+        {
+          "shape": [
+            4,
+            64,
+            3072,
+            512
+          ],
+          "status": "conditional_forecast_in_old_environment",
+          "choice": "splitk4",
+          "predicted_ms": {
+            "direct": 0.821355476240756,
+            "host": 0.6149794520610496,
+            "splitk2": 0.548325634136743,
+            "splitk4": 0.45916086199198775,
+            "splitk8": 0.5092787737341128
+          }
+        },
+        {
+          "shape": [
+            4,
+            64,
+            3072,
+            1536
+          ],
+          "status": "conditional_forecast_in_old_environment",
+          "choice": "splitk4",
+          "predicted_ms": {
+            "direct": 0.8447584623787767,
+            "host": 0.6286116416933922,
+            "splitk2": 0.574876543090764,
+            "splitk4": 0.5388224133839054,
+            "splitk8": 0.6483468131959275
+          }
+        },
+        {
+          "shape": [
+            4,
+            192,
+            3072,
+            512
+          ],
+          "status": "conditional_forecast_in_old_environment",
+          "choice": "splitk4",
+          "predicted_ms": {
+            "direct": 0.8362875429645749,
+            "host": 0.6651793192598748,
+            "splitk2": 0.566405623676562,
+            "splitk4": 0.5303514939697034,
+            "splitk8": 0.6398758937817256
+          }
+        },
+        {
+          "shape": [
+            4,
+            192,
+            3072,
+            1536
+          ],
+          "status": "outside_model_domain",
+          "choice": null
+        },
+        {
+          "shape": [
+            4,
+            512,
+            3072,
+            512
+          ],
+          "status": "conditional_forecast_in_old_environment",
+          "choice": "splitk2",
+          "predicted_ms": {
+            "direct": 0.8942281361974957,
+            "host": 0.9213802784755716,
+            "splitk2": 0.8194752111730679,
+            "splitk4": 0.8459754923521066,
+            "splitk8": 0.9869791203241314
+          }
+        }
+      ]
+    },
+    {
+      "model": "separate_resources_average",
+      "compiler_admission": false,
+      "forecasts": [
+        {
+          "shape": [
+            4,
+            512,
+            4096,
+            512
+          ],
+          "status": "conditional_forecast_in_old_environment",
+          "choice": "splitk4",
+          "predicted_ms": {
+            "direct": 1.2214263746758065,
+            "host": 1.022935509748706,
+            "splitk2": 0.9678834527755217,
+            "splitk4": 0.9666608703942021,
+            "splitk8": 1.13151535445139
+          }
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            2048
+          ],
+          "status": "conditional_forecast_in_old_environment",
+          "choice": "host",
+          "predicted_ms": {
+            "direct": 1.078134594411187,
+            "host": 0.6722104440634644,
+            "splitk2": 0.7557464909782218,
+            "splitk4": 0.6818015949210444,
+            "splitk8": 0.7868434335163147
+          }
+        },
+        {
+          "shape": [
+            4,
+            64,
+            3072,
+            512
+          ],
+          "status": "conditional_forecast_in_old_environment",
+          "choice": "splitk4",
+          "predicted_ms": {
+            "direct": 0.7966169411038141,
+            "host": 0.6174575798946996,
+            "splitk2": 0.5420608170288684,
+            "splitk4": 0.46147637003422587,
+            "splitk8": 0.5183282918247912
+          }
+        },
+        {
+          "shape": [
+            4,
+            64,
+            3072,
+            1536
+          ],
+          "status": "conditional_forecast_in_old_environment",
+          "choice": "splitk4",
+          "predicted_ms": {
+            "direct": 0.8260778281044474,
+            "host": 0.625802199268941,
+            "splitk2": 0.5839418943140623,
+            "splitk4": 0.5317525840664253,
+            "splitk8": 0.6275017725893801
+          }
+        },
+        {
+          "shape": [
+            4,
+            192,
+            3072,
+            512
+          ],
+          "status": "conditional_forecast_in_old_environment",
+          "choice": "splitk4",
+          "predicted_ms": {
+            "direct": 0.8253382493996059,
+            "host": 0.6894493150063008,
+            "splitk2": 0.5832023156092209,
+            "splitk4": 0.5310130053615838,
+            "splitk8": 0.6267621938845387
+          }
+        },
+        {
+          "shape": [
+            4,
+            192,
+            3072,
+            1536
+          ],
+          "status": "outside_model_domain",
+          "choice": null
+        },
+        {
+          "shape": [
+            4,
+            512,
+            3072,
+            512
+          ],
+          "status": "conditional_forecast_in_old_environment",
+          "choice": "splitk2",
+          "predicted_ms": {
+            "direct": 0.9558374298761768,
+            "host": 0.8974987943052392,
+            "splitk2": 0.7777555725198627,
+            "splitk4": 0.8009893038716719,
+            "splitk8": 0.9729315031901605
+          }
+        }
+      ]
+    }
+  ],
+  "references_sha256": {
+    "experiments/2026-10-21-additive-selector-repair/verified/selector.json": "de5928b0d0caaab2f8d41037c1726416752b79f6afba6ddcfd09b109699abceb",
+    "experiments/2026-10-21-additive-selector-repair/verified/decision.json": "fb19ced0db57b430e739f534bd62029bbab000742b31d971c0aa593b94c03ad2",
+    "experiments/2026-10-21-host-boundary-repair/verified/selector.json": "f25a169deba476f79381490c4d6c0d42571f00b8f95c719cb1861e76e08a477a",
+    "experiments/2026-10-21-host-boundary-repair/verified/decision.json": "81f0f78fa6597d1e7c6a78be008c6f7139987406604d6c1640356a4475572d11",
+    "experiments/2026-10-21-structural-identifiability/verified/results.json": "8d49e75515bf7485820fe3daa0a3383b0775dcaa0919f6777e12fd0d672573df"
+  },
+  "fit_operations": 0
+}

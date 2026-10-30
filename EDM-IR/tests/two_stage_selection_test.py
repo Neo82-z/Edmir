@@ -1,14 +1,18 @@
 from __future__ import annotations
 
 import sys
+import math
 import tempfile
 import unittest
+from dataclasses import replace
 from pathlib import Path
+from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from edmir.compiler import (  # noqa: E402
     AnalyticalScheduleFeatures,
+    RidgeLatencyModel,
     ScheduleMeasurement,
     TwoStageSelector,
     evaluate_group_heldout,
@@ -27,7 +31,7 @@ def measurement(
     measured_ms: float,
 ) -> ScheduleMeasurement:
     q, g = parse_schedule_family(family)
-    replay = max(1, (n + 127) // 128 // g)
+    replay = 1 if family == "host" else ((n + 127) // 128 + g - 1) // g
     ctas = 0 if family == "host" else max(1, (m + 63) // 64 * replay * q)
     return ScheduleMeasurement(
         group_id=group,
@@ -70,6 +74,43 @@ def synthetic_surface() -> tuple[ScheduleMeasurement, ...]:
 
 
 class TwoStageSelectionTest(unittest.TestCase):
+    def test_regression_against_host_when_oracle_is_fused(self) -> None:
+        rows = tuple(replace(row, measured_ms=(
+            2.0 if row.is_host else 1.0 if row.family == "direct" else 3.0
+        )) for row in synthetic_surface())
+        def select_bad_fused(_selector, candidates):
+            return candidates["splitk8"], {"admit_fused": True}
+        with patch.object(TwoStageSelector, "select", select_bad_fused):
+            report = evaluate_group_heldout(rows)
+        metrics = report["metrics"]
+        self.assertEqual(metrics["host_admission_errors"], 0)
+        self.assertEqual(metrics["host_regressions"], 18)
+        self.assertEqual(metrics["max_host_regression"], 0.5)
+        self.assertIn("host regression count above gate", metrics["gate_failures"])
+
+    def test_depth_interaction_can_represent_grouping_reversal(self) -> None:
+        rows = []
+        for group, m, n in (("a", 32, 512), ("b", 64, 1024), ("c", 128, 2048)):
+            for k in (512, 1024, 2048, 4096, 8192, 16384):
+                for family in ("direct", "direct_groupedn2"):
+                    grouped = family.endswith("groupedn2")
+                    latency = 0.8 * math.exp(-0.3 * grouped * (math.log2(k) - 11))
+                    rows.append(measurement(group, family, m, k, n, latency))
+        for ablation in ("full", "interaction_depth", "interaction_depth_grid"):
+            model = RidgeLatencyModel.fit(
+                rows, stage="fused", ablation=ablation, ridge=1.0, sm_count=108,
+            )
+            ratios = []
+            for k in (512, 8192):
+                base = measurement("test", "direct", 64, k, 1024, 1.0)
+                grouped = measurement("test", "direct_groupedn2", 64, k, 1024, 1.0)
+                ratios.append(model.predict_ms(grouped) / model.predict_ms(base))
+            if ablation == "full":
+                self.assertAlmostEqual(*ratios)
+            else:
+                self.assertGreater(ratios[0], 1.0)
+                self.assertLess(ratios[1], 1.0)
+
     def test_family_parser_and_analytical_features(self) -> None:
         self.assertEqual(parse_schedule_family("direct"), (1, 1))
         self.assertEqual(parse_schedule_family("splitk8_groupedn2"), (8, 2))

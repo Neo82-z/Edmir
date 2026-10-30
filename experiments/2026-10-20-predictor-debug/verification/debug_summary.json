@@ -1,0 +1,1432 @@
+{
+  "schema": "edmir.predictor-debug.v1",
+  "eligible_for_compiler_admission": false,
+  "evidence_status": "existing data, retrospective diagnosis only",
+  "reference_report_sha256": "3e66874f12df919ebbc789621c5423b018b686d429b5f2664c71c02c5245e53b",
+  "replay_checks": {
+    "all_metrics_unchanged": true,
+    "all_decisions_unchanged": true,
+    "method_protocol_combinations": 15,
+    "decision_instances": 395
+  },
+  "worst_point": {
+    "group_id": "heldout-host-anchor-m512-n512-k8192",
+    "world_size": 8,
+    "rows_per_peer": 512,
+    "k": 8192,
+    "n": 512,
+    "candidate_count": 11,
+    "oracle_family": "splitk4_groupedn2",
+    "selected_family": "splitk2",
+    "oracle_direction": "fused",
+    "selected_direction": "fused",
+    "oracle_ms": 3.4733,
+    "selected_ms": 5.701,
+    "host_ms": 5.0696,
+    "regret": 0.6413785161085999,
+    "predicted_fused_family": "splitk2",
+    "predicted_fused_log_ratio": -0.3727057909781602,
+    "admit_fused": true
+  },
+  "candidate_trace": [
+    {
+      "family": "splitk2",
+      "measured_ms": 5.701,
+      "measured_host_ratio": 1.124546315291147,
+      "predicted_host_ratio": 0.6888678741764783,
+      "uncalibrated_log_ratio": -0.024109501073107997,
+      "analytical_features": {
+        "flops": 34359738368,
+        "unique_remote_bytes": 58720256,
+        "local_bytes": 29360128,
+        "rho_n": 4,
+        "gamma": 64,
+        "split_k_slices": 2,
+        "n_tiles_per_cta": 1,
+        "split_k_depth": 4096.0,
+        "reduction_bytes": 8388608,
+        "underfill": 0.4074074074074074
+      },
+      "training_support": {
+        "family_m_values": [
+          32,
+          64,
+          128,
+          256,
+          512
+        ],
+        "same_m_family_workloads": 3,
+        "same_mkn_family_workloads": 1
+      },
+      "explanation": {
+        "predicted_log_ratio": -0.3727057909781602,
+        "intercept": -0.03803122862687321,
+        "calibration_offset": -0.3485962899050522,
+        "terms": [
+          {
+            "feature": "log_flops",
+            "raw": 35.0,
+            "standardized": 2.4956901827328197,
+            "coefficient": -0.20863094544933825,
+            "contribution": -0.52067820237218
+          },
+          {
+            "feature": "log_unique_remote_bytes",
+            "raw": 25.807354922057606,
+            "standardized": 3.002995097135354,
+            "coefficient": -0.03530955088877683,
+            "contribution": -0.1060344082010481
+          },
+          {
+            "feature": "log_local_bytes",
+            "raw": 24.807354922057606,
+            "standardized": 1.2964078999149484,
+            "coefficient": 0.5857517953759224,
+            "contribution": 0.7593732549147101
+          },
+          {
+            "feature": "log_split_k_depth",
+            "raw": 12.0,
+            "standardized": 1.439516267524846,
+            "coefficient": 0.06262986907971549,
+            "contribution": 0.09015671537320182
+          },
+          {
+            "feature": "log_q",
+            "raw": 1.0,
+            "standardized": -0.7071067811865475,
+            "coefficient": -0.1500972890044279,
+            "contribution": 0.10613481089274797
+          },
+          {
+            "feature": "grouped",
+            "raw": 0.0,
+            "standardized": -0.5679618342470648,
+            "coefficient": -0.010541667299560391,
+            "contribution": 0.005987264695480622
+          },
+          {
+            "feature": "log_rho_n",
+            "raw": 2.0,
+            "standardized": 0.15634333171259338,
+            "coefficient": -0.10600741826053951,
+            "contribution": -0.016573552957103155
+          },
+          {
+            "feature": "log_gamma",
+            "raw": 6.0,
+            "standardized": 0.8097148437582937,
+            "coefficient": -0.15271438754283606,
+            "contribution": -0.12365510644889102
+          },
+          {
+            "feature": "underfill",
+            "raw": 0.4074074074074074,
+            "standardized": -0.7625178985532806,
+            "coefficient": -0.1530536246834491,
+            "contribution": 0.11670612825958611
+          },
+          {
+            "feature": "log_reduction_bytes",
+            "raw": 23.00000017198264,
+            "standardized": 0.6661026799617621,
+            "coefficient": -0.10833642455849322,
+            "contribution": -0.07216318273588761
+          },
+          {
+            "feature": "q_minus_one",
+            "raw": 1.0,
+            "standardized": -0.7698973538621047,
+            "coefficient": 0.20970451899043716,
+            "contribution": -0.16145095426366304
+          },
+          {
+            "feature": "grouped_x_log_split_k_depth",
+            "raw": 0.0,
+            "standardized": -0.5502760564641688,
+            "coefficient": 0.008154718730832603,
+            "contribution": -0.004487346464777055
+          },
+          {
+            "feature": "underfill_x_log_split_k_depth",
+            "raw": 4.888888888888888,
+            "standardized": -0.3930550434384979,
+            "coefficient": 0.15110782606636328,
+            "contribution": -0.059393693138411405
+          }
+        ]
+      }
+    },
+    {
+      "family": "splitk4",
+      "measured_ms": 5.7082,
+      "measured_host_ratio": 1.1259665456840775,
+      "predicted_host_ratio": 0.7291064650490092,
+      "uncalibrated_log_ratio": 0.03266077485962567,
+      "analytical_features": {
+        "flops": 34359738368,
+        "unique_remote_bytes": 58720256,
+        "local_bytes": 46137344,
+        "rho_n": 4,
+        "gamma": 128,
+        "split_k_slices": 4,
+        "n_tiles_per_cta": 1,
+        "split_k_depth": 2048.0,
+        "reduction_bytes": 25165824,
+        "underfill": 0.0
+      },
+      "training_support": {
+        "family_m_values": [
+          32,
+          64,
+          128,
+          256,
+          512
+        ],
+        "same_m_family_workloads": 3,
+        "same_mkn_family_workloads": 1
+      },
+      "explanation": {
+        "predicted_log_ratio": -0.3159355150454265,
+        "intercept": -0.03803122862687321,
+        "calibration_offset": -0.3485962899050522,
+        "terms": [
+          {
+            "feature": "log_flops",
+            "raw": 35.0,
+            "standardized": 2.4956901827328197,
+            "coefficient": -0.20863094544933825,
+            "contribution": -0.52067820237218
+          },
+          {
+            "feature": "log_unique_remote_bytes",
+            "raw": 25.807354922057606,
+            "standardized": 3.002995097135354,
+            "coefficient": -0.03530955088877683,
+            "contribution": -0.1060344082010481
+          },
+          {
+            "feature": "log_local_bytes",
+            "raw": 25.459431618637296,
+            "standardized": 1.6828076321356655,
+            "coefficient": 0.5857517953759224,
+            "contribution": 0.9857075917957708
+          },
+          {
+            "feature": "log_split_k_depth",
+            "raw": 11.0,
+            "standardized": 0.9350703959990454,
+            "coefficient": 0.06262986907971549,
+            "contribution": 0.05856333648173793
+          },
+          {
+            "feature": "log_q",
+            "raw": 2.0,
+            "standardized": 0.0,
+            "coefficient": -0.1500972890044279,
+            "contribution": -0.0
+          },
+          {
+            "feature": "grouped",
+            "raw": 0.0,
+            "standardized": -0.5679618342470648,
+            "coefficient": -0.010541667299560391,
+            "contribution": 0.005987264695480622
+          },
+          {
+            "feature": "log_rho_n",
+            "raw": 2.0,
+            "standardized": 0.15634333171259338,
+            "coefficient": -0.10600741826053951,
+            "contribution": -0.016573552957103155
+          },
+          {
+            "feature": "log_gamma",
+            "raw": 7.0,
+            "standardized": 1.2873883487092295,
+            "coefficient": -0.15271438754283606,
+            "contribution": -0.19660272320291305
+          },
+          {
+            "feature": "underfill",
+            "raw": 0.0,
+            "standardized": -1.9600301201865336,
+            "coefficient": -0.1530536246834491,
+            "contribution": 0.29998971438328537
+          },
+          {
+            "feature": "log_reduction_bytes",
+            "raw": 24.584962558048705,
+            "standardized": 0.8466503134301909,
+            "coefficient": -0.10833642455849322,
+            "contribution": -0.09172306780835451
+          },
+          {
+            "feature": "q_minus_one",
+            "raw": 3.0,
+            "standardized": -0.4032795663087215,
+            "coefficient": 0.20970451899043716,
+            "contribution": -0.08456954747144255
+          },
+          {
+            "feature": "grouped_x_log_split_k_depth",
+            "raw": 0.0,
+            "standardized": -0.5502760564641688,
+            "coefficient": 0.008154718730832603,
+            "contribution": -0.004487346464777055
+          },
+          {
+            "feature": "underfill_x_log_split_k_depth",
+            "raw": 0.0,
+            "standardized": -1.7132604057069807,
+            "coefficient": 0.15110782606636328,
+            "contribution": -0.25888705539195744
+          }
+        ]
+      }
+    },
+    {
+      "family": "splitk2_groupedn2",
+      "measured_ms": 4.7286,
+      "measured_host_ratio": 0.9327363105570459,
+      "predicted_host_ratio": 0.8208752626221191,
+      "uncalibrated_log_ratio": 0.1512121753634894,
+      "analytical_features": {
+        "flops": 34359738368,
+        "unique_remote_bytes": 58720256,
+        "local_bytes": 29360128,
+        "rho_n": 2,
+        "gamma": 32,
+        "split_k_slices": 2,
+        "n_tiles_per_cta": 2,
+        "split_k_depth": 4096.0,
+        "reduction_bytes": 8388608,
+        "underfill": 0.7037037037037037
+      },
+      "training_support": {
+        "family_m_values": [
+          64
+        ],
+        "same_m_family_workloads": 0,
+        "same_mkn_family_workloads": 0
+      },
+      "explanation": {
+        "predicted_log_ratio": -0.19738411454156277,
+        "intercept": -0.03803122862687321,
+        "calibration_offset": -0.3485962899050522,
+        "terms": [
+          {
+            "feature": "log_flops",
+            "raw": 35.0,
+            "standardized": 2.4956901827328197,
+            "coefficient": -0.20863094544933825,
+            "contribution": -0.52067820237218
+          },
+          {
+            "feature": "log_unique_remote_bytes",
+            "raw": 25.807354922057606,
+            "standardized": 3.002995097135354,
+            "coefficient": -0.03530955088877683,
+            "contribution": -0.1060344082010481
+          },
+          {
+            "feature": "log_local_bytes",
+            "raw": 24.807354922057606,
+            "standardized": 1.2964078999149484,
+            "coefficient": 0.5857517953759224,
+            "contribution": 0.7593732549147101
+          },
+          {
+            "feature": "log_split_k_depth",
+            "raw": 12.0,
+            "standardized": 1.439516267524846,
+            "coefficient": 0.06262986907971549,
+            "contribution": 0.09015671537320182
+          },
+          {
+            "feature": "log_q",
+            "raw": 1.0,
+            "standardized": -0.7071067811865475,
+            "coefficient": -0.1500972890044279,
+            "contribution": 0.10613481089274797
+          },
+          {
+            "feature": "grouped",
+            "raw": 1.0,
+            "standardized": 1.760681686165901,
+            "coefficient": -0.010541667299560391,
+            "contribution": -0.018560520555989928
+          },
+          {
+            "feature": "log_rho_n",
+            "raw": 1.0,
+            "standardized": -0.6983335483162507,
+            "coefficient": -0.10600741826053951,
+            "contribution": 0.07402853654172747
+          },
+          {
+            "feature": "log_gamma",
+            "raw": 5.0,
+            "standardized": 0.3320413388073579,
+            "coefficient": -0.15271438754283606,
+            "contribution": -0.05070748969486898
+          },
+          {
+            "feature": "underfill",
+            "raw": 0.7037037037037037,
+            "standardized": 0.1084000808163581,
+            "coefficient": -0.1530536246834491,
+            "contribution": -0.01659102528492242
+          },
+          {
+            "feature": "log_reduction_bytes",
+            "raw": 23.00000017198264,
+            "standardized": 0.6661026799617621,
+            "coefficient": -0.10833642455849322,
+            "contribution": -0.07216318273588761
+          },
+          {
+            "feature": "q_minus_one",
+            "raw": 1.0,
+            "standardized": -0.7698973538621047,
+            "coefficient": 0.20970451899043716,
+            "contribution": -0.16145095426366304
+          },
+          {
+            "feature": "grouped_x_log_split_k_depth",
+            "raw": 12.0,
+            "standardized": 2.457899718873287,
+            "coefficient": 0.008154718730832603,
+            "contribution": 0.02004348087600418
+          },
+          {
+            "feature": "underfill_x_log_split_k_depth",
+            "raw": 8.444444444444445,
+            "standardized": 0.5670943109385808,
+            "coefficient": 0.15110782606636328,
+            "contribution": 0.0856923885005312
+          }
+        ]
+      }
+    },
+    {
+      "family": "splitk4_groupedn2",
+      "measured_ms": 3.4733,
+      "measured_host_ratio": 0.685123086634054,
+      "predicted_host_ratio": 0.8565336509857973,
+      "uncalibrated_log_ratio": 0.19373461686544186,
+      "analytical_features": {
+        "flops": 34359738368,
+        "unique_remote_bytes": 58720256,
+        "local_bytes": 46137344,
+        "rho_n": 2,
+        "gamma": 64,
+        "split_k_slices": 4,
+        "n_tiles_per_cta": 2,
+        "split_k_depth": 2048.0,
+        "reduction_bytes": 25165824,
+        "underfill": 0.4074074074074074
+      },
+      "training_support": {
+        "family_m_values": [
+          64
+        ],
+        "same_m_family_workloads": 0,
+        "same_mkn_family_workloads": 0
+      },
+      "explanation": {
+        "predicted_log_ratio": -0.15486167303961032,
+        "intercept": -0.03803122862687321,
+        "calibration_offset": -0.3485962899050522,
+        "terms": [
+          {
+            "feature": "log_flops",
+            "raw": 35.0,
+            "standardized": 2.4956901827328197,
+            "coefficient": -0.20863094544933825,
+            "contribution": -0.52067820237218
+          },
+          {
+            "feature": "log_unique_remote_bytes",
+            "raw": 25.807354922057606,
+            "standardized": 3.002995097135354,
+            "coefficient": -0.03530955088877683,
+            "contribution": -0.1060344082010481
+          },
+          {
+            "feature": "log_local_bytes",
+            "raw": 25.459431618637296,
+            "standardized": 1.6828076321356655,
+            "coefficient": 0.5857517953759224,
+            "contribution": 0.9857075917957708
+          },
+          {
+            "feature": "log_split_k_depth",
+            "raw": 11.0,
+            "standardized": 0.9350703959990454,
+            "coefficient": 0.06262986907971549,
+            "contribution": 0.05856333648173793
+          },
+          {
+            "feature": "log_q",
+            "raw": 2.0,
+            "standardized": 0.0,
+            "coefficient": -0.1500972890044279,
+            "contribution": -0.0
+          },
+          {
+            "feature": "grouped",
+            "raw": 1.0,
+            "standardized": 1.760681686165901,
+            "coefficient": -0.010541667299560391,
+            "contribution": -0.018560520555989928
+          },
+          {
+            "feature": "log_rho_n",
+            "raw": 1.0,
+            "standardized": -0.6983335483162507,
+            "coefficient": -0.10600741826053951,
+            "contribution": 0.07402853654172747
+          },
+          {
+            "feature": "log_gamma",
+            "raw": 6.0,
+            "standardized": 0.8097148437582937,
+            "coefficient": -0.15271438754283606,
+            "contribution": -0.12365510644889102
+          },
+          {
+            "feature": "underfill",
+            "raw": 0.4074074074074074,
+            "standardized": -0.7625178985532806,
+            "coefficient": -0.1530536246834491,
+            "contribution": 0.11670612825958611
+          },
+          {
+            "feature": "log_reduction_bytes",
+            "raw": 24.584962558048705,
+            "standardized": 0.8466503134301909,
+            "coefficient": -0.10833642455849322,
+            "contribution": -0.09172306780835451
+          },
+          {
+            "feature": "q_minus_one",
+            "raw": 3.0,
+            "standardized": -0.4032795663087215,
+            "coefficient": 0.20970451899043716,
+            "contribution": -0.08456954747144255
+          },
+          {
+            "feature": "grouped_x_log_split_k_depth",
+            "raw": 11.0,
+            "standardized": 2.207218404261832,
+            "coefficient": 0.008154718730832603,
+            "contribution": 0.01799924526427241
+          },
+          {
+            "feature": "underfill_x_log_split_k_depth",
+            "raw": 4.481481481481481,
+            "standardized": -0.5030721569608715,
+            "coefficient": 0.15110782606636328,
+            "contribution": -0.07601813999287357
+          }
+        ]
+      }
+    },
+    {
+      "family": "splitk8",
+      "measured_ms": 6.3388,
+      "measured_host_ratio": 1.2503550575982325,
+      "predicted_host_ratio": 0.8920359738690333,
+      "uncalibrated_log_ratio": 0.2343474721393031,
+      "analytical_features": {
+        "flops": 34359738368,
+        "unique_remote_bytes": 58720256,
+        "local_bytes": 79691776,
+        "rho_n": 4,
+        "gamma": 256,
+        "split_k_slices": 8,
+        "n_tiles_per_cta": 1,
+        "split_k_depth": 1024.0,
+        "reduction_bytes": 58720256,
+        "underfill": 0.0
+      },
+      "training_support": {
+        "family_m_values": [
+          32,
+          64,
+          128,
+          256,
+          512
+        ],
+        "same_m_family_workloads": 3,
+        "same_mkn_family_workloads": 1
+      },
+      "explanation": {
+        "predicted_log_ratio": -0.11424881776574908,
+        "intercept": -0.03803122862687321,
+        "calibration_offset": -0.3485962899050522,
+        "terms": [
+          {
+            "feature": "log_flops",
+            "raw": 35.0,
+            "standardized": 2.4956901827328197,
+            "coefficient": -0.20863094544933825,
+            "contribution": -0.52067820237218
+          },
+          {
+            "feature": "log_unique_remote_bytes",
+            "raw": 25.807354922057606,
+            "standardized": 3.002995097135354,
+            "coefficient": -0.03530955088877683,
+            "contribution": -0.1060344082010481
+          },
+          {
+            "feature": "log_local_bytes",
+            "raw": 26.247927513443585,
+            "standardized": 2.1500450049913145,
+            "coefficient": 0.5857517953759224,
+            "contribution": 1.2593927218126963
+          },
+          {
+            "feature": "log_split_k_depth",
+            "raw": 10.0,
+            "standardized": 0.4306245244732445,
+            "coefficient": 0.06262986907971549,
+            "contribution": 0.026969957590274044
+          },
+          {
+            "feature": "log_q",
+            "raw": 3.0,
+            "standardized": 0.7071067811865475,
+            "coefficient": -0.1500972890044279,
+            "contribution": -0.10613481089274797
+          },
+          {
+            "feature": "grouped",
+            "raw": 0.0,
+            "standardized": -0.5679618342470648,
+            "coefficient": -0.010541667299560391,
+            "contribution": 0.005987264695480622
+          },
+          {
+            "feature": "log_rho_n",
+            "raw": 2.0,
+            "standardized": 0.15634333171259338,
+            "coefficient": -0.10600741826053951,
+            "contribution": -0.016573552957103155
+          },
+          {
+            "feature": "log_gamma",
+            "raw": 8.0,
+            "standardized": 1.7650618536601652,
+            "coefficient": -0.15271438754283606,
+            "contribution": -0.26955033995693506
+          },
+          {
+            "feature": "underfill",
+            "raw": 0.0,
+            "standardized": -1.9600301201865336,
+            "coefficient": -0.1530536246834491,
+            "contribution": 0.29998971438328537
+          },
+          {
+            "feature": "log_reduction_bytes",
+            "raw": 25.807354946626553,
+            "standardized": 0.9858965535099549,
+            "coefficient": -0.10833642455849322,
+            "contribution": -0.10680850759180971
+          },
+          {
+            "feature": "q_minus_one",
+            "raw": 7.0,
+            "standardized": 0.3299560087980448,
+            "coefficient": 0.20970451899043716,
+            "contribution": 0.06919326611299843
+          },
+          {
+            "feature": "grouped_x_log_split_k_depth",
+            "raw": 0.0,
+            "standardized": -0.5502760564641688,
+            "coefficient": 0.008154718730832603,
+            "contribution": -0.004487346464777055
+          },
+          {
+            "feature": "underfill_x_log_split_k_depth",
+            "raw": 0.0,
+            "standardized": -1.7132604057069807,
+            "coefficient": 0.15110782606636328,
+            "contribution": -0.25888705539195744
+          }
+        ]
+      }
+    },
+    {
+      "family": "direct",
+      "measured_ms": 7.3685,
+      "measured_host_ratio": 1.453467729209405,
+      "predicted_host_ratio": 0.9563643490836619,
+      "uncalibrated_log_ratio": 0.3039799696555382,
+      "analytical_features": {
+        "flops": 34359738368,
+        "unique_remote_bytes": 58720256,
+        "local_bytes": 20971520,
+        "rho_n": 4,
+        "gamma": 32,
+        "split_k_slices": 1,
+        "n_tiles_per_cta": 1,
+        "split_k_depth": 8192.0,
+        "reduction_bytes": 0,
+        "underfill": 0.7037037037037037
+      },
+      "training_support": {
+        "family_m_values": [
+          32,
+          64,
+          128,
+          256,
+          512
+        ],
+        "same_m_family_workloads": 3,
+        "same_mkn_family_workloads": 1
+      },
+      "explanation": {
+        "predicted_log_ratio": -0.04461632024951401,
+        "intercept": -0.03803122862687321,
+        "calibration_offset": -0.3485962899050522,
+        "terms": [
+          {
+            "feature": "log_flops",
+            "raw": 35.0,
+            "standardized": 2.4956901827328197,
+            "coefficient": -0.20863094544933825,
+            "contribution": -0.52067820237218
+          },
+          {
+            "feature": "log_unique_remote_bytes",
+            "raw": 25.807354922057606,
+            "standardized": 3.002995097135354,
+            "coefficient": -0.03530955088877683,
+            "contribution": -0.1060344082010481
+          },
+          {
+            "feature": "log_local_bytes",
+            "raw": 24.32192809488736,
+            "standardized": 1.008759534292958,
+            "coefficient": 0.5857517953759224,
+            "contribution": 0.5908827083146795
+          },
+          {
+            "feature": "log_split_k_depth",
+            "raw": 13.0,
+            "standardized": 1.943962139050647,
+            "coefficient": 0.06262986907971549,
+            "contribution": 0.1217500942646657
+          },
+          {
+            "feature": "log_q",
+            "raw": 0.0,
+            "standardized": -1.414213562373095,
+            "coefficient": -0.1500972890044279,
+            "contribution": 0.21226962178549594
+          },
+          {
+            "feature": "grouped",
+            "raw": 0.0,
+            "standardized": -0.5679618342470648,
+            "coefficient": -0.010541667299560391,
+            "contribution": 0.005987264695480622
+          },
+          {
+            "feature": "log_rho_n",
+            "raw": 2.0,
+            "standardized": 0.15634333171259338,
+            "coefficient": -0.10600741826053951,
+            "contribution": -0.016573552957103155
+          },
+          {
+            "feature": "log_gamma",
+            "raw": 5.0,
+            "standardized": 0.3320413388073579,
+            "coefficient": -0.15271438754283606,
+            "contribution": -0.05070748969486898
+          },
+          {
+            "feature": "underfill",
+            "raw": 0.7037037037037037,
+            "standardized": 0.1084000808163581,
+            "coefficient": -0.1530536246834491,
+            "contribution": -0.01659102528492242
+          },
+          {
+            "feature": "log_reduction_bytes",
+            "raw": 0.0,
+            "standardized": -1.9538936286773476,
+            "coefficient": -0.10833642455849322,
+            "contribution": 0.21167784969852405
+          },
+          {
+            "feature": "q_minus_one",
+            "raw": 0.0,
+            "standardized": -0.9532062476387962,
+            "coefficient": 0.20970451899043716,
+            "contribution": -0.1998916576597733
+          },
+          {
+            "feature": "grouped_x_log_split_k_depth",
+            "raw": 0.0,
+            "standardized": -0.5502760564641688,
+            "coefficient": 0.008154718730832603,
+            "contribution": -0.004487346464777055
+          },
+          {
+            "feature": "underfill_x_log_split_k_depth",
+            "raw": 9.148148148148149,
+            "standardized": 0.7571238706590444,
+            "coefficient": 0.15110782606636328,
+            "contribution": 0.1144073421582386
+          }
+        ]
+      }
+    },
+    {
+      "family": "host",
+      "measured_ms": 5.0696,
+      "measured_host_ratio": 1.0,
+      "predicted_host_ratio": 1.0,
+      "uncalibrated_log_ratio": 0.0,
+      "analytical_features": {
+        "flops": 34359738368,
+        "unique_remote_bytes": 58720256,
+        "local_bytes": 138412032,
+        "rho_n": 1,
+        "gamma": 32,
+        "split_k_slices": 1,
+        "n_tiles_per_cta": 1,
+        "split_k_depth": 8192.0,
+        "reduction_bytes": 0,
+        "underfill": 0.7037037037037037
+      },
+      "training_support": {
+        "family_m_values": [
+          32,
+          64,
+          128,
+          256,
+          512
+        ],
+        "same_m_family_workloads": 3,
+        "same_mkn_family_workloads": 1
+      },
+      "explanation": {
+        "predicted_log_ratio": 0.0,
+        "intercept": 0.0,
+        "calibration_offset": 0.0,
+        "terms": []
+      }
+    },
+    {
+      "family": "splitk8_groupedn2",
+      "measured_ms": 3.7626,
+      "measured_host_ratio": 0.7421887328388826,
+      "predicted_host_ratio": 1.046232335820097,
+      "uncalibrated_log_ratio": 0.3937917492580029,
+      "analytical_features": {
+        "flops": 34359738368,
+        "unique_remote_bytes": 58720256,
+        "local_bytes": 79691776,
+        "rho_n": 2,
+        "gamma": 128,
+        "split_k_slices": 8,
+        "n_tiles_per_cta": 2,
+        "split_k_depth": 1024.0,
+        "reduction_bytes": 58720256,
+        "underfill": 0.0
+      },
+      "training_support": {
+        "family_m_values": [
+          64
+        ],
+        "same_m_family_workloads": 0,
+        "same_mkn_family_workloads": 0
+      },
+      "explanation": {
+        "predicted_log_ratio": 0.04519545935295072,
+        "intercept": -0.03803122862687321,
+        "calibration_offset": -0.3485962899050522,
+        "terms": [
+          {
+            "feature": "log_flops",
+            "raw": 35.0,
+            "standardized": 2.4956901827328197,
+            "coefficient": -0.20863094544933825,
+            "contribution": -0.52067820237218
+          },
+          {
+            "feature": "log_unique_remote_bytes",
+            "raw": 25.807354922057606,
+            "standardized": 3.002995097135354,
+            "coefficient": -0.03530955088877683,
+            "contribution": -0.1060344082010481
+          },
+          {
+            "feature": "log_local_bytes",
+            "raw": 26.247927513443585,
+            "standardized": 2.1500450049913145,
+            "coefficient": 0.5857517953759224,
+            "contribution": 1.2593927218126963
+          },
+          {
+            "feature": "log_split_k_depth",
+            "raw": 10.0,
+            "standardized": 0.4306245244732445,
+            "coefficient": 0.06262986907971549,
+            "contribution": 0.026969957590274044
+          },
+          {
+            "feature": "log_q",
+            "raw": 3.0,
+            "standardized": 0.7071067811865475,
+            "coefficient": -0.1500972890044279,
+            "contribution": -0.10613481089274797
+          },
+          {
+            "feature": "grouped",
+            "raw": 1.0,
+            "standardized": 1.760681686165901,
+            "coefficient": -0.010541667299560391,
+            "contribution": -0.018560520555989928
+          },
+          {
+            "feature": "log_rho_n",
+            "raw": 1.0,
+            "standardized": -0.6983335483162507,
+            "coefficient": -0.10600741826053951,
+            "contribution": 0.07402853654172747
+          },
+          {
+            "feature": "log_gamma",
+            "raw": 7.0,
+            "standardized": 1.2873883487092295,
+            "coefficient": -0.15271438754283606,
+            "contribution": -0.19660272320291305
+          },
+          {
+            "feature": "underfill",
+            "raw": 0.0,
+            "standardized": -1.9600301201865336,
+            "coefficient": -0.1530536246834491,
+            "contribution": 0.29998971438328537
+          },
+          {
+            "feature": "log_reduction_bytes",
+            "raw": 25.807354946626553,
+            "standardized": 0.9858965535099549,
+            "coefficient": -0.10833642455849322,
+            "contribution": -0.10680850759180971
+          },
+          {
+            "feature": "q_minus_one",
+            "raw": 7.0,
+            "standardized": 0.3299560087980448,
+            "coefficient": 0.20970451899043716,
+            "contribution": 0.06919326611299843
+          },
+          {
+            "feature": "grouped_x_log_split_k_depth",
+            "raw": 10.0,
+            "standardized": 1.9565370896503775,
+            "coefficient": 0.008154718730832603,
+            "contribution": 0.015955009652540642
+          },
+          {
+            "feature": "underfill_x_log_split_k_depth",
+            "raw": 0.0,
+            "standardized": -1.7132604057069807,
+            "coefficient": 0.15110782606636328,
+            "contribution": -0.25888705539195744
+          }
+        ]
+      }
+    },
+    {
+      "family": "direct_groupedn2",
+      "measured_ms": 8.3361,
+      "measured_host_ratio": 1.6443309136815527,
+      "predicted_host_ratio": 1.1421362143709344,
+      "uncalibrated_log_ratio": 0.48149667105827293,
+      "analytical_features": {
+        "flops": 34359738368,
+        "unique_remote_bytes": 58720256,
+        "local_bytes": 20971520,
+        "rho_n": 2,
+        "gamma": 16,
+        "split_k_slices": 1,
+        "n_tiles_per_cta": 2,
+        "split_k_depth": 8192.0,
+        "reduction_bytes": 0,
+        "underfill": 0.8518518518518519
+      },
+      "training_support": {
+        "family_m_values": [
+          64
+        ],
+        "same_m_family_workloads": 0,
+        "same_mkn_family_workloads": 0
+      },
+      "explanation": {
+        "predicted_log_ratio": 0.13290038115322073,
+        "intercept": -0.03803122862687321,
+        "calibration_offset": -0.3485962899050522,
+        "terms": [
+          {
+            "feature": "log_flops",
+            "raw": 35.0,
+            "standardized": 2.4956901827328197,
+            "coefficient": -0.20863094544933825,
+            "contribution": -0.52067820237218
+          },
+          {
+            "feature": "log_unique_remote_bytes",
+            "raw": 25.807354922057606,
+            "standardized": 3.002995097135354,
+            "coefficient": -0.03530955088877683,
+            "contribution": -0.1060344082010481
+          },
+          {
+            "feature": "log_local_bytes",
+            "raw": 24.32192809488736,
+            "standardized": 1.008759534292958,
+            "coefficient": 0.5857517953759224,
+            "contribution": 0.5908827083146795
+          },
+          {
+            "feature": "log_split_k_depth",
+            "raw": 13.0,
+            "standardized": 1.943962139050647,
+            "coefficient": 0.06262986907971549,
+            "contribution": 0.1217500942646657
+          },
+          {
+            "feature": "log_q",
+            "raw": 0.0,
+            "standardized": -1.414213562373095,
+            "coefficient": -0.1500972890044279,
+            "contribution": 0.21226962178549594
+          },
+          {
+            "feature": "grouped",
+            "raw": 1.0,
+            "standardized": 1.760681686165901,
+            "coefficient": -0.010541667299560391,
+            "contribution": -0.018560520555989928
+          },
+          {
+            "feature": "log_rho_n",
+            "raw": 1.0,
+            "standardized": -0.6983335483162507,
+            "coefficient": -0.10600741826053951,
+            "contribution": 0.07402853654172747
+          },
+          {
+            "feature": "log_gamma",
+            "raw": 4.0,
+            "standardized": -0.1456321661435779,
+            "coefficient": -0.15271438754283606,
+            "contribution": 0.022240127059153045
+          },
+          {
+            "feature": "underfill",
+            "raw": 0.8518518518518519,
+            "standardized": 0.5438590705011773,
+            "coefficient": -0.1530536246834491,
+            "contribution": -0.08323960205717669
+          },
+          {
+            "feature": "log_reduction_bytes",
+            "raw": 0.0,
+            "standardized": -1.9538936286773476,
+            "coefficient": -0.10833642455849322,
+            "contribution": 0.21167784969852405
+          },
+          {
+            "feature": "q_minus_one",
+            "raw": 0.0,
+            "standardized": -0.9532062476387962,
+            "coefficient": 0.20970451899043716,
+            "contribution": -0.1998916576597733
+          },
+          {
+            "feature": "grouped_x_log_split_k_depth",
+            "raw": 13.0,
+            "standardized": 2.7085810334847413,
+            "coefficient": 0.008154718730832603,
+            "contribution": 0.022087716487735953
+          },
+          {
+            "feature": "underfill_x_log_split_k_depth",
+            "raw": 11.074074074074074,
+            "standardized": 1.2772047709466285,
+            "coefficient": 0.15110782606636328,
+            "contribution": 0.19299563637933248
+          }
+        ]
+      }
+    },
+    {
+      "family": "splitk16",
+      "measured_ms": 6.2313,
+      "measured_host_ratio": 1.2291502288148966,
+      "predicted_host_ratio": 1.3164625017178373,
+      "uncalibrated_log_ratio": 0.6235445061401675,
+      "analytical_features": {
+        "flops": 34359738368,
+        "unique_remote_bytes": 58720256,
+        "local_bytes": 146800640,
+        "rho_n": 4,
+        "gamma": 512,
+        "split_k_slices": 16,
+        "n_tiles_per_cta": 1,
+        "split_k_depth": 512.0,
+        "reduction_bytes": 125829120,
+        "underfill": 0.0
+      },
+      "training_support": {
+        "family_m_values": [
+          32,
+          64,
+          128,
+          256,
+          512
+        ],
+        "same_m_family_workloads": 3,
+        "same_mkn_family_workloads": 1
+      },
+      "explanation": {
+        "predicted_log_ratio": 0.2749482162351154,
+        "intercept": -0.03803122862687321,
+        "calibration_offset": -0.3485962899050522,
+        "terms": [
+          {
+            "feature": "log_flops",
+            "raw": 35.0,
+            "standardized": 2.4956901827328197,
+            "coefficient": -0.20863094544933825,
+            "contribution": -0.52067820237218
+          },
+          {
+            "feature": "log_unique_remote_bytes",
+            "raw": 25.807354922057606,
+            "standardized": 3.002995097135354,
+            "coefficient": -0.03530955088877683,
+            "contribution": -0.1060344082010481
+          },
+          {
+            "feature": "log_local_bytes",
+            "raw": 27.129283016944967,
+            "standardized": 2.672308003087229,
+            "coefficient": 0.5857517953759224,
+            "contribution": 1.5653092106057902
+          },
+          {
+            "feature": "log_split_k_depth",
+            "raw": 9.0,
+            "standardized": -0.07382134705255629,
+            "coefficient": 0.06262986907971549,
+            "contribution": -0.00462342130118984
+          },
+          {
+            "feature": "log_q",
+            "raw": 4.0,
+            "standardized": 1.414213562373095,
+            "coefficient": -0.1500972890044279,
+            "contribution": -0.21226962178549594
+          },
+          {
+            "feature": "grouped",
+            "raw": 0.0,
+            "standardized": -0.5679618342470648,
+            "coefficient": -0.010541667299560391,
+            "contribution": 0.005987264695480622
+          },
+          {
+            "feature": "log_rho_n",
+            "raw": 2.0,
+            "standardized": 0.15634333171259338,
+            "coefficient": -0.10600741826053951,
+            "contribution": -0.016573552957103155
+          },
+          {
+            "feature": "log_gamma",
+            "raw": 9.0,
+            "standardized": 2.242735358611101,
+            "coefficient": -0.15271438754283606,
+            "contribution": -0.34249795671095706
+          },
+          {
+            "feature": "underfill",
+            "raw": 0.0,
+            "standardized": -1.9600301201865336,
+            "coefficient": -0.1530536246834491,
+            "contribution": 0.29998971438328537
+          },
+          {
+            "feature": "log_reduction_bytes",
+            "raw": 26.90689060707403,
+            "standardized": 1.111147829599016,
+            "coefficient": -0.10833642455849322,
+            "contribution": -0.1203777830146873
+          },
+          {
+            "feature": "q_minus_one",
+            "raw": 15.0,
+            "standardized": 1.7964271590115777,
+            "coefficient": 0.20970451899043716,
+            "contribution": 0.37671889328188046
+          },
+          {
+            "feature": "grouped_x_log_split_k_depth",
+            "raw": 0.0,
+            "standardized": -0.5502760564641688,
+            "coefficient": 0.008154718730832603,
+            "contribution": -0.004487346464777055
+          },
+          {
+            "feature": "underfill_x_log_split_k_depth",
+            "raw": 0.0,
+            "standardized": -1.7132604057069807,
+            "coefficient": 0.15110782606636328,
+            "contribution": -0.25888705539195744
+          }
+        ]
+      }
+    },
+    {
+      "family": "splitk16_groupedn2",
+      "measured_ms": 3.5872,
+      "measured_host_ratio": 0.7075903424333281,
+      "predicted_host_ratio": 1.5408716422098114,
+      "uncalibrated_log_ratio": 0.7809445476471355,
+      "analytical_features": {
+        "flops": 34359738368,
+        "unique_remote_bytes": 58720256,
+        "local_bytes": 146800640,
+        "rho_n": 2,
+        "gamma": 256,
+        "split_k_slices": 16,
+        "n_tiles_per_cta": 2,
+        "split_k_depth": 512.0,
+        "reduction_bytes": 125829120,
+        "underfill": 0.0
+      },
+      "training_support": {
+        "family_m_values": [
+          64
+        ],
+        "same_m_family_workloads": 0,
+        "same_mkn_family_workloads": 0
+      },
+      "explanation": {
+        "predicted_log_ratio": 0.43234825774208335,
+        "intercept": -0.03803122862687321,
+        "calibration_offset": -0.3485962899050522,
+        "terms": [
+          {
+            "feature": "log_flops",
+            "raw": 35.0,
+            "standardized": 2.4956901827328197,
+            "coefficient": -0.20863094544933825,
+            "contribution": -0.52067820237218
+          },
+          {
+            "feature": "log_unique_remote_bytes",
+            "raw": 25.807354922057606,
+            "standardized": 3.002995097135354,
+            "coefficient": -0.03530955088877683,
+            "contribution": -0.1060344082010481
+          },
+          {
+            "feature": "log_local_bytes",
+            "raw": 27.129283016944967,
+            "standardized": 2.672308003087229,
+            "coefficient": 0.5857517953759224,
+            "contribution": 1.5653092106057902
+          },
+          {
+            "feature": "log_split_k_depth",
+            "raw": 9.0,
+            "standardized": -0.07382134705255629,
+            "coefficient": 0.06262986907971549,
+            "contribution": -0.00462342130118984
+          },
+          {
+            "feature": "log_q",
+            "raw": 4.0,
+            "standardized": 1.414213562373095,
+            "coefficient": -0.1500972890044279,
+            "contribution": -0.21226962178549594
+          },
+          {
+            "feature": "grouped",
+            "raw": 1.0,
+            "standardized": 1.760681686165901,
+            "coefficient": -0.010541667299560391,
+            "contribution": -0.018560520555989928
+          },
+          {
+            "feature": "log_rho_n",
+            "raw": 1.0,
+            "standardized": -0.6983335483162507,
+            "coefficient": -0.10600741826053951,
+            "contribution": 0.07402853654172747
+          },
+          {
+            "feature": "log_gamma",
+            "raw": 8.0,
+            "standardized": 1.7650618536601652,
+            "coefficient": -0.15271438754283606,
+            "contribution": -0.26955033995693506
+          },
+          {
+            "feature": "underfill",
+            "raw": 0.0,
+            "standardized": -1.9600301201865336,
+            "coefficient": -0.1530536246834491,
+            "contribution": 0.29998971438328537
+          },
+          {
+            "feature": "log_reduction_bytes",
+            "raw": 26.90689060707403,
+            "standardized": 1.111147829599016,
+            "coefficient": -0.10833642455849322,
+            "contribution": -0.1203777830146873
+          },
+          {
+            "feature": "q_minus_one",
+            "raw": 15.0,
+            "standardized": 1.7964271590115777,
+            "coefficient": 0.20970451899043716,
+            "contribution": 0.37671889328188046
+          },
+          {
+            "feature": "grouped_x_log_split_k_depth",
+            "raw": 9.0,
+            "standardized": 1.705855775038923,
+            "coefficient": 0.008154718730832603,
+            "contribution": 0.013910774040808871
+          },
+          {
+            "feature": "underfill_x_log_split_k_depth",
+            "raw": 0.0,
+            "standardized": -1.7132604057069807,
+            "coefficient": 0.15110782606636328,
+            "contribution": -0.25888705539195744
+          }
+        ]
+      }
+    }
+  ],
+  "oracle_vs_selected": {
+    "predicted_ratio": 1.2433932298116799,
+    "measured_ratio": 0.6092439922820558,
+    "feature_contribution_differences": [
+      {
+        "feature": "log_local_bytes",
+        "oracle_minus_selected": 0.22633433688106075
+      },
+      {
+        "feature": "log_q",
+        "oracle_minus_selected": -0.10613481089274797
+      },
+      {
+        "feature": "log_rho_n",
+        "oracle_minus_selected": 0.09060208949883063
+      },
+      {
+        "feature": "q_minus_one",
+        "oracle_minus_selected": 0.0768814067922205
+      },
+      {
+        "feature": "log_split_k_depth",
+        "oracle_minus_selected": -0.03159337889146389
+      },
+      {
+        "feature": "grouped",
+        "oracle_minus_selected": -0.02454778525147055
+      },
+      {
+        "feature": "grouped_x_log_split_k_depth",
+        "oracle_minus_selected": 0.022486591729049467
+      },
+      {
+        "feature": "log_reduction_bytes",
+        "oracle_minus_selected": -0.019559885072466907
+      },
+      {
+        "feature": "underfill_x_log_split_k_depth",
+        "oracle_minus_selected": -0.01662444685446217
+      },
+      {
+        "feature": "log_flops",
+        "oracle_minus_selected": 0.0
+      },
+      {
+        "feature": "log_unique_remote_bytes",
+        "oracle_minus_selected": 0.0
+      },
+      {
+        "feature": "log_gamma",
+        "oracle_minus_selected": 0.0
+      },
+      {
+        "feature": "underfill",
+        "oracle_minus_selected": 0.0
+      }
+    ],
+    "interpretation": "linear-score decomposition, not a causal attribution"
+  },
+  "sources": [
+    {
+      "path": "EDM-IR/tools/evaluate_relative_selector.py",
+      "sha256": "d6ca3ded41e67082666b3f225948e85c8f7ae2f17009dc4f4a0ec786062f19bf"
+    },
+    {
+      "path": "EDM-IR/tools/prepare_selector_dataset.py",
+      "sha256": "6ac85f8e6dbabdc7169c2a9f90f4879d8a2c50cff9f0218318395a85ca056569"
+    },
+    {
+      "path": "EDM-IR/edmir/compiler/relative_selection.py",
+      "sha256": "47e425ce32d60577b1ee38e1e7a4f7f542dab06599b2ae1a8b694d7d09aed4c9"
+    },
+    {
+      "path": "EDM-IR/edmir/compiler/measurement_dataset.py",
+      "sha256": "8db18ddb079ca7893af4b72d089566a33dd91ab4eb549b55a70366c05c7f0c43"
+    },
+    {
+      "path": "EDM-IR/edmir/compiler/two_stage_selection.py",
+      "sha256": "4d875a82ca57fbd07ce538a4fecf4db0d306c963945c010bcbe6cc05a2e8a8d2"
+    },
+    {
+      "path": "EDM-IR/tools/debug_relative_selector.py",
+      "sha256": "9655d209066ecbc81908f082c74b556ea5a7b080ce8db56fa434a3db736869a8"
+    },
+    {
+      "path": "EDM-IR/edmir/compiler/fused_selection.py",
+      "sha256": "723bda19fd4dd14cda10bef40dd878d39698180537d83a50c4a4dcce00e08e58"
+    },
+    {
+      "path": "EDM-IR/edmir/compiler/fused_evaluation.py",
+      "sha256": "c279cc23a070bda79a68913bac38690ebdf4e72253088958b38f2a3fe9e2fb12"
+    },
+    {
+      "path": "EDM-IR/edmir/compiler/roofline_accounting.py",
+      "sha256": "6d4201a9f33fd42af5425825ef4b3307a6eb02181ab5f024ee0cd0922fb6bc48"
+    }
+  ],
+  "limits": [
+    "Input/model validation does not provide a latency-error bound.",
+    "The relative model remains an offline experiment, not the compile-fused K-rule path.",
+    "Environment strings are declared metadata, not a runtime hardware attestation.",
+    "No new training labels or independent generalization evidence were added."
+  ]
+}

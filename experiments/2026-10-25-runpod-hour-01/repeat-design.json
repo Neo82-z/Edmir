@@ -1,0 +1,31 @@
+{
+  "declared_utc": "2026-10-25T05:50:38.188539+00:00",
+  "before_first_stage_completed": true,
+  "condition": "After original four frozen stages, if deadline leaves >=12 minutes for anchor repeat and final retrieval",
+  "stage": "anchors",
+  "processes": 93,
+  "same_package_and_executables": true,
+  "same_inputs_warmup_iterations_order": true,
+  "separate_work_directory": "work-recheck",
+  "purpose": "Independent temporal recheck of all anchor configurations; initial run overlapped briefly with a file transfer",
+  "no_pooling": true,
+  "no_replacement_of_original_measurements": true,
+  "fit": false,
+  "library_extension": {
+    "declared_utc": "2026-10-25T06:06:41.697052+00:00",
+    "adaptive_after_primary_library_results": true,
+    "stage": "library",
+    "processes": 24,
+    "purpose": "Verify K768 CUTLASS/cuBLASLt ranking reversal and K1536 control",
+    "same_frozen_plan_and_algorithms": true
+  },
+  "crossings_extension": {
+    "declared_utc": "2026-10-25T06:13:08.082055+00:00",
+    "stage": "crossings",
+    "processes": 54,
+    "purpose": "Complete repeated coverage of all 57 primary configurations, including M-sweep plateaus and near ties",
+    "same_frozen_plan": true,
+    "before_inspecting_repeat_labels": true,
+    "adaptive_budget_decision": true
+  }
+}

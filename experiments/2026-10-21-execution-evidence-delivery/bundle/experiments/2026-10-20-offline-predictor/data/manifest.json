@@ -1,0 +1,205 @@
+{
+  "schema": "edmir.offline-measurements.v1",
+  "evidence_status": "retrospective development; no fresh held-out labels",
+  "eligible_for_compiler_admission": false,
+  "counts": {
+    "selector_rows": 599,
+    "selector_shapes": 64,
+    "historical_roles": {
+      "development": 346,
+      "calibration": 44,
+      "heldout": 209
+    },
+    "scoring_overrides": 10,
+    "repeat_observations": 12,
+    "component_rows": 156,
+    "component_scopes": {
+      "standalone_gemm": 72,
+      "standalone_collective": 84
+    }
+  },
+  "environments": {
+    "a100-sxm4-80gb-p4-2026-08-26": {
+      "gpu": "NVIDIA A100-SXM4-80GB",
+      "world_size": 4,
+      "sm_count": 108,
+      "topology": "NV12 full peer access",
+      "evidence": {
+        "path": "experiments/2026-08-26-runpod-4xa100-cost-model/README.md",
+        "sha256": "f1b556065699ad510fbba7787ea9dc9f87548563bc9229ebee809bdf86801188"
+      },
+      "pooling_policy": "separate collection/stack; not interchangeable calibration"
+    },
+    "a100-sxm4-80gb-p4-2026-08-29": {
+      "gpu": "NVIDIA A100-SXM4-80GB",
+      "world_size": 4,
+      "sm_count": 108,
+      "topology": "NV12 full peer access",
+      "evidence": {
+        "path": "experiments/2026-08-29-a100-grouped-n-plan/README.md",
+        "sha256": "8703a0208734df21d710181f6c95a804952047b8aa2ee1897e14a28c917138f6"
+      },
+      "pooling_policy": "separate collection/stack; not interchangeable calibration"
+    },
+    "a100-sxm4-80gb-p8-2026-08-30": {
+      "gpu": "NVIDIA A100-SXM4-80GB",
+      "world_size": 8,
+      "sm_count": 108,
+      "topology": "NV12 full peer access",
+      "evidence": {
+        "path": "experiments/2026-08-30-a100-8gpu/README.md",
+        "sha256": "71dc68a9613c6bd8a53d225297222c0c3bed6f73235b3b60c573efd7d118faa2"
+      },
+      "pooling_policy": "separate collection/stack; not interchangeable calibration"
+    }
+  },
+  "inputs": [
+    {
+      "path": "experiments/2026-08-26-a100-cutlass-cost-model/results/cublas_gemm_measurements.jsonl",
+      "sha256": "99a8735cf982b010aefcc3c01888cbc9c5f403b4c155e4f1b146c46e87f66650"
+    },
+    {
+      "path": "experiments/2026-08-26-a100-cutlass-cost-model/results/isolated_gemm_measurements.jsonl",
+      "sha256": "557929d248563e66e6797b169dcaefdf28cb5353178e5ddfa5577e8f120da134"
+    },
+    {
+      "path": "experiments/2026-08-26-runpod-4xa100-cost-model/README.md",
+      "sha256": "f1b556065699ad510fbba7787ea9dc9f87548563bc9229ebee809bdf86801188"
+    },
+    {
+      "path": "experiments/2026-08-29-a100-grouped-n-plan/README.md",
+      "sha256": "8703a0208734df21d710181f6c95a804952047b8aa2ee1897e14a28c917138f6"
+    },
+    {
+      "path": "experiments/2026-08-29-a100-grouped-n-plan/raw/extracted-v2/2026-08-29-g2/m128-n512/results.csv",
+      "sha256": "f52a42292184c559797988fe8c02026c0fdc09345f3c5a1fe607bd0f75de4188"
+    },
+    {
+      "path": "experiments/2026-08-29-a100-grouped-n-plan/raw/extracted-v2/2026-08-29-g2/m256-n512-longk/results.csv",
+      "sha256": "2867f7ffafa739c9bcae844e4df13f841d38f5654490a10c7b760453d3103020"
+    },
+    {
+      "path": "experiments/2026-08-29-a100-grouped-n-plan/raw/extracted-v2/2026-08-29-g2/m32-n512/results.csv",
+      "sha256": "ff21158fb86c139b5573a938eab7ca5cabe78fa61e4c50a7c147da6dabd5174f"
+    },
+    {
+      "path": "experiments/2026-08-29-a100-grouped-n-plan/raw/extracted-v2/2026-08-29-g2/m512-n512-longk/results.csv",
+      "sha256": "ac2693d1866752db1098bafecec01e35a58eab3fd8374c458927d2fcaffdbea0"
+    },
+    {
+      "path": "experiments/2026-08-29-a100-grouped-n-plan/raw/extracted-v2/2026-08-29-g2/m64-n1024/results.csv",
+      "sha256": "a1c661f0691f6eb73fa6f245a6006bf439a1ecf8500b71fe638ab5c61aa4c599"
+    },
+    {
+      "path": "experiments/2026-08-29-a100-grouped-n-plan/raw/extracted-v2/2026-08-29-g2/m64-n128/results.csv",
+      "sha256": "c7b606f8071190515e1d57a039c480cdf1db42b7e542c6df1f6e470395dad48d"
+    },
+    {
+      "path": "experiments/2026-08-29-a100-grouped-n-plan/raw/extracted-v2/2026-08-29-g2/m64-n2048/results.csv",
+      "sha256": "c7ecd13c5ea5f32e4b91180b1805554aef4dd8e697b0f6ccbcf6cc5fc9420d06"
+    },
+    {
+      "path": "experiments/2026-08-29-a100-grouped-n-plan/raw/extracted-v2/2026-08-29-g2/m64-n256/results.csv",
+      "sha256": "def0ea9071600ff6c85475edfead1d0be81427f7c5e0cad2e0459b5a0552ee5c"
+    },
+    {
+      "path": "experiments/2026-08-29-a100-grouped-n-plan/raw/extracted-v2/2026-08-29-g2/m64-n512/results.csv",
+      "sha256": "275a951be305d5504c0d6f9ad4e73e4c3acd75f73a0c417dadc63123d6636665"
+    },
+    {
+      "path": "experiments/2026-08-29-a100-grouped-n-plan/raw/extracted-v2/2026-08-29-g2/nccl/alltoall.txt",
+      "sha256": "6ffec96ab83a324ea1e499627373c31833199acea324746bbeb21fc2a9111e0d"
+    },
+    {
+      "path": "experiments/2026-08-29-a100-grouped-n-plan/two_stage_selector_report.json",
+      "sha256": "a4cfa05d94daad6db058df7ce17c02133eb49e14e07d099358f1cf108919041e"
+    },
+    {
+      "path": "experiments/2026-08-30-a100-8gpu/README.md",
+      "sha256": "71dc68a9613c6bd8a53d225297222c0c3bed6f73235b3b60c573efd7d118faa2"
+    },
+    {
+      "path": "experiments/2026-08-30-a100-8gpu/extracted/experiments/2026-08-29-a100-8gpu-transfer-plan/manifest.json",
+      "sha256": "4fcbf170c783be49b21434eec4dad02d90643b143f662e23ad0a2826092641d9"
+    },
+    {
+      "path": "experiments/2026-08-30-a100-8gpu/extracted/logs/20_nccl_alltoall.txt",
+      "sha256": "793479b1df87a94b6e71f5cfd4a29b9dc7cb9f3ab3dc442c11c333dbd5a78d95"
+    },
+    {
+      "path": "experiments/2026-08-30-a100-8gpu/extracted/results/p8-analysis/boundary-repeats/replication_results.csv",
+      "sha256": "df1cd068e5f9a98a11d10f943dba6688e1594c782cc5fa288cfcc26c3fd400cb"
+    },
+    {
+      "path": "experiments/2026-08-30-a100-8gpu/extracted/results/p8-frozen/cal-fixed-total-m32-n512-k1024/repeat-01/results.csv",
+      "sha256": "3c597bbcb022a870b90dbae78af6e490883a93befad84ea7b51d8e4efb6160da"
+    },
+    {
+      "path": "experiments/2026-08-30-a100-8gpu/extracted/results/p8-timing/cal-fixed-peer-m64-n1024-k2048/repeat-01/results.csv",
+      "sha256": "1d3009113c13e18ef0eae35bb05bec384452b6f73e73f2a002a5d13664effb67"
+    },
+    {
+      "path": "experiments/2026-08-30-a100-8gpu/extracted/results/p8-timing/cal-fixed-total-m32-n2048-k4096/repeat-01/results.csv",
+      "sha256": "ef0add251afeefab669dd47e38c9f39deb895200ffa56518b5acb5d2c6864fc8"
+    },
+    {
+      "path": "experiments/2026-08-30-a100-8gpu/extracted/results/p8-timing/cal-host-anchor-m256-n512-k8192/repeat-01/results.csv",
+      "sha256": "ba6fc94649384deb60f7faa80d9fbb7581ca5eaebea89731da7ae22c5792d852"
+    },
+    {
+      "path": "experiments/2026-08-30-a100-8gpu/extracted/results/p8-timing/heldout-fixed-peer-m64-n1024/repeat-01/results.csv",
+      "sha256": "19d56f0a8bca666f4c49095e64cd3737de534dc548154399f8c46b12cbe44f56"
+    },
+    {
+      "path": "experiments/2026-08-30-a100-8gpu/extracted/results/p8-timing/heldout-fixed-peer-m64-n512/repeat-01/results.csv",
+      "sha256": "b2599d702fa5e1378c60b2436050a5942146d22e1627e593ef1e56ba06a5206b"
+    },
+    {
+      "path": "experiments/2026-08-30-a100-8gpu/extracted/results/p8-timing/heldout-fixed-total-m32-n1024/repeat-01/results.csv",
+      "sha256": "865f2d6cd2d9278c01454bf0a36f85c85f653220bea1227d4e3b0ea212200b37"
+    },
+    {
+      "path": "experiments/2026-08-30-a100-8gpu/extracted/results/p8-timing/heldout-fixed-total-m32-n2048/repeat-01/results.csv",
+      "sha256": "e52487d2f04cd7f6a99e1b68147ecf9e60fd9504195052df434df87fe750167b"
+    },
+    {
+      "path": "experiments/2026-08-30-a100-8gpu/extracted/results/p8-timing/heldout-fixed-total-m32-n512/repeat-01/results.csv",
+      "sha256": "9dbada2ad817c3bfa31eb13c9a3720fc63ddba14a0ba53ca681bcdab959adfb1"
+    },
+    {
+      "path": "experiments/2026-08-30-a100-8gpu/extracted/results/p8-timing/heldout-host-anchor-m512-n512-k8192/repeat-01/results.csv",
+      "sha256": "0bcab7529733939b99b0ae66be48722baaf66ed207d54ff9b2a81242f19ffae8"
+    },
+    {
+      "path": "experiments/2026-08-30-a100-8gpu/extracted/results/p8-timing/heldout-host-boundary-m64-n2048/repeat-01/results.csv",
+      "sha256": "eefa99939cb5303cad789fb5681e5cbf8443d393f9d32016070c1da87f0e1a4a"
+    },
+    {
+      "path": "experiments/2026-10-19-selector-baseline-design/interaction_results.json",
+      "sha256": "51b098b4244c67aefbdbb95ee6a65ccb0c5c67d3ccf77e5114ea6e08cca70b71"
+    }
+  ],
+  "full_operator_collector": {
+    "path": "EDM-IR/runtime/tools/benchmark_generated.cpp",
+    "p4_commit": "f584d7d",
+    "p8_commit": "72c01fd40d16210f667bd2c7f3697815f190c872",
+    "sha256_at_both_commits": "4c9e705ae5bee2d5c03db6cf5c7c1cdb7a9264d665de24486a002b380ae7853c",
+    "timed_region": "execute plus synchronize; preparation and input copies excluded",
+    "percentile_rule": "sorted[floor(fraction * (n - 1))]"
+  },
+  "files": {
+    "selector_measurements.jsonl": "fa98a7a05ca858730029f0331c86a549adc294495d8c5beeea57f229a5659c7a",
+    "component_measurements.jsonl": "0af2a1d9b87666acde7e4779ad95604cb3b293b77a8e0a701012cc5f2ea269b0"
+  },
+  "normalization": {
+    "latency": "ms; microsecond source values divided by 1000",
+    "remote_input_bytes": "full-program sum across ranks; unchanged",
+    "missing_candidates": "absent; never imputed",
+    "repeat_medians": "replace only scoring labels; originals retained",
+    "nccl_NA_wrong": "null, not zero",
+    "external_component_data": "not imported into fused training",
+    "device_gemm_rows": "four device observations per shape, not four new workloads",
+    "full_operator_timer": "host wall time includes dispatch and synchronization; not isolated GPU kernel time",
+    "reported_percentile": "collector uses sorted[floor(fraction*(iterations-1))], not interpolated quantiles"
+  }
+}

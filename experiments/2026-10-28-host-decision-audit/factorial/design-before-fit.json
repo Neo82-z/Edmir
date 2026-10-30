@@ -1,0 +1,76 @@
+{
+  "variants": [
+    {
+      "representation": "original",
+      "cross_path": false,
+      "balanced": false,
+      "width": 8
+    },
+    {
+      "representation": "original",
+      "cross_path": false,
+      "balanced": true,
+      "width": 8
+    },
+    {
+      "representation": "original",
+      "cross_path": true,
+      "balanced": false,
+      "width": 8
+    },
+    {
+      "representation": "original",
+      "cross_path": true,
+      "balanced": true,
+      "width": 8
+    },
+    {
+      "representation": "path_geometry",
+      "cross_path": false,
+      "balanced": false,
+      "width": 8
+    },
+    {
+      "representation": "path_geometry",
+      "cross_path": false,
+      "balanced": true,
+      "width": 8
+    },
+    {
+      "representation": "path_geometry",
+      "cross_path": true,
+      "balanced": false,
+      "width": 8
+    },
+    {
+      "representation": "path_geometry",
+      "cross_path": true,
+      "balanced": true,
+      "width": 8
+    },
+    {
+      "representation": "path_geometry",
+      "cross_path": true,
+      "balanced": false,
+      "width": 0
+    }
+  ],
+  "settings": {
+    "epochs": 1000,
+    "learning_rate": 0.003,
+    "weight_decay": 0.001,
+    "temperature": 0.05,
+    "gradient_clip": 10.0,
+    "seeds": [
+      0,
+      1
+    ],
+    "max_seconds": 10.0
+  },
+  "data": "same original P4 measurements and same four folds",
+  "weighting": "balanced uses training-fold measured winner counts only; evaluation remains shape-uniform",
+  "initialization_and_scaler": "same within a feature representation; not changed by loss or weighting",
+  "total_seconds_cap": 180,
+  "new_GPU_data": 0,
+  "new_boundary_shapes_used": false
+}

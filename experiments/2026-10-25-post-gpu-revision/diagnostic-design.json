@@ -1,0 +1,374 @@
+{
+  "schema": "edmir.targeted-stage-diagnostic.v1",
+  "status": "local measurement design; diagnostic instrumentation not yet implemented or GPU-validated",
+  "execution_package_ready": false,
+  "gpu_runs": 0,
+  "independent_generalization_test": false,
+  "priority_order": [
+    "stable M256 q8/q2 and large N differences",
+    "short K stage costs",
+    "adjacent M growth"
+  ],
+  "shape_order": "P,M,K,N",
+  "primary_timing": {
+    "scope": "host steady_clock execute()+synchronize()",
+    "warmup": 20,
+    "samples_per_process": 100,
+    "processes_per_configuration": 3,
+    "profiler": false
+  },
+  "configurations": [
+    {
+      "shape": [
+        4,
+        192,
+        8192,
+        512
+      ],
+      "family": "splitk2",
+      "questions": [
+        "M/q growth and stable q8/q2 reversal"
+      ]
+    },
+    {
+      "shape": [
+        4,
+        192,
+        8192,
+        512
+      ],
+      "family": "splitk8",
+      "questions": [
+        "M/q growth and stable q8/q2 reversal"
+      ]
+    },
+    {
+      "shape": [
+        4,
+        256,
+        8192,
+        512
+      ],
+      "family": "splitk2",
+      "questions": [
+        "M/q growth and stable q8/q2 reversal"
+      ]
+    },
+    {
+      "shape": [
+        4,
+        256,
+        8192,
+        512
+      ],
+      "family": "splitk8",
+      "questions": [
+        "M/q growth and stable q8/q2 reversal"
+      ]
+    },
+    {
+      "shape": [
+        4,
+        320,
+        8192,
+        512
+      ],
+      "family": "splitk2",
+      "questions": [
+        "M/q growth and stable q8/q2 reversal"
+      ]
+    },
+    {
+      "shape": [
+        4,
+        320,
+        8192,
+        512
+      ],
+      "family": "splitk8",
+      "questions": [
+        "M/q growth and stable q8/q2 reversal"
+      ]
+    },
+    {
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      "family": "host",
+      "questions": [
+        "large N with matched strong hosts"
+      ]
+    },
+    {
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      "family": "splitk4_groupedn2",
+      "questions": [
+        "large N with matched strong hosts"
+      ]
+    },
+    {
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      "family": "host_merged_cutlass",
+      "questions": [
+        "large N with matched strong hosts"
+      ]
+    },
+    {
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      "family": "host_merged_cublaslt",
+      "questions": [
+        "large N with matched strong hosts"
+      ]
+    },
+    {
+      "shape": [
+        4,
+        64,
+        1024,
+        512
+      ],
+      "family": "host",
+      "questions": [
+        "short K host submission versus device work"
+      ]
+    },
+    {
+      "shape": [
+        4,
+        64,
+        1024,
+        512
+      ],
+      "family": "host_merged_cutlass",
+      "questions": [
+        "short K host submission versus device work"
+      ]
+    },
+    {
+      "shape": [
+        4,
+        64,
+        1024,
+        512
+      ],
+      "family": "host_merged_cublaslt",
+      "questions": [
+        "short K host submission versus device work"
+      ]
+    }
+  ],
+  "configuration_count": 13,
+  "primary_process_count": 39,
+  "host_support_design": {
+    "training_shapes": [
+      [
+        4,
+        64,
+        4096,
+        512
+      ],
+      [
+        4,
+        256,
+        4096,
+        512
+      ],
+      [
+        4,
+        256,
+        1024,
+        512
+      ],
+      [
+        4,
+        256,
+        4096,
+        2048
+      ]
+    ],
+    "support_check_shape": [
+      4,
+      512,
+      4096,
+      512
+    ],
+    "known_development_shape_not_new_blind_test": true,
+    "linear_rank_check": {
+      "host_merged_cutlass": {
+        "training_rank": 4,
+        "rank_with_target": 4,
+        "feature_count": 4,
+        "target_in_training_row_span": true,
+        "outside_training_feature_indices": [
+          1
+        ],
+        "interpretation": "Unconstrained linear identifiability only. Nonnegative constraints/ridge can pick coefficients but do not add observations. Full rank is not evidence of causal or extrapolation accuracy.",
+        "confidence_probability": null
+      },
+      "host_merged_cublaslt": {
+        "training_rank": 3,
+        "rank_with_target": 3,
+        "feature_count": 3,
+        "target_in_training_row_span": true,
+        "outside_training_feature_indices": [
+          1
+        ],
+        "interpretation": "Unconstrained linear identifiability only. Nonnegative constraints/ridge can pick coefficients but do not add observations. Full rank is not evidence of causal or extrapolation accuracy.",
+        "confidence_probability": null
+      }
+    }
+  },
+  "separate_diagnostics": {
+    "CPU": "submission and synchronize wall-clock boundaries with API identity; no additive overlap assumption",
+    "GPU": "per-device events plus dependency timeline; do not merge unsynchronized device clocks",
+    "kernel": "same binary/algorithm isolated GEMM; difference from end-to-end is not communication attribution",
+    "counters": "only if timeline identifies a distinguishing hypothesis; never include profiler time in primary performance"
+  },
+  "stop_conditions": [
+    "semantic/numerical check failure",
+    "execution identity mismatch",
+    "missing ability to distinguish competing stage explanations"
+  ],
+  "runtime_policy": "frozen 10/21 identity for reproduction; repaired runtime is a separate experiment",
+  "optional_host_support_configurations": [
+    {
+      "shape": [
+        4,
+        64,
+        4096,
+        512
+      ],
+      "family": "host_merged_cutlass",
+      "questions": [
+        "host feature support; vary M K N independently"
+      ]
+    },
+    {
+      "shape": [
+        4,
+        64,
+        4096,
+        512
+      ],
+      "family": "host_merged_cublaslt",
+      "questions": [
+        "host feature support; vary M K N independently"
+      ]
+    },
+    {
+      "shape": [
+        4,
+        256,
+        4096,
+        512
+      ],
+      "family": "host_merged_cutlass",
+      "questions": [
+        "host feature support; vary M K N independently"
+      ]
+    },
+    {
+      "shape": [
+        4,
+        256,
+        4096,
+        512
+      ],
+      "family": "host_merged_cublaslt",
+      "questions": [
+        "host feature support; vary M K N independently"
+      ]
+    },
+    {
+      "shape": [
+        4,
+        256,
+        1024,
+        512
+      ],
+      "family": "host_merged_cutlass",
+      "questions": [
+        "host feature support; vary M K N independently"
+      ]
+    },
+    {
+      "shape": [
+        4,
+        256,
+        1024,
+        512
+      ],
+      "family": "host_merged_cublaslt",
+      "questions": [
+        "host feature support; vary M K N independently"
+      ]
+    },
+    {
+      "shape": [
+        4,
+        256,
+        4096,
+        2048
+      ],
+      "family": "host_merged_cutlass",
+      "questions": [
+        "host feature support; vary M K N independently"
+      ]
+    },
+    {
+      "shape": [
+        4,
+        256,
+        4096,
+        2048
+      ],
+      "family": "host_merged_cublaslt",
+      "questions": [
+        "host feature support; vary M K N independently"
+      ]
+    },
+    {
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ],
+      "family": "host_merged_cutlass",
+      "questions": [
+        "host feature support; vary M K N independently"
+      ]
+    },
+    {
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ],
+      "family": "host_merged_cublaslt",
+      "questions": [
+        "host feature support; vary M K N independently"
+      ]
+    }
+  ],
+  "optional_host_support_reason": "Existing eight extension labels already restore full host feature rank and reduce M512 error; do not rent a GPU solely to fill this support gap. Keep this design only for future stage attribution or cross-context verification."
+}

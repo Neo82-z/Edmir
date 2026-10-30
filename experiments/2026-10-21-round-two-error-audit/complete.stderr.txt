@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/Users/neo/code/llm-serving/experiments/2026-10-21-round-two-error-audit/audit.py", line 275, in <module>
+    p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True);main(p.parse_args().out)
+                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/neo/code/llm-serving/experiments/2026-10-21-round-two-error-audit/audit.py", line 208, in main
+    frozen=solve(changed,basis(original))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/neo/code/llm-serving/experiments/2026-10-21-round-two-error-audit/audit.py", line 102, in solve
+    if not check['valid']:raise ArithmeticError('active-region polish failed: '+str(check))
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ArithmeticError: active-region polish failed: {'valid': False, 'projected_gradient': 1.9491352976075405e-14, 'free_parameters': 17, 'active_hinges': 78, 'active_hessian_condition': 124443.52741733893}

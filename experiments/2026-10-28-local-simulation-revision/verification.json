@@ -1,0 +1,146 @@
+{
+  "python_tests": {
+    "axis_residual_selection_test": 11,
+    "resource_service_simulator_test": 10,
+    "dependency_wave_model_test": 10,
+    "prediction_explanation_test": 7
+  },
+  "test_count": 38,
+  "training_calls": [],
+  "scoring_41_shapes_ms": {
+    "median": 21.023250475991517,
+    "max": 204.19954194221646,
+    "repetitions": 12
+  },
+  "maximum_simulation_size": 512,
+  "maximum_size_scenarios": [
+    {
+      "scope": "one per-source GEMM, not whole program",
+      "shape_P_M_K_N": [
+        4,
+        64,
+        8192,
+        4096
+      ],
+      "q": 16,
+      "group_n": 1,
+      "unit": "synthetic_units",
+      "scenario_makespan": 28544.0,
+      "remote_source": false,
+      "order": "partition_major",
+      "memory_service_bytes": 116916224.0,
+      "link_service_bytes": 0.0,
+      "service_bytes_are_measured_physical_traffic": false,
+      "resource_work_lower_bound": 28544.0,
+      "resident_wait_slot_time": 0.0,
+      "completed_ctas": 512,
+      "events": 2048,
+      "stage_transitions": 2048,
+      "cpu_seconds": 0.0040256669744849205,
+      "prediction_us": null,
+      "training_eligible": false,
+      "compiler_admission": false,
+      "assumption": "maximum supported CTA count fixture",
+      "unmodeled": [
+        "GPU placement",
+        "per-SM issue competition",
+        "cache-line coalescing and reuse",
+        "source HBM contention for remote A",
+        "host submission",
+        "other source GEMMs and collectives"
+      ]
+    },
+    {
+      "scope": "one per-source GEMM, not whole program",
+      "shape_P_M_K_N": [
+        4,
+        64,
+        8192,
+        4096
+      ],
+      "q": 16,
+      "group_n": 1,
+      "unit": "synthetic_units",
+      "scenario_makespan": 20352.0,
+      "remote_source": true,
+      "order": "partition_major",
+      "memory_service_bytes": 83361792.0,
+      "link_service_bytes": 33554432.0,
+      "service_bytes_are_measured_physical_traffic": false,
+      "resource_work_lower_bound": 20352.0,
+      "resident_wait_slot_time": 41472.0,
+      "completed_ctas": 512,
+      "events": 74,
+      "stage_transitions": 2048,
+      "cpu_seconds": 0.004474834073334932,
+      "prediction_us": null,
+      "training_eligible": false,
+      "compiler_admission": false,
+      "assumption": "maximum supported CTA count fixture",
+      "unmodeled": [
+        "GPU placement",
+        "per-SM issue competition",
+        "cache-line coalescing and reuse",
+        "source HBM contention for remote A",
+        "host submission",
+        "other source GEMMs and collectives"
+      ]
+    },
+    {
+      "scope": "one per-source GEMM, not whole program",
+      "shape_P_M_K_N": [
+        4,
+        64,
+        8192,
+        4096
+      ],
+      "q": 16,
+      "group_n": 1,
+      "unit": "synthetic_units",
+      "scenario_makespan": 20352.0,
+      "remote_source": true,
+      "order": "tile_major",
+      "memory_service_bytes": 83361792.0,
+      "link_service_bytes": 33554432.0,
+      "service_bytes_are_measured_physical_traffic": false,
+      "resource_work_lower_bound": 20352.0,
+      "resident_wait_slot_time": 1016496.0,
+      "completed_ctas": 512,
+      "events": 424,
+      "stage_transitions": 2048,
+      "cpu_seconds": 0.01320024998858571,
+      "prediction_us": null,
+      "training_eligible": false,
+      "compiler_admission": false,
+      "assumption": "maximum supported CTA count fixture",
+      "unmodeled": [
+        "GPU placement",
+        "per-SM issue competition",
+        "cache-line coalescing and reuse",
+        "source HBM contention for remote A",
+        "host submission",
+        "other source GEMMs and collectives"
+      ]
+    }
+  ],
+  "new_sources_sha256": {
+    "EDM-IR/edmir/compiler/axis_residual_selection.py": "b5eae7591ba2024520955ccc4721e4d6b123f6f8a34c53dee5fcab4862b46013",
+    "EDM-IR/edmir/compiler/resource_service_simulator.py": "426bf30bd6ea2590cdcc521d694247f6d6249faaded0df55c2d981b99d7e471c",
+    "EDM-IR/tests/axis_residual_selection_test.py": "9bf29f09935e73506d7684ce7a5c1dbb9289f38304678c2de78f4bd239740fe4",
+    "EDM-IR/tests/resource_service_simulator_test.py": "478704decb13d75ad36aec6089301ced88891e5d749acfb9c080c4f9ac25b97c",
+    "experiments/2026-10-28-local-simulation-revision/review.py": "b2b1d4da7dc21218e9db09b485d7d56d908a476d67e45fe66fc7e936555f8859",
+    "experiments/2026-10-28-local-simulation-revision/simulate_review.py": "78aff55ebcbcdeab57424ab3fde5c90fc0da95b070f9c8066f7ab1701134e00a",
+    "experiments/2026-10-28-local-simulation-revision/validate.py": "cfb587262d0379006884a704af6043ee904278b7d2a634c77914db6ce38c24d1",
+    "experiments/2026-10-28-local-simulation-revision/README.md": "a299ecb834b9646da86599b3bd19441442eae3416fe03a6121da6f03c4635195"
+  },
+  "frozen_and_protected_files_unchanged": 22,
+  "prior_source_and_evidence_files_unchanged": 122,
+  "frozen_six_parsed_or_scored": false,
+  "GPU_started": false,
+  "new_training_labels": 0,
+  "local_near_perfect_acceptance_passed": false,
+  "compiler_admission": false,
+  "elapsed_seconds": 1.6987812080187723,
+  "first_round_failed_controls_reproduced_exactly": true,
+  "current_source_snapshot": "verified/source/"
+}

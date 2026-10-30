@@ -1,0 +1,85 @@
+{
+  "all_expectations_met": true,
+  "cases": [
+    {
+      "config": "RemotePublication.cfg",
+      "config_sha256": "7c8212fdd732ad773ab2b9700ca858812f21facd54827e870fc9bcee3caff965",
+      "distinct_states": 23,
+      "expectation_met": true,
+      "expected": "safe",
+      "expected_violation": null,
+      "raw_output": "safe.txt",
+      "raw_output_sha256": "c3b9fc0b3406cfc20d76e4dbb573294d7b8bdd3c24c2f0af72e3b0aae2a12f57",
+      "returncode": 0,
+      "states_generated": 32
+    },
+    {
+      "config": "RemotePublicationExpanded.cfg",
+      "config_sha256": "15687e80d7e690e33b0e3058b1cae2ae54981473a7adf21e805cf338e747def0",
+      "distinct_states": 88,
+      "expectation_met": true,
+      "expected": "safe",
+      "expected_violation": null,
+      "raw_output": "expanded.txt",
+      "raw_output_sha256": "4187b8fe5ad8743df7830a9c2ffc20d021e761327f06f91a5cd764f0536349fd",
+      "returncode": 0,
+      "states_generated": 173
+    },
+    {
+      "config": "RemotePublicationUnsafeAcquire.cfg",
+      "config_sha256": "08d252f2b6612f6c4b1a39bb7e2e04632af49712036daf7b4cfa146a6bde6e7b",
+      "distinct_states": 4,
+      "expectation_met": true,
+      "expected": "counterexample",
+      "expected_violation": "AcquireAfterPublish",
+      "raw_output": "unsafe_acquire.txt",
+      "raw_output_sha256": "ca88a4a9b5b322f81e778206331154a115154a8369c4a3f818fd2891ce125bf6",
+      "returncode": 12,
+      "states_generated": 4
+    },
+    {
+      "config": "RemotePublicationUnsafeConsume.cfg",
+      "config_sha256": "5970eb9e88007f1bbd55a97537b1ce3f6c5609bd1bf672fb67e5b4debf4b350c",
+      "distinct_states": 5,
+      "expectation_met": true,
+      "expected": "counterexample",
+      "expected_violation": "ConsumeAfterAcquire",
+      "raw_output": "unsafe_consume.txt",
+      "raw_output_sha256": "28d7a82f30a8579041116f837579e4cafba86a73c48aaa671a4b65c737b4b0e5",
+      "returncode": 12,
+      "states_generated": 5
+    },
+    {
+      "config": "RemotePublicationUnsafeRetire.cfg",
+      "config_sha256": "b4ad6f7800c39f217d86226046a981770fa9215c4d058b7441df9b495f5c3ec3",
+      "distinct_states": 6,
+      "expectation_met": true,
+      "expected": "counterexample",
+      "expected_violation": "CompleteConsumption",
+      "raw_output": "unsafe_retire.txt",
+      "raw_output_sha256": "a2a0c9fa4533ab25d7ae09239fa8164af8b520db5ec12008e49fe3d871b15b99",
+      "returncode": 12,
+      "states_generated": 6
+    },
+    {
+      "config": "RemotePublicationUnsafeOverwrite.cfg",
+      "config_sha256": "325c3ac7a1195142df2ce93f748d4f2ec340099ca7e1c7d8315878d134496f97",
+      "distinct_states": 4,
+      "expectation_met": true,
+      "expected": "counterexample",
+      "expected_violation": "NoOverwriteBeforeConsume",
+      "raw_output": "unsafe_overwrite.txt",
+      "raw_output_sha256": "2a047e426ca23aca94ebb08022f0da5188fbedc6bb65ec0bdfaede049dab88e2",
+      "returncode": 12,
+      "states_generated": 4
+    }
+  ],
+  "executed_at_utc": "2026-09-09T04:57:32.074464+00:00",
+  "java": "openjdk version \"17.0.19\" 2026-04-21",
+  "model": "RemotePublication.tla",
+  "model_sha256": "d9f1fe6b5e584f14f9faf98b6bc64b242584380c7c031d7c5ab6e9de8ddfdd75",
+  "schema": "edmir.publication_tlc_report.v1",
+  "tla2tools_sha256": "936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88",
+  "tlc_version": "2.19 of 08 August 2024",
+  "workers": 1
+}

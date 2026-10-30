@@ -246,6 +246,30 @@ python -m edmir compile-fused examples/a100_fused_problem.json \
 
 No opt-in or any fingerprint/envelope/evidence mismatch selects the host
 fallback while still producing a valid Program, target, and `selection.json`.
+The profile must also identify the same host implementation as the fallback.
+The archived A100 profile measured per-source CUTLASS; the compiler fallback
+uses per-source cuBLAS, so that profile currently rejects admission even with
+opt-in. The report records both identities.
+
+The earlier experimental offline selector is
+`compiler/additive_latency_selection.py`. It fits nonnegative absolute costs
+for the archived per-source CUTLASS host and the fused candidates separately;
+12 bounded pressure-threshold/ridge combinations are selected using only
+inner training groups. Both directions use the same minimum predicted latency.
+This model passed the unchanged retrospective local gates; it is not wired
+into `compile-fused`, because the latter still falls back to cuBLAS and no new
+matched-hardware evidence has been collected. See the
+[acceptance report](../../experiments/2026-10-21-additive-selector-repair/README.md)
+for remaining errors, sensitivity, and reproduction commands.
+
+Current work freezes further fitting and separates execution representation
+from performance evidence. `compiler/execution_ledger.py` emits the actual
+Program and derived dependencies, scoped logical counts and implementation
+identity. `compiler/evidence_selection.py` retains unresolved candidates rather
+than treating fitted point estimates as facts. `edmir explain-execution` is a
+standard-library-only inspection path; it does not change `compile-fused` or
+claim GPU validation. The source assumptions, error-specific comparisons and
+selection contract are documented in [EXECUTION_EVIDENCE.md](EXECUTION_EVIDENCE.md).
 
 ## Extension rules
 

@@ -1,5 +1,24 @@
 # EDM-IR
 
+## Offline routed-benchmark preparation
+
+The [offline readiness guide](docs/ROUTED_OFFLINE_READINESS.md) connects the
+[D7 routing contract](docs/ROUTED_BENCHMARK_CONTRACT.md) to a small BF16/FP32
+CPU reference, strict timing-record validation, paired-block statistics, and
+fresh bounded TLC checks. It requires no GPU. Synthetic fixtures are kept out
+of measured paper exports; a passing rehearsal is **not** GPU readiness.
+
+```bash
+cd EDM-IR
+python3 tools/prepare_routed_benchmark.py --out-dir build/routed-rehearsal
+# Add --jar /absolute/path/tla2tools.jar for fresh TLC checks.
+```
+
+The output directory must be new. No server access, model download, paid
+resource provisioning, or modifications to historical measurements occur.
+
+## Compiler overview
+
 EDM-IR deliberately keeps compilation and analysis different:
 
 ```text
@@ -109,7 +128,7 @@ edge list for schedule generation, verification, and simulation to disagree on.
 ## CPU-only quick start
 
 ```bash
-python -m unittest discover -s tests -p '*_test.py' -v
+for test in tests/*_test.py; do PYTHONPATH=. python "$test" || exit 1; done
 
 python -m edmir compile examples/a2a_gemm_problem.json \
   --profile examples/synthetic_profile.json \
@@ -172,10 +191,14 @@ python -m edmir compile-fused examples/a100_fused_problem.json \
   --out-dir /tmp/edmir-fused-selected
 ```
 
-The example selects split-K8 for the measured K=4096 point. Removing
-`--allow-experimental-fused`, changing any environment field, removing the
-NV12 link labels, or using a shape outside the explicit 45-point envelope
-emits a host fallback. `selection.json` records the chosen family, every
+The retained example now emits the cuBLAS host fallback even with explicit
+opt-in: its speed evidence used per-source CUTLASS, while this compiler's
+fallback uses per-source cuBLAS. `reference_host_baseline_id` must match the
+actual fallback before a profile can admit fused execution. Missing baseline
+identity also rejects admission; old measurement files are not relabelled.
+Changing any environment field, removing the NV12 link labels, or using a shape
+outside the explicit 45-point envelope also emits a host fallback.
+`selection.json` records the reference and fallback host identities, chosen family, every
 candidate, the guard result, exact reason, resolved target, and static traffic
 features. The supplied fingerprint is a retained experiment fixture; it must
 be replaced by the observed server environment on a new run.
@@ -262,6 +285,35 @@ no-Gamma, no-rho, no-reduction, and K-only ablations. Failing the registered
 direction/regret/host-regression gates produces evidence but cannot open the
 default compiler path.
 
+The next selector/baseline experiment design and retrospective interaction
+comparison are recorded in
+[`experiments/2026-10-19-selector-baseline-design`](../experiments/2026-10-19-selector-baseline-design/README.md).
+`tools/evaluate_selector_interactions.py` compares fixed feature alternatives
+on archived data without GPU execution or compiler admission. Evaluation v2
+counts every selected latency above host as a point-estimate host regression;
+the previous host-oracle-only count is retained as `host_admission_errors`.
+
+The audited offline dataset and experimental relative-cost predictor are in
+[`experiments/2026-10-20-offline-predictor`](../experiments/2026-10-20-offline-predictor/README.md).
+`tools/prepare_selector_dataset.py` retains timing scope, environment, source
+hashes, and historical roles; standalone GEMM/NCCL records stay separate.
+`tools/evaluate_relative_selector.py` compares the original models, a fixed
+schedule chosen on training workloads, and within-workload cost ratios.
+This retrospective comparison does not enable compiler admission.
+
+Code-path mapping, input-contract fixes, regression checks, and a feature-level
+trace of the largest remaining prediction error are documented in
+[`experiments/2026-10-20-predictor-debug`](../experiments/2026-10-20-predictor-debug/README.md).
+`tools/debug_relative_selector.py` verifies historical decisions before producing
+that trace. Passing these checks does not establish prediction accuracy on new workloads.
+
+The subsequent [predictor contract audit](../experiments/2026-10-20-predictor-contracts/README.md)
+adds explicit host identities, paired grouped-N support by M/q, a diagnostic
+three-ratio factorization, and frozen predictions for new A100 measurements.
+The factorized fit performs worse on historical data and is not promoted.
+`tools/independent_selector_validation.py` validates and scores complete new
+runs; it does not implement or execute the missing merged-host collectors.
+
 Plan the grouped-N kernel space:
 
 ```bash
@@ -290,6 +342,9 @@ compiler/evaluation.py train/heldout runtime fit and selection metrics
 compiler/fused_evaluation.py guarded fused-family boundary and held-out metrics
 compiler/fused_selection.py exact-envelope admission, selection, and fallback
 compiler/two_stage_selection.py host admission, fused schedule fit, group holdout
+compiler/host_baseline.py explicit host implementation/partition/timer identities
+compiler/factorized_selection.py experimental three-ratio fits and grouped-N support
+compiler/additive_latency_selection.py bounded nested fit of host/fused absolute latency
 compiler/dataflow.py    typed SSA-like tensor Dataflow IR
 compiler/frontend.py    small graph builder and A2AGemm frontend
 compiler/passes.py      canonicalization, verification, pass trace
@@ -301,6 +356,7 @@ compiler/verify.py      All2All->GEMM semantic checks
 compiler/assurance.py   executable semantics and target-bound evidence gate
 compiler/slot_protocol.py host-staging correspondence to the TLA+ lifecycle
 compiler/remote_publication.py publication trace correspondence and closed gate
+compiler/routed_contract.py versioned routed rows, canonical order, and D7 ledger
 compiler/simulate.py    ready-time/resource interpreter and EventGraph emission
 compiler/compile.py     candidate enumeration, selection, and fallback
 compiler/pipeline.py    end-to-end compiler orchestration
@@ -313,6 +369,32 @@ analysis.py             critical path and counterfactual exposure on EventGraph
 Runtime build and generated-program smoke instructions are in
 [`runtime/README.md`](runtime/README.md).
 
+The controlled split-K revision, retrospective results, four explicit host
+baselines, and prepared GPU pilot are documented in
+[`2026-10-20-splitk-local-revision`](../experiments/2026-10-20-splitk-local-revision/README.md).
+The revision did not pass its replacement criteria. The merged host source
+and collector are available, but GPU build, correctness, and timing remain
+unverified; they do not change the compiler's fallback.
+
+The earlier [additive latency selector repair](../experiments/2026-10-21-additive-selector-repair/README.md)
+passes the existing local selection gates, including all four priority shapes,
+using nested training-only parameter selection. It estimates host and fused
+milliseconds separately, keeps grouped-N within paired M64 support, and retains
+the CUTLASS baseline identity. New independent GPU validation and compiler
+admission remain pending. Use `tools/predict_additive_schedule.py` with the frozen
+model to inspect decisions without loading measurements or fitting.
+
+The current review path is **execution accounts and explicit evidence**, with
+fitting paused. `python tools/explain_execution.py --m 512 --k 4096 --n 512
+--environment planned-a100-p4` uses only the Python standard library. It exports
+candidate programs, source-derived counts, dependencies, assumptions and unknown
+costs; without sufficient timing evidence its decision is `choice: null`.
+The traffic/decision prediction tools now keep fitted preferences under
+`fitted_model_diagnostic`, separate from the evidence decision. This is an
+intentional output-schema change, not a new claim of predictor accuracy. See
+[execution evidence](docs/EXECUTION_EVIDENCE.md) and the
+[local delivery](../experiments/2026-10-21-execution-evidence-delivery/README.md).
+
 ## v0.1 boundary
 
 - static world size and shapes;
@@ -321,7 +403,12 @@ Runtime build and generated-program smoke instructions are in
 - one destination-local GEMM per received row tile;
 - one communication, compute, and control resource model per rank;
 - sequential fallback when P2P connectivity or predicted gain is absent.
-- fused selection only for the exact versioned A100/NV12 measured envelope.
+- fused selection requires the exact versioned A100/NV12 measured envelope
+  and evidence against the same host implementation as the fallback.
 
 Dynamic MoE routing, ragged tokens, Grouped GEMM, multi-node networking, true
 collective rendezvous, and GPU code generation remain outside this version.
+The next routed extension is frozen in
+[`docs/ROUTED_BENCHMARK_CONTRACT.md`](docs/ROUTED_BENCHMARK_CONTRACT.md); its
+schema and analytical D7 checks are implemented, but its CUDA execution path
+is not yet claimed.

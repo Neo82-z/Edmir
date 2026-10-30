@@ -1,0 +1,406 @@
+{
+  "method": "separate_resources",
+  "assessment": {
+    "candidate_accepted": false,
+    "checks": {
+      "unchanged_primary_gates_and_M512_exact_choices": false,
+      "M512_all_training_deletions_preserve_best": false,
+      "N_all_training_deletions_preserve_host": false,
+      "N_previous_attack_resisted": true,
+      "N_one_percent_stress_all_correct": true
+    },
+    "interpretation": "Retrospective engineering checks only. Passing is not independent GPU validation."
+  },
+  "primary": {
+    "workloads": 41,
+    "mean_regret": 0.0037409750625231196,
+    "max_regret": 0.07356596083109657,
+    "host_regressions": 0,
+    "false_host_over_five_percent": 1,
+    "false_fused_over_five_percent": 0
+  },
+  "stress": {
+    "workloads": 41,
+    "mean_regret": 0.0037409750625231196,
+    "max_regret": 0.07356596083109657,
+    "host_regressions": 0,
+    "false_host_over_five_percent": 1,
+    "false_fused_over_five_percent": 0
+  },
+  "boundary_failures": [],
+  "priority_deletions": [
+    {
+      "shape": [
+        4,
+        256,
+        8192,
+        512
+      ],
+      "counts": {
+        "splitk4": 8
+      },
+      "worst": 0.0
+    },
+    {
+      "shape": [
+        4,
+        512,
+        2048,
+        512
+      ],
+      "counts": {
+        "splitk2": 8
+      },
+      "worst": 0.0
+    },
+    {
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ],
+      "counts": {
+        "host": 8
+      },
+      "worst": 0.07356596083109657
+    },
+    {
+      "shape": [
+        4,
+        512,
+        8192,
+        512
+      ],
+      "counts": {
+        "host": 8
+      },
+      "worst": 0.0
+    },
+    {
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      "counts": {
+        "host": 7,
+        "splitk4": 1
+      },
+      "worst": 0.11715481171548126
+    },
+    {
+      "shape": [
+        4,
+        64,
+        1024,
+        512
+      ],
+      "counts": {
+        "splitk2": 8
+      },
+      "worst": 0.0
+    },
+    {
+      "shape": [
+        4,
+        64,
+        8192,
+        512
+      ],
+      "counts": {
+        "splitk8": 8
+      },
+      "worst": 0.0
+    }
+  ]
+}
+{
+  "method": "separate_resources_average",
+  "assessment": {
+    "candidate_accepted": false,
+    "checks": {
+      "unchanged_primary_gates_and_M512_exact_choices": false,
+      "M512_all_training_deletions_preserve_best": true,
+      "N_all_training_deletions_preserve_host": false,
+      "N_previous_attack_resisted": false,
+      "N_one_percent_stress_all_correct": false
+    },
+    "interpretation": "Retrospective engineering checks only. Passing is not independent GPU validation."
+  },
+  "primary": {
+    "workloads": 41,
+    "mean_regret": 0.00996571603655507,
+    "max_regret": 0.11962100276352139,
+    "host_regressions": 1,
+    "false_host_over_five_percent": 0,
+    "false_fused_over_five_percent": 1
+  },
+  "stress": {
+    "workloads": 41,
+    "mean_regret": 0.01103016748035373,
+    "max_regret": 0.11962100276352139,
+    "host_regressions": 1,
+    "false_host_over_five_percent": 0,
+    "false_fused_over_five_percent": 1
+  },
+  "boundary_failures": [
+    {
+      "perturbation": "seeded_signs_0",
+      "choice": "splitk4",
+      "regret": 0.11715481171548126
+    },
+    {
+      "perturbation": "seeded_signs_1",
+      "choice": "splitk4",
+      "regret": 0.11715481171548126
+    },
+    {
+      "perturbation": "seeded_signs_2",
+      "choice": "splitk4",
+      "regret": 0.11715481171548126
+    },
+    {
+      "perturbation": "seeded_signs_3",
+      "choice": "splitk4",
+      "regret": 0.11715481171548126
+    },
+    {
+      "perturbation": "seeded_signs_4",
+      "choice": "splitk4",
+      "regret": 0.11715481171548126
+    },
+    {
+      "perturbation": "seeded_signs_5",
+      "choice": "splitk4",
+      "regret": 0.11715481171548126
+    },
+    {
+      "perturbation": "seeded_signs_6",
+      "choice": "splitk4",
+      "regret": 0.11715481171548126
+    },
+    {
+      "perturbation": "seeded_signs_7",
+      "choice": "splitk4",
+      "regret": 0.11715481171548126
+    },
+    {
+      "perturbation": "seeded_signs_8",
+      "choice": "splitk4",
+      "regret": 0.11715481171548126
+    },
+    {
+      "perturbation": "seeded_signs_9",
+      "choice": "splitk4",
+      "regret": 0.11715481171548126
+    },
+    {
+      "perturbation": "seeded_signs_10",
+      "choice": "splitk4",
+      "regret": 0.11715481171548126
+    },
+    {
+      "perturbation": "seeded_signs_11",
+      "choice": "splitk4",
+      "regret": 0.11715481171548126
+    },
+    {
+      "perturbation": "seeded_signs_12",
+      "choice": "splitk4",
+      "regret": 0.11715481171548126
+    },
+    {
+      "perturbation": "seeded_signs_13",
+      "choice": "splitk4",
+      "regret": 0.11715481171548126
+    },
+    {
+      "perturbation": "seeded_signs_14",
+      "choice": "splitk4",
+      "regret": 0.11715481171548126
+    },
+    {
+      "perturbation": "seeded_signs_15",
+      "choice": "splitk4",
+      "regret": 0.11715481171548126
+    },
+    {
+      "perturbation": "seeded_signs_16",
+      "choice": "splitk4",
+      "regret": 0.11715481171548126
+    },
+    {
+      "perturbation": "seeded_signs_17",
+      "choice": "splitk4",
+      "regret": 0.11715481171548126
+    },
+    {
+      "perturbation": "seeded_signs_18",
+      "choice": "splitk4",
+      "regret": 0.11715481171548126
+    },
+    {
+      "perturbation": "seeded_signs_19",
+      "choice": "splitk4",
+      "regret": 0.11715481171548126
+    },
+    {
+      "perturbation": "seeded_signs_20",
+      "choice": "splitk4",
+      "regret": 0.11715481171548126
+    },
+    {
+      "perturbation": "seeded_signs_21",
+      "choice": "splitk4",
+      "regret": 0.11715481171548126
+    },
+    {
+      "perturbation": "seeded_signs_22",
+      "choice": "splitk4",
+      "regret": 0.11715481171548126
+    },
+    {
+      "perturbation": "seeded_signs_23",
+      "choice": "splitk4",
+      "regret": 0.11715481171548126
+    },
+    {
+      "perturbation": "seeded_signs_24",
+      "choice": "splitk4",
+      "regret": 0.11715481171548126
+    },
+    {
+      "perturbation": "seeded_signs_25",
+      "choice": "splitk4",
+      "regret": 0.11715481171548126
+    },
+    {
+      "perturbation": "seeded_signs_26",
+      "choice": "splitk4",
+      "regret": 0.11715481171548126
+    },
+    {
+      "perturbation": "seeded_signs_27",
+      "choice": "splitk4",
+      "regret": 0.11715481171548126
+    },
+    {
+      "perturbation": "seeded_signs_28",
+      "choice": "splitk4",
+      "regret": 0.11715481171548126
+    },
+    {
+      "perturbation": "seeded_signs_29",
+      "choice": "splitk4",
+      "regret": 0.11715481171548126
+    },
+    {
+      "perturbation": "seeded_signs_30",
+      "choice": "splitk4",
+      "regret": 0.11715481171548126
+    },
+    {
+      "perturbation": "seeded_signs_31",
+      "choice": "splitk4",
+      "regret": 0.11715481171548126
+    },
+    {
+      "perturbation": "host_up_fused_down",
+      "choice": "splitk4",
+      "regret": 0.11715481171548126
+    },
+    {
+      "perturbation": "host_down_fused_up",
+      "choice": "splitk4",
+      "regret": 0.11715481171548126
+    }
+  ],
+  "priority_deletions": [
+    {
+      "shape": [
+        4,
+        256,
+        8192,
+        512
+      ],
+      "counts": {
+        "splitk4": 8
+      },
+      "worst": 0.0
+    },
+    {
+      "shape": [
+        4,
+        512,
+        2048,
+        512
+      ],
+      "counts": {
+        "splitk2": 8
+      },
+      "worst": 0.0
+    },
+    {
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ],
+      "counts": {
+        "splitk2": 8
+      },
+      "worst": 0.0
+    },
+    {
+      "shape": [
+        4,
+        512,
+        8192,
+        512
+      ],
+      "counts": {
+        "host": 8
+      },
+      "worst": 0.0
+    },
+    {
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      "counts": {
+        "splitk4": 8
+      },
+      "worst": 0.11715481171548126
+    },
+    {
+      "shape": [
+        4,
+        64,
+        1024,
+        512
+      ],
+      "counts": {
+        "splitk2": 8
+      },
+      "worst": 0.0
+    },
+    {
+      "shape": [
+        4,
+        64,
+        8192,
+        512
+      ],
+      "counts": {
+        "splitk8": 8
+      },
+      "worst": 0.0
+    }
+  ]
+}

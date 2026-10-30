@@ -1,0 +1,13 @@
+{
+  "status": "Three declared local iterations on an adaptively inspected archive; all results are retrospective, not independent evidence",
+  "variants": ["log_gap", "traffic_gap", "traffic_nested"],
+  "round_1": "Keep the old shared affine log residual and additive prior. Replace softmin expected regret by measured signed pair-gap squared error and observed-best squared margin loss. Equal anchor/pair/margin coefficients; ridge 0.001.",
+  "round_2": "Use a joint positive direct-time execution potential with 6 host and 13 fused coordinates. The host includes MK and an MK log tail, plus K/N depth interactions; fused includes K/q, q serial work, grid pressure, and grouped-N couplings. Existing traffic basis selection is refit inside each training fold. This changes both the basis and output units and must not be attributed to a single feature.",
+  "round_3": "Select loss composition only inside training: pair=1, margin in [0,1,4], ridge in [0.0001,0.001,0.01], anchor=1. Choose mean actual regret, then maximum regret, then relative time error. Each inner fit refits the traffic basis and scaler; no outer-label access.",
+  "bound": "Sum of squared best-relative margin violations bounds squared regret of the argmin over the measured eligible candidates for direct-time training; log round bounds squared log1p(regret). This does not bound unseen-workload regret.",
+  "numerics": "Convex differentiable objective, constrained L-BFGS-B for direct time, analytic gradients; require solver success and projected gradient <=1e-5. Maximum 1500 iterations, 4000 evaluations and 30 seconds per full fit; cache bounded.",
+  "gates": "Keep all prior primary/leave-K, 328 deletion choices, old adversarial witness and 34 one-percent stress checks unchanged. Report every variant, no boundary-specific host margin or hand-coded M512 exception.",
+  "stop": "Complete the three declared rounds and diagnose errors. No automatic compiler promotion or GPU package modification.",
+  "new_gpu_operations": 0,
+  "new_independent_labels": 0
+}

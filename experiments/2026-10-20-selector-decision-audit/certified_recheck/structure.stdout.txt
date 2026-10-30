@@ -1,0 +1,303 @@
+{
+  "collision_summary": {
+    "existing_split": {
+      "cells": 31,
+      "worst": {
+        "features": [
+          -1.0,
+          1.0,
+          0.0625,
+          0.0078125
+        ],
+        "rows": [
+          {
+            "shape": [
+              4,
+              64,
+              4096,
+              128
+            ],
+            "family": "splitk2",
+            "ratio": 0.6376266280752533
+          },
+          {
+            "shape": [
+              4,
+              64,
+              4096,
+              256
+            ],
+            "family": "splitk2",
+            "ratio": 0.6336996336996337
+          },
+          {
+            "shape": [
+              4,
+              64,
+              4096,
+              512
+            ],
+            "family": "splitk2",
+            "ratio": 0.6272498548480743
+          },
+          {
+            "shape": [
+              4,
+              64,
+              4096,
+              1024
+            ],
+            "family": "splitk2",
+            "ratio": 0.6297840090943538
+          },
+          {
+            "shape": [
+              4,
+              64,
+              4096,
+              2048
+            ],
+            "family": "splitk2",
+            "ratio": 0.6785881471772306
+          },
+          {
+            "shape": [
+              4,
+              32,
+              4096,
+              512
+            ],
+            "family": "splitk2",
+            "ratio": 0.6300805026506971
+          },
+          {
+            "shape": [
+              4,
+              128,
+              4096,
+              512
+            ],
+            "family": "splitk2",
+            "ratio": 0.6356905552918841
+          },
+          {
+            "shape": [
+              4,
+              256,
+              4096,
+              512
+            ],
+            "family": "splitk2",
+            "ratio": 0.6440373902369938
+          },
+          {
+            "shape": [
+              4,
+              512,
+              4096,
+              512
+            ],
+            "family": "splitk2",
+            "ratio": 0.92225176492161
+          }
+        ],
+        "unavoidable_max_abs_log_error_at_least": 0.19273664817561634,
+        "unavoidable_multiplicative_error_factor_at_least": 1.2125634206782387
+      }
+    },
+    "extended_split": {
+      "cells": 52,
+      "worst": {
+        "features": [
+          -4.0,
+          4.0,
+          0.9375,
+          0.05859375,
+          4.0,
+          -16.0
+        ],
+        "rows": [
+          {
+            "shape": [
+              4,
+              64,
+              8192,
+              512
+            ],
+            "family": "splitk16",
+            "ratio": 0.4628825585089484
+          },
+          {
+            "shape": [
+              4,
+              32,
+              8192,
+              512
+            ],
+            "family": "splitk16",
+            "ratio": 0.4207829026278487
+          }
+        ],
+        "unavoidable_max_abs_log_error_at_least": 0.04767816931078533,
+        "unavoidable_multiplicative_error_factor_at_least": 1.0488330543374567
+      }
+    },
+    "group_component": {
+      "cells": 28,
+      "worst": {
+        "features": [
+          -2.0,
+          -3.0
+        ],
+        "rows": [
+          {
+            "shape": [
+              4,
+              64,
+              1024,
+              1024
+            ],
+            "family": "direct_groupedn2",
+            "ratio": 1.1416707376648754
+          },
+          {
+            "shape": [
+              4,
+              64,
+              2048,
+              1024
+            ],
+            "family": "splitk2_groupedn2",
+            "ratio": 1.0921052631578947
+          },
+          {
+            "shape": [
+              4,
+              64,
+              4096,
+              1024
+            ],
+            "family": "splitk4_groupedn2",
+            "ratio": 1.0964192465497948
+          },
+          {
+            "shape": [
+              4,
+              64,
+              8192,
+              1024
+            ],
+            "family": "splitk8_groupedn2",
+            "ratio": 0.8931593794076164
+          }
+        ],
+        "unavoidable_max_abs_log_error_at_least": 0.12274149326395567,
+        "unavoidable_multiplicative_error_factor_at_least": 1.130592117489821
+      }
+    }
+  },
+  "coverage": {
+    "workloads": 41,
+    "measurement_rows": 346,
+    "grouped_m_values": [
+      64
+    ],
+    "candidate_count_workloads": {
+      "11": 20,
+      "6": 21
+    },
+    "priority": [
+      {
+        "shape": [
+          4,
+          256,
+          8192,
+          512
+        ],
+        "fold": "m256-n512-longk",
+        "choice": "splitk4",
+        "best_observed": "splitk4",
+        "best_eligible": "splitk4",
+        "observed_count": 6,
+        "eligible_count": 6,
+        "excluded": {},
+        "regret_all_observed": 0.0,
+        "regret_eligible": 0.0
+      },
+      {
+        "shape": [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        "fold": "m64-n2048",
+        "choice": "splitk4",
+        "best_observed": "host",
+        "best_eligible": "host",
+        "observed_count": 6,
+        "eligible_count": 6,
+        "excluded": {},
+        "regret_all_observed": 0.11715481171548126,
+        "regret_eligible": 0.11715481171548126
+      },
+      {
+        "shape": [
+          4,
+          64,
+          1024,
+          512
+        ],
+        "fold": "m64-n512",
+        "choice": "splitk2",
+        "best_observed": "splitk2",
+        "best_eligible": "splitk2",
+        "observed_count": 11,
+        "eligible_count": 11,
+        "excluded": {},
+        "regret_all_observed": 0.0,
+        "regret_eligible": 0.0
+      },
+      {
+        "shape": [
+          4,
+          64,
+          8192,
+          512
+        ],
+        "fold": "m64-n512",
+        "choice": "splitk8",
+        "best_observed": "splitk8",
+        "best_eligible": "splitk8",
+        "observed_count": 11,
+        "eligible_count": 11,
+        "excluded": {},
+        "regret_all_observed": 0.0,
+        "regret_eligible": 0.0
+      }
+    ]
+  },
+  "pairwise_loss": {
+    "identity": "sum_(a<b)(e_a-e_b)^2 / C(n,2) = 2/(n-1) * sum_a(e_a-mean(e))^2",
+    "interpretation": "Exact loss identity, not an accuracy guarantee. Pair constraints are correlated.",
+    "by_candidate_count": [
+      {
+        "candidates": 6,
+        "pairs": 15,
+        "independent_within_workload_log_contrasts": 5,
+        "explicit_host_pair_weight_fraction": 0.3333333333333333
+      },
+      {
+        "candidates": 11,
+        "pairs": 55,
+        "independent_within_workload_log_contrasts": 10,
+        "explicit_host_pair_weight_fraction": 0.18181818181818182
+      }
+    ],
+    "limitations": [
+      "Equal total workload weight does not mean equal host-vs-fused pair weight.",
+      "Average squared log-ratio error is not decision regret or worst-case loss.",
+      "The same ridge number does not imply equal regularization across feature designs."
+    ]
+  }
+}

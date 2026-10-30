@@ -1,0 +1,577 @@
+{
+  "schema": "edmir.paired-diagnosis-plan.v1",
+  "profile": "p8-grouped",
+  "world_size": 8,
+  "workloads": [
+    {
+      "id": "w000",
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "families": [
+        "host",
+        "splitk4",
+        "splitk8",
+        "splitk4_groupedn2",
+        "splitk8_groupedn2"
+      ],
+      "blocks": 5
+    }
+  ],
+  "programs": {
+    "pair_p8_grouped_w000_host": {
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "compiled_family": "host",
+      "dependency_policy": "resource_queues_v1",
+      "header": "generated/pair_p8_grouped_w000_host/edmir_program.hpp"
+    },
+    "pair_p8_grouped_w000_splitk4": {
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "compiled_family": "splitk4",
+      "dependency_policy": "resource_queues_v1",
+      "header": "generated/pair_p8_grouped_w000_splitk4/edmir_program.hpp"
+    },
+    "pair_p8_grouped_w000_splitk8": {
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "compiled_family": "splitk8",
+      "dependency_policy": "resource_queues_v1",
+      "header": "generated/pair_p8_grouped_w000_splitk8/edmir_program.hpp"
+    },
+    "pair_p8_grouped_w000_splitk4_groupedn2": {
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "compiled_family": "splitk4_groupedn2",
+      "dependency_policy": "resource_queues_v1",
+      "header": "generated/pair_p8_grouped_w000_splitk4_groupedn2/edmir_program.hpp"
+    },
+    "pair_p8_grouped_w000_splitk8_groupedn2": {
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "compiled_family": "splitk8_groupedn2",
+      "dependency_policy": "resource_queues_v1",
+      "header": "generated/pair_p8_grouped_w000_splitk8_groupedn2/edmir_program.hpp"
+    }
+  },
+  "jobs": [
+    {
+      "workload_id": "w000",
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "family": "host",
+      "repetition": 0,
+      "trial_order": 0,
+      "ordinal": 0,
+      "candidate_id": "host@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+      "executable": "pair_p8_grouped_w000_host"
+    },
+    {
+      "workload_id": "w000",
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "family": "splitk4",
+      "repetition": 0,
+      "trial_order": 1,
+      "ordinal": 1,
+      "candidate_id": "splitk4@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q4_g1_prepared_metadata_v2",
+      "executable": "pair_p8_grouped_w000_splitk4"
+    },
+    {
+      "workload_id": "w000",
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "family": "splitk8",
+      "repetition": 0,
+      "trial_order": 2,
+      "ordinal": 2,
+      "candidate_id": "splitk8@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q8_g1_prepared_metadata_v2",
+      "executable": "pair_p8_grouped_w000_splitk8"
+    },
+    {
+      "workload_id": "w000",
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "family": "splitk4_groupedn2",
+      "repetition": 0,
+      "trial_order": 3,
+      "ordinal": 3,
+      "candidate_id": "splitk4_groupedn2@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q4_g2_prepared_metadata_v2",
+      "executable": "pair_p8_grouped_w000_splitk4_groupedn2"
+    },
+    {
+      "workload_id": "w000",
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "family": "splitk8_groupedn2",
+      "repetition": 0,
+      "trial_order": 4,
+      "ordinal": 4,
+      "candidate_id": "splitk8_groupedn2@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q8_g2_prepared_metadata_v2",
+      "executable": "pair_p8_grouped_w000_splitk8_groupedn2"
+    },
+    {
+      "workload_id": "w000",
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "family": "splitk4",
+      "repetition": 1,
+      "trial_order": 5,
+      "ordinal": 5,
+      "candidate_id": "splitk4@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q4_g1_prepared_metadata_v2",
+      "executable": "pair_p8_grouped_w000_splitk4"
+    },
+    {
+      "workload_id": "w000",
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "family": "splitk8",
+      "repetition": 1,
+      "trial_order": 6,
+      "ordinal": 6,
+      "candidate_id": "splitk8@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q8_g1_prepared_metadata_v2",
+      "executable": "pair_p8_grouped_w000_splitk8"
+    },
+    {
+      "workload_id": "w000",
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "family": "splitk4_groupedn2",
+      "repetition": 1,
+      "trial_order": 7,
+      "ordinal": 7,
+      "candidate_id": "splitk4_groupedn2@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q4_g2_prepared_metadata_v2",
+      "executable": "pair_p8_grouped_w000_splitk4_groupedn2"
+    },
+    {
+      "workload_id": "w000",
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "family": "splitk8_groupedn2",
+      "repetition": 1,
+      "trial_order": 8,
+      "ordinal": 8,
+      "candidate_id": "splitk8_groupedn2@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q8_g2_prepared_metadata_v2",
+      "executable": "pair_p8_grouped_w000_splitk8_groupedn2"
+    },
+    {
+      "workload_id": "w000",
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "family": "host",
+      "repetition": 1,
+      "trial_order": 9,
+      "ordinal": 9,
+      "candidate_id": "host@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+      "executable": "pair_p8_grouped_w000_host"
+    },
+    {
+      "workload_id": "w000",
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "family": "splitk8",
+      "repetition": 2,
+      "trial_order": 10,
+      "ordinal": 10,
+      "candidate_id": "splitk8@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q8_g1_prepared_metadata_v2",
+      "executable": "pair_p8_grouped_w000_splitk8"
+    },
+    {
+      "workload_id": "w000",
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "family": "splitk4_groupedn2",
+      "repetition": 2,
+      "trial_order": 11,
+      "ordinal": 11,
+      "candidate_id": "splitk4_groupedn2@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q4_g2_prepared_metadata_v2",
+      "executable": "pair_p8_grouped_w000_splitk4_groupedn2"
+    },
+    {
+      "workload_id": "w000",
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "family": "splitk8_groupedn2",
+      "repetition": 2,
+      "trial_order": 12,
+      "ordinal": 12,
+      "candidate_id": "splitk8_groupedn2@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q8_g2_prepared_metadata_v2",
+      "executable": "pair_p8_grouped_w000_splitk8_groupedn2"
+    },
+    {
+      "workload_id": "w000",
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "family": "host",
+      "repetition": 2,
+      "trial_order": 13,
+      "ordinal": 13,
+      "candidate_id": "host@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+      "executable": "pair_p8_grouped_w000_host"
+    },
+    {
+      "workload_id": "w000",
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "family": "splitk4",
+      "repetition": 2,
+      "trial_order": 14,
+      "ordinal": 14,
+      "candidate_id": "splitk4@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q4_g1_prepared_metadata_v2",
+      "executable": "pair_p8_grouped_w000_splitk4"
+    },
+    {
+      "workload_id": "w000",
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "family": "splitk4_groupedn2",
+      "repetition": 3,
+      "trial_order": 15,
+      "ordinal": 15,
+      "candidate_id": "splitk4_groupedn2@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q4_g2_prepared_metadata_v2",
+      "executable": "pair_p8_grouped_w000_splitk4_groupedn2"
+    },
+    {
+      "workload_id": "w000",
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "family": "splitk8_groupedn2",
+      "repetition": 3,
+      "trial_order": 16,
+      "ordinal": 16,
+      "candidate_id": "splitk8_groupedn2@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q8_g2_prepared_metadata_v2",
+      "executable": "pair_p8_grouped_w000_splitk8_groupedn2"
+    },
+    {
+      "workload_id": "w000",
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "family": "host",
+      "repetition": 3,
+      "trial_order": 17,
+      "ordinal": 17,
+      "candidate_id": "host@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+      "executable": "pair_p8_grouped_w000_host"
+    },
+    {
+      "workload_id": "w000",
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "family": "splitk4",
+      "repetition": 3,
+      "trial_order": 18,
+      "ordinal": 18,
+      "candidate_id": "splitk4@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q4_g1_prepared_metadata_v2",
+      "executable": "pair_p8_grouped_w000_splitk4"
+    },
+    {
+      "workload_id": "w000",
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "family": "splitk8",
+      "repetition": 3,
+      "trial_order": 19,
+      "ordinal": 19,
+      "candidate_id": "splitk8@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q8_g1_prepared_metadata_v2",
+      "executable": "pair_p8_grouped_w000_splitk8"
+    },
+    {
+      "workload_id": "w000",
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "family": "splitk8_groupedn2",
+      "repetition": 4,
+      "trial_order": 20,
+      "ordinal": 20,
+      "candidate_id": "splitk8_groupedn2@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q8_g2_prepared_metadata_v2",
+      "executable": "pair_p8_grouped_w000_splitk8_groupedn2"
+    },
+    {
+      "workload_id": "w000",
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "family": "host",
+      "repetition": 4,
+      "trial_order": 21,
+      "ordinal": 21,
+      "candidate_id": "host@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+      "executable": "pair_p8_grouped_w000_host"
+    },
+    {
+      "workload_id": "w000",
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "family": "splitk4",
+      "repetition": 4,
+      "trial_order": 22,
+      "ordinal": 22,
+      "candidate_id": "splitk4@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q4_g1_prepared_metadata_v2",
+      "executable": "pair_p8_grouped_w000_splitk4"
+    },
+    {
+      "workload_id": "w000",
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "family": "splitk8",
+      "repetition": 4,
+      "trial_order": 23,
+      "ordinal": 23,
+      "candidate_id": "splitk8@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q8_g1_prepared_metadata_v2",
+      "executable": "pair_p8_grouped_w000_splitk8"
+    },
+    {
+      "workload_id": "w000",
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "family": "splitk4_groupedn2",
+      "repetition": 4,
+      "trial_order": 24,
+      "ordinal": 24,
+      "candidate_id": "splitk4_groupedn2@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "implementation_id": "direct_peer_cutlass_sm80_q4_g2_prepared_metadata_v2",
+      "executable": "pair_p8_grouped_w000_splitk4_groupedn2"
+    }
+  ],
+  "warmup": 30,
+  "iterations": 300,
+  "process_timeout_seconds": 90,
+  "collection_budget_seconds": 600,
+  "cutlass_revision": "dcf215af68a2d08d305076c152a06f201728cd53",
+  "nccl_revision": "dbc86fd06e8b0c4517b95d8958a09ccacf9520c9",
+  "baseline_contracts": {
+    "host": {
+      "baseline_id": "host_nccl_cutlass_sm80_per_source_v1",
+      "gemm_provider": "cutlass",
+      "gemm_kernel": "sm80_64x128x32",
+      "partition": "P_sequential_M_gemms",
+      "communication": "host_nccl_send_recv_and_local_copy",
+      "schedule": "materialize_then_gemm",
+      "dtype": "float16",
+      "layout": "row_major",
+      "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()"
+    }
+  },
+  "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+  "measurement_policy": {
+    "profiler": false,
+    "nvtx": false,
+    "discarded_samples": 0
+  },
+  "precision": {
+    "input": "fp16",
+    "weight": "fp16",
+    "output": "fp16",
+    "accumulator": "fp32",
+    "split_partial": "fp16 output writeback, no separate FP32 reduction"
+  },
+  "new_training": false,
+  "independent_validation": false,
+  "compiler_admission": false,
+  "frozen_six_used": false,
+  "full_candidate_oracle": false,
+  "primary_objective": "median full-operator host wall time; retain mean and p95 as secondary",
+  "blocks_are_confidence_intervals": false,
+  "numerical_failure_labels_are_latency": false,
+  "identity_limit": "new source/input/runtime identity; do not pool with historical labels or immutable-peer P8 runs",
+  "prediction_claim": "historical directional hypotheses only; no cross-identity numeric latency forecast",
+  "scope": "one previously measured P8 grouped shape, separate mechanism evidence",
+  "repetition_budget_change": "230-process preliminary specification reduced before measurement: one balanced positional cycle per shape; not a significance claim"
+}

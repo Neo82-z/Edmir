@@ -1,0 +1,100 @@
+{
+  "schema": "deepinfer_measurement_audit.v1",
+  "gpu_experiments_run": false,
+  "sources": {
+    "DeepInfer": {
+      "commit": "774ce244b87cc0eb8d4b94ab9f5de2ab22049f01",
+      "files_sha256": {
+        "README.md": "b55624158ada4dc21b882d24ded06bf82f65350b44d170877b68395712cd670d",
+        "examples/README.md": "fde052a91323c18565148398b47281a2183cfb008cd3c0d0f24ec25956ae62d9",
+        "examples/benchmark.py": "a4e0b114b4173b9d2124cdabfedc54d3dd5cd81d269d7054c48f9bac780eb9f2",
+        "examples/_config.py": "a671d83fa5becac257722e67facec2f33743a1263e0b2e6355dcdb00984f4f42",
+        "examples/sweep/plot_pareto.py": "13249bd8fd328ea6d59436e8a54360f53fbfcee6ec60a32f2ffb64e881ff6c56",
+        "examples/sweep/run_sweep.sh": "bc15882ffef797e93b724233d71395f2b49973463572e797a2fff5148d50ca5c",
+        "deepinfer/timer.py": "ed40611395c78df0d1e3240615212f9a83688b5c145ce5c1a037a1aae1fe84df",
+        "deepinfer/worker/worker.py": "ad32e595d9ab289dff1a7709136431ac60dae709e9e5123ae42eb0ebf7c30cbb",
+        "deepinfer/model_executor/eplb/__init__.py": "1b30c01b36cfc711281bd729ab5cbf09826b4ba22359573f46d96c10ea6e7260",
+        "deepinfer/model_executor/models/decoder_layer.py": "2189fa14c0665a3a211b47c5440748273fd92b39a68268a0080530d3c95b7297",
+        "deepinfer/model_executor/models/v4_modules/mlp.py": "2541bcc83b178a9e2f18b387b301d60111d6d603e18e2d31df38196b03d290dd",
+        "csrc/engine/input_metadata/prepare_tensor_input_base.cpp": "b8e7c5eff7dc2b5ae59b41918faf0669c7415a053dcbbb0f7568d7a4e4618794",
+        "deepinfer/model_executor/layers/tilelang_ops/prepare_v4_decode_metadata.py": "4117a3203a8e444549969647ba57c1d56d10116a93b50c9d9b8e96c74f36d06e"
+      }
+    },
+    "deepseek-recipe": {
+      "commit": "935817c66f5d6e64838f419692545f06787e485f",
+      "files_sha256": {
+        "README.md": "e3ea4bd6b3a3debd8431af23d81935b93858636883dfc651f7ecc3416e099a67",
+        "server-py/README.md": "d22a05044ff092cf4f3ccaf987176341c003b8fbb9806b1590f427db1f0ef727"
+      }
+    }
+  },
+  "accounting_example": {
+    "evidence_kind": "synthetic_timestamps_executed_through_upstream_functions",
+    "hardware_measurement": false,
+    "input": {
+      "intervals": 60,
+      "base_ms": 1,
+      "extra_ms_every_tenth": 5
+    },
+    "inclusive_steps_per_s": 666.6666666666667,
+    "inclusive_max_step_ms": 6.0,
+    "inclusive_nominal_tokens_per_s_per_gpu": 256000.00000000003,
+    "upstream_clean_decode": {
+      "decode_window_steps": 54,
+      "decode_avg_sps": 999.9999999999993,
+      "decode_max_step_ms": 1.0000000000000009,
+      "decode_tokens_per_s_per_gpu": 383999.99999999977
+    },
+    "upstream_clean_prefill": {
+      "prefill_window_steps": 54,
+      "prefill_window_tokens": 221184,
+      "prefill_window_seconds": 0.054000000000000034,
+      "prefill_tokens_per_s_per_gpu": 4095999.999999997
+    },
+    "clean_to_inclusive_throughput_ratio": 1.499999999999999,
+    "excluded_interval_fraction": 0.1,
+    "excluded_wall_time_fraction": 0.4000000000000001,
+    "controls": [
+      "no flags equals inclusive rate",
+      "all flags returns empty metrics"
+    ]
+  },
+  "plot_example": {
+    "evidence_kind": "synthetic_records_executed_through_upstream_functions",
+    "hardware_measurement": false,
+    "two_repetitions_retained": 1,
+    "retained_sps": 90,
+    "mixed_prompt_modes_accepted": [
+      "text",
+      "image"
+    ],
+    "earlier_nextn_mismatch_erased_before_validation": true,
+    "different_ep_across_distinct_batches_rejected": true,
+    "nominal_tau_at_nextn5_acceptance075": 4.75,
+    "full_acceptance_to_nominal075_ratio": 1.263157894736842,
+    "note": "Acceptance is assumed, not measured; last-run selection can raise or lower a curve."
+  },
+  "our_runtime": {
+    "evidence_kind": "static_counts_from_current_runtime_and_generated_programs",
+    "hardware_measurement": false,
+    "sources_matching_frozen_pilot": 104,
+    "pilot_package_sha256": "5553b2f4548f04b6205361f73f0481ea077edfbf09aa31645d8a62ea1806b771",
+    "per_execute": {
+      "host": {
+        "program_sha256": "55a0986a473ccea0a87bbc1787a8afc4dffd5ce0da963428ae2e94dacd3e84ae",
+        "ops": 36,
+        "access_records": 116,
+        "accesses_calls_per_execute": 64,
+        "records_visited_per_execute": 7424
+      },
+      "direct": {
+        "program_sha256": "421f4f75d2c28033c5b9e958540dca72a1c2f7b7f21464cba2611d2024c15332",
+        "ops": 16,
+        "access_records": 48,
+        "accesses_calls_per_execute": 32,
+        "records_visited_per_execute": 1536
+      }
+    },
+    "note": "Counts exclude prepare(); they are not latency estimates or a measured bottleneck."
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "status": "Adaptive engineering on the already inspected archive, not an independent experiment",
+  "scope": "Separate M/N resource coordinates, diagnose identifiable costs, and retain all previous decision/stability gates",
+  "new_gpu_operations": 0,
+  "architecture_candidates": [
+    "separate_resources: retain partition depth, serial epilogue and grid-pressure terms; replace depth-times-total-grid with separate input and weight working-set coordinates and their convex responses",
+    "separate_resources_average: same basis and fit grid, arithmetic average over training-only parameter fits instead of discontinuous best-CV selection"
+  ],
+  "basis_caveat": "Working-set squares and grid pressure are empirical response functions, not identified bandwidth or cache misses. They are separately audited for rank and ambiguity.",
+  "fit": "Nonnegative ridge; host basis retained; fused relative-error weights retained; original 48 host and 12 fused configurations; all inner folds remain within outer training",
+  "selection": "Minimum predicted latency, symmetric host/fused comparison; no shape-specific overrides and no forced-host fallback",
+  "acceptance": "Unchanged primary/leave-K gates, M512 exact decisions, full training-group deletion, old adversarial witnesses, and deterministic 34-direction one-percent boundary stress",
+  "stop_rule": "Do not tune the architecture again against failed outer cases in this round. Quantify remaining prediction ambiguity using training-only feasible fits and exact design null directions, then specify the minimum discriminating measurements. Do not promote a failed or ambiguous candidate."
+}

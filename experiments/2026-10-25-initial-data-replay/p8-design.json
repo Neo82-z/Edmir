@@ -1,0 +1,25 @@
+{
+  "schema": "edmir.p8-replay-design.v1",
+  "status": "fixed before first scale-aware replay; outcomes already historically examined",
+  "primary_scope": "P8 A100 SXM4 80GB, full NVLink/P2P, archived cyclic resource queues, FP16 full-program wall time",
+  "host_identity": "host_nccl_cutlass_sm80_per_source_v1",
+  "primary_variant": "scale_max",
+  "sensitivity_variant": "scale_retained_0.25",
+  "formula": "nonnegative common cost + max(a*chain_depth,b*remote_replay_per_rank) + rho*min(a*chain_depth,b*remote_replay_per_rank)",
+  "rho": [0.0, 0.25],
+  "parameter_counts": {"host": 4, "fused": 8},
+  "scaling_hypotheses": {
+    "host": "whole-program GEMM submissions P^2; per-rank remote bytes 2(P-1)MK; per-rank FLOPs 2PMNK; sequential K depth P*K/32",
+    "fused": "whole-program submissions P^2; kernel latency/epilogue proxies scaled by audited unit graph chain 11 at P4, 33 at P8; throughput proxy uses per-rank remote A replay 2(P-1)MK*ceil(N/(128g))",
+    "not_identified": "Single-P calibration cannot establish scaling exponents. Test P4-to-P8 explicitly; do not silently repair with P8 evaluation labels."
+  },
+  "candidate_space": ["host", "direct", "splitk2", "splitk4", "splitk8", "splitk16", "direct_groupedn2", "splitk2_groupedn2", "splitk4_groupedn2", "splitk8_groupedn2", "splitk16_groupedn2"],
+  "protocols": ["P4 leave-whole-sweep-out (41 shapes, recorded 6/11 candidate coverage)", "P4 fit to P8 19-shape transfer without P8 labels", "P8 original four calibration shapes to original 19 evaluation shapes"],
+  "calibration_shapes": [[8,32,1024,512], [8,64,2048,1024], [8,32,4096,2048], [8,256,8192,512]],
+  "comparison": ["original full log-latency model", "scale_max", "scale_retained_0.25", "training-only fixed-family baseline", "host"],
+  "historical_gates": {"direction_accuracy_min": 0.99, "host_regressions_max": 0, "mean_regret_max": 0.005, "worst_regret_max": 0.01},
+  "training": "Equal total weight per shape per host/fused block; fixed ridge 1e-6, deterministic finite nonnegative solve, <=10s per fit; no hyperparameter search",
+  "budget": {"whole_replay_seconds": 120, "GPU_runs": 0},
+  "label_rules": "Only original P8 calibration records fit P8; existing repeat overrides score evaluation only. Never impute missing P4 candidates. Never pool October prepared-execution labels into August runtime.",
+  "claim_boundary": "Historical selection-loss comparison only; improved choice does not make any kernel faster. No compiler admission, strong-host speedup or independent generalization claim."
+}

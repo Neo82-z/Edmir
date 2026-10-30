@@ -146,8 +146,10 @@ def account_schedule(
     rho_n = 1 if host else math.ceil(n_tiles / g)
     batch_rank = p * m
     batch_global = p * batch_rank
+    # The retained host executes P sequential per-source GEMMs. Gamma refers
+    # to one launched GEMM, while FLOPs/bytes below cover the whole destination.
     gamma = (
-        math.ceil(batch_rank / DEFAULT_THREADBLOCK_M) * n_tiles
+        math.ceil(m / DEFAULT_THREADBLOCK_M) * n_tiles
         if host
         else math.ceil(m / DEFAULT_THREADBLOCK_M) * rho_n * q
     )

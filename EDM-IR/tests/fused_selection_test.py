@@ -7,6 +7,7 @@ from dataclasses import replace
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from edmir.compiler.host_baseline import PER_SOURCE_CUBLAS, PER_SOURCE_CUTLASS
 
 from edmir.compiler import (  # noqa: E402
     A2AGemmProblem,
@@ -52,6 +53,8 @@ def profile() -> FusedSelectionProfile:
     return FusedSelectionProfile(
         profile_id="test-a100-profile",
         source="test-heldout-grid",
+        # Synthetic fixture for testing admission, not archived performance evidence.
+        reference_host_baseline_id=PER_SOURCE_CUBLAS.baseline_id,
         environment=environment(),
         envelope=FusedShapeEnvelope(
             rows_per_peer=(32, 64, 128),
@@ -224,6 +227,20 @@ class FusedSelectionTest(unittest.TestCase):
             retained.evidence.heldout_host_wins,
             evaluation["heldout"]["host_wins"],
         )
+        self.assertEqual(retained.reference_host_baseline_id, PER_SOURCE_CUTLASS.baseline_id)
+
+    def test_missing_or_different_host_identity_cannot_admit_fused(self):
+        for baseline_id in (None, PER_SOURCE_CUTLASS.baseline_id):
+            with self.subTest(baseline_id=baseline_id):
+                result = select_fused_a2a_gemm(
+                    problem(), topology(), replace(profile(), reference_host_baseline_id=baseline_id),
+                    environment(), allow_experimental_fused=True)
+                self.assertFalse(result.admitted)
+                self.assertEqual(result.target.gemm_provider, "cublas")
+                self.assertIn("matched baseline evidence", result.reason)
+                metadata = result.program.metadata["fused_selection"]
+                self.assertEqual(metadata["reference_host_baseline_id"], baseline_id)
+                self.assertEqual(metadata["fallback_host_baseline"], PER_SOURCE_CUBLAS.to_dict())
 
 
 if __name__ == "__main__":

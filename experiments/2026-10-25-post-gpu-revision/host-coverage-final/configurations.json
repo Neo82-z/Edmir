@@ -1,0 +1,3132 @@
+[
+  {
+    "shape": [
+      4,
+      64,
+      1024,
+      512
+    ],
+    "candidate_id": "host@prepared",
+    "family": "host",
+    "process_medians_us": [
+      411.7025,
+      414.4785,
+      408.6075
+    ],
+    "observed_us": 411.7025,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "sm80_64x128x32"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 337.66780125010024,
+        "error_us": -74.03469874989975,
+        "absolute_percentage_error": 0.1798257206354097
+      },
+      "residual_depth": {
+        "predicted_us": 337.66780125010024,
+        "error_us": -74.03469874989975,
+        "absolute_percentage_error": 0.1798257206354097
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+    "metadata_mode": "prepared",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "cf476691cd5ec7f2f02c3e88dc61b73b721eba1086d4004a23243dded2b92dc3",
+    "reference_sha256": "3d53f9d7dc06b868e6dec81062dd9ffa906186e4d1bb19b2a72b6f32b9a20347",
+    "collection": "primary",
+    "stage": "anchors",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "a50a1c49de0d37f41a3b65f404c602e5f99b5129601c65c3911ffdefcc635751",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": null,
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/anchors-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      64,
+      1024,
+      512
+    ],
+    "candidate_id": "host_compiler_cublas@prepared",
+    "family": "host_compiler_cublas",
+    "process_medians_us": [
+      542.2985,
+      545.6410000000001,
+      542.2355
+    ],
+    "observed_us": 542.2985,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "library_default"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 435.6135281062546,
+        "error_us": -106.6849718937454,
+        "absolute_percentage_error": 0.19672739624716906
+      },
+      "residual_depth": {
+        "predicted_us": 435.6135281062546,
+        "error_us": -106.6849718937454,
+        "absolute_percentage_error": 0.19672739624716906
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "host_nccl_cublas_per_source_v1_prepared_metadata_v2",
+    "metadata_mode": "prepared",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "cf476691cd5ec7f2f02c3e88dc61b73b721eba1086d4004a23243dded2b92dc3",
+    "reference_sha256": "3d53f9d7dc06b868e6dec81062dd9ffa906186e4d1bb19b2a72b6f32b9a20347",
+    "collection": "primary",
+    "stage": "anchors",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "bc8b1f086a1cd2de1e3137a72c9f1c3dfc417f795501358848aef1b5bca3f478",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": null,
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/anchors-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      64,
+      1024,
+      512
+    ],
+    "candidate_id": "host_merged_cublaslt@merged",
+    "family": "host_merged_cublaslt",
+    "process_medians_us": [
+      235.319,
+      235.67100000000002,
+      234.18800000000002
+    ],
+    "observed_us": 235.319,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "rank0:0=31;1=15;2=1;3=0;4=0;5=0;6=17;workspace=0;budget=33554432|rank1:0=31;1=15;2=1;3=0;4=0;5=0;6=17;workspace=0;budget=33554432|rank2:0=31;1=15;2=1;3=0;4=0;5=0;6=17;workspace=0;budget=33554432|rank3:0=31;1=15;2=1;3=0;4=0;5=0;6=17;workspace=0;budget=33554432|"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 232.7429798569719,
+        "error_us": -2.5760201430280745,
+        "absolute_percentage_error": 0.010946927970236442
+      },
+      "residual_depth": {
+        "predicted_us": 232.7429798569719,
+        "error_us": -2.5760201430280745,
+        "absolute_percentage_error": 0.010946927970236442
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "host_nccl_cublaslt_merged_v1",
+    "metadata_mode": "merged",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "cf476691cd5ec7f2f02c3e88dc61b73b721eba1086d4004a23243dded2b92dc3",
+    "reference_sha256": "3d53f9d7dc06b868e6dec81062dd9ffa906186e4d1bb19b2a72b6f32b9a20347",
+    "collection": "primary",
+    "stage": "anchors",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "31acbc1103a2bd37b49fdd6fcf2c0be1497f242ad3c85ea1198f0336a677deab",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": null,
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/anchors-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      64,
+      1024,
+      512
+    ],
+    "candidate_id": "host_merged_cutlass@merged",
+    "family": "host_merged_cutlass",
+    "process_medians_us": [
+      239.26649999999998,
+      240.44,
+      239.258
+    ],
+    "observed_us": 239.26649999999998,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "sm80_64x128x32"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 233.3289291125833,
+        "error_us": -5.937570887416683,
+        "absolute_percentage_error": 0.02481572174715929
+      },
+      "residual_depth": {
+        "predicted_us": 233.3289291125833,
+        "error_us": -5.937570887416683,
+        "absolute_percentage_error": 0.02481572174715929
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "host_nccl_cutlass_sm80_merged_v1",
+    "metadata_mode": "merged",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "cf476691cd5ec7f2f02c3e88dc61b73b721eba1086d4004a23243dded2b92dc3",
+    "reference_sha256": "3d53f9d7dc06b868e6dec81062dd9ffa906186e4d1bb19b2a72b6f32b9a20347",
+    "collection": "primary",
+    "stage": "anchors",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "87d21076c3f0818a510e78479089939b984664a777a7449009195d0c88915712",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": null,
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/anchors-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      64,
+      1024,
+      512
+    ],
+    "candidate_id": "splitk2_groupedn2@prepared",
+    "family": "splitk2_groupedn2",
+    "process_medians_us": [
+      367.529,
+      365.596,
+      364.4145
+    ],
+    "observed_us": 365.596,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk2"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 383.5238858890018,
+        "error_us": 17.9278858890018,
+        "absolute_percentage_error": 0.049037423519408874
+      },
+      "residual_depth": {
+        "predicted_us": 367.6709393725241,
+        "error_us": 2.0749393725241134,
+        "absolute_percentage_error": 0.00567549801563505
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "direct_peer_cutlass_sm80_q2_g2_prepared_metadata_v2",
+    "metadata_mode": "prepared",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "cf476691cd5ec7f2f02c3e88dc61b73b721eba1086d4004a23243dded2b92dc3",
+    "reference_sha256": "3d53f9d7dc06b868e6dec81062dd9ffa906186e4d1bb19b2a72b6f32b9a20347",
+    "collection": "primary",
+    "stage": "anchors",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "7ac407c559cf6d221b9e731720ae2127b7693a99d7402fd2db1e5610ae010f5a",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": "resource_queues_v1",
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/anchors-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      64,
+      1024,
+      512
+    ],
+    "candidate_id": "splitk4_groupedn2@prepared",
+    "family": "splitk4_groupedn2",
+    "process_medians_us": [
+      388.71849999999995,
+      388.019,
+      387.939
+    ],
+    "observed_us": 388.019,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk4"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 381.24692589571833,
+        "error_us": -6.772074104281671,
+        "absolute_percentage_error": 0.01745294458333657
+      },
+      "residual_depth": {
+        "predicted_us": 369.6231728079156,
+        "error_us": -18.395827192084425,
+        "absolute_percentage_error": 0.047409604148468065
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "direct_peer_cutlass_sm80_q4_g2_prepared_metadata_v2",
+    "metadata_mode": "prepared",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "cf476691cd5ec7f2f02c3e88dc61b73b721eba1086d4004a23243dded2b92dc3",
+    "reference_sha256": "3d53f9d7dc06b868e6dec81062dd9ffa906186e4d1bb19b2a72b6f32b9a20347",
+    "collection": "primary",
+    "stage": "anchors",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "fb0d7b6e3c434b1d96e22239e15d58405a661c4ee8a61a17069d297c16646eda",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": "resource_queues_v1",
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/anchors-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      64,
+      3072,
+      1536
+    ],
+    "candidate_id": "host@prepared",
+    "family": "host",
+    "process_medians_us": [
+      498.13,
+      496.56899999999996,
+      497.76149999999996
+    ],
+    "observed_us": 497.76149999999996,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "sm80_64x128x32"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 500.1172564619534,
+        "error_us": 2.3557564619534332,
+        "absolute_percentage_error": 0.004732701227301517
+      },
+      "residual_depth": {
+        "predicted_us": 500.1172564619534,
+        "error_us": 2.3557564619534332,
+        "absolute_percentage_error": 0.004732701227301517
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+    "metadata_mode": "prepared",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "29971b6db6b73399e9f6f5e79379af56faf96ad57242e34d0178779c65ece344",
+    "reference_sha256": "59b39adf4ea9e6164d976faef942abb47933457976fb7ec2e57fd716121e8bf0",
+    "collection": "primary",
+    "stage": "anchors",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "90040c3d6892a2d163832bf847953522030d46cc06d85fb4b69b27d558ad70fb",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": null,
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/anchors-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      64,
+      3072,
+      1536
+    ],
+    "candidate_id": "splitk4@prepared",
+    "family": "splitk4",
+    "process_medians_us": [
+      551.471,
+      552.124,
+      550.701
+    ],
+    "observed_us": 551.471,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk4"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 512.5936381982189,
+        "error_us": -38.87736180178115,
+        "absolute_percentage_error": 0.07049756342904911
+      },
+      "residual_depth": {
+        "predicted_us": 536.8665879355988,
+        "error_us": -14.604412064401231,
+        "absolute_percentage_error": 0.02648264743640416
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "direct_peer_cutlass_sm80_q4_g1_prepared_metadata_v2",
+    "metadata_mode": "prepared",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "29971b6db6b73399e9f6f5e79379af56faf96ad57242e34d0178779c65ece344",
+    "reference_sha256": "59b39adf4ea9e6164d976faef942abb47933457976fb7ec2e57fd716121e8bf0",
+    "collection": "primary",
+    "stage": "anchors",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "ff5aff8a93d87d3f5508307f5b161f2c9c1ed89299fb0f6299d5445476030283",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": "resource_queues_v1",
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/anchors-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      64,
+      3072,
+      1536
+    ],
+    "candidate_id": "splitk4_groupedn2@prepared",
+    "family": "splitk4_groupedn2",
+    "process_medians_us": [
+      532.0845,
+      528.562,
+      537.4859999999999
+    ],
+    "observed_us": 532.0845,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk4"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 515.4167046267878,
+        "error_us": -16.667795373212243,
+        "absolute_percentage_error": 0.031325466863274976
+      },
+      "residual_depth": {
+        "predicted_us": 504.00926343358583,
+        "error_us": -28.07523656641422,
+        "absolute_percentage_error": 0.052764620218055946
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "direct_peer_cutlass_sm80_q4_g2_prepared_metadata_v2",
+    "metadata_mode": "prepared",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "29971b6db6b73399e9f6f5e79379af56faf96ad57242e34d0178779c65ece344",
+    "reference_sha256": "59b39adf4ea9e6164d976faef942abb47933457976fb7ec2e57fd716121e8bf0",
+    "collection": "primary",
+    "stage": "anchors",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "f98e712e89b293641fcfa88edcad4ce2f1d1aa51c1319e840738f489ef9e5949",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": "resource_queues_v1",
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/anchors-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      64,
+      4096,
+      2048
+    ],
+    "candidate_id": "host@prepared",
+    "family": "host",
+    "process_medians_us": [
+      582.515,
+      573.6949999999999,
+      576.4195000000001
+    ],
+    "observed_us": 576.4195000000001,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "sm80_64x128x32"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 589.7443177410422,
+        "error_us": 13.324817741042125,
+        "absolute_percentage_error": 0.02311652839822753
+      },
+      "residual_depth": {
+        "predicted_us": 589.7443177410422,
+        "error_us": 13.324817741042125,
+        "absolute_percentage_error": 0.02311652839822753
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+    "metadata_mode": "prepared",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "f6fba035e48f6c5c60e5565020ab17c88a8060931c1511dcd046643ecec12598",
+    "reference_sha256": "c82a490a3d1db291944c79feaec6431baac2dc734d5440209b33cfdea6027602",
+    "collection": "primary",
+    "stage": "anchors",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "b8c841f8d39406340c9d9b0d1d96738f3aa81200b841d2372deceb14164ddca7",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": null,
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/anchors-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      64,
+      4096,
+      2048
+    ],
+    "candidate_id": "splitk2@prepared",
+    "family": "splitk2",
+    "process_medians_us": [
+      727.8645,
+      727.1099999999999,
+      726.839
+    ],
+    "observed_us": 727.1099999999999,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk2"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 687.6674817969906,
+        "error_us": -39.442518203009286,
+        "absolute_percentage_error": 0.05424559998213374
+      },
+      "residual_depth": {
+        "predicted_us": 705.9468848827494,
+        "error_us": -21.163115117250527,
+        "absolute_percentage_error": 0.029105795708009197
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "direct_peer_cutlass_sm80_q2_g1_prepared_metadata_v2",
+    "metadata_mode": "prepared",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "f6fba035e48f6c5c60e5565020ab17c88a8060931c1511dcd046643ecec12598",
+    "reference_sha256": "c82a490a3d1db291944c79feaec6431baac2dc734d5440209b33cfdea6027602",
+    "collection": "primary",
+    "stage": "anchors",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "d3109ed0702faacdb2626f8d4ba9a7faa74efba6fb25d94b293292138802b367",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": "resource_queues_v1",
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/anchors-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      64,
+      4096,
+      2048
+    ],
+    "candidate_id": "splitk4@prepared",
+    "family": "splitk4",
+    "process_medians_us": [
+      723.1305,
+      727.7655000000001,
+      727.125
+    ],
+    "observed_us": 727.125,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk4"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 683.4249097893135,
+        "error_us": -43.70009021068654,
+        "absolute_percentage_error": 0.06009983181803202
+      },
+      "residual_depth": {
+        "predicted_us": 702.0000808409187,
+        "error_us": -25.124919159081287,
+        "absolute_percentage_error": 0.03455378258082353
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "direct_peer_cutlass_sm80_q4_g1_prepared_metadata_v2",
+    "metadata_mode": "prepared",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "f6fba035e48f6c5c60e5565020ab17c88a8060931c1511dcd046643ecec12598",
+    "reference_sha256": "c82a490a3d1db291944c79feaec6431baac2dc734d5440209b33cfdea6027602",
+    "collection": "primary",
+    "stage": "anchors",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "5b07e5fd53996e542391ed72499309546a5a5b42a5b16294dda77fb815eab997",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": "resource_queues_v1",
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/anchors-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      64,
+      4096,
+      2048
+    ],
+    "candidate_id": "splitk4_groupedn2@prepared",
+    "family": "splitk4_groupedn2",
+    "process_medians_us": [
+      613.899,
+      610.4295,
+      614.377
+    ],
+    "observed_us": 613.899,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk4"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 582.5015939923226,
+        "error_us": -31.397406007677432,
+        "absolute_percentage_error": 0.05114425338317452
+      },
+      "residual_depth": {
+        "predicted_us": 591.3904725563891,
+        "error_us": -22.508527443610888,
+        "absolute_percentage_error": 0.03666487067679025
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "direct_peer_cutlass_sm80_q4_g2_prepared_metadata_v2",
+    "metadata_mode": "prepared",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "f6fba035e48f6c5c60e5565020ab17c88a8060931c1511dcd046643ecec12598",
+    "reference_sha256": "c82a490a3d1db291944c79feaec6431baac2dc734d5440209b33cfdea6027602",
+    "collection": "primary",
+    "stage": "anchors",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "f229fc815f5006f4811ebad7a4509fc85c2b04e515d9ae1e734f7b21e4971e2b",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": "resource_queues_v1",
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/anchors-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      64,
+      8192,
+      512
+    ],
+    "candidate_id": "host@prepared",
+    "family": "host",
+    "process_medians_us": [
+      838.969,
+      826.7335,
+      827.6494999999999
+    ],
+    "observed_us": 827.6494999999999,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "sm80_64x128x32"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 847.4245587794504,
+        "error_us": 19.775058779450546,
+        "absolute_percentage_error": 0.023893035372401616
+      },
+      "residual_depth": {
+        "predicted_us": 847.4245587794504,
+        "error_us": 19.775058779450546,
+        "absolute_percentage_error": 0.023893035372401616
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+    "metadata_mode": "prepared",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "9f01da29c9bff0efd896001a4984ec6f6b68c32fd981b68e6de64d1793471e3a",
+    "reference_sha256": "1e10ae2fca27e174a966c86881defb8a39b9c97fcdd2b0fe1f250eb90810e454",
+    "collection": "primary",
+    "stage": "anchors",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "66c4fa8a0bf65ebc0b3f6044d7b41f8b147e0c1f84a37c7accb6e68f7237d6ab",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": null,
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/anchors-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      64,
+      8192,
+      512
+    ],
+    "candidate_id": "splitk4@prepared",
+    "family": "splitk4",
+    "process_medians_us": [
+      719.3430000000001,
+      720.1165000000001,
+      719.9610000000001
+    ],
+    "observed_us": 719.9610000000001,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk4"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 752.4754111692419,
+        "error_us": 32.514411169241725,
+        "absolute_percentage_error": 0.045161350641551135
+      },
+      "residual_depth": {
+        "predicted_us": 734.7158360110395,
+        "error_us": 14.754836011039401,
+        "absolute_percentage_error": 0.020493937881412183
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "direct_peer_cutlass_sm80_q4_g1_prepared_metadata_v2",
+    "metadata_mode": "prepared",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "9f01da29c9bff0efd896001a4984ec6f6b68c32fd981b68e6de64d1793471e3a",
+    "reference_sha256": "1e10ae2fca27e174a966c86881defb8a39b9c97fcdd2b0fe1f250eb90810e454",
+    "collection": "primary",
+    "stage": "anchors",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "f8877d994d4fa3d8713aaf6e377a47863ceaeafd9294dab919d3bb4f56576005",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": "resource_queues_v1",
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/anchors-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      64,
+      8192,
+      512
+    ],
+    "candidate_id": "splitk4_groupedn2@prepared",
+    "family": "splitk4_groupedn2",
+    "process_medians_us": [
+      844.0635000000001,
+      843.61,
+      841.777
+    ],
+    "observed_us": 843.61,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk4"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 850.8411514544615,
+        "error_us": 7.2311514544614965,
+        "absolute_percentage_error": 0.008571675838908277
+      },
+      "residual_depth": {
+        "predicted_us": 839.9744899977613,
+        "error_us": -3.635510002238675,
+        "absolute_percentage_error": 0.004309467647655496
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "direct_peer_cutlass_sm80_q4_g2_prepared_metadata_v2",
+    "metadata_mode": "prepared",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "9f01da29c9bff0efd896001a4984ec6f6b68c32fd981b68e6de64d1793471e3a",
+    "reference_sha256": "1e10ae2fca27e174a966c86881defb8a39b9c97fcdd2b0fe1f250eb90810e454",
+    "collection": "primary",
+    "stage": "anchors",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "b508c5c84c81dd0a6e7c468e4930bcc7e119510a7fd56b20fd7df348a78863a8",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": "resource_queues_v1",
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/anchors-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      64,
+      8192,
+      512
+    ],
+    "candidate_id": "splitk8_groupedn2@prepared",
+    "family": "splitk8_groupedn2",
+    "process_medians_us": [
+      737.0565,
+      731.809,
+      740.2295
+    ],
+    "observed_us": 737.0565,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk8"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 712.1174527368252,
+        "error_us": -24.93904726317487,
+        "absolute_percentage_error": 0.03383600478820126
+      },
+      "residual_depth": {
+        "predicted_us": 709.4928662428741,
+        "error_us": -27.5636337571259,
+        "absolute_percentage_error": 0.03739690750590474
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "direct_peer_cutlass_sm80_q8_g2_prepared_metadata_v2",
+    "metadata_mode": "prepared",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "9f01da29c9bff0efd896001a4984ec6f6b68c32fd981b68e6de64d1793471e3a",
+    "reference_sha256": "1e10ae2fca27e174a966c86881defb8a39b9c97fcdd2b0fe1f250eb90810e454",
+    "collection": "primary",
+    "stage": "anchors",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "51b59a0e78190f3f5247ff6234929ae176a1c83788956969f517908a566b1717",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": "resource_queues_v1",
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/anchors-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      192,
+      3072,
+      512
+    ],
+    "candidate_id": "host@prepared",
+    "family": "host",
+    "process_medians_us": [
+      622.4549999999999,
+      620.0375,
+      618.7745
+    ],
+    "observed_us": 620.0375,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "sm80_64x128x32"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 597.7189508303426,
+        "error_us": -22.318549169657445,
+        "absolute_percentage_error": 0.03599548280492304
+      },
+      "residual_depth": {
+        "predicted_us": 597.7189508303426,
+        "error_us": -22.318549169657445,
+        "absolute_percentage_error": 0.03599548280492304
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+    "metadata_mode": "prepared",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "814847f5edb22a7fffc23c3f66612f918af925a8c38b1529d249ed41a6aa4835",
+    "reference_sha256": "8d96e6a79d4cf245ab5af0d2f281259f4181d123d9cf2612ee3bb514cfb1747f",
+    "collection": "primary",
+    "stage": "anchors",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "753f0520ae8dcbc736fd5a3ce79a4520b7a534b394ed2dd777c73628597b28f8",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": null,
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/anchors-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      192,
+      3072,
+      512
+    ],
+    "candidate_id": "splitk2@prepared",
+    "family": "splitk2",
+    "process_medians_us": [
+      560.0169999999999,
+      561.4765,
+      560.8705
+    ],
+    "observed_us": 560.8705,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk2"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 572.7869869713829,
+        "error_us": 11.916486971382938,
+        "absolute_percentage_error": 0.021246414228209387
+      },
+      "residual_depth": {
+        "predicted_us": 555.1983279397366,
+        "error_us": -5.672172060263392,
+        "absolute_percentage_error": 0.010113158135903744
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "direct_peer_cutlass_sm80_q2_g1_prepared_metadata_v2",
+    "metadata_mode": "prepared",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "814847f5edb22a7fffc23c3f66612f918af925a8c38b1529d249ed41a6aa4835",
+    "reference_sha256": "8d96e6a79d4cf245ab5af0d2f281259f4181d123d9cf2612ee3bb514cfb1747f",
+    "collection": "primary",
+    "stage": "anchors",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "01c4477bf1d32b949fca646a0bc77d145151c745276c42123ff49de9530024c0",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": "resource_queues_v1",
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/anchors-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      192,
+      3072,
+      512
+    ],
+    "candidate_id": "splitk2_groupedn2@prepared",
+    "family": "splitk2_groupedn2",
+    "process_medians_us": [
+      631.3925,
+      630.767,
+      632.771
+    ],
+    "observed_us": 631.3925,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk2"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 651.8634433511407,
+        "error_us": 20.470943351140704,
+        "absolute_percentage_error": 0.032421898187166676
+      },
+      "residual_depth": {
+        "predicted_us": 636.4431206238645,
+        "error_us": 5.050620623864461,
+        "absolute_percentage_error": 0.007999177411617042
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "direct_peer_cutlass_sm80_q2_g2_prepared_metadata_v2",
+    "metadata_mode": "prepared",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "814847f5edb22a7fffc23c3f66612f918af925a8c38b1529d249ed41a6aa4835",
+    "reference_sha256": "8d96e6a79d4cf245ab5af0d2f281259f4181d123d9cf2612ee3bb514cfb1747f",
+    "collection": "primary",
+    "stage": "anchors",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "d8106848d0bcad6ec68f78507a36b7779c9663b2c4b1de4b38fada10176ad7c0",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": "resource_queues_v1",
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/anchors-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      256,
+      8192,
+      512
+    ],
+    "candidate_id": "host@prepared",
+    "family": "host",
+    "process_medians_us": [
+      1328.6335,
+      1316.8950000000002,
+      1313.689
+    ],
+    "observed_us": 1316.8950000000002,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "sm80_64x128x32"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 1305.0500056383053,
+        "error_us": -11.844994361694944,
+        "absolute_percentage_error": 0.00899463841968795
+      },
+      "residual_depth": {
+        "predicted_us": 1305.0500056383053,
+        "error_us": -11.844994361694944,
+        "absolute_percentage_error": 0.00899463841968795
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+    "metadata_mode": "prepared",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "393d4932a81e7f1c58fdfc0f4c7b0a6343d29f6297d7fffbe740d6ad0987d6e7",
+    "reference_sha256": "2b601ff6603aa9767fe3e5abfb8c6ef00f493b29c33dc273fef9551edccbb4d3",
+    "collection": "primary",
+    "stage": "anchors",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "56c083f2313229539cfa2e19c86614717b3927107b56ac1d64ff363dd7212259",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": null,
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/anchors-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      256,
+      8192,
+      512
+    ],
+    "candidate_id": "host_merged_cublaslt@merged",
+    "family": "host_merged_cublaslt",
+    "process_medians_us": [
+      641.246,
+      637.6105000000001,
+      639.98
+    ],
+    "observed_us": 639.98,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "rank0:0=6;1=20;2=3;3=4;4=0;5=0;6=15;workspace=3145728;budget=33554432|rank1:0=6;1=20;2=3;3=4;4=0;5=0;6=15;workspace=3145728;budget=33554432|rank2:0=6;1=20;2=3;3=4;4=0;5=0;6=15;workspace=3145728;budget=33554432|rank3:0=6;1=20;2=3;3=4;4=0;5=0;6=15;workspace=3145728;budget=33554432|"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 637.3361959066453,
+        "error_us": -2.6438040933546745,
+        "absolute_percentage_error": 0.004131072991897633
+      },
+      "residual_depth": {
+        "predicted_us": 637.3361959066453,
+        "error_us": -2.6438040933546745,
+        "absolute_percentage_error": 0.004131072991897633
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "host_nccl_cublaslt_merged_v1",
+    "metadata_mode": "merged",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "393d4932a81e7f1c58fdfc0f4c7b0a6343d29f6297d7fffbe740d6ad0987d6e7",
+    "reference_sha256": "2b601ff6603aa9767fe3e5abfb8c6ef00f493b29c33dc273fef9551edccbb4d3",
+    "collection": "primary",
+    "stage": "anchors",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "7228079e92b1097c478ed6412d8959a8d52a67ce75805b0424f549a77242ea75",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": null,
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/anchors-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      256,
+      8192,
+      512
+    ],
+    "candidate_id": "splitk2@prepared",
+    "family": "splitk2",
+    "process_medians_us": [
+      1258.8065,
+      1257.2920000000001,
+      1258.339
+    ],
+    "observed_us": 1258.339,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk2"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 1147.189461099421,
+        "error_us": -111.14953890057905,
+        "absolute_percentage_error": 0.08833036161207675
+      },
+      "residual_depth": {
+        "predicted_us": 1187.8121297949908,
+        "error_us": -70.52687020500912,
+        "absolute_percentage_error": 0.05604759147178073
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "direct_peer_cutlass_sm80_q2_g1_prepared_metadata_v2",
+    "metadata_mode": "prepared",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "393d4932a81e7f1c58fdfc0f4c7b0a6343d29f6297d7fffbe740d6ad0987d6e7",
+    "reference_sha256": "2b601ff6603aa9767fe3e5abfb8c6ef00f493b29c33dc273fef9551edccbb4d3",
+    "collection": "primary",
+    "stage": "anchors",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "30f101ffa6108c4cd64e4b05ce05d429d16fb811b01d595410ca1542b0906f70",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": "resource_queues_v1",
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/anchors-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      256,
+      8192,
+      512
+    ],
+    "candidate_id": "splitk2_groupedn2@prepared",
+    "family": "splitk2_groupedn2",
+    "process_medians_us": [
+      1346.5725,
+      1327.7655,
+      1334.879
+    ],
+    "observed_us": 1334.879,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk2"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 1322.712337006488,
+        "error_us": -12.166662993511864,
+        "absolute_percentage_error": 0.009114431340602303
+      },
+      "residual_depth": {
+        "predicted_us": 1308.3735737522156,
+        "error_us": -26.50542624778427,
+        "absolute_percentage_error": 0.019856051558069465
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "direct_peer_cutlass_sm80_q2_g2_prepared_metadata_v2",
+    "metadata_mode": "prepared",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "393d4932a81e7f1c58fdfc0f4c7b0a6343d29f6297d7fffbe740d6ad0987d6e7",
+    "reference_sha256": "2b601ff6603aa9767fe3e5abfb8c6ef00f493b29c33dc273fef9551edccbb4d3",
+    "collection": "primary",
+    "stage": "anchors",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "40475062e41e26a7a38ce6f17ef57de5589eed34141a1228057cbb128527a4e5",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": "resource_queues_v1",
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/anchors-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      256,
+      8192,
+      512
+    ],
+    "candidate_id": "splitk4@prepared",
+    "family": "splitk4",
+    "process_medians_us": [
+      1093.2740000000001,
+      1090.6825,
+      1107.1835
+    ],
+    "observed_us": 1093.2740000000001,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk4"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 1073.8963877118154,
+        "error_us": -19.377612288184764,
+        "absolute_percentage_error": 0.017724387745601478
+      },
+      "residual_depth": {
+        "predicted_us": 1110.773242963103,
+        "error_us": 17.499242963102915,
+        "absolute_percentage_error": 0.016006273782329883
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "direct_peer_cutlass_sm80_q4_g1_prepared_metadata_v2",
+    "metadata_mode": "prepared",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "393d4932a81e7f1c58fdfc0f4c7b0a6343d29f6297d7fffbe740d6ad0987d6e7",
+    "reference_sha256": "2b601ff6603aa9767fe3e5abfb8c6ef00f493b29c33dc273fef9551edccbb4d3",
+    "collection": "primary",
+    "stage": "anchors",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "4ae1a6b85edb3802ed963c7b20291c6cf929e47b52d8f55ed649cbb7dc7fe6fd",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": "resource_queues_v1",
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/anchors-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      256,
+      8192,
+      512
+    ],
+    "candidate_id": "splitk4_groupedn2@prepared",
+    "family": "splitk4_groupedn2",
+    "process_medians_us": [
+      896.1569999999999,
+      896.6505,
+      892.5175
+    ],
+    "observed_us": 896.1569999999999,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk4"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 850.8411514544615,
+        "error_us": -45.315848545538415,
+        "absolute_percentage_error": 0.05056686333481564
+      },
+      "residual_depth": {
+        "predicted_us": 880.3508176176978,
+        "error_us": -15.806182382302154,
+        "absolute_percentage_error": 0.01763773801052959
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "direct_peer_cutlass_sm80_q4_g2_prepared_metadata_v2",
+    "metadata_mode": "prepared",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "393d4932a81e7f1c58fdfc0f4c7b0a6343d29f6297d7fffbe740d6ad0987d6e7",
+    "reference_sha256": "2b601ff6603aa9767fe3e5abfb8c6ef00f493b29c33dc273fef9551edccbb4d3",
+    "collection": "primary",
+    "stage": "anchors",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "3e59817c5532a95ca67720b53ba97fb6a91ebf78fd0a15b56d30c9be7c4b99ca",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": "resource_queues_v1",
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/anchors-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      256,
+      8192,
+      512
+    ],
+    "candidate_id": "splitk8@prepared",
+    "family": "splitk8",
+    "process_medians_us": [
+      1181.8315,
+      1179.1595,
+      1178.538
+    ],
+    "observed_us": 1179.1595,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk8"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 1203.5122464563178,
+        "error_us": 24.352746456317846,
+        "absolute_percentage_error": 0.020652631349972417
+      },
+      "residual_depth": {
+        "predicted_us": 1175.971717669499,
+        "error_us": -3.1877823305010224,
+        "absolute_percentage_error": 0.0027034360750186615
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "direct_peer_cutlass_sm80_q8_g1_prepared_metadata_v2",
+    "metadata_mode": "prepared",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "393d4932a81e7f1c58fdfc0f4c7b0a6343d29f6297d7fffbe740d6ad0987d6e7",
+    "reference_sha256": "2b601ff6603aa9767fe3e5abfb8c6ef00f493b29c33dc273fef9551edccbb4d3",
+    "collection": "primary",
+    "stage": "anchors",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "691a493bf97bafe29f162de28ffc0d216cbcad2972a53dadaa10f64a118d2e5f",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": "resource_queues_v1",
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/anchors-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      256,
+      8192,
+      512
+    ],
+    "candidate_id": "splitk8_groupedn2@prepared",
+    "family": "splitk8_groupedn2",
+    "process_medians_us": [
+      909.1709999999999,
+      858.9735000000001,
+      878.5110000000001
+    ],
+    "observed_us": 878.5110000000001,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk8"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 872.8279410081119,
+        "error_us": -5.683058991888174,
+        "absolute_percentage_error": 0.006468967368522649
+      },
+      "residual_depth": {
+        "predicted_us": 897.5215697189059,
+        "error_us": 19.0105697189058,
+        "absolute_percentage_error": 0.021639535212314653
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "direct_peer_cutlass_sm80_q8_g2_prepared_metadata_v2",
+    "metadata_mode": "prepared",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "393d4932a81e7f1c58fdfc0f4c7b0a6343d29f6297d7fffbe740d6ad0987d6e7",
+    "reference_sha256": "2b601ff6603aa9767fe3e5abfb8c6ef00f493b29c33dc273fef9551edccbb4d3",
+    "collection": "primary",
+    "stage": "anchors",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "77c1d5d68487bfded2509d9bb0eb54270be426f47bb8c2b1f1de8400db2484d5",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": "resource_queues_v1",
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/anchors-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      512,
+      4096,
+      512
+    ],
+    "candidate_id": "host_merged_cublaslt@merged",
+    "family": "host_merged_cublaslt",
+    "process_medians_us": [
+      643.6395,
+      638.2615000000001,
+      639.1035
+    ],
+    "observed_us": 639.1035,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "rank0:0=6;1=20;2=3;3=1;4=0;5=0;6=11;workspace=256;budget=33554432|rank1:0=6;1=20;2=3;3=1;4=0;5=0;6=11;workspace=256;budget=33554432|rank2:0=6;1=20;2=3;3=1;4=0;5=0;6=11;workspace=256;budget=33554432|rank3:0=6;1=20;2=3;3=1;4=0;5=0;6=11;workspace=256;budget=33554432|"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 637.3361959066453,
+        "error_us": -1.76730409335471,
+        "absolute_percentage_error": 0.0027652862069362794
+      },
+      "residual_depth": {
+        "predicted_us": 637.3361959066453,
+        "error_us": -1.76730409335471,
+        "absolute_percentage_error": 0.0027652862069362794
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "host_nccl_cublaslt_merged_v1",
+    "metadata_mode": "merged",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "29100ffb1a0419f170eb21e8dce3afef85c6bc2af63ab68540e2c3673fa36f9f",
+    "reference_sha256": "7bcae5fd61c978340ffa2e8c66ac306843819eb0f0a61a2cd23112ff95710950",
+    "collection": "primary",
+    "stage": "anchors",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "ac180fa4ac39daca25509bee3cffb03f6be8423748ae6d36359ec983971efbb2",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": null,
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/anchors-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      512,
+      4096,
+      512
+    ],
+    "candidate_id": "host_merged_cutlass@merged",
+    "family": "host_merged_cutlass",
+    "process_medians_us": [
+      656.4295,
+      657.1329999999999,
+      656.1005
+    ],
+    "observed_us": 656.4295,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "sm80_64x128x32"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 652.2927813264822,
+        "error_us": -4.136718673517748,
+        "absolute_percentage_error": 0.006301847606662636
+      },
+      "residual_depth": {
+        "predicted_us": 652.2927813264822,
+        "error_us": -4.136718673517748,
+        "absolute_percentage_error": 0.006301847606662636
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "host_nccl_cutlass_sm80_merged_v1",
+    "metadata_mode": "merged",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "29100ffb1a0419f170eb21e8dce3afef85c6bc2af63ab68540e2c3673fa36f9f",
+    "reference_sha256": "7bcae5fd61c978340ffa2e8c66ac306843819eb0f0a61a2cd23112ff95710950",
+    "collection": "primary",
+    "stage": "anchors",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "c3d5b8c5e3b5de942868b655c6a03cf9a8f9d5b75e5489f28b1b02262bf167bb",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": null,
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/anchors-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      512,
+      4096,
+      512
+    ],
+    "candidate_id": "splitk2_groupedn2@prepared",
+    "family": "splitk2_groupedn2",
+    "process_medians_us": [
+      772.7539999999999,
+      772.26,
+      773.3019999999999
+    ],
+    "observed_us": 772.7539999999999,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk2"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 786.0332220822102,
+        "error_us": 13.279222082210254,
+        "absolute_percentage_error": 0.017184281261837908
+      },
+      "residual_depth": {
+        "predicted_us": 811.2055388694712,
+        "error_us": 38.45153886947128,
+        "absolute_percentage_error": 0.049759093928302356
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "direct_peer_cutlass_sm80_q2_g2_prepared_metadata_v2",
+    "metadata_mode": "prepared",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "29100ffb1a0419f170eb21e8dce3afef85c6bc2af63ab68540e2c3673fa36f9f",
+    "reference_sha256": "7bcae5fd61c978340ffa2e8c66ac306843819eb0f0a61a2cd23112ff95710950",
+    "collection": "primary",
+    "stage": "anchors",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "aeb898530c707adb5a005b0a31c41ce19015c3a37d3e9521ba1d4accb9fd81ab",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": "resource_queues_v1",
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/anchors-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      192,
+      8192,
+      512
+    ],
+    "candidate_id": "splitk2@prepared",
+    "family": "splitk2",
+    "process_medians_us": [
+      1107.99,
+      1097.064,
+      1107.5945
+    ],
+    "observed_us": 1107.5945,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk2"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 1147.189461099421,
+        "error_us": 39.59496109942097,
+        "absolute_percentage_error": 0.03574860754492826
+      },
+      "residual_depth": {
+        "predicted_us": 1107.059474555118,
+        "error_us": -0.5350254448819669,
+        "absolute_percentage_error": 0.0004830517349824204
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "direct_peer_cutlass_sm80_q2_g1_prepared_metadata_v2",
+    "metadata_mode": "prepared",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "c8942ac38a8ce3058dae071355944fdf237c9cb5d45c7e522c0ebfdb44338410",
+    "reference_sha256": "3a6c4665d9f31c7c921885b43d93c59b1db60031a8c2921195aed5358effde98",
+    "collection": "primary",
+    "stage": "crossings",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "987372bb378cd78f79ee8ae39c4f351f865d3cd75eea00555598cae0ee7d4209",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": "resource_queues_v1",
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/crossings-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      192,
+      8192,
+      512
+    ],
+    "candidate_id": "splitk4@prepared",
+    "family": "splitk4",
+    "process_medians_us": [
+      905.5070000000001,
+      907.1,
+      919.2525
+    ],
+    "observed_us": 907.1,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk4"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 878.6606487505644,
+        "error_us": -28.439351249435617,
+        "absolute_percentage_error": 0.03135194713861278
+      },
+      "residual_depth": {
+        "predicted_us": 942.9327032970394,
+        "error_us": 35.832703297039416,
+        "absolute_percentage_error": 0.03950248406684986
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "direct_peer_cutlass_sm80_q4_g1_prepared_metadata_v2",
+    "metadata_mode": "prepared",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "c8942ac38a8ce3058dae071355944fdf237c9cb5d45c7e522c0ebfdb44338410",
+    "reference_sha256": "3a6c4665d9f31c7c921885b43d93c59b1db60031a8c2921195aed5358effde98",
+    "collection": "primary",
+    "stage": "crossings",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "274bf9f65947ad3d0d4628b4b5ef650fac8fce56216131498c30007ce327e4c8",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": "resource_queues_v1",
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/crossings-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      192,
+      8192,
+      512
+    ],
+    "candidate_id": "splitk4_groupedn2@prepared",
+    "family": "splitk4_groupedn2",
+    "process_medians_us": [
+      847.798,
+      834.919,
+      843.0945
+    ],
+    "observed_us": 843.0945,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk4"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 850.8411514544615,
+        "error_us": 7.746651454461471,
+        "absolute_percentage_error": 0.009188354869426263
+      },
+      "residual_depth": {
+        "predicted_us": 839.9744899977613,
+        "error_us": -3.1200100022387005,
+        "absolute_percentage_error": 0.003700664637521278
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "direct_peer_cutlass_sm80_q4_g2_prepared_metadata_v2",
+    "metadata_mode": "prepared",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "c8942ac38a8ce3058dae071355944fdf237c9cb5d45c7e522c0ebfdb44338410",
+    "reference_sha256": "3a6c4665d9f31c7c921885b43d93c59b1db60031a8c2921195aed5358effde98",
+    "collection": "primary",
+    "stage": "crossings",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "a9157d24831b7457306a436fedc1c920e591f20122fe944cc4fd0cba8cc6e23d",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": "resource_queues_v1",
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/crossings-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      192,
+      8192,
+      512
+    ],
+    "candidate_id": "splitk8@prepared",
+    "family": "splitk8",
+    "process_medians_us": [
+      982.919,
+      984.621,
+      984.4965
+    ],
+    "observed_us": 984.4965,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk8"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 1008.2765074950669,
+        "error_us": 23.78000749506691,
+        "absolute_percentage_error": 0.024154486577724565
+      },
+      "residual_depth": {
+        "predicted_us": 1008.1311780034355,
+        "error_us": 23.63467800343551,
+        "absolute_percentage_error": 0.024006868489055533
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "direct_peer_cutlass_sm80_q8_g1_prepared_metadata_v2",
+    "metadata_mode": "prepared",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "c8942ac38a8ce3058dae071355944fdf237c9cb5d45c7e522c0ebfdb44338410",
+    "reference_sha256": "3a6c4665d9f31c7c921885b43d93c59b1db60031a8c2921195aed5358effde98",
+    "collection": "primary",
+    "stage": "crossings",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "6c9a7047c36b09e3a64de43bf32171f07949326710abfc302349ee9f1928ce33",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": "resource_queues_v1",
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/crossings-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      192,
+      8192,
+      512
+    ],
+    "candidate_id": "splitk8_groupedn2@prepared",
+    "family": "splitk8_groupedn2",
+    "process_medians_us": [
+      784.659,
+      796.7919999999999,
+      782.961
+    ],
+    "observed_us": 784.659,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk8"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 775.2100715274864,
+        "error_us": -9.448928472513558,
+        "absolute_percentage_error": 0.012042082576652513
+      },
+      "residual_depth": {
+        "predicted_us": 813.601299885874,
+        "error_us": 28.942299885874036,
+        "absolute_percentage_error": 0.036885194569709956
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "direct_peer_cutlass_sm80_q8_g2_prepared_metadata_v2",
+    "metadata_mode": "prepared",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "c8942ac38a8ce3058dae071355944fdf237c9cb5d45c7e522c0ebfdb44338410",
+    "reference_sha256": "3a6c4665d9f31c7c921885b43d93c59b1db60031a8c2921195aed5358effde98",
+    "collection": "primary",
+    "stage": "crossings",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "7e117ed1c60944d85a7f6d00a415fe82d3f23e6bec4d6c1c7d2784e0c2afc58b",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": "resource_queues_v1",
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/crossings-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      256,
+      3072,
+      512
+    ],
+    "candidate_id": "splitk2@prepared",
+    "family": "splitk2",
+    "process_medians_us": [
+      572.888,
+      573.234,
+      572.392
+    ],
+    "observed_us": 572.888,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk2"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 572.7869869713829,
+        "error_us": -0.10101302861710337,
+        "absolute_percentage_error": 0.00017632247248522415
+      },
+      "residual_depth": {
+        "predicted_us": 585.4805736546889,
+        "error_us": 12.592573654688863,
+        "absolute_percentage_error": 0.02198086476709027
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "direct_peer_cutlass_sm80_q2_g1_prepared_metadata_v2",
+    "metadata_mode": "prepared",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "46d36a5fd83962468b5064f572bacea536a540d300ec58c0a0a799afc9c920b3",
+    "reference_sha256": "98330bfdd39186149d7955b0c8876b0f549eefdb973229915b7fd41b7266bea9",
+    "collection": "primary",
+    "stage": "crossings",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "6415fbb18655db05f412c62ce638d2b240e79994d08cb63011c1d7588920a3b8",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": "resource_queues_v1",
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/crossings-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      256,
+      3072,
+      512
+    ],
+    "candidate_id": "splitk2_groupedn2@prepared",
+    "family": "splitk2_groupedn2",
+    "process_medians_us": [
+      640.3805,
+      636.433,
+      638.617
+    ],
+    "observed_us": 638.617,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk2"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 651.8634433511407,
+        "error_us": 13.246443351140783,
+        "absolute_percentage_error": 0.020742390746160577
+      },
+      "residual_depth": {
+        "predicted_us": 636.4431206238645,
+        "error_us": -2.17387937613546,
+        "absolute_percentage_error": 0.0034040424481895926
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "direct_peer_cutlass_sm80_q2_g2_prepared_metadata_v2",
+    "metadata_mode": "prepared",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "46d36a5fd83962468b5064f572bacea536a540d300ec58c0a0a799afc9c920b3",
+    "reference_sha256": "98330bfdd39186149d7955b0c8876b0f549eefdb973229915b7fd41b7266bea9",
+    "collection": "primary",
+    "stage": "crossings",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "b7c82bdbfaa4f1812cb872216ef2369596bf0010b47903e3ccb1d36a48671744",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": "resource_queues_v1",
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/crossings-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      320,
+      3072,
+      512
+    ],
+    "candidate_id": "splitk2@prepared",
+    "family": "splitk2",
+    "process_medians_us": [
+      638.988,
+      643.4014999999999,
+      638.422
+    ],
+    "observed_us": 638.988,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk2"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 594.2125130469058,
+        "error_us": -44.77548695309429,
+        "absolute_percentage_error": 0.0700725005056344
+      },
+      "residual_depth": {
+        "predicted_us": 648.4207760294628,
+        "error_us": 9.43277602946273,
+        "absolute_percentage_error": 0.014762055045576261
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "direct_peer_cutlass_sm80_q2_g1_prepared_metadata_v2",
+    "metadata_mode": "prepared",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "45f3d0f41ffec0fd34e300de9848de74bbee0ecb3c087f7baee9c4275234af7d",
+    "reference_sha256": "ab432e146353fe63fed834e6df9b0727dbca54500df4240a71b53dc82b26202a",
+    "collection": "primary",
+    "stage": "crossings",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "2561f5a7ac84ce5e2b2c614e8b6d4ec850201617294c25340ea2f2f7ff79b857",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": "resource_queues_v1",
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/crossings-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      320,
+      3072,
+      512
+    ],
+    "candidate_id": "splitk2_groupedn2@prepared",
+    "family": "splitk2_groupedn2",
+    "process_medians_us": [
+      637.1139999999999,
+      638.497,
+      638.5675
+    ],
+    "observed_us": 638.497,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk2"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 651.8634433511407,
+        "error_us": 13.366443351140788,
+        "absolute_percentage_error": 0.02093423046802223
+      },
+      "residual_depth": {
+        "predicted_us": 636.4431206238645,
+        "error_us": -2.0538793761354555,
+        "absolute_percentage_error": 0.0032167408400280983
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "direct_peer_cutlass_sm80_q2_g2_prepared_metadata_v2",
+    "metadata_mode": "prepared",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "45f3d0f41ffec0fd34e300de9848de74bbee0ecb3c087f7baee9c4275234af7d",
+    "reference_sha256": "ab432e146353fe63fed834e6df9b0727dbca54500df4240a71b53dc82b26202a",
+    "collection": "primary",
+    "stage": "crossings",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "07263b196a15e92f07902b4bbb988ce898c4732b968c903dfff27b51f2503082",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": "resource_queues_v1",
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/crossings-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      320,
+      8192,
+      512
+    ],
+    "candidate_id": "splitk2@prepared",
+    "family": "splitk2",
+    "process_medians_us": [
+      1350.1725000000001,
+      1352.1065,
+      1353.479
+    ],
+    "observed_us": 1352.1065,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk2"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 1204.3241973008148,
+        "error_us": -147.78230269918527,
+        "absolute_percentage_error": 0.10929782727853554
+      },
+      "residual_depth": {
+        "predicted_us": 1355.6526694610545,
+        "error_us": 3.5461694610544328,
+        "absolute_percentage_error": 0.0026226998102993893
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "direct_peer_cutlass_sm80_q2_g1_prepared_metadata_v2",
+    "metadata_mode": "prepared",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "69a91dd61925016eee1dc7d6a37f92be28646239a68a5a284c35f149618ad9b4",
+    "reference_sha256": "cb8b4d2971820a1670a201244225f97a487a593f1f23f8c9517e80b84f13b936",
+    "collection": "primary",
+    "stage": "crossings",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "c27beebe2cf8fa9ff5bc44396e00810010c2ec676cd27fb1ef6aeaad26e3bbb3",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": "resource_queues_v1",
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/crossings-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      320,
+      8192,
+      512
+    ],
+    "candidate_id": "splitk4@prepared",
+    "family": "splitk4",
+    "process_medians_us": [
+      1269.455,
+      1272.095,
+      1268.9745
+    ],
+    "observed_us": 1269.455,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk4"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 1269.1321266730663,
+        "error_us": -0.3228733269336317,
+        "absolute_percentage_error": 0.00025434011204306106
+      },
+      "residual_depth": {
+        "predicted_us": 1278.6137826291667,
+        "error_us": 9.158782629166808,
+        "absolute_percentage_error": 0.007214735952961515
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "direct_peer_cutlass_sm80_q4_g1_prepared_metadata_v2",
+    "metadata_mode": "prepared",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "69a91dd61925016eee1dc7d6a37f92be28646239a68a5a284c35f149618ad9b4",
+    "reference_sha256": "cb8b4d2971820a1670a201244225f97a487a593f1f23f8c9517e80b84f13b936",
+    "collection": "primary",
+    "stage": "crossings",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "e37b0b4cf16dbf938f8802e061a38d51593423ba195c18c7a717c1383c4e68f3",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": "resource_queues_v1",
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/crossings-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      320,
+      8192,
+      512
+    ],
+    "candidate_id": "splitk4_groupedn2@prepared",
+    "family": "splitk4_groupedn2",
+    "process_medians_us": [
+      944.847,
+      954.2189999999999,
+      952.095
+    ],
+    "observed_us": 952.095,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk4"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 879.4085195551585,
+        "error_us": -72.68648044484155,
+        "absolute_percentage_error": 0.07634372667101663
+      },
+      "residual_depth": {
+        "predicted_us": 964.2710874507295,
+        "error_us": 12.176087450729483,
+        "absolute_percentage_error": 0.012788731639940876
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "direct_peer_cutlass_sm80_q4_g2_prepared_metadata_v2",
+    "metadata_mode": "prepared",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "69a91dd61925016eee1dc7d6a37f92be28646239a68a5a284c35f149618ad9b4",
+    "reference_sha256": "cb8b4d2971820a1670a201244225f97a487a593f1f23f8c9517e80b84f13b936",
+    "collection": "primary",
+    "stage": "crossings",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "06ded14a4dadd339f84a35edd7edf81d3c7bbe4a612033bba638865d9e50e47c",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": "resource_queues_v1",
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/crossings-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      320,
+      8192,
+      512
+    ],
+    "candidate_id": "splitk8@prepared",
+    "family": "splitk8",
+    "process_medians_us": [
+      1372.9909999999998,
+      1369.9854999999998,
+      1369.2234999999998
+    ],
+    "observed_us": 1369.9854999999998,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk8"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 1398.7479854175688,
+        "error_us": 28.762485417568996,
+        "absolute_percentage_error": 0.02099473711040667
+      },
+      "residual_depth": {
+        "predicted_us": 1343.8122573355627,
+        "error_us": -26.17324266443711,
+        "absolute_percentage_error": 0.019104758893022655
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "direct_peer_cutlass_sm80_q8_g1_prepared_metadata_v2",
+    "metadata_mode": "prepared",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "69a91dd61925016eee1dc7d6a37f92be28646239a68a5a284c35f149618ad9b4",
+    "reference_sha256": "cb8b4d2971820a1670a201244225f97a487a593f1f23f8c9517e80b84f13b936",
+    "collection": "primary",
+    "stage": "crossings",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "c7dec2093b3acf690cdd581abbb42311bd1022ed82be8f24f9665998bc536ac7",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": "resource_queues_v1",
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/crossings-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      320,
+      8192,
+      512
+    ],
+    "candidate_id": "splitk8_groupedn2@prepared",
+    "family": "splitk8_groupedn2",
+    "process_medians_us": [
+      974.1815,
+      975.8249999999999,
+      967.5595000000001
+    ],
+    "observed_us": 974.1815,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk8"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 970.4458104887374,
+        "error_us": -3.735689511262649,
+        "absolute_percentage_error": 0.0038346955996009235
+      },
+      "residual_depth": {
+        "predicted_us": 981.4418395519376,
+        "error_us": 7.260339551937591,
+        "absolute_percentage_error": 0.007452758599847842
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "direct_peer_cutlass_sm80_q8_g2_prepared_metadata_v2",
+    "metadata_mode": "prepared",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "69a91dd61925016eee1dc7d6a37f92be28646239a68a5a284c35f149618ad9b4",
+    "reference_sha256": "cb8b4d2971820a1670a201244225f97a487a593f1f23f8c9517e80b84f13b936",
+    "collection": "primary",
+    "stage": "crossings",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "b3b19b2e436404cb3c81ea89a2f73fad303686e0c1ef8f113bcef2d3df2c31a0",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": "resource_queues_v1",
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/crossings-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      576,
+      3072,
+      512
+    ],
+    "candidate_id": "splitk2@prepared",
+    "family": "splitk2",
+    "process_medians_us": [
+      911.053,
+      912.7805,
+      910.221
+    ],
+    "observed_us": 911.053,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk2"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 887.0661214887822,
+        "error_us": -23.98687851121781,
+        "absolute_percentage_error": 0.026328741040551717
+      },
+      "residual_depth": {
+        "predicted_us": 900.1815855285581,
+        "error_us": -10.87141447144188,
+        "absolute_percentage_error": 0.011932801353425004
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "direct_peer_cutlass_sm80_q2_g1_prepared_metadata_v2",
+    "metadata_mode": "prepared",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "7658d6d249fb224a650830e114b6a72e193aa5e653f9e2fbf1f223e93073dc60",
+    "reference_sha256": "075b3e85e9ddc4ae67d6b187d6fe69afd1116db51591c70df27421413027c18f",
+    "collection": "primary",
+    "stage": "crossings",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "4c316e1a1af3ad70cc3463c634dc6567ec2816df1abfeba8d908c57887ed4264",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": "resource_queues_v1",
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/crossings-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      576,
+      3072,
+      512
+    ],
+    "candidate_id": "splitk2_groupedn2@prepared",
+    "family": "splitk2_groupedn2",
+    "process_medians_us": [
+      658.806,
+      651.6325,
+      657.037
+    ],
+    "observed_us": 657.037,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk2"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 651.8634433511407,
+        "error_us": -5.1735566488592895,
+        "absolute_percentage_error": 0.007874072006385124
+      },
+      "residual_depth": {
+        "predicted_us": 698.1954675262037,
+        "error_us": 41.15846752620371,
+        "absolute_percentage_error": 0.06264254147970916
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "direct_peer_cutlass_sm80_q2_g2_prepared_metadata_v2",
+    "metadata_mode": "prepared",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "7658d6d249fb224a650830e114b6a72e193aa5e653f9e2fbf1f223e93073dc60",
+    "reference_sha256": "075b3e85e9ddc4ae67d6b187d6fe69afd1116db51591c70df27421413027c18f",
+    "collection": "primary",
+    "stage": "crossings",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "b8bc23dd28baadaa20a3b325a90be93f2e65ec16049e2236eafa9ddbf3f0dc75",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": "resource_queues_v1",
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/crossings-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      640,
+      3072,
+      512
+    ],
+    "candidate_id": "splitk2@prepared",
+    "family": "splitk2",
+    "process_medians_us": [
+      984.0105,
+      981.085,
+      981.416
+    ],
+    "observed_us": 981.416,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk2"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 960.2795235992513,
+        "error_us": -21.136476400748734,
+        "absolute_percentage_error": 0.021536714706861027
+      },
+      "residual_depth": {
+        "predicted_us": 963.1217879033319,
+        "error_us": -18.29421209666816,
+        "absolute_percentage_error": 0.01864062955634327
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "direct_peer_cutlass_sm80_q2_g1_prepared_metadata_v2",
+    "metadata_mode": "prepared",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "0dcba53a69bcb86a224530a62c276cb37a543a249a9b7a91795b04a0f832c72f",
+    "reference_sha256": "b90918ca2e0b4e5f8ba97558a2ef1e9ae3a18a85f0f5c3264ac095b2bcc67b4b",
+    "collection": "primary",
+    "stage": "crossings",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "f7fc2c222e539b32b66dd06c924c886f69169a15ffe5b792899c6108ac846202",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": "resource_queues_v1",
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/crossings-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      640,
+      3072,
+      512
+    ],
+    "candidate_id": "splitk2_groupedn2@prepared",
+    "family": "splitk2_groupedn2",
+    "process_medians_us": [
+      665.9495,
+      672.6719999999999,
+      671.544
+    ],
+    "observed_us": 671.544,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "sm80_64x128x32_splitk2"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 673.2889694266635,
+        "error_us": 1.7449694266634879,
+        "absolute_percentage_error": 0.0025984439242454638
+      },
+      "residual_depth": {
+        "predicted_us": 729.6655687135907,
+        "error_us": 58.121568713590705,
+        "absolute_percentage_error": 0.08654915942006891
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "direct_peer_cutlass_sm80_q2_g2_prepared_metadata_v2",
+    "metadata_mode": "prepared",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "0dcba53a69bcb86a224530a62c276cb37a543a249a9b7a91795b04a0f832c72f",
+    "reference_sha256": "b90918ca2e0b4e5f8ba97558a2ef1e9ae3a18a85f0f5c3264ac095b2bcc67b4b",
+    "collection": "primary",
+    "stage": "crossings",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "e0fa418a627dd8c20516fc8c528492daa0209dde201bf43811f6df7d45659ff4",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": "resource_queues_v1",
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/crossings-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      64,
+      768,
+      512
+    ],
+    "candidate_id": "host@prepared",
+    "family": "host",
+    "process_medians_us": [
+      405.742,
+      435.12700000000007,
+      416.442
+    ],
+    "observed_us": 416.442,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "sm80_64x128x32"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 319.4622027669092,
+        "error_us": -96.97979723309084,
+        "absolute_percentage_error": 0.2328770806813214
+      },
+      "residual_depth": {
+        "predicted_us": 319.4622027669092,
+        "error_us": -96.97979723309084,
+        "absolute_percentage_error": 0.2328770806813214
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+    "metadata_mode": "prepared",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "a4ccbbea8bfd6b2e5d983af7780d576cc1daf6455a3088e316d22806d3892229",
+    "reference_sha256": "276ce90a66b04f9dc4bf2e5b2c6f22646d12e384f848985c6494e906769855f4",
+    "collection": "primary",
+    "stage": "library",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "88a80bcc6d2d35615565b664cfda78773cab84abf46c4b1d11bc3482e7eb08e8",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": null,
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/library-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      64,
+      768,
+      512
+    ],
+    "candidate_id": "host_compiler_cublas@prepared",
+    "family": "host_compiler_cublas",
+    "process_medians_us": [
+      538.2020000000001,
+      520.4635,
+      527.3215
+    ],
+    "observed_us": 527.3215,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "library_default"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 431.82984245661504,
+        "error_us": -95.49165754338497,
+        "absolute_percentage_error": 0.18108811710386352
+      },
+      "residual_depth": {
+        "predicted_us": 431.82984245661504,
+        "error_us": -95.49165754338497,
+        "absolute_percentage_error": 0.18108811710386352
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "host_nccl_cublas_per_source_v1_prepared_metadata_v2",
+    "metadata_mode": "prepared",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "a4ccbbea8bfd6b2e5d983af7780d576cc1daf6455a3088e316d22806d3892229",
+    "reference_sha256": "276ce90a66b04f9dc4bf2e5b2c6f22646d12e384f848985c6494e906769855f4",
+    "collection": "primary",
+    "stage": "library",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "bf16c5e1bb9ba5b87edfede6e54dd61d08fe457150a9ff8329cc6cdf6d2f1c15",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": null,
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/library-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      64,
+      768,
+      512
+    ],
+    "candidate_id": "host_merged_cublaslt@merged",
+    "family": "host_merged_cublaslt",
+    "process_medians_us": [
+      250.9,
+      251.22900000000004,
+      256.26899999999995
+    ],
+    "observed_us": 251.22900000000004,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "rank0:0=35;1=11;2=1;3=0;4=0;5=0;6=18;workspace=0;budget=33554432|rank1:0=35;1=11;2=1;3=0;4=0;5=0;6=18;workspace=0;budget=33554432|rank2:0=35;1=11;2=1;3=0;4=0;5=0;6=18;workspace=0;budget=33554432|rank3:0=35;1=11;2=1;3=0;4=0;5=0;6=18;workspace=0;budget=33554432|"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 229.48013134044228,
+        "error_us": -21.748868659557758,
+        "absolute_percentage_error": 0.08656989702445883
+      },
+      "residual_depth": {
+        "predicted_us": 229.48013134044228,
+        "error_us": -21.748868659557758,
+        "absolute_percentage_error": 0.08656989702445883
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "host_nccl_cublaslt_merged_v1",
+    "metadata_mode": "merged",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "a4ccbbea8bfd6b2e5d983af7780d576cc1daf6455a3088e316d22806d3892229",
+    "reference_sha256": "276ce90a66b04f9dc4bf2e5b2c6f22646d12e384f848985c6494e906769855f4",
+    "collection": "primary",
+    "stage": "library",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "e215634325be9d011e17d6ef18f0cb52c17eec4fa10fd912ef4b141f9518859f",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": null,
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/library-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      64,
+      768,
+      512
+    ],
+    "candidate_id": "host_merged_cutlass@merged",
+    "family": "host_merged_cutlass",
+    "process_medians_us": [
+      233.68650000000002,
+      234.273,
+      236.05100000000002
+    ],
+    "observed_us": 234.273,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "sm80_64x128x32"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 226.33644794901443,
+        "error_us": -7.9365520509855685,
+        "absolute_percentage_error": 0.033877365513676594
+      },
+      "residual_depth": {
+        "predicted_us": 226.33644794901443,
+        "error_us": -7.9365520509855685,
+        "absolute_percentage_error": 0.033877365513676594
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "host_nccl_cutlass_sm80_merged_v1",
+    "metadata_mode": "merged",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "a4ccbbea8bfd6b2e5d983af7780d576cc1daf6455a3088e316d22806d3892229",
+    "reference_sha256": "276ce90a66b04f9dc4bf2e5b2c6f22646d12e384f848985c6494e906769855f4",
+    "collection": "primary",
+    "stage": "library",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "1ea3ff7c17119416edb35e304afb9144e58eff6562a169edfd5ec3e353524c3c",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": null,
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/library-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      64,
+      1536,
+      512
+    ],
+    "candidate_id": "host@prepared",
+    "family": "host",
+    "process_medians_us": [
+      467.027,
+      426.50100000000003,
+      429.9575
+    ],
+    "observed_us": 429.9575,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "sm80_64x128x32"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 374.0789982164824,
+        "error_us": -55.878501783517606,
+        "absolute_percentage_error": 0.12996284931305446
+      },
+      "residual_depth": {
+        "predicted_us": 374.0789982164824,
+        "error_us": -55.878501783517606,
+        "absolute_percentage_error": 0.12996284931305446
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+    "metadata_mode": "prepared",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "7f97357cafafaa7a693d77635da5157b052dfbd53c3a85da539c69655bbd1eac",
+    "reference_sha256": "42c5c270b6ab40fa9a3449f46195e3e32b54c3eb3d9af96e4d17bcda441ee34f",
+    "collection": "primary",
+    "stage": "library",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "67bcea20b65f296ea5402fe134b929719c666439dbe29e6eba04c541bf11031d",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": null,
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/library-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      64,
+      1536,
+      512
+    ],
+    "candidate_id": "host_compiler_cublas@prepared",
+    "family": "host_compiler_cublas",
+    "process_medians_us": [
+      515.3639999999999,
+      520.689,
+      525.2280000000001
+    ],
+    "observed_us": 520.689,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "library_default"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 443.18089940553375,
+        "error_us": -77.50810059446621,
+        "absolute_percentage_error": 0.1488568043389935
+      },
+      "residual_depth": {
+        "predicted_us": 443.18089940553375,
+        "error_us": -77.50810059446621,
+        "absolute_percentage_error": 0.1488568043389935
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "host_nccl_cublas_per_source_v1_prepared_metadata_v2",
+    "metadata_mode": "prepared",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "7f97357cafafaa7a693d77635da5157b052dfbd53c3a85da539c69655bbd1eac",
+    "reference_sha256": "42c5c270b6ab40fa9a3449f46195e3e32b54c3eb3d9af96e4d17bcda441ee34f",
+    "collection": "primary",
+    "stage": "library",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "b13cf4a6b72fe97bd11a8c710d59da64f66db2a3e741798e9edf27fc9d39d408",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": null,
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/library-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      64,
+      1536,
+      512
+    ],
+    "candidate_id": "host_merged_cublaslt@merged",
+    "family": "host_merged_cublaslt",
+    "process_medians_us": [
+      244.091,
+      245.12800000000001,
+      246.43599999999998
+    ],
+    "observed_us": 245.12800000000001,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "rank0:0=31;1=15;2=1;3=0;4=0;5=0;6=17;workspace=0;budget=33554432|rank1:0=31;1=15;2=1;3=0;4=0;5=0;6=17;workspace=0;budget=33554432|rank2:0=31;1=15;2=1;3=0;4=0;5=0;6=17;workspace=0;budget=33554432|rank3:0=31;1=15;2=1;3=0;4=0;5=0;6=17;workspace=0;budget=33554432|"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 239.26867689003117,
+        "error_us": -5.859323109968841,
+        "absolute_percentage_error": 0.023903116371727595
+      },
+      "residual_depth": {
+        "predicted_us": 239.26867689003117,
+        "error_us": -5.859323109968841,
+        "absolute_percentage_error": 0.023903116371727595
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "host_nccl_cublaslt_merged_v1",
+    "metadata_mode": "merged",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "7f97357cafafaa7a693d77635da5157b052dfbd53c3a85da539c69655bbd1eac",
+    "reference_sha256": "42c5c270b6ab40fa9a3449f46195e3e32b54c3eb3d9af96e4d17bcda441ee34f",
+    "collection": "primary",
+    "stage": "library",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "bc9f3d68760591b46bd4a301aeba1ed52775ec63cd6fbeb44f8fbd1ebcdabdb4",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": null,
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/library-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      64,
+      1536,
+      512
+    ],
+    "candidate_id": "host_merged_cutlass@merged",
+    "family": "host_merged_cutlass",
+    "process_medians_us": [
+      257.53700000000003,
+      252.70749999999998,
+      256.394
+    ],
+    "observed_us": 256.394,
+    "quality_flags": [],
+    "algorithm_ids": [
+      "sm80_64x128x32"
+    ],
+    "warmup": 20,
+    "complete_blocks": true,
+    "forecast_errors": {
+      "regime_max": {
+        "predicted_us": 247.31389143972103,
+        "error_us": -9.080108560278973,
+        "absolute_percentage_error": 0.03541466867508203
+      },
+      "residual_depth": {
+        "predicted_us": 247.31389143972103,
+        "error_us": -9.080108560278973,
+        "absolute_percentage_error": 0.03541466867508203
+      }
+    },
+    "primary_timing_label": true,
+    "new_context_not_pooled_with_old": true,
+    "implementation_id": "host_nccl_cutlass_sm80_merged_v1",
+    "metadata_mode": "merged",
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "7f97357cafafaa7a693d77635da5157b052dfbd53c3a85da539c69655bbd1eac",
+    "reference_sha256": "42c5c270b6ab40fa9a3449f46195e3e32b54c3eb3d9af96e4d17bcda441ee34f",
+    "collection": "primary",
+    "stage": "library",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "58c7ac6760e87b030943a2a615d2c666a66c08e57feb833c4a1dcd678e304840",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": null,
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/work/library-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      64,
+      3072,
+      1536
+    ],
+    "candidate_id": "host_merged_cublaslt@merged",
+    "observed_us": 293.2045,
+    "process_medians_us": [
+      293.01800000000003,
+      293.2045,
+      294.20099999999996
+    ],
+    "quality_flags": [],
+    "algorithm_ids": [
+      "rank0:0=31;1=15;2=1;3=0;4=1;5=0;6=18;workspace=0;budget=33554432|rank1:0=31;1=15;2=1;3=0;4=1;5=0;6=18;workspace=0;budget=33554432|rank2:0=31;1=15;2=1;3=0;4=1;5=0;6=18;workspace=0;budget=33554432|rank3:0=31;1=15;2=1;3=0;4=1;5=0;6=18;workspace=0;budget=33554432|"
+    ],
+    "family": "host_merged_cublaslt",
+    "implementation_id": "host_nccl_cublaslt_merged_v1",
+    "metadata_mode": "merged",
+    "warmup": 20,
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "29971b6db6b73399e9f6f5e79379af56faf96ad57242e34d0178779c65ece344",
+    "reference_sha256": "59b39adf4ea9e6164d976faef942abb47933457976fb7ec2e57fd716121e8bf0",
+    "collection": "extension",
+    "stage": "baseline_extension",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "09067e60659a18f41808a6ede6262fc806e0b42257537fb4a0e9ff5771c10f6d",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": null,
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/baseline-extension-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      64,
+      3072,
+      1536
+    ],
+    "candidate_id": "host_merged_cutlass@merged",
+    "observed_us": 301.83000000000004,
+    "process_medians_us": [
+      302.6265,
+      301.83000000000004,
+      298.674
+    ],
+    "quality_flags": [],
+    "algorithm_ids": [
+      "sm80_64x128x32"
+    ],
+    "family": "host_merged_cutlass",
+    "implementation_id": "host_nccl_cutlass_sm80_merged_v1",
+    "metadata_mode": "merged",
+    "warmup": 20,
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "29971b6db6b73399e9f6f5e79379af56faf96ad57242e34d0178779c65ece344",
+    "reference_sha256": "59b39adf4ea9e6164d976faef942abb47933457976fb7ec2e57fd716121e8bf0",
+    "collection": "extension",
+    "stage": "baseline_extension",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "bbef8187ba8ada75bc6f6632a417157cd47330abe574ab96d5c361afbca311ac",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": null,
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/baseline-extension-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      64,
+      4096,
+      2048
+    ],
+    "candidate_id": "host_merged_cublaslt@merged",
+    "observed_us": 330.6605,
+    "process_medians_us": [
+      330.139,
+      330.6605,
+      331.516
+    ],
+    "quality_flags": [],
+    "algorithm_ids": [
+      "rank0:0=21;1=20;2=3;3=4;4=0;5=0;6=11;workspace=3145728;budget=33554432|rank1:0=21;1=20;2=3;3=4;4=0;5=0;6=11;workspace=3145728;budget=33554432|rank2:0=21;1=20;2=3;3=4;4=0;5=0;6=11;workspace=3145728;budget=33554432|rank3:0=21;1=20;2=3;3=4;4=0;5=0;6=11;workspace=3145728;budget=33554432|"
+    ],
+    "family": "host_merged_cublaslt",
+    "implementation_id": "host_nccl_cublaslt_merged_v1",
+    "metadata_mode": "merged",
+    "warmup": 20,
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "f6fba035e48f6c5c60e5565020ab17c88a8060931c1511dcd046643ecec12598",
+    "reference_sha256": "c82a490a3d1db291944c79feaec6431baac2dc734d5440209b33cfdea6027602",
+    "collection": "extension",
+    "stage": "baseline_extension",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "d3abd2b2fdd7ce8a11c73313e6063b6a935eba8c05273283708ef7941169afdf",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": null,
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/baseline-extension-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      64,
+      4096,
+      2048
+    ],
+    "candidate_id": "host_merged_cutlass@merged",
+    "observed_us": 354.991,
+    "process_medians_us": [
+      354.991,
+      358.74300000000005,
+      353.633
+    ],
+    "quality_flags": [],
+    "algorithm_ids": [
+      "sm80_64x128x32"
+    ],
+    "family": "host_merged_cutlass",
+    "implementation_id": "host_nccl_cutlass_sm80_merged_v1",
+    "metadata_mode": "merged",
+    "warmup": 20,
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "f6fba035e48f6c5c60e5565020ab17c88a8060931c1511dcd046643ecec12598",
+    "reference_sha256": "c82a490a3d1db291944c79feaec6431baac2dc734d5440209b33cfdea6027602",
+    "collection": "extension",
+    "stage": "baseline_extension",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "d0ea5a436f082ef8df220c5e82751bd9b225d8788b869dbcb48d91c1758aeb2a",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": null,
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/baseline-extension-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      64,
+      8192,
+      512
+    ],
+    "candidate_id": "host_merged_cublaslt@merged",
+    "observed_us": 362.9655,
+    "process_medians_us": [
+      363.26650000000006,
+      362.8655,
+      362.9655
+    ],
+    "quality_flags": [],
+    "algorithm_ids": [
+      "rank0:0=21;1=20;2=11;3=4;4=0;5=0;6=12;workspace=2883584;budget=33554432|rank1:0=21;1=20;2=11;3=4;4=0;5=0;6=12;workspace=2883584;budget=33554432|rank2:0=21;1=20;2=11;3=4;4=0;5=0;6=12;workspace=2883584;budget=33554432|rank3:0=21;1=20;2=11;3=4;4=0;5=0;6=12;workspace=2883584;budget=33554432|"
+    ],
+    "family": "host_merged_cublaslt",
+    "implementation_id": "host_nccl_cublaslt_merged_v1",
+    "metadata_mode": "merged",
+    "warmup": 20,
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "9f01da29c9bff0efd896001a4984ec6f6b68c32fd981b68e6de64d1793471e3a",
+    "reference_sha256": "1e10ae2fca27e174a966c86881defb8a39b9c97fcdd2b0fe1f250eb90810e454",
+    "collection": "extension",
+    "stage": "baseline_extension",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "7534609d3f3e48de4caced80e2558b67fb80afcc290ff53c56697f653188f120",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": null,
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/baseline-extension-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      64,
+      8192,
+      512
+    ],
+    "candidate_id": "host_merged_cutlass@merged",
+    "observed_us": 428.635,
+    "process_medians_us": [
+      428.635,
+      428.5245,
+      431.20000000000005
+    ],
+    "quality_flags": [],
+    "algorithm_ids": [
+      "sm80_64x128x32"
+    ],
+    "family": "host_merged_cutlass",
+    "implementation_id": "host_nccl_cutlass_sm80_merged_v1",
+    "metadata_mode": "merged",
+    "warmup": 20,
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "9f01da29c9bff0efd896001a4984ec6f6b68c32fd981b68e6de64d1793471e3a",
+    "reference_sha256": "1e10ae2fca27e174a966c86881defb8a39b9c97fcdd2b0fe1f250eb90810e454",
+    "collection": "extension",
+    "stage": "baseline_extension",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "38cedc8d4d23a56e92aa84a8ecf46090c79f58d8222a6904b26cba70b4026f68",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": null,
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/baseline-extension-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      192,
+      3072,
+      512
+    ],
+    "candidate_id": "host_merged_cublaslt@merged",
+    "observed_us": 365.035,
+    "process_medians_us": [
+      365.035,
+      361.73350000000005,
+      365.11499999999995
+    ],
+    "quality_flags": [],
+    "algorithm_ids": [
+      "rank0:0=6;1=15;2=1;3=0;4=1;5=0;6=18;workspace=0;budget=33554432|rank1:0=6;1=15;2=1;3=0;4=1;5=0;6=18;workspace=0;budget=33554432|rank2:0=6;1=15;2=1;3=0;4=1;5=0;6=18;workspace=0;budget=33554432|rank3:0=6;1=15;2=1;3=0;4=1;5=0;6=18;workspace=0;budget=33554432|"
+    ],
+    "family": "host_merged_cublaslt",
+    "implementation_id": "host_nccl_cublaslt_merged_v1",
+    "metadata_mode": "merged",
+    "warmup": 20,
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "814847f5edb22a7fffc23c3f66612f918af925a8c38b1529d249ed41a6aa4835",
+    "reference_sha256": "8d96e6a79d4cf245ab5af0d2f281259f4181d123d9cf2612ee3bb514cfb1747f",
+    "collection": "extension",
+    "stage": "baseline_extension",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "281a09d8d1be254c9e1d3e37fb53318b66a645d61779b61b2aa6e8b169e18c9c",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": null,
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/baseline-extension-01/measurements.jsonl"
+  },
+  {
+    "shape": [
+      4,
+      192,
+      3072,
+      512
+    ],
+    "candidate_id": "host_merged_cutlass@merged",
+    "observed_us": 375.054,
+    "process_medians_us": [
+      375.33950000000004,
+      375.054,
+      374.8935
+    ],
+    "quality_flags": [],
+    "algorithm_ids": [
+      "sm80_64x128x32"
+    ],
+    "family": "host_merged_cutlass",
+    "implementation_id": "host_nccl_cutlass_sm80_merged_v1",
+    "metadata_mode": "merged",
+    "warmup": 20,
+    "iterations": 100,
+    "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()",
+    "input_sha256": "814847f5edb22a7fffc23c3f66612f918af925a8c38b1529d249ed41a6aa4835",
+    "reference_sha256": "8d96e6a79d4cf245ab5af0d2f281259f4181d123d9cf2612ee3bb514cfb1747f",
+    "collection": "extension",
+    "stage": "baseline_extension",
+    "context_id": "0ddfe5bb30b70183fa54b61ae03a007f5ec66fae2fcce5389043e59e00953239",
+    "config_id": "7d5df04f750ca45920d6c2781b68c3151338edeb1511a6f61fecb087d9ac7559",
+    "primary_scope": true,
+    "eligible_for_calibration": true,
+    "dependency_policy": null,
+    "raw_source": "experiments/2026-10-25-runpod-hour-01/recovered/baseline-extension-01/measurements.jsonl"
+  }
+]

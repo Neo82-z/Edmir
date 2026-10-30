@@ -1,0 +1,871 @@
+{
+  "targets": [
+    {
+      "shape": [
+        4,
+        64,
+        512,
+        256
+      ],
+      "contrast": "splitk2 - direct",
+      "predicted_gap_us": -5.348969732420358,
+      "observed_median_gap_us": 3.5,
+      "gap_error_us": -8.848969732420358,
+      "term_differences_us": {
+        "fixed": 0.0,
+        "serial_stages": 33.33346264278912,
+        "ctas": 0.32604495017721646,
+        "partition_K_pressure": 0.0,
+        "serial_pressure": 0.0,
+        "K_output_tiles": 0.0,
+        "group_fixed": 0.0,
+        "group_partition_K": 0.0,
+        "group_serial_stages": 0.0,
+        "group_K": 0.0,
+        "group_ctas": 0.0,
+        "depth_1_2": 0.0,
+        "depth_2_4": 0.0,
+        "depth_4_8": 0.0,
+        "depth_8_16": -39.00847732538669,
+        "depth_16_32": 0.0,
+        "depth_32_64": 0.0,
+        "depth_64_128": 0.0,
+        "depth_128_256": 0.0,
+        "local_residual": 0.0
+      },
+      "reconstruction_error_us": 3.552713678800501e-15,
+      "single_coefficient_sensitivity": {
+        "serial_stages": {
+          "term_difference_us": 33.33346264278912,
+          "relative_coefficient_change_to_zero_raw_gap": 0.16046846946989698
+        },
+        "ctas": {
+          "term_difference_us": 0.32604495017721646,
+          "relative_coefficient_change_to_zero_raw_gap": 16.40562054254486
+        },
+        "depth_8_16": {
+          "term_difference_us": -39.00847732538669,
+          "relative_coefficient_change_to_zero_raw_gap": 0.13712326394599492
+        }
+      },
+      "sensitivity_semantics": "analytic break-even, not uncertainty estimate or a parameter update",
+      "sum_abs_nonzero_terms_us": 72.66798491835303,
+      "cancellation_ratio": 13.585417109001186,
+      "counts": {
+        "direct": {
+          "scope": "one source GEMM; structural counts, not achieved occupancy or total program time",
+          "cta_tile": [
+            64,
+            128,
+            32
+          ],
+          "warp_tile": [
+            32,
+            64,
+            32
+          ],
+          "independent_output_chains": 2,
+          "split_ctas": 2,
+          "depth_k_iterations": 16,
+          "warps_per_cta": 4,
+          "threads_per_cta": 128,
+          "serial_interpartition_edges": 0,
+          "kernel_launches_per_gemm": 1,
+          "padded_mnk_flops_per_gemm": 16777216,
+          "logical_mnk_flops_per_gemm": 16777216,
+          "modeled_pressure": 0,
+          "capacity_is_measured_occupancy": false
+        },
+        "splitk2": {
+          "scope": "one source GEMM; structural counts, not achieved occupancy or total program time",
+          "cta_tile": [
+            64,
+            128,
+            32
+          ],
+          "warp_tile": [
+            32,
+            64,
+            32
+          ],
+          "independent_output_chains": 2,
+          "split_ctas": 4,
+          "depth_k_iterations": 8,
+          "warps_per_cta": 4,
+          "threads_per_cta": 128,
+          "serial_interpartition_edges": 2,
+          "kernel_launches_per_gemm": 1,
+          "padded_mnk_flops_per_gemm": 16777216,
+          "logical_mnk_flops_per_gemm": 16777216,
+          "modeled_pressure": 0,
+          "capacity_is_measured_occupancy": false
+        }
+      },
+      "local_curves": {
+        "direct": null,
+        "splitk2": null
+      }
+    },
+    {
+      "shape": [
+        4,
+        64,
+        512,
+        1024
+      ],
+      "contrast": "splitk2 - direct",
+      "predicted_gap_us": -3.708021348974796,
+      "observed_median_gap_us": 1.8000000000000682,
+      "gap_error_us": -5.508021348974864,
+      "term_differences_us": {
+        "fixed": 0.0,
+        "serial_stages": 32.54717880390622,
+        "ctas": 1.6381274857497174,
+        "partition_K_pressure": 0.0,
+        "serial_pressure": 0.0,
+        "K_output_tiles": 0.0,
+        "group_fixed": 0.0,
+        "group_partition_K": 0.0,
+        "group_serial_stages": 0.0,
+        "group_K": 0.0,
+        "group_ctas": 0.0,
+        "depth_1_2": 0.0,
+        "depth_2_4": 0.0,
+        "depth_4_8": 0.0,
+        "depth_8_16": -37.89332763863067,
+        "depth_16_32": 0.0,
+        "depth_32_64": 0.0,
+        "depth_64_128": 0.0,
+        "depth_128_256": 0.0,
+        "local_residual": 0.0
+      },
+      "reconstruction_error_us": 6.128431095930864e-14,
+      "single_coefficient_sensitivity": {
+        "serial_stages": {
+          "term_difference_us": 32.54717880390622,
+          "relative_coefficient_change_to_zero_raw_gap": 0.1139275809837555
+        },
+        "ctas": {
+          "term_difference_us": 1.6381274857497174,
+          "relative_coefficient_change_to_zero_raw_gap": 2.2635731231124274
+        },
+        "depth_8_16": {
+          "term_difference_us": -37.89332763863067,
+          "relative_coefficient_change_to_zero_raw_gap": 0.0978542023106628
+        }
+      },
+      "sensitivity_semantics": "analytic break-even, not uncertainty estimate or a parameter update",
+      "sum_abs_nonzero_terms_us": 72.0786339282866,
+      "cancellation_ratio": 19.438570370749108,
+      "counts": {
+        "direct": {
+          "scope": "one source GEMM; structural counts, not achieved occupancy or total program time",
+          "cta_tile": [
+            64,
+            128,
+            32
+          ],
+          "warp_tile": [
+            32,
+            64,
+            32
+          ],
+          "independent_output_chains": 8,
+          "split_ctas": 8,
+          "depth_k_iterations": 16,
+          "warps_per_cta": 4,
+          "threads_per_cta": 128,
+          "serial_interpartition_edges": 0,
+          "kernel_launches_per_gemm": 1,
+          "padded_mnk_flops_per_gemm": 67108864,
+          "logical_mnk_flops_per_gemm": 67108864,
+          "modeled_pressure": 0,
+          "capacity_is_measured_occupancy": false
+        },
+        "splitk2": {
+          "scope": "one source GEMM; structural counts, not achieved occupancy or total program time",
+          "cta_tile": [
+            64,
+            128,
+            32
+          ],
+          "warp_tile": [
+            32,
+            64,
+            32
+          ],
+          "independent_output_chains": 8,
+          "split_ctas": 16,
+          "depth_k_iterations": 8,
+          "warps_per_cta": 4,
+          "threads_per_cta": 128,
+          "serial_interpartition_edges": 8,
+          "kernel_launches_per_gemm": 1,
+          "padded_mnk_flops_per_gemm": 67108864,
+          "logical_mnk_flops_per_gemm": 67108864,
+          "modeled_pressure": 0,
+          "capacity_is_measured_occupancy": false
+        }
+      },
+      "local_curves": {
+        "direct": null,
+        "splitk2": null
+      }
+    },
+    {
+      "shape": [
+        4,
+        128,
+        512,
+        512
+      ],
+      "contrast": "splitk2 - direct",
+      "predicted_gap_us": -4.3708348818886975,
+      "observed_median_gap_us": 4.900000000000034,
+      "gap_error_us": -9.270834881888732,
+      "term_differences_us": {
+        "fixed": 0.0,
+        "serial_stages": 33.33346264278912,
+        "ctas": 1.3041798007088659,
+        "partition_K_pressure": 0.0,
+        "serial_pressure": 0.0,
+        "K_output_tiles": 0.0,
+        "group_fixed": 0.0,
+        "group_partition_K": 0.0,
+        "group_serial_stages": 0.0,
+        "group_K": 0.0,
+        "group_ctas": 0.0,
+        "depth_1_2": 0.0,
+        "depth_2_4": 0.0,
+        "depth_4_8": 0.0,
+        "depth_8_16": -39.00847732538669,
+        "depth_16_32": 0.0,
+        "depth_32_64": 0.0,
+        "depth_64_128": 0.0,
+        "depth_128_256": 0.0,
+        "local_residual": 0.0
+      },
+      "reconstruction_error_us": 7.105427357601002e-15,
+      "single_coefficient_sensitivity": {
+        "serial_stages": {
+          "term_difference_us": 33.33346264278912,
+          "relative_coefficient_change_to_zero_raw_gap": 0.13112453778738226
+        },
+        "ctas": {
+          "term_difference_us": 1.3041798007088659,
+          "relative_coefficient_change_to_zero_raw_gap": 3.3514051356362065
+        },
+        "depth_8_16": {
+          "term_difference_us": -39.00847732538669,
+          "relative_coefficient_change_to_zero_raw_gap": 0.11204833363347308
+        }
+      },
+      "sensitivity_semantics": "analytic break-even, not uncertainty estimate or a parameter update",
+      "sum_abs_nonzero_terms_us": 73.64611976888469,
+      "cancellation_ratio": 16.849439926008184,
+      "counts": {
+        "direct": {
+          "scope": "one source GEMM; structural counts, not achieved occupancy or total program time",
+          "cta_tile": [
+            64,
+            128,
+            32
+          ],
+          "warp_tile": [
+            32,
+            64,
+            32
+          ],
+          "independent_output_chains": 8,
+          "split_ctas": 8,
+          "depth_k_iterations": 16,
+          "warps_per_cta": 4,
+          "threads_per_cta": 128,
+          "serial_interpartition_edges": 0,
+          "kernel_launches_per_gemm": 1,
+          "padded_mnk_flops_per_gemm": 67108864,
+          "logical_mnk_flops_per_gemm": 67108864,
+          "modeled_pressure": 0,
+          "capacity_is_measured_occupancy": false
+        },
+        "splitk2": {
+          "scope": "one source GEMM; structural counts, not achieved occupancy or total program time",
+          "cta_tile": [
+            64,
+            128,
+            32
+          ],
+          "warp_tile": [
+            32,
+            64,
+            32
+          ],
+          "independent_output_chains": 8,
+          "split_ctas": 16,
+          "depth_k_iterations": 8,
+          "warps_per_cta": 4,
+          "threads_per_cta": 128,
+          "serial_interpartition_edges": 8,
+          "kernel_launches_per_gemm": 1,
+          "padded_mnk_flops_per_gemm": 67108864,
+          "logical_mnk_flops_per_gemm": 67108864,
+          "modeled_pressure": 0,
+          "capacity_is_measured_occupancy": false
+        }
+      },
+      "local_curves": {
+        "direct": null,
+        "splitk2": null
+      }
+    },
+    {
+      "shape": [
+        4,
+        64,
+        8192,
+        1024
+      ],
+      "contrast": "splitk8_groupedn2 - splitk4",
+      "predicted_gap_us": -0.036815946256751886,
+      "observed_median_gap_us": -4.100000000000023,
+      "gap_error_us": 4.063184053743271,
+      "term_differences_us": {
+        "fixed": 0.0,
+        "serial_stages": 125.99914443546474,
+        "ctas": 0.0,
+        "partition_K_pressure": 0.0,
+        "serial_pressure": 0.0,
+        "K_output_tiles": -50.26650084701651,
+        "group_fixed": 15.544462013212465,
+        "group_partition_K": 45.469687965957604,
+        "group_serial_stages": 24.266298919372595,
+        "group_K": 0.0,
+        "group_ctas": 30.911882851752544,
+        "depth_1_2": 0.0,
+        "depth_2_4": 0.0,
+        "depth_4_8": 0.0,
+        "depth_8_16": 0.0,
+        "depth_16_32": 0.0,
+        "depth_32_64": -191.96179128500057,
+        "depth_64_128": 0.0,
+        "depth_128_256": 0.0,
+        "local_residual": 0.0
+      },
+      "reconstruction_error_us": 3.7836400679225335e-13,
+      "single_coefficient_sensitivity": {
+        "serial_stages": {
+          "term_difference_us": 125.99914443546474,
+          "relative_coefficient_change_to_zero_raw_gap": 0.0002921920336975667
+        },
+        "K_output_tiles": {
+          "term_difference_us": -50.26650084701651,
+          "relative_coefficient_change_to_zero_raw_gap": 0.0007324151400313164
+        },
+        "group_fixed": {
+          "term_difference_us": 15.544462013212465,
+          "relative_coefficient_change_to_zero_raw_gap": 0.0023684284618830237
+        },
+        "group_partition_K": {
+          "term_difference_us": 45.469687965957604,
+          "relative_coefficient_change_to_zero_raw_gap": 0.0008096810843372264
+        },
+        "group_serial_stages": {
+          "term_difference_us": 24.266298919372595,
+          "relative_coefficient_change_to_zero_raw_gap": 0.0015171636341857015
+        },
+        "group_ctas": {
+          "term_difference_us": 30.911882851752544,
+          "relative_coefficient_change_to_zero_raw_gap": 0.001190996563791151
+        },
+        "depth_32_64": {
+          "term_difference_us": -191.96179128500057,
+          "relative_coefficient_change_to_zero_raw_gap": 0.00019178788659089053
+        }
+      },
+      "sensitivity_semantics": "analytic break-even, not uncertainty estimate or a parameter update",
+      "sum_abs_nonzero_terms_us": 484.419768317777,
+      "cancellation_ratio": 13157.879059782052,
+      "counts": {
+        "splitk4": {
+          "scope": "one source GEMM; structural counts, not achieved occupancy or total program time",
+          "cta_tile": [
+            64,
+            128,
+            32
+          ],
+          "warp_tile": [
+            32,
+            64,
+            32
+          ],
+          "independent_output_chains": 8,
+          "split_ctas": 32,
+          "depth_k_iterations": 64,
+          "warps_per_cta": 4,
+          "threads_per_cta": 128,
+          "serial_interpartition_edges": 24,
+          "kernel_launches_per_gemm": 1,
+          "padded_mnk_flops_per_gemm": 1073741824,
+          "logical_mnk_flops_per_gemm": 1073741824,
+          "modeled_pressure": 0.0,
+          "capacity_is_measured_occupancy": false
+        },
+        "splitk8_groupedn2": {
+          "scope": "one source GEMM; structural counts, not achieved occupancy or total program time",
+          "cta_tile": [
+            64,
+            256,
+            32
+          ],
+          "warp_tile": [
+            32,
+            64,
+            32
+          ],
+          "independent_output_chains": 4,
+          "split_ctas": 32,
+          "depth_k_iterations": 32,
+          "warps_per_cta": 8,
+          "threads_per_cta": 256,
+          "serial_interpartition_edges": 28,
+          "kernel_launches_per_gemm": 1,
+          "padded_mnk_flops_per_gemm": 1073741824,
+          "logical_mnk_flops_per_gemm": 1073741824,
+          "modeled_pressure": 0.0,
+          "capacity_is_measured_occupancy": false
+        }
+      },
+      "local_curves": {
+        "splitk4": null,
+        "splitk8_groupedn2": null
+      }
+    }
+  ],
+  "local_structure": {
+    "formula": "raw gap = 1000*(serial_stages + ctas*G/108 - depth_8_16/16)",
+    "conditions": "K512; g1; q1/q2; both CTA counts <= capacity; no residual correction",
+    "per_fold": [
+      {
+        "fold": 0,
+        "local_contrast_count": 7,
+        "feature_count": 19,
+        "local_contrast_rank": 2,
+        "active_terms": [
+          "serial_stages",
+          "ctas",
+          "depth_8_16"
+        ],
+        "serial_depth_null_residual": 0.0
+      },
+      {
+        "fold": 1,
+        "local_contrast_count": 7,
+        "feature_count": 19,
+        "local_contrast_rank": 2,
+        "active_terms": [
+          "serial_stages",
+          "ctas",
+          "depth_8_16"
+        ],
+        "serial_depth_null_residual": 0.0
+      },
+      {
+        "fold": 2,
+        "local_contrast_count": 7,
+        "feature_count": 19,
+        "local_contrast_rank": 2,
+        "active_terms": [
+          "serial_stages",
+          "ctas",
+          "depth_8_16"
+        ],
+        "serial_depth_null_residual": 0.0
+      },
+      {
+        "fold": 3,
+        "local_contrast_count": 7,
+        "feature_count": 19,
+        "local_contrast_rank": 2,
+        "active_terms": [
+          "serial_stages",
+          "ctas",
+          "depth_8_16"
+        ],
+        "serial_depth_null_residual": 0.0
+      }
+    ],
+    "observed_short_k_contrasts": [
+      {
+        "shape": [
+          4,
+          32,
+          512,
+          512
+        ],
+        "q2_minus_direct_us": -8.800000000000068
+      },
+      {
+        "shape": [
+          4,
+          64,
+          512,
+          128
+        ],
+        "q2_minus_direct_us": 8.0
+      },
+      {
+        "shape": [
+          4,
+          64,
+          512,
+          256
+        ],
+        "q2_minus_direct_us": 3.5
+      },
+      {
+        "shape": [
+          4,
+          64,
+          512,
+          512
+        ],
+        "q2_minus_direct_us": -2.0
+      },
+      {
+        "shape": [
+          4,
+          64,
+          512,
+          1024
+        ],
+        "q2_minus_direct_us": 1.8000000000000682
+      },
+      {
+        "shape": [
+          4,
+          64,
+          512,
+          2048
+        ],
+        "q2_minus_direct_us": 1.8999999999999773
+      },
+      {
+        "shape": [
+          4,
+          128,
+          512,
+          512
+        ],
+        "q2_minus_direct_us": 4.900000000000034
+      }
+    ],
+    "nondecreasing_gap_minimum_max_error_us": 5.0,
+    "bound_scope": "two observed gap labels, one shared raw function; not a four-fold selection lower bound",
+    "identification_limit": "these local contrasts cannot separately identify depth saving and serial cost; no global rank or causal claim"
+  },
+  "grouped_factorial": {
+    "predicted_times_us": {
+      "splitk4": 772.608027417333,
+      "splitk8": 831.9620392432137,
+      "splitk4_groupedn2": 850.7119674326085,
+      "splitk8_groupedn2": 772.5712114710763
+    },
+    "observed_median_times_us": {
+      "splitk4": 764.0,
+      "splitk8": 850.8,
+      "splitk4_groupedn2": 844.1999999999999,
+      "splitk8_groupedn2": 759.9
+    },
+    "predicted_contrasts_us": {
+      "q8_minus_q4_at_g1": 59.35401182588066,
+      "q8_minus_q4_at_g2": -78.14075596153225,
+      "g2_minus_g1_at_q4": 78.1039400152755,
+      "g2_minus_g1_at_q8": -59.39082777213741,
+      "q_by_group_interaction": -137.4947677874129,
+      "target_diagonal": -0.036815946256751886
+    },
+    "observed_contrasts_us": {
+      "q8_minus_q4_at_g1": 86.79999999999995,
+      "q8_minus_q4_at_g2": -84.29999999999995,
+      "g2_minus_g1_at_q4": 80.19999999999993,
+      "g2_minus_g1_at_q8": -90.89999999999998,
+      "q_by_group_interaction": -171.0999999999999,
+      "target_diagonal": -4.100000000000023
+    },
+    "contrast_errors_us": {
+      "q8_minus_q4_at_g1": -27.445988174119293,
+      "q8_minus_q4_at_g2": 6.159244038467705,
+      "g2_minus_g1_at_q4": -2.096059984724434,
+      "g2_minus_g1_at_q8": 31.509172227862564,
+      "q_by_group_interaction": 33.605232212587,
+      "target_diagonal": 4.063184053743271
+    },
+    "meaning": "a complete measured 2x2 contrast; not an isolated causal cost measurement"
+  },
+  "archive": {
+    "rows": [
+      {
+        "shape": [
+          4,
+          64,
+          512,
+          256
+        ],
+        "candidate": "direct",
+        "reported_timing": {
+          "iterations": 300,
+          "max_ms": 0.5477,
+          "mean_ms": 0.3376,
+          "median_ms": 0.3093,
+          "min_ms": 0.3,
+          "p95_ms": 0.5303,
+          "warmup": 30
+        },
+        "repeat_observation": null,
+        "source": {
+          "line": 3,
+          "path": "experiments/2026-08-29-a100-grouped-n-plan/raw/extracted-v2/2026-08-29-g2/m64-n256/results.csv",
+          "sha256": "def0ea9071600ff6c85475edfead1d0be81427f7c5e0cad2e0459b5a0552ee5c"
+        },
+        "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()"
+      },
+      {
+        "shape": [
+          4,
+          64,
+          512,
+          256
+        ],
+        "candidate": "splitk2",
+        "reported_timing": {
+          "iterations": 300,
+          "max_ms": 1.0156,
+          "mean_ms": 0.3432,
+          "median_ms": 0.3128,
+          "min_ms": 0.3059,
+          "p95_ms": 0.5389,
+          "warmup": 30
+        },
+        "repeat_observation": null,
+        "source": {
+          "line": 4,
+          "path": "experiments/2026-08-29-a100-grouped-n-plan/raw/extracted-v2/2026-08-29-g2/m64-n256/results.csv",
+          "sha256": "def0ea9071600ff6c85475edfead1d0be81427f7c5e0cad2e0459b5a0552ee5c"
+        },
+        "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()"
+      },
+      {
+        "shape": [
+          4,
+          64,
+          512,
+          1024
+        ],
+        "candidate": "direct",
+        "reported_timing": {
+          "iterations": 300,
+          "max_ms": 0.5587,
+          "mean_ms": 0.3433,
+          "median_ms": 0.3121,
+          "min_ms": 0.3048,
+          "p95_ms": 0.531,
+          "warmup": 30
+        },
+        "repeat_observation": null,
+        "source": {
+          "line": 3,
+          "path": "experiments/2026-08-29-a100-grouped-n-plan/raw/extracted-v2/2026-08-29-g2/m64-n1024/results.csv",
+          "sha256": "a1c661f0691f6eb73fa6f245a6006bf439a1ecf8500b71fe638ab5c61aa4c599"
+        },
+        "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()"
+      },
+      {
+        "shape": [
+          4,
+          64,
+          512,
+          1024
+        ],
+        "candidate": "splitk2",
+        "reported_timing": {
+          "iterations": 300,
+          "max_ms": 0.5545,
+          "mean_ms": 0.3449,
+          "median_ms": 0.3139,
+          "min_ms": 0.3065,
+          "p95_ms": 0.5359,
+          "warmup": 30
+        },
+        "repeat_observation": null,
+        "source": {
+          "line": 4,
+          "path": "experiments/2026-08-29-a100-grouped-n-plan/raw/extracted-v2/2026-08-29-g2/m64-n1024/results.csv",
+          "sha256": "a1c661f0691f6eb73fa6f245a6006bf439a1ecf8500b71fe638ab5c61aa4c599"
+        },
+        "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()"
+      },
+      {
+        "shape": [
+          4,
+          64,
+          8192,
+          1024
+        ],
+        "candidate": "splitk4",
+        "reported_timing": {
+          "iterations": 300,
+          "max_ms": 1.0019,
+          "mean_ms": 0.7791,
+          "median_ms": 0.764,
+          "min_ms": 0.7436,
+          "p95_ms": 0.8725,
+          "warmup": 30
+        },
+        "repeat_observation": null,
+        "source": {
+          "line": 49,
+          "path": "experiments/2026-08-29-a100-grouped-n-plan/raw/extracted-v2/2026-08-29-g2/m64-n1024/results.csv",
+          "sha256": "a1c661f0691f6eb73fa6f245a6006bf439a1ecf8500b71fe638ab5c61aa4c599"
+        },
+        "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()"
+      },
+      {
+        "shape": [
+          4,
+          64,
+          8192,
+          1024
+        ],
+        "candidate": "splitk8",
+        "reported_timing": {
+          "iterations": 300,
+          "max_ms": 4.732,
+          "mean_ms": 0.8854,
+          "median_ms": 0.8508,
+          "min_ms": 0.8382,
+          "p95_ms": 0.9621,
+          "warmup": 30
+        },
+        "repeat_observation": null,
+        "source": {
+          "line": 50,
+          "path": "experiments/2026-08-29-a100-grouped-n-plan/raw/extracted-v2/2026-08-29-g2/m64-n1024/results.csv",
+          "sha256": "a1c661f0691f6eb73fa6f245a6006bf439a1ecf8500b71fe638ab5c61aa4c599"
+        },
+        "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()"
+      },
+      {
+        "shape": [
+          4,
+          64,
+          8192,
+          1024
+        ],
+        "candidate": "splitk4_groupedn2",
+        "reported_timing": {
+          "iterations": 300,
+          "max_ms": 1.1027,
+          "mean_ms": 0.8581,
+          "median_ms": 0.8442,
+          "min_ms": 0.8221,
+          "p95_ms": 0.9216,
+          "warmup": 30
+        },
+        "repeat_observation": null,
+        "source": {
+          "line": 54,
+          "path": "experiments/2026-08-29-a100-grouped-n-plan/raw/extracted-v2/2026-08-29-g2/m64-n1024/results.csv",
+          "sha256": "a1c661f0691f6eb73fa6f245a6006bf439a1ecf8500b71fe638ab5c61aa4c599"
+        },
+        "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()"
+      },
+      {
+        "shape": [
+          4,
+          64,
+          8192,
+          1024
+        ],
+        "candidate": "splitk8_groupedn2",
+        "reported_timing": {
+          "iterations": 300,
+          "max_ms": 3.275,
+          "mean_ms": 0.7832,
+          "median_ms": 0.7599,
+          "min_ms": 0.7414,
+          "p95_ms": 0.8608,
+          "warmup": 30
+        },
+        "repeat_observation": null,
+        "source": {
+          "line": 55,
+          "path": "experiments/2026-08-29-a100-grouped-n-plan/raw/extracted-v2/2026-08-29-g2/m64-n1024/results.csv",
+          "sha256": "a1c661f0691f6eb73fa6f245a6006bf439a1ecf8500b71fe638ab5c61aa4c599"
+        },
+        "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()"
+      },
+      {
+        "shape": [
+          4,
+          128,
+          512,
+          512
+        ],
+        "candidate": "direct",
+        "reported_timing": {
+          "iterations": 300,
+          "max_ms": 0.6106,
+          "mean_ms": 0.3413,
+          "median_ms": 0.3101,
+          "min_ms": 0.2959,
+          "p95_ms": 0.5819,
+          "warmup": 30
+        },
+        "repeat_observation": null,
+        "source": {
+          "line": 3,
+          "path": "experiments/2026-08-29-a100-grouped-n-plan/raw/extracted-v2/2026-08-29-g2/m128-n512/results.csv",
+          "sha256": "f52a42292184c559797988fe8c02026c0fdc09345f3c5a1fe607bd0f75de4188"
+        },
+        "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()"
+      },
+      {
+        "shape": [
+          4,
+          128,
+          512,
+          512
+        ],
+        "candidate": "splitk2",
+        "reported_timing": {
+          "iterations": 300,
+          "max_ms": 0.7501,
+          "mean_ms": 0.3423,
+          "median_ms": 0.315,
+          "min_ms": 0.3068,
+          "p95_ms": 0.538,
+          "warmup": 30
+        },
+        "repeat_observation": null,
+        "source": {
+          "line": 4,
+          "path": "experiments/2026-08-29-a100-grouped-n-plan/raw/extracted-v2/2026-08-29-g2/m128-n512/results.csv",
+          "sha256": "f52a42292184c559797988fe8c02026c0fdc09345f3c5a1fe607bd0f75de4188"
+        },
+        "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()"
+      }
+    ],
+    "candidate_statistics_are_not_paired_difference_CIs": true,
+    "historical_median_objective_unchanged": true,
+    "unrecorded_repeats_not_inferred": true
+  },
+  "training_calls": 0,
+  "parameter_updates": 0,
+  "saved_41_shape_scores_identical": true,
+  "frozen_six_parsed_or_scored": false,
+  "gpu_started": false,
+  "compiler_admission": false,
+  "protected_unchanged": true,
+  "source_and_model_hashes_unchanged": true,
+  "seconds": 0.420992249972187
+}

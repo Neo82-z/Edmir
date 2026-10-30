@@ -237,7 +237,30 @@ runtime.synchronize();
 // Read output.* buffers with copy_to_host().
 ```
 
+## Prepared host metadata experiment
+
+`CudaBackendOptions{.prepare_metadata = true}` resolves tensor bindings,
+transfer sizes, participating ranks and dependency-event mappings in
+`prepare()`. Host and fused operators use the same preparation path. The
+ProgramView and its backing arrays must remain alive and immutable. The
+default remains `false`; existing callers retain their execution identity.
+
+The [four-shape A100 experiment](../../experiments/2026-10-20-host-metadata-optimization/README.md)
+uses separate implementation IDs for prepared execution, preserves legacy
+controls, and includes both merged host baselines. Timings retain every sample.
+Optional `EDMIR_CUDA_API_TRACE_TESTS` compare the real executor's host API call
+sequence against CPU test doubles using official CUDA/NCCL/cuBLAS headers;
+these tests do not execute kernels or establish GPU correctness or performance.
+
 ## Deliberate v0.1 limits
+
+An experiment-only `MergedHostBackend` and `benchmark_selector.cpp` now compare
+the original per-source CUTLASS/cuBLAS paths with one PM-row CUTLASS/cuBLASLt
+GEMM per destination. See the
+[controlled experiment and run package](../../experiments/2026-10-20-splitk-local-revision/README.md)
+for the exact input, timing, library, and hardware contracts. These additions
+have CPU checks and CUDA-header syntax checks, but await GPU compilation and
+execution. The limits below describe the original `CudaBackend`.
 
 - one host process controls all GPUs;
 - one NCCL communicator and three streams per logical rank;

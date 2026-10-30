@@ -1,0 +1,247 @@
+{
+  "schema": "edmir.predictor-contract-verification.v1",
+  "tests": {
+    "command": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "EDM-IR/tests",
+      "-p",
+      "*_test.py"
+    ],
+    "exit_code": 0,
+    "count": 191,
+    "output": "...............................................................................................................................................................................................\n----------------------------------------------------------------------\nRan 191 tests in 2.652s\n\nOK\n"
+  },
+  "source_sha256": {
+    "EDM-IR/edmir/compiler/factorized_selection.py": "fb695e1615ff7a22b7e7bcd8d9e9fcaf4d4d173be25159c7aba0daeb0f41c1d1",
+    "EDM-IR/edmir/compiler/fused_selection.py": "20bc75f9a69f5179bd5acdb8b74c52dcba04ab0294e9fc55171aa8ceef025ae0",
+    "EDM-IR/edmir/compiler/host_baseline.py": "e335c5a38dbbfd661fe4828aa1867fcb14bd4f82984f9dbcb8a20c805b9e2b75",
+    "EDM-IR/edmir/compiler/measurement_dataset.py": "c28fd8a8e79dd222612581e6b9c85f84ee21afabb8c42b58ccdc4c30851c50bf",
+    "EDM-IR/edmir/compiler/relative_selection.py": "47e425ce32d60577b1ee38e1e7a4f7f542dab06599b2ae1a8b694d7d09aed4c9",
+    "EDM-IR/edmir/compiler/two_stage_selection.py": "4d875a82ca57fbd07ce538a4fecf4db0d306c963945c010bcbe6cc05a2e8a8d2",
+    "EDM-IR/examples/a100_fused_selection_profile.json": "90bf5f3ba5b757b21fd9e3d49438315cec03a4b1fa3540b775f0431449ac45c7",
+    "EDM-IR/runtime/tools/validate_generated.cpp": "4bd7d678d7cfebf1f46556bee245a4f74ec5d97724f85de41d9f0f4a3c0ce6fd",
+    "EDM-IR/tests/factorized_selection_test.py": "2672f7b71214a55e4821919b6f451b10d0a13199900a70e0da759c763a3776d0",
+    "EDM-IR/tests/fused_selection_test.py": "31ec0dfde356f58653fde7b51ceab80fe14913b3339f342290faffda29d83418",
+    "EDM-IR/tests/independent_selector_validation_test.py": "81897ac2996e63962538a722c3da3f99882b626c98c600275d6f17b82a65ad68",
+    "EDM-IR/tools/evaluate_factorized_selector.py": "bb745667319d15d28bb99a93f5b2d8b562c3f8669199607340af43376f873bcb",
+    "EDM-IR/tools/independent_selector_validation.py": "a9144709ceb8337ce7334b5f0d27bc9c6a021df0573eb70f318947bb2d8c0885"
+  },
+  "retained_profile_cli": {
+    "admitted": false,
+    "candidates": [
+      {
+        "communication_api": "host_nccl",
+        "eligible": true,
+        "family": "host",
+        "gemm_kernel": "library_default",
+        "gemm_provider": "cublas",
+        "reason": "selected fallback"
+      },
+      {
+        "communication_api": "nccl_device",
+        "eligible": false,
+        "family": "direct",
+        "gemm_kernel": "sm80_64x128x32",
+        "gemm_provider": "cutlass",
+        "reason": "measured host baseline is missing or differs from the compiler's per-source cuBLAS fallback; matched baseline evidence is required"
+      },
+      {
+        "communication_api": "nccl_device",
+        "eligible": false,
+        "family": "splitk8",
+        "gemm_kernel": "sm80_64x128x32_splitk8",
+        "gemm_provider": "cutlass",
+        "reason": "measured host baseline is missing or differs from the compiler's per-source cuBLAS fallback; matched baseline evidence is required"
+      }
+    ],
+    "fallback_host_baseline": {
+      "baseline_id": "host_nccl_cublas_per_source_v1",
+      "communication": "host_nccl_send_recv_and_local_copy",
+      "dtype": "float16",
+      "gemm_kernel": "library_default",
+      "gemm_provider": "cublas",
+      "layout": "row_major",
+      "partition": "P_sequential_M_gemms",
+      "schedule": "materialize_then_gemm",
+      "timing_scope": "host steady_clock around backend.execute() plus backend.synchronize()"
+    },
+    "observed_environment": {
+      "arch": "sm_80",
+      "cuda_version": "12.8.93",
+      "cutlass_commit": "dcf215af68a2d08d305076c152a06f201728cd53",
+      "cutlass_version": "v4.7.0",
+      "device": "NVIDIA A100-SXM4-80GB",
+      "driver_version": "580.126.16",
+      "link_label": "NV12",
+      "nccl_commit": "dbc86fd06e8b0c4517b95d8958a09ccacf9520c9",
+      "nccl_version": "v2.28.9-1",
+      "schema": "edmir.fused_environment.v1",
+      "world_size": 4
+    },
+    "problem": {
+      "dtype": "float16",
+      "k": 4096,
+      "layout": "row_major",
+      "n": 128,
+      "name": "a100_measured_a2a_gemm",
+      "rows_per_peer": 64,
+      "schema": "edmir.problem.v1",
+      "world_size": 4
+    },
+    "profile": {
+      "default_compiler_admission": false,
+      "envelope": {
+        "dtype": "float16",
+        "k": [
+          256,
+          512,
+          1024,
+          2048,
+          4096
+        ],
+        "layout": "row_major",
+        "n": [
+          64,
+          128,
+          256
+        ],
+        "rows_per_peer": [
+          32,
+          64,
+          128
+        ]
+      },
+      "environment": {
+        "arch": "sm_80",
+        "cuda_version": "12.8.93",
+        "cutlass_commit": "dcf215af68a2d08d305076c152a06f201728cd53",
+        "cutlass_version": "v4.7.0",
+        "device": "NVIDIA A100-SXM4-80GB",
+        "driver_version": "580.126.16",
+        "link_label": "NV12",
+        "nccl_commit": "dbc86fd06e8b0c4517b95d8958a09ccacf9520c9",
+        "nccl_version": "v2.28.9-1",
+        "schema": "edmir.fused_environment.v1",
+        "world_size": 4
+      },
+      "evidence": {
+        "heldout_direction_accuracy": 1.0,
+        "heldout_host_wins": 0,
+        "heldout_max_selection_regret": 0.0,
+        "heldout_problems": 40,
+        "train_problems": 5
+      },
+      "profile_id": "a100-nv12-fused-2026-08-26",
+      "reference_host_baseline_id": "host_nccl_cutlass_sm80_per_source_v1",
+      "rule": {
+        "direct_kernel": "sm80_64x128x32",
+        "max_direct_k": 1024,
+        "min_split_k": 2048,
+        "split_kernel": "sm80_64x128x32_splitk8"
+      },
+      "schema": "edmir.fused_selection_profile.v1",
+      "source": "experiments/2026-08-26-a100-fused-heldout/evaluation.json"
+    },
+    "reason": "measured host baseline is missing or differs from the compiler's per-source cuBLAS fallback; matched baseline evidence is required",
+    "schema": "edmir.fused_selection_report.v1",
+    "selected_family": "host",
+    "target": {
+      "arch": "sm_80",
+      "communication_api": "host_nccl",
+      "fused_schedule": {
+        "n_tiles_per_cta": 1
+      },
+      "gemm_kernel": "library_default",
+      "gemm_provider": "cublas",
+      "kind": "cuda",
+      "name": "host-nccl-fallback",
+      "schema": "edmir.target.v1",
+      "topology": {
+        "devices": [
+          "NVIDIA A100-SXM4-80GB",
+          "NVIDIA A100-SXM4-80GB",
+          "NVIDIA A100-SXM4-80GB",
+          "NVIDIA A100-SXM4-80GB"
+        ],
+        "link_labels": [
+          [
+            "X",
+            "NV12",
+            "NV12",
+            "NV12"
+          ],
+          [
+            "NV12",
+            "X",
+            "NV12",
+            "NV12"
+          ],
+          [
+            "NV12",
+            "NV12",
+            "X",
+            "NV12"
+          ],
+          [
+            "NV12",
+            "NV12",
+            "NV12",
+            "X"
+          ]
+        ],
+        "p2p": [
+          [
+            true,
+            true,
+            true,
+            true
+          ],
+          [
+            true,
+            true,
+            true,
+            true
+          ],
+          [
+            true,
+            true,
+            true,
+            true
+          ],
+          [
+            true,
+            true,
+            true,
+            true
+          ]
+        ],
+        "raw_topology": "recorded 4x A100-SXM4-80GB full pairwise NV12 envelope",
+        "schema": "edmir.topology.v1",
+        "world_size": 4
+      }
+    },
+    "traffic": null
+  },
+  "plans": {
+    "independent_p4_plan.json": {
+      "plan_sha256": "1165461fba0b280b4e09e5d4667efa99b2d85d7e838d3ac34371ea378c57907b",
+      "workloads": 45,
+      "grouped_eligible_workloads": 6,
+      "expected_median_records": 3150,
+      "status": "awaiting_new_gpu_measurements"
+    },
+    "independent_p8_plan.json": {
+      "plan_sha256": "dc4a4a956c169c28705a6757c3a7db78015a1fed20638e15c9e1056dcad29846",
+      "workloads": 45,
+      "grouped_eligible_workloads": 6,
+      "expected_median_records": 3150,
+      "status": "awaiting_new_gpu_measurements"
+    }
+  },
+  "new_gpu_measurements": 0,
+  "independent_reliability_established": false
+}

@@ -1,0 +1,22 @@
+{
+  "schema": "edmir.host-boundary-investigation.v1",
+  "status": "Adaptive local engineering investigation; the earlier accepted version remains unchanged",
+  "request": "Inspect remaining M512 errors and large-N sensitivity",
+  "no_gpu_operations": true,
+  "independent_new_labels": 0,
+  "proposals_preserved": [
+    {"file":"exploration.json","variants":2,"change":"coupled M*K input response in the host"},
+    {"file":"exploration_v2.json","variants":3,"change":"host depth/N hinge and separated fused base/extra work"},
+    {"file":"exploration_v3.json","variants":3,"change":"logarithmic N response"},
+    {"file":"exploration_v4.json","variants":2,"change":"relative-error fused training weights"},
+    {"file":"paired_exploration.json","variants":1,"change":"N response fitted from same-M/K contrasts; leave-K large-N failure retained"},
+    {"file":"exploration_v5.json","variants":1,"change":"separate N replay coordinates; cannot identify a positive replay coefficient in the held-out largest-N fold"},
+    {"file":"exploration_v6.json","variants":1,"change":"equal absolute/relative loss mix; M512 q2/q4 ordering remains wrong"}
+  ],
+  "fully_reviewed_candidate":"exploration_v4 mode 2; traffic_latency_selection.py",
+  "candidate_status":"Not accepted: group-deletion and one-percent large-N stress regressions",
+  "fit":"48 host and 12 fused configurations selected using training-only inner folds; no inference timing labels",
+  "review":"All previous gates plus M512 exact choices, 72 deletion refits, previous adversarial witnesses, 34 deterministic one-percent boundary perturbations",
+  "LP_scope":"Frozen weights, active sets and hyperparameters only; complete retraining confirms witnesses; not a global robustness certificate",
+  "stop":"Do not promote the candidate on average regret alone. Preserve the prior accepted selector and all failures. New matched observations are needed to resolve the extrapolation boundary reliably."
+}

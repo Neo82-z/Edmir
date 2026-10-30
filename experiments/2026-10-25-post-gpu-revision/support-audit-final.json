@@ -1,0 +1,3492 @@
+{
+  "host_linear_support": [
+    {
+      "context": "old",
+      "shape": [
+        4,
+        64,
+        3072,
+        1536
+      ],
+      "candidate_id": "host@prepared",
+      "training_shapes": [
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          512,
+          3072,
+          512
+        ]
+      ],
+      "feature_names": [
+        "fixed",
+        "remote_A_MiB",
+        "logical_work_Gflop",
+        "cutlass_K_iterations_over_128"
+      ],
+      "training_rank": 4,
+      "rank_with_target": 4,
+      "feature_count": 4,
+      "target_in_training_row_span": true,
+      "outside_training_feature_indices": [
+        1
+      ],
+      "interpretation": "Unconstrained linear identifiability only. Nonnegative constraints/ridge can pick coefficients but do not add observations. Full rank is not evidence of causal or extrapolation accuracy.",
+      "confidence_probability": null
+    },
+    {
+      "context": "old",
+      "shape": [
+        4,
+        256,
+        8192,
+        512
+      ],
+      "candidate_id": "host@prepared",
+      "training_shapes": [
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          512,
+          3072,
+          512
+        ]
+      ],
+      "feature_names": [
+        "fixed",
+        "remote_A_MiB",
+        "logical_work_Gflop",
+        "cutlass_K_iterations_over_128"
+      ],
+      "training_rank": 4,
+      "rank_with_target": 4,
+      "feature_count": 4,
+      "target_in_training_row_span": true,
+      "outside_training_feature_indices": [],
+      "interpretation": "Unconstrained linear identifiability only. Nonnegative constraints/ridge can pick coefficients but do not add observations. Full rank is not evidence of causal or extrapolation accuracy.",
+      "confidence_probability": null
+    },
+    {
+      "context": "old",
+      "shape": [
+        4,
+        64,
+        8192,
+        512
+      ],
+      "candidate_id": "host_compiler_cublas@prepared",
+      "training_shapes": [
+        [
+          4,
+          512,
+          4096,
+          512
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ]
+      ],
+      "feature_names": [
+        "fixed",
+        "remote_A_MiB",
+        "logical_work_Gflop"
+      ],
+      "training_rank": 2,
+      "rank_with_target": 3,
+      "feature_count": 3,
+      "target_in_training_row_span": false,
+      "outside_training_feature_indices": [
+        2
+      ],
+      "interpretation": "Unconstrained linear identifiability only. Nonnegative constraints/ridge can pick coefficients but do not add observations. Full rank is not evidence of causal or extrapolation accuracy.",
+      "confidence_probability": null
+    },
+    {
+      "context": "old",
+      "shape": [
+        4,
+        192,
+        3072,
+        1536
+      ],
+      "candidate_id": "host@prepared",
+      "training_shapes": [
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          512,
+          3072,
+          512
+        ]
+      ],
+      "feature_names": [
+        "fixed",
+        "remote_A_MiB",
+        "logical_work_Gflop",
+        "cutlass_K_iterations_over_128"
+      ],
+      "training_rank": 4,
+      "rank_with_target": 4,
+      "feature_count": 4,
+      "target_in_training_row_span": true,
+      "outside_training_feature_indices": [],
+      "interpretation": "Unconstrained linear identifiability only. Nonnegative constraints/ridge can pick coefficients but do not add observations. Full rank is not evidence of causal or extrapolation accuracy.",
+      "confidence_probability": null
+    },
+    {
+      "context": "old",
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      "candidate_id": "host_merged_cutlass@merged",
+      "training_shapes": [
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "feature_names": [
+        "fixed",
+        "remote_A_MiB",
+        "logical_work_Gflop",
+        "cutlass_K_iterations_over_128"
+      ],
+      "training_rank": 3,
+      "rank_with_target": 4,
+      "feature_count": 4,
+      "target_in_training_row_span": false,
+      "outside_training_feature_indices": [
+        1
+      ],
+      "interpretation": "Unconstrained linear identifiability only. Nonnegative constraints/ridge can pick coefficients but do not add observations. Full rank is not evidence of causal or extrapolation accuracy.",
+      "confidence_probability": null
+    },
+    {
+      "context": "old",
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ],
+      "candidate_id": "host@prepared",
+      "training_shapes": [
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          512,
+          3072,
+          512
+        ]
+      ],
+      "feature_names": [
+        "fixed",
+        "remote_A_MiB",
+        "logical_work_Gflop",
+        "cutlass_K_iterations_over_128"
+      ],
+      "training_rank": 4,
+      "rank_with_target": 4,
+      "feature_count": 4,
+      "target_in_training_row_span": true,
+      "outside_training_feature_indices": [],
+      "interpretation": "Unconstrained linear identifiability only. Nonnegative constraints/ridge can pick coefficients but do not add observations. Full rank is not evidence of causal or extrapolation accuracy.",
+      "confidence_probability": null
+    },
+    {
+      "context": "old",
+      "shape": [
+        4,
+        192,
+        3072,
+        512
+      ],
+      "candidate_id": "host@prepared",
+      "training_shapes": [
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          512,
+          3072,
+          512
+        ]
+      ],
+      "feature_names": [
+        "fixed",
+        "remote_A_MiB",
+        "logical_work_Gflop",
+        "cutlass_K_iterations_over_128"
+      ],
+      "training_rank": 4,
+      "rank_with_target": 4,
+      "feature_count": 4,
+      "target_in_training_row_span": true,
+      "outside_training_feature_indices": [],
+      "interpretation": "Unconstrained linear identifiability only. Nonnegative constraints/ridge can pick coefficients but do not add observations. Full rank is not evidence of causal or extrapolation accuracy.",
+      "confidence_probability": null
+    },
+    {
+      "context": "old",
+      "shape": [
+        4,
+        64,
+        8192,
+        512
+      ],
+      "candidate_id": "host_merged_cutlass@merged",
+      "training_shapes": [
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "feature_names": [
+        "fixed",
+        "remote_A_MiB",
+        "logical_work_Gflop",
+        "cutlass_K_iterations_over_128"
+      ],
+      "training_rank": 2,
+      "rank_with_target": 3,
+      "feature_count": 4,
+      "target_in_training_row_span": false,
+      "outside_training_feature_indices": [
+        1,
+        2
+      ],
+      "interpretation": "Unconstrained linear identifiability only. Nonnegative constraints/ridge can pick coefficients but do not add observations. Full rank is not evidence of causal or extrapolation accuracy.",
+      "confidence_probability": null
+    },
+    {
+      "context": "old",
+      "shape": [
+        4,
+        64,
+        8192,
+        512
+      ],
+      "candidate_id": "host_merged_cublaslt@merged",
+      "training_shapes": [
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "feature_names": [
+        "fixed",
+        "remote_A_MiB",
+        "logical_work_Gflop"
+      ],
+      "training_rank": 3,
+      "rank_with_target": 3,
+      "feature_count": 3,
+      "target_in_training_row_span": true,
+      "outside_training_feature_indices": [],
+      "interpretation": "Unconstrained linear identifiability only. Nonnegative constraints/ridge can pick coefficients but do not add observations. Full rank is not evidence of causal or extrapolation accuracy.",
+      "confidence_probability": null
+    },
+    {
+      "context": "old",
+      "shape": [
+        4,
+        256,
+        8192,
+        512
+      ],
+      "candidate_id": "host_merged_cutlass@merged",
+      "training_shapes": [
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "feature_names": [
+        "fixed",
+        "remote_A_MiB",
+        "logical_work_Gflop",
+        "cutlass_K_iterations_over_128"
+      ],
+      "training_rank": 2,
+      "rank_with_target": 3,
+      "feature_count": 4,
+      "target_in_training_row_span": false,
+      "outside_training_feature_indices": [],
+      "interpretation": "Unconstrained linear identifiability only. Nonnegative constraints/ridge can pick coefficients but do not add observations. Full rank is not evidence of causal or extrapolation accuracy.",
+      "confidence_probability": null
+    },
+    {
+      "context": "old",
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ],
+      "candidate_id": "host_merged_cutlass@merged",
+      "training_shapes": [
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ]
+      ],
+      "feature_names": [
+        "fixed",
+        "remote_A_MiB",
+        "logical_work_Gflop",
+        "cutlass_K_iterations_over_128"
+      ],
+      "training_rank": 2,
+      "rank_with_target": 3,
+      "feature_count": 4,
+      "target_in_training_row_span": false,
+      "outside_training_feature_indices": [
+        3
+      ],
+      "interpretation": "Unconstrained linear identifiability only. Nonnegative constraints/ridge can pick coefficients but do not add observations. Full rank is not evidence of causal or extrapolation accuracy.",
+      "confidence_probability": null
+    },
+    {
+      "context": "old",
+      "shape": [
+        4,
+        64,
+        8192,
+        512
+      ],
+      "candidate_id": "host@prepared",
+      "training_shapes": [
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          512,
+          3072,
+          512
+        ]
+      ],
+      "feature_names": [
+        "fixed",
+        "remote_A_MiB",
+        "logical_work_Gflop",
+        "cutlass_K_iterations_over_128"
+      ],
+      "training_rank": 4,
+      "rank_with_target": 4,
+      "feature_count": 4,
+      "target_in_training_row_span": true,
+      "outside_training_feature_indices": [
+        2
+      ],
+      "interpretation": "Unconstrained linear identifiability only. Nonnegative constraints/ridge can pick coefficients but do not add observations. Full rank is not evidence of causal or extrapolation accuracy.",
+      "confidence_probability": null
+    },
+    {
+      "context": "old",
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      "candidate_id": "host@prepared",
+      "training_shapes": [
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          3072,
+          512
+        ]
+      ],
+      "feature_names": [
+        "fixed",
+        "remote_A_MiB",
+        "logical_work_Gflop",
+        "cutlass_K_iterations_over_128"
+      ],
+      "training_rank": 4,
+      "rank_with_target": 4,
+      "feature_count": 4,
+      "target_in_training_row_span": true,
+      "outside_training_feature_indices": [],
+      "interpretation": "Unconstrained linear identifiability only. Nonnegative constraints/ridge can pick coefficients but do not add observations. Full rank is not evidence of causal or extrapolation accuracy.",
+      "confidence_probability": null
+    },
+    {
+      "context": "old",
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ],
+      "candidate_id": "host_compiler_cublas@prepared",
+      "training_shapes": [
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ]
+      ],
+      "feature_names": [
+        "fixed",
+        "remote_A_MiB",
+        "logical_work_Gflop"
+      ],
+      "training_rank": 3,
+      "rank_with_target": 3,
+      "feature_count": 3,
+      "target_in_training_row_span": true,
+      "outside_training_feature_indices": [],
+      "interpretation": "Unconstrained linear identifiability only. Nonnegative constraints/ridge can pick coefficients but do not add observations. Full rank is not evidence of causal or extrapolation accuracy.",
+      "confidence_probability": null
+    },
+    {
+      "context": "old",
+      "shape": [
+        4,
+        64,
+        3072,
+        512
+      ],
+      "candidate_id": "host@prepared",
+      "training_shapes": [
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          512,
+          3072,
+          512
+        ]
+      ],
+      "feature_names": [
+        "fixed",
+        "remote_A_MiB",
+        "logical_work_Gflop",
+        "cutlass_K_iterations_over_128"
+      ],
+      "training_rank": 4,
+      "rank_with_target": 4,
+      "feature_count": 4,
+      "target_in_training_row_span": true,
+      "outside_training_feature_indices": [
+        2
+      ],
+      "interpretation": "Unconstrained linear identifiability only. Nonnegative constraints/ridge can pick coefficients but do not add observations. Full rank is not evidence of causal or extrapolation accuracy.",
+      "confidence_probability": null
+    },
+    {
+      "context": "old",
+      "shape": [
+        4,
+        256,
+        8192,
+        512
+      ],
+      "candidate_id": "host_compiler_cublas@prepared",
+      "training_shapes": [
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ]
+      ],
+      "feature_names": [
+        "fixed",
+        "remote_A_MiB",
+        "logical_work_Gflop"
+      ],
+      "training_rank": 3,
+      "rank_with_target": 3,
+      "feature_count": 3,
+      "target_in_training_row_span": true,
+      "outside_training_feature_indices": [],
+      "interpretation": "Unconstrained linear identifiability only. Nonnegative constraints/ridge can pick coefficients but do not add observations. Full rank is not evidence of causal or extrapolation accuracy.",
+      "confidence_probability": null
+    },
+    {
+      "context": "old",
+      "shape": [
+        4,
+        256,
+        8192,
+        512
+      ],
+      "candidate_id": "host_merged_cublaslt@merged",
+      "training_shapes": [
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "feature_names": [
+        "fixed",
+        "remote_A_MiB",
+        "logical_work_Gflop"
+      ],
+      "training_rank": 3,
+      "rank_with_target": 3,
+      "feature_count": 3,
+      "target_in_training_row_span": true,
+      "outside_training_feature_indices": [],
+      "interpretation": "Unconstrained linear identifiability only. Nonnegative constraints/ridge can pick coefficients but do not add observations. Full rank is not evidence of causal or extrapolation accuracy.",
+      "confidence_probability": null
+    },
+    {
+      "context": "old",
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      "candidate_id": "host_merged_cublaslt@merged",
+      "training_shapes": [
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "feature_names": [
+        "fixed",
+        "remote_A_MiB",
+        "logical_work_Gflop"
+      ],
+      "training_rank": 2,
+      "rank_with_target": 3,
+      "feature_count": 3,
+      "target_in_training_row_span": false,
+      "outside_training_feature_indices": [],
+      "interpretation": "Unconstrained linear identifiability only. Nonnegative constraints/ridge can pick coefficients but do not add observations. Full rank is not evidence of causal or extrapolation accuracy.",
+      "confidence_probability": null
+    },
+    {
+      "context": "old",
+      "shape": [
+        4,
+        64,
+        1024,
+        512
+      ],
+      "candidate_id": "host_merged_cublaslt@merged",
+      "training_shapes": [
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "feature_names": [
+        "fixed",
+        "remote_A_MiB",
+        "logical_work_Gflop"
+      ],
+      "training_rank": 3,
+      "rank_with_target": 3,
+      "feature_count": 3,
+      "target_in_training_row_span": true,
+      "outside_training_feature_indices": [
+        1,
+        2
+      ],
+      "interpretation": "Unconstrained linear identifiability only. Nonnegative constraints/ridge can pick coefficients but do not add observations. Full rank is not evidence of causal or extrapolation accuracy.",
+      "confidence_probability": null
+    },
+    {
+      "context": "old",
+      "shape": [
+        4,
+        512,
+        3072,
+        512
+      ],
+      "candidate_id": "host@prepared",
+      "training_shapes": [
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ]
+      ],
+      "feature_names": [
+        "fixed",
+        "remote_A_MiB",
+        "logical_work_Gflop",
+        "cutlass_K_iterations_over_128"
+      ],
+      "training_rank": 4,
+      "rank_with_target": 4,
+      "feature_count": 4,
+      "target_in_training_row_span": true,
+      "outside_training_feature_indices": [],
+      "interpretation": "Unconstrained linear identifiability only. Nonnegative constraints/ridge can pick coefficients but do not add observations. Full rank is not evidence of causal or extrapolation accuracy.",
+      "confidence_probability": null
+    },
+    {
+      "context": "old",
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ],
+      "candidate_id": "host_merged_cublaslt@merged",
+      "training_shapes": [
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          1024,
+          512
+        ]
+      ],
+      "feature_names": [
+        "fixed",
+        "remote_A_MiB",
+        "logical_work_Gflop"
+      ],
+      "training_rank": 3,
+      "rank_with_target": 3,
+      "feature_count": 3,
+      "target_in_training_row_span": true,
+      "outside_training_feature_indices": [],
+      "interpretation": "Unconstrained linear identifiability only. Nonnegative constraints/ridge can pick coefficients but do not add observations. Full rank is not evidence of causal or extrapolation accuracy.",
+      "confidence_probability": null
+    },
+    {
+      "context": "old",
+      "shape": [
+        4,
+        64,
+        1024,
+        512
+      ],
+      "candidate_id": "host_merged_cutlass@merged",
+      "training_shapes": [
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "feature_names": [
+        "fixed",
+        "remote_A_MiB",
+        "logical_work_Gflop",
+        "cutlass_K_iterations_over_128"
+      ],
+      "training_rank": 3,
+      "rank_with_target": 3,
+      "feature_count": 4,
+      "target_in_training_row_span": true,
+      "outside_training_feature_indices": [
+        1,
+        2,
+        3
+      ],
+      "interpretation": "Unconstrained linear identifiability only. Nonnegative constraints/ridge can pick coefficients but do not add observations. Full rank is not evidence of causal or extrapolation accuracy.",
+      "confidence_probability": null
+    },
+    {
+      "context": "old",
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      "candidate_id": "host_compiler_cublas@prepared",
+      "training_shapes": [
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ]
+      ],
+      "feature_names": [
+        "fixed",
+        "remote_A_MiB",
+        "logical_work_Gflop"
+      ],
+      "training_rank": 2,
+      "rank_with_target": 3,
+      "feature_count": 3,
+      "target_in_training_row_span": false,
+      "outside_training_feature_indices": [
+        1
+      ],
+      "interpretation": "Unconstrained linear identifiability only. Nonnegative constraints/ridge can pick coefficients but do not add observations. Full rank is not evidence of causal or extrapolation accuracy.",
+      "confidence_probability": null
+    },
+    {
+      "context": "old",
+      "shape": [
+        4,
+        64,
+        1024,
+        512
+      ],
+      "candidate_id": "host_compiler_cublas@prepared",
+      "training_shapes": [
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ]
+      ],
+      "feature_names": [
+        "fixed",
+        "remote_A_MiB",
+        "logical_work_Gflop"
+      ],
+      "training_rank": 3,
+      "rank_with_target": 3,
+      "feature_count": 3,
+      "target_in_training_row_span": true,
+      "outside_training_feature_indices": [
+        1,
+        2
+      ],
+      "interpretation": "Unconstrained linear identifiability only. Nonnegative constraints/ridge can pick coefficients but do not add observations. Full rank is not evidence of causal or extrapolation accuracy.",
+      "confidence_probability": null
+    },
+    {
+      "context": "old",
+      "shape": [
+        4,
+        64,
+        1024,
+        512
+      ],
+      "candidate_id": "host@prepared",
+      "training_shapes": [
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          1536
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          512,
+          3072,
+          512
+        ]
+      ],
+      "feature_names": [
+        "fixed",
+        "remote_A_MiB",
+        "logical_work_Gflop",
+        "cutlass_K_iterations_over_128"
+      ],
+      "training_rank": 4,
+      "rank_with_target": 4,
+      "feature_count": 4,
+      "target_in_training_row_span": true,
+      "outside_training_feature_indices": [
+        1,
+        2,
+        3
+      ],
+      "interpretation": "Unconstrained linear identifiability only. Nonnegative constraints/ridge can pick coefficients but do not add observations. Full rank is not evidence of causal or extrapolation accuracy.",
+      "confidence_probability": null
+    },
+    {
+      "context": "primary",
+      "shape": [
+        4,
+        64,
+        1024,
+        512
+      ],
+      "candidate_id": "host@prepared",
+      "training_shapes": [
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          64,
+          768,
+          512
+        ],
+        [
+          4,
+          64,
+          1536,
+          512
+        ]
+      ],
+      "feature_names": [
+        "fixed",
+        "remote_A_MiB",
+        "logical_work_Gflop",
+        "cutlass_K_iterations_over_128"
+      ],
+      "training_rank": 4,
+      "rank_with_target": 4,
+      "feature_count": 4,
+      "target_in_training_row_span": true,
+      "outside_training_feature_indices": [],
+      "interpretation": "Unconstrained linear identifiability only. Nonnegative constraints/ridge can pick coefficients but do not add observations. Full rank is not evidence of causal or extrapolation accuracy.",
+      "confidence_probability": null
+    },
+    {
+      "context": "primary",
+      "shape": [
+        4,
+        64,
+        1024,
+        512
+      ],
+      "candidate_id": "host_compiler_cublas@prepared",
+      "training_shapes": [
+        [
+          4,
+          64,
+          768,
+          512
+        ],
+        [
+          4,
+          64,
+          1536,
+          512
+        ]
+      ],
+      "feature_names": [
+        "fixed",
+        "remote_A_MiB",
+        "logical_work_Gflop"
+      ],
+      "training_rank": 2,
+      "rank_with_target": 2,
+      "feature_count": 3,
+      "target_in_training_row_span": true,
+      "outside_training_feature_indices": [],
+      "interpretation": "Unconstrained linear identifiability only. Nonnegative constraints/ridge can pick coefficients but do not add observations. Full rank is not evidence of causal or extrapolation accuracy.",
+      "confidence_probability": null
+    },
+    {
+      "context": "primary",
+      "shape": [
+        4,
+        64,
+        1024,
+        512
+      ],
+      "candidate_id": "host_merged_cublaslt@merged",
+      "training_shapes": [
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ],
+        [
+          4,
+          64,
+          768,
+          512
+        ],
+        [
+          4,
+          64,
+          1536,
+          512
+        ]
+      ],
+      "feature_names": [
+        "fixed",
+        "remote_A_MiB",
+        "logical_work_Gflop"
+      ],
+      "training_rank": 2,
+      "rank_with_target": 2,
+      "feature_count": 3,
+      "target_in_training_row_span": true,
+      "outside_training_feature_indices": [],
+      "interpretation": "Unconstrained linear identifiability only. Nonnegative constraints/ridge can pick coefficients but do not add observations. Full rank is not evidence of causal or extrapolation accuracy.",
+      "confidence_probability": null
+    },
+    {
+      "context": "primary",
+      "shape": [
+        4,
+        64,
+        1024,
+        512
+      ],
+      "candidate_id": "host_merged_cutlass@merged",
+      "training_shapes": [
+        [
+          4,
+          512,
+          4096,
+          512
+        ],
+        [
+          4,
+          64,
+          768,
+          512
+        ],
+        [
+          4,
+          64,
+          1536,
+          512
+        ]
+      ],
+      "feature_names": [
+        "fixed",
+        "remote_A_MiB",
+        "logical_work_Gflop",
+        "cutlass_K_iterations_over_128"
+      ],
+      "training_rank": 3,
+      "rank_with_target": 3,
+      "feature_count": 4,
+      "target_in_training_row_span": true,
+      "outside_training_feature_indices": [],
+      "interpretation": "Unconstrained linear identifiability only. Nonnegative constraints/ridge can pick coefficients but do not add observations. Full rank is not evidence of causal or extrapolation accuracy.",
+      "confidence_probability": null
+    },
+    {
+      "context": "primary",
+      "shape": [
+        4,
+        64,
+        3072,
+        1536
+      ],
+      "candidate_id": "host@prepared",
+      "training_shapes": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          64,
+          768,
+          512
+        ],
+        [
+          4,
+          64,
+          1536,
+          512
+        ]
+      ],
+      "feature_names": [
+        "fixed",
+        "remote_A_MiB",
+        "logical_work_Gflop",
+        "cutlass_K_iterations_over_128"
+      ],
+      "training_rank": 4,
+      "rank_with_target": 4,
+      "feature_count": 4,
+      "target_in_training_row_span": true,
+      "outside_training_feature_indices": [],
+      "interpretation": "Unconstrained linear identifiability only. Nonnegative constraints/ridge can pick coefficients but do not add observations. Full rank is not evidence of causal or extrapolation accuracy.",
+      "confidence_probability": null
+    },
+    {
+      "context": "primary",
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      "candidate_id": "host@prepared",
+      "training_shapes": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          64,
+          768,
+          512
+        ],
+        [
+          4,
+          64,
+          1536,
+          512
+        ]
+      ],
+      "feature_names": [
+        "fixed",
+        "remote_A_MiB",
+        "logical_work_Gflop",
+        "cutlass_K_iterations_over_128"
+      ],
+      "training_rank": 4,
+      "rank_with_target": 4,
+      "feature_count": 4,
+      "target_in_training_row_span": true,
+      "outside_training_feature_indices": [],
+      "interpretation": "Unconstrained linear identifiability only. Nonnegative constraints/ridge can pick coefficients but do not add observations. Full rank is not evidence of causal or extrapolation accuracy.",
+      "confidence_probability": null
+    },
+    {
+      "context": "primary",
+      "shape": [
+        4,
+        64,
+        8192,
+        512
+      ],
+      "candidate_id": "host@prepared",
+      "training_shapes": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          64,
+          768,
+          512
+        ],
+        [
+          4,
+          64,
+          1536,
+          512
+        ]
+      ],
+      "feature_names": [
+        "fixed",
+        "remote_A_MiB",
+        "logical_work_Gflop",
+        "cutlass_K_iterations_over_128"
+      ],
+      "training_rank": 4,
+      "rank_with_target": 4,
+      "feature_count": 4,
+      "target_in_training_row_span": true,
+      "outside_training_feature_indices": [],
+      "interpretation": "Unconstrained linear identifiability only. Nonnegative constraints/ridge can pick coefficients but do not add observations. Full rank is not evidence of causal or extrapolation accuracy.",
+      "confidence_probability": null
+    },
+    {
+      "context": "primary",
+      "shape": [
+        4,
+        192,
+        3072,
+        512
+      ],
+      "candidate_id": "host@prepared",
+      "training_shapes": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          64,
+          768,
+          512
+        ],
+        [
+          4,
+          64,
+          1536,
+          512
+        ]
+      ],
+      "feature_names": [
+        "fixed",
+        "remote_A_MiB",
+        "logical_work_Gflop",
+        "cutlass_K_iterations_over_128"
+      ],
+      "training_rank": 4,
+      "rank_with_target": 4,
+      "feature_count": 4,
+      "target_in_training_row_span": true,
+      "outside_training_feature_indices": [],
+      "interpretation": "Unconstrained linear identifiability only. Nonnegative constraints/ridge can pick coefficients but do not add observations. Full rank is not evidence of causal or extrapolation accuracy.",
+      "confidence_probability": null
+    },
+    {
+      "context": "primary",
+      "shape": [
+        4,
+        256,
+        8192,
+        512
+      ],
+      "candidate_id": "host@prepared",
+      "training_shapes": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          64,
+          768,
+          512
+        ],
+        [
+          4,
+          64,
+          1536,
+          512
+        ]
+      ],
+      "feature_names": [
+        "fixed",
+        "remote_A_MiB",
+        "logical_work_Gflop",
+        "cutlass_K_iterations_over_128"
+      ],
+      "training_rank": 4,
+      "rank_with_target": 4,
+      "feature_count": 4,
+      "target_in_training_row_span": true,
+      "outside_training_feature_indices": [
+        1,
+        2
+      ],
+      "interpretation": "Unconstrained linear identifiability only. Nonnegative constraints/ridge can pick coefficients but do not add observations. Full rank is not evidence of causal or extrapolation accuracy.",
+      "confidence_probability": null
+    },
+    {
+      "context": "primary",
+      "shape": [
+        4,
+        256,
+        8192,
+        512
+      ],
+      "candidate_id": "host_merged_cublaslt@merged",
+      "training_shapes": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ],
+        [
+          4,
+          64,
+          768,
+          512
+        ],
+        [
+          4,
+          64,
+          1536,
+          512
+        ]
+      ],
+      "feature_names": [
+        "fixed",
+        "remote_A_MiB",
+        "logical_work_Gflop"
+      ],
+      "training_rank": 2,
+      "rank_with_target": 2,
+      "feature_count": 3,
+      "target_in_training_row_span": true,
+      "outside_training_feature_indices": [],
+      "interpretation": "Unconstrained linear identifiability only. Nonnegative constraints/ridge can pick coefficients but do not add observations. Full rank is not evidence of causal or extrapolation accuracy.",
+      "confidence_probability": null
+    },
+    {
+      "context": "primary",
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ],
+      "candidate_id": "host_merged_cublaslt@merged",
+      "training_shapes": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          64,
+          768,
+          512
+        ],
+        [
+          4,
+          64,
+          1536,
+          512
+        ]
+      ],
+      "feature_names": [
+        "fixed",
+        "remote_A_MiB",
+        "logical_work_Gflop"
+      ],
+      "training_rank": 2,
+      "rank_with_target": 2,
+      "feature_count": 3,
+      "target_in_training_row_span": true,
+      "outside_training_feature_indices": [],
+      "interpretation": "Unconstrained linear identifiability only. Nonnegative constraints/ridge can pick coefficients but do not add observations. Full rank is not evidence of causal or extrapolation accuracy.",
+      "confidence_probability": null
+    },
+    {
+      "context": "primary",
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ],
+      "candidate_id": "host_merged_cutlass@merged",
+      "training_shapes": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          768,
+          512
+        ],
+        [
+          4,
+          64,
+          1536,
+          512
+        ]
+      ],
+      "feature_names": [
+        "fixed",
+        "remote_A_MiB",
+        "logical_work_Gflop",
+        "cutlass_K_iterations_over_128"
+      ],
+      "training_rank": 2,
+      "rank_with_target": 3,
+      "feature_count": 4,
+      "target_in_training_row_span": false,
+      "outside_training_feature_indices": [
+        1,
+        2,
+        3
+      ],
+      "interpretation": "Unconstrained linear identifiability only. Nonnegative constraints/ridge can pick coefficients but do not add observations. Full rank is not evidence of causal or extrapolation accuracy.",
+      "confidence_probability": null
+    },
+    {
+      "context": "primary",
+      "shape": [
+        4,
+        64,
+        768,
+        512
+      ],
+      "candidate_id": "host@prepared",
+      "training_shapes": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          64,
+          1536,
+          512
+        ]
+      ],
+      "feature_names": [
+        "fixed",
+        "remote_A_MiB",
+        "logical_work_Gflop",
+        "cutlass_K_iterations_over_128"
+      ],
+      "training_rank": 4,
+      "rank_with_target": 4,
+      "feature_count": 4,
+      "target_in_training_row_span": true,
+      "outside_training_feature_indices": [
+        1,
+        2,
+        3
+      ],
+      "interpretation": "Unconstrained linear identifiability only. Nonnegative constraints/ridge can pick coefficients but do not add observations. Full rank is not evidence of causal or extrapolation accuracy.",
+      "confidence_probability": null
+    },
+    {
+      "context": "primary",
+      "shape": [
+        4,
+        64,
+        768,
+        512
+      ],
+      "candidate_id": "host_compiler_cublas@prepared",
+      "training_shapes": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          1536,
+          512
+        ]
+      ],
+      "feature_names": [
+        "fixed",
+        "remote_A_MiB",
+        "logical_work_Gflop"
+      ],
+      "training_rank": 2,
+      "rank_with_target": 2,
+      "feature_count": 3,
+      "target_in_training_row_span": true,
+      "outside_training_feature_indices": [
+        1,
+        2
+      ],
+      "interpretation": "Unconstrained linear identifiability only. Nonnegative constraints/ridge can pick coefficients but do not add observations. Full rank is not evidence of causal or extrapolation accuracy.",
+      "confidence_probability": null
+    },
+    {
+      "context": "primary",
+      "shape": [
+        4,
+        64,
+        768,
+        512
+      ],
+      "candidate_id": "host_merged_cublaslt@merged",
+      "training_shapes": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ],
+        [
+          4,
+          64,
+          1536,
+          512
+        ]
+      ],
+      "feature_names": [
+        "fixed",
+        "remote_A_MiB",
+        "logical_work_Gflop"
+      ],
+      "training_rank": 2,
+      "rank_with_target": 2,
+      "feature_count": 3,
+      "target_in_training_row_span": true,
+      "outside_training_feature_indices": [
+        1,
+        2
+      ],
+      "interpretation": "Unconstrained linear identifiability only. Nonnegative constraints/ridge can pick coefficients but do not add observations. Full rank is not evidence of causal or extrapolation accuracy.",
+      "confidence_probability": null
+    },
+    {
+      "context": "primary",
+      "shape": [
+        4,
+        64,
+        768,
+        512
+      ],
+      "candidate_id": "host_merged_cutlass@merged",
+      "training_shapes": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ],
+        [
+          4,
+          64,
+          1536,
+          512
+        ]
+      ],
+      "feature_names": [
+        "fixed",
+        "remote_A_MiB",
+        "logical_work_Gflop",
+        "cutlass_K_iterations_over_128"
+      ],
+      "training_rank": 3,
+      "rank_with_target": 3,
+      "feature_count": 4,
+      "target_in_training_row_span": true,
+      "outside_training_feature_indices": [
+        1,
+        2,
+        3
+      ],
+      "interpretation": "Unconstrained linear identifiability only. Nonnegative constraints/ridge can pick coefficients but do not add observations. Full rank is not evidence of causal or extrapolation accuracy.",
+      "confidence_probability": null
+    },
+    {
+      "context": "primary",
+      "shape": [
+        4,
+        64,
+        1536,
+        512
+      ],
+      "candidate_id": "host@prepared",
+      "training_shapes": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          3072,
+          1536
+        ],
+        [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          192,
+          3072,
+          512
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          64,
+          768,
+          512
+        ]
+      ],
+      "feature_names": [
+        "fixed",
+        "remote_A_MiB",
+        "logical_work_Gflop",
+        "cutlass_K_iterations_over_128"
+      ],
+      "training_rank": 4,
+      "rank_with_target": 4,
+      "feature_count": 4,
+      "target_in_training_row_span": true,
+      "outside_training_feature_indices": [],
+      "interpretation": "Unconstrained linear identifiability only. Nonnegative constraints/ridge can pick coefficients but do not add observations. Full rank is not evidence of causal or extrapolation accuracy.",
+      "confidence_probability": null
+    },
+    {
+      "context": "primary",
+      "shape": [
+        4,
+        64,
+        1536,
+        512
+      ],
+      "candidate_id": "host_compiler_cublas@prepared",
+      "training_shapes": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          768,
+          512
+        ]
+      ],
+      "feature_names": [
+        "fixed",
+        "remote_A_MiB",
+        "logical_work_Gflop"
+      ],
+      "training_rank": 2,
+      "rank_with_target": 2,
+      "feature_count": 3,
+      "target_in_training_row_span": true,
+      "outside_training_feature_indices": [
+        1,
+        2
+      ],
+      "interpretation": "Unconstrained linear identifiability only. Nonnegative constraints/ridge can pick coefficients but do not add observations. Full rank is not evidence of causal or extrapolation accuracy.",
+      "confidence_probability": null
+    },
+    {
+      "context": "primary",
+      "shape": [
+        4,
+        64,
+        1536,
+        512
+      ],
+      "candidate_id": "host_merged_cublaslt@merged",
+      "training_shapes": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ],
+        [
+          4,
+          64,
+          768,
+          512
+        ]
+      ],
+      "feature_names": [
+        "fixed",
+        "remote_A_MiB",
+        "logical_work_Gflop"
+      ],
+      "training_rank": 2,
+      "rank_with_target": 2,
+      "feature_count": 3,
+      "target_in_training_row_span": true,
+      "outside_training_feature_indices": [],
+      "interpretation": "Unconstrained linear identifiability only. Nonnegative constraints/ridge can pick coefficients but do not add observations. Full rank is not evidence of causal or extrapolation accuracy.",
+      "confidence_probability": null
+    },
+    {
+      "context": "primary",
+      "shape": [
+        4,
+        64,
+        1536,
+        512
+      ],
+      "candidate_id": "host_merged_cutlass@merged",
+      "training_shapes": [
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ],
+        [
+          4,
+          64,
+          768,
+          512
+        ]
+      ],
+      "feature_names": [
+        "fixed",
+        "remote_A_MiB",
+        "logical_work_Gflop",
+        "cutlass_K_iterations_over_128"
+      ],
+      "training_rank": 3,
+      "rank_with_target": 3,
+      "feature_count": 4,
+      "target_in_training_row_span": true,
+      "outside_training_feature_indices": [],
+      "interpretation": "Unconstrained linear identifiability only. Nonnegative constraints/ridge can pick coefficients but do not add observations. Full rank is not evidence of causal or extrapolation accuracy.",
+      "confidence_probability": null
+    }
+  ],
+  "two_host_matched_comparison": [
+    {
+      "evaluation": "old/shape/regime_max",
+      "shapes": [
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "policies": {
+        "model_top1": {
+          "mean_loss": 0.007639429587166606,
+          "max_loss": 0.022918288761499817
+        },
+        "model_top2": {
+          "mean_loss": 0.0,
+          "max_loss": 0.0
+        },
+        "two_merged_hosts": {
+          "mean_loss": 0.0,
+          "max_loss": 0.0
+        }
+      },
+      "same_candidate_support": true,
+      "ideal_replay_not_deployment": true
+    },
+    {
+      "evaluation": "old/shape/residual_depth",
+      "shapes": [
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "policies": {
+        "model_top1": {
+          "mean_loss": 0.007639429587166606,
+          "max_loss": 0.022918288761499817
+        },
+        "model_top2": {
+          "mean_loss": 0.0,
+          "max_loss": 0.0
+        },
+        "two_merged_hosts": {
+          "mean_loss": 0.0,
+          "max_loss": 0.0
+        }
+      },
+      "same_candidate_support": true,
+      "ideal_replay_not_deployment": true
+    },
+    {
+      "evaluation": "old/shape/row_service",
+      "shapes": [
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "policies": {
+        "model_top1": {
+          "mean_loss": 0.007639429587166606,
+          "max_loss": 0.022918288761499817
+        },
+        "model_top2": {
+          "mean_loss": 0.0,
+          "max_loss": 0.0
+        },
+        "two_merged_hosts": {
+          "mean_loss": 0.0,
+          "max_loss": 0.0
+        }
+      },
+      "same_candidate_support": true,
+      "ideal_replay_not_deployment": true
+    },
+    {
+      "evaluation": "old/shape/retained_0",
+      "shapes": [
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "policies": {
+        "model_top1": {
+          "mean_loss": 0.007639429587166606,
+          "max_loss": 0.022918288761499817
+        },
+        "model_top2": {
+          "mean_loss": 0.0,
+          "max_loss": 0.0
+        },
+        "two_merged_hosts": {
+          "mean_loss": 0.0,
+          "max_loss": 0.0
+        }
+      },
+      "same_candidate_support": true,
+      "ideal_replay_not_deployment": true
+    },
+    {
+      "evaluation": "old/shape/retained_0.25",
+      "shapes": [
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "policies": {
+        "model_top1": {
+          "mean_loss": 0.007639429587166606,
+          "max_loss": 0.022918288761499817
+        },
+        "model_top2": {
+          "mean_loss": 0.0,
+          "max_loss": 0.0
+        },
+        "two_merged_hosts": {
+          "mean_loss": 0.0,
+          "max_loss": 0.0
+        }
+      },
+      "same_candidate_support": true,
+      "ideal_replay_not_deployment": true
+    },
+    {
+      "evaluation": "old/shape/retained_0.5",
+      "shapes": [
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "policies": {
+        "model_top1": {
+          "mean_loss": 0.007639429587166606,
+          "max_loss": 0.022918288761499817
+        },
+        "model_top2": {
+          "mean_loss": 0.0,
+          "max_loss": 0.0
+        },
+        "two_merged_hosts": {
+          "mean_loss": 0.0,
+          "max_loss": 0.0
+        }
+      },
+      "same_candidate_support": true,
+      "ideal_replay_not_deployment": true
+    },
+    {
+      "evaluation": "old/shape/retained_0.75",
+      "shapes": [
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "policies": {
+        "model_top1": {
+          "mean_loss": 0.007639429587166606,
+          "max_loss": 0.022918288761499817
+        },
+        "model_top2": {
+          "mean_loss": 0.0,
+          "max_loss": 0.0
+        },
+        "two_merged_hosts": {
+          "mean_loss": 0.0,
+          "max_loss": 0.0
+        }
+      },
+      "same_candidate_support": true,
+      "ideal_replay_not_deployment": true
+    },
+    {
+      "evaluation": "old/shape/retained_1",
+      "shapes": [
+        [
+          4,
+          64,
+          8192,
+          512
+        ],
+        [
+          4,
+          256,
+          8192,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "policies": {
+        "model_top1": {
+          "mean_loss": 0.007639429587166606,
+          "max_loss": 0.022918288761499817
+        },
+        "model_top2": {
+          "mean_loss": 0.0,
+          "max_loss": 0.0
+        },
+        "two_merged_hosts": {
+          "mean_loss": 0.0,
+          "max_loss": 0.0
+        }
+      },
+      "same_candidate_support": true,
+      "ideal_replay_not_deployment": true
+    },
+    {
+      "evaluation": "primary/shape/regime_max",
+      "shapes": [
+        [
+          4,
+          64,
+          768,
+          512
+        ],
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          1536,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "policies": {
+        "model_top1": {
+          "mean_loss": 0.01568369073099901,
+          "max_loss": 0.04595966189093037
+        },
+        "model_top2": {
+          "mean_loss": 0.0,
+          "max_loss": 0.0
+        },
+        "two_merged_hosts": {
+          "mean_loss": 0.0,
+          "max_loss": 0.0
+        }
+      },
+      "same_candidate_support": true,
+      "ideal_replay_not_deployment": true
+    },
+    {
+      "evaluation": "repeat/shape/regime_max",
+      "shapes": [
+        [
+          4,
+          64,
+          768,
+          512
+        ],
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          1536,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "policies": {
+        "model_top1": {
+          "mean_loss": 0.014815884040512484,
+          "max_loss": 0.03976715886446036
+        },
+        "model_top2": {
+          "mean_loss": 0.0,
+          "max_loss": 0.0
+        },
+        "two_merged_hosts": {
+          "mean_loss": 0.0,
+          "max_loss": 0.0
+        }
+      },
+      "same_candidate_support": true,
+      "ideal_replay_not_deployment": true
+    },
+    {
+      "evaluation": "primary/shape/residual_depth",
+      "shapes": [
+        [
+          4,
+          64,
+          768,
+          512
+        ],
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          1536,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "policies": {
+        "model_top1": {
+          "mean_loss": 0.01568369073099901,
+          "max_loss": 0.04595966189093037
+        },
+        "model_top2": {
+          "mean_loss": 0.0,
+          "max_loss": 0.0
+        },
+        "two_merged_hosts": {
+          "mean_loss": 0.0,
+          "max_loss": 0.0
+        }
+      },
+      "same_candidate_support": true,
+      "ideal_replay_not_deployment": true
+    },
+    {
+      "evaluation": "repeat/shape/residual_depth",
+      "shapes": [
+        [
+          4,
+          64,
+          768,
+          512
+        ],
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          1536,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "policies": {
+        "model_top1": {
+          "mean_loss": 0.014815884040512484,
+          "max_loss": 0.03976715886446036
+        },
+        "model_top2": {
+          "mean_loss": 0.0,
+          "max_loss": 0.0
+        },
+        "two_merged_hosts": {
+          "mean_loss": 0.0,
+          "max_loss": 0.0
+        }
+      },
+      "same_candidate_support": true,
+      "ideal_replay_not_deployment": true
+    },
+    {
+      "evaluation": "primary/shape/row_service",
+      "shapes": [
+        [
+          4,
+          64,
+          768,
+          512
+        ],
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          1536,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "policies": {
+        "model_top1": {
+          "mean_loss": 0.01568369073099901,
+          "max_loss": 0.04595966189093037
+        },
+        "model_top2": {
+          "mean_loss": 0.0,
+          "max_loss": 0.0
+        },
+        "two_merged_hosts": {
+          "mean_loss": 0.0,
+          "max_loss": 0.0
+        }
+      },
+      "same_candidate_support": true,
+      "ideal_replay_not_deployment": true
+    },
+    {
+      "evaluation": "repeat/shape/row_service",
+      "shapes": [
+        [
+          4,
+          64,
+          768,
+          512
+        ],
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          1536,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "policies": {
+        "model_top1": {
+          "mean_loss": 0.014815884040512484,
+          "max_loss": 0.03976715886446036
+        },
+        "model_top2": {
+          "mean_loss": 0.0,
+          "max_loss": 0.0
+        },
+        "two_merged_hosts": {
+          "mean_loss": 0.0,
+          "max_loss": 0.0
+        }
+      },
+      "same_candidate_support": true,
+      "ideal_replay_not_deployment": true
+    },
+    {
+      "evaluation": "primary/shape/retained_0",
+      "shapes": [
+        [
+          4,
+          64,
+          768,
+          512
+        ],
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          1536,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "policies": {
+        "model_top1": {
+          "mean_loss": 0.01568369073099901,
+          "max_loss": 0.04595966189093037
+        },
+        "model_top2": {
+          "mean_loss": 0.0,
+          "max_loss": 0.0
+        },
+        "two_merged_hosts": {
+          "mean_loss": 0.0,
+          "max_loss": 0.0
+        }
+      },
+      "same_candidate_support": true,
+      "ideal_replay_not_deployment": true
+    },
+    {
+      "evaluation": "repeat/shape/retained_0",
+      "shapes": [
+        [
+          4,
+          64,
+          768,
+          512
+        ],
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          1536,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "policies": {
+        "model_top1": {
+          "mean_loss": 0.014815884040512484,
+          "max_loss": 0.03976715886446036
+        },
+        "model_top2": {
+          "mean_loss": 0.0,
+          "max_loss": 0.0
+        },
+        "two_merged_hosts": {
+          "mean_loss": 0.0,
+          "max_loss": 0.0
+        }
+      },
+      "same_candidate_support": true,
+      "ideal_replay_not_deployment": true
+    },
+    {
+      "evaluation": "primary/shape/retained_0.25",
+      "shapes": [
+        [
+          4,
+          64,
+          768,
+          512
+        ],
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          1536,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "policies": {
+        "model_top1": {
+          "mean_loss": 0.01568369073099901,
+          "max_loss": 0.04595966189093037
+        },
+        "model_top2": {
+          "mean_loss": 0.0,
+          "max_loss": 0.0
+        },
+        "two_merged_hosts": {
+          "mean_loss": 0.0,
+          "max_loss": 0.0
+        }
+      },
+      "same_candidate_support": true,
+      "ideal_replay_not_deployment": true
+    },
+    {
+      "evaluation": "repeat/shape/retained_0.25",
+      "shapes": [
+        [
+          4,
+          64,
+          768,
+          512
+        ],
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          1536,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "policies": {
+        "model_top1": {
+          "mean_loss": 0.014815884040512484,
+          "max_loss": 0.03976715886446036
+        },
+        "model_top2": {
+          "mean_loss": 0.0,
+          "max_loss": 0.0
+        },
+        "two_merged_hosts": {
+          "mean_loss": 0.0,
+          "max_loss": 0.0
+        }
+      },
+      "same_candidate_support": true,
+      "ideal_replay_not_deployment": true
+    },
+    {
+      "evaluation": "primary/shape/retained_0.5",
+      "shapes": [
+        [
+          4,
+          64,
+          768,
+          512
+        ],
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          1536,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "policies": {
+        "model_top1": {
+          "mean_loss": 0.01568369073099901,
+          "max_loss": 0.04595966189093037
+        },
+        "model_top2": {
+          "mean_loss": 0.0,
+          "max_loss": 0.0
+        },
+        "two_merged_hosts": {
+          "mean_loss": 0.0,
+          "max_loss": 0.0
+        }
+      },
+      "same_candidate_support": true,
+      "ideal_replay_not_deployment": true
+    },
+    {
+      "evaluation": "repeat/shape/retained_0.5",
+      "shapes": [
+        [
+          4,
+          64,
+          768,
+          512
+        ],
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          1536,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "policies": {
+        "model_top1": {
+          "mean_loss": 0.014815884040512484,
+          "max_loss": 0.03976715886446036
+        },
+        "model_top2": {
+          "mean_loss": 0.0,
+          "max_loss": 0.0
+        },
+        "two_merged_hosts": {
+          "mean_loss": 0.0,
+          "max_loss": 0.0
+        }
+      },
+      "same_candidate_support": true,
+      "ideal_replay_not_deployment": true
+    },
+    {
+      "evaluation": "primary/shape/retained_0.75",
+      "shapes": [
+        [
+          4,
+          64,
+          768,
+          512
+        ],
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          1536,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "policies": {
+        "model_top1": {
+          "mean_loss": 0.01568369073099901,
+          "max_loss": 0.04595966189093037
+        },
+        "model_top2": {
+          "mean_loss": 0.0,
+          "max_loss": 0.0
+        },
+        "two_merged_hosts": {
+          "mean_loss": 0.0,
+          "max_loss": 0.0
+        }
+      },
+      "same_candidate_support": true,
+      "ideal_replay_not_deployment": true
+    },
+    {
+      "evaluation": "repeat/shape/retained_0.75",
+      "shapes": [
+        [
+          4,
+          64,
+          768,
+          512
+        ],
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          1536,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "policies": {
+        "model_top1": {
+          "mean_loss": 0.014815884040512484,
+          "max_loss": 0.03976715886446036
+        },
+        "model_top2": {
+          "mean_loss": 0.0,
+          "max_loss": 0.0
+        },
+        "two_merged_hosts": {
+          "mean_loss": 0.0,
+          "max_loss": 0.0
+        }
+      },
+      "same_candidate_support": true,
+      "ideal_replay_not_deployment": true
+    },
+    {
+      "evaluation": "primary/shape/retained_1",
+      "shapes": [
+        [
+          4,
+          64,
+          768,
+          512
+        ],
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          1536,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "policies": {
+        "model_top1": {
+          "mean_loss": 0.01568369073099901,
+          "max_loss": 0.04595966189093037
+        },
+        "model_top2": {
+          "mean_loss": 0.0,
+          "max_loss": 0.0
+        },
+        "two_merged_hosts": {
+          "mean_loss": 0.0,
+          "max_loss": 0.0
+        }
+      },
+      "same_candidate_support": true,
+      "ideal_replay_not_deployment": true
+    },
+    {
+      "evaluation": "repeat/shape/retained_1",
+      "shapes": [
+        [
+          4,
+          64,
+          768,
+          512
+        ],
+        [
+          4,
+          64,
+          1024,
+          512
+        ],
+        [
+          4,
+          64,
+          1536,
+          512
+        ],
+        [
+          4,
+          512,
+          4096,
+          512
+        ]
+      ],
+      "policies": {
+        "model_top1": {
+          "mean_loss": 0.014815884040512484,
+          "max_loss": 0.03976715886446036
+        },
+        "model_top2": {
+          "mean_loss": 0.0,
+          "max_loss": 0.0
+        },
+        "two_merged_hosts": {
+          "mean_loss": 0.0,
+          "max_loss": 0.0
+        }
+      },
+      "same_candidate_support": true,
+      "ideal_replay_not_deployment": true
+    }
+  ],
+  "fit_performed": false,
+  "causal_hardware_attribution": false,
+  "compiler_admission": false,
+  "sources": {
+    "/Users/neo/code/llm-serving/EDM-IR/tools/audit_post_gpu_support.py": "cdff90e2ee0b69f6a31ecb055993b65a0671e166846900166affd9102d815881",
+    "/Users/neo/code/llm-serving/EDM-IR/edmir/compiler/prediction_support.py": "47b9934284e4b9de5ab576f97ebfee09f49a3152a180057db91ab06ff33eb01e",
+    "/Users/neo/code/llm-serving/experiments/2026-10-25-post-gpu-revision/run-02/analysis-seal.json": "89ac21f3a0c13acacfd03be17c6f7dba66b3cb120557261d2a93104a695fb41a"
+  }
+}

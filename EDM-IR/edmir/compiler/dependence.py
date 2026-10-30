@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from .model import BUFFER_ROLES, OP_KINDS, QUEUE_KINDS, Program
+from .execution_policy import dependency_policy, UNIFORM_PEER_POLICY
 
 
 EXTERNAL_BUFFER_ROLES = frozenset({"input", "weight"})
@@ -64,6 +65,10 @@ def derive_dependencies(program: Program) -> DependenceResult:
     """
 
     errors: list[str] = []
+    try:
+        policy = dependency_policy(program)
+    except ValueError as exc:
+        return DependenceResult((), tuple(op.id for op in program.ops), (str(exc),))
     buffer_map = program.buffer_map()
     op_map = program.op_map()
     if len(buffer_map) != len(program.buffers):
@@ -116,7 +121,9 @@ def derive_dependencies(program: Program) -> DependenceResult:
         elif op.kind == "barrier" and op.queue != "control":
             errors.append(f"barrier {op.id} must use the control queue")
 
-        for resource in op.resources():
+        resources = ((f"rank{op.rank}.compute",) if policy == UNIFORM_PEER_POLICY
+                     else op.resources())
+        for resource in resources:
             previous = last_on_resource.get(resource)
             if previous is not None:
                 add(previous, op.id, "queue")

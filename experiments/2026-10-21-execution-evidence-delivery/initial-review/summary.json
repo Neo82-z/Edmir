@@ -1,0 +1,127 @@
+{
+  "schema": "edmir.execution-review.v1",
+  "cases": [
+    {
+      "shape": [
+        4,
+        64,
+        1024,
+        512
+      ],
+      "path": "p4-m64-k1024-n512.json",
+      "decision": "insufficient_evidence",
+      "choice": null,
+      "historical_best_observed": [
+        "splitk2"
+      ],
+      "unmeasured_candidates": []
+    },
+    {
+      "shape": [
+        4,
+        64,
+        4096,
+        2048
+      ],
+      "path": "p4-m64-k4096-n2048.json",
+      "decision": "insufficient_evidence",
+      "choice": null,
+      "historical_best_observed": [
+        "host"
+      ],
+      "unmeasured_candidates": [
+        "direct_groupedn2",
+        "splitk16_groupedn2",
+        "splitk2_groupedn2",
+        "splitk4_groupedn2",
+        "splitk8_groupedn2"
+      ]
+    },
+    {
+      "shape": [
+        4,
+        64,
+        8192,
+        512
+      ],
+      "path": "p4-m64-k8192-n512.json",
+      "decision": "insufficient_evidence",
+      "choice": null,
+      "historical_best_observed": [
+        "splitk8"
+      ],
+      "unmeasured_candidates": []
+    },
+    {
+      "shape": [
+        4,
+        256,
+        8192,
+        512
+      ],
+      "path": "p4-m256-k8192-n512.json",
+      "decision": "insufficient_evidence",
+      "choice": null,
+      "historical_best_observed": [
+        "splitk4"
+      ],
+      "unmeasured_candidates": [
+        "direct_groupedn2",
+        "splitk16_groupedn2",
+        "splitk2_groupedn2",
+        "splitk4_groupedn2",
+        "splitk8_groupedn2"
+      ]
+    },
+    {
+      "shape": [
+        4,
+        512,
+        4096,
+        512
+      ],
+      "path": "p4-m512-k4096-n512.json",
+      "decision": "insufficient_evidence",
+      "choice": null,
+      "historical_best_observed": [
+        "splitk2"
+      ],
+      "unmeasured_candidates": [
+        "direct_groupedn2",
+        "splitk16_groupedn2",
+        "splitk2_groupedn2",
+        "splitk4_groupedn2",
+        "splitk8_groupedn2"
+      ]
+    }
+  ],
+  "old_shapes_checked": 41,
+  "candidate_ledgers_checked": 451,
+  "scope": "static local execution review, not predictor accuracy validation",
+  "new_training_runs": 0,
+  "new_gpu_runs": 0,
+  "independent_validation": false,
+  "elapsed_seconds": 0.2101206670049578,
+  "source_evidence": {
+    "experiments/2026-08-29-a100-grouped-n-plan/raw/extracted-v2/2026-08-29-g2/m64-n128/results.csv": "c7b606f8071190515e1d57a039c480cdf1db42b7e542c6df1f6e470395dad48d",
+    "experiments/2026-08-29-a100-grouped-n-plan/raw/extracted-v2/2026-08-29-g2/m64-n256/results.csv": "def0ea9071600ff6c85475edfead1d0be81427f7c5e0cad2e0459b5a0552ee5c",
+    "experiments/2026-08-29-a100-grouped-n-plan/raw/extracted-v2/2026-08-29-g2/m64-n512/results.csv": "275a951be305d5504c0d6f9ad4e73e4c3acd75f73a0c417dadc63123d6636665",
+    "experiments/2026-08-29-a100-grouped-n-plan/raw/extracted-v2/2026-08-29-g2/m64-n1024/results.csv": "a1c661f0691f6eb73fa6f245a6006bf439a1ecf8500b71fe638ab5c61aa4c599",
+    "experiments/2026-08-29-a100-grouped-n-plan/raw/extracted-v2/2026-08-29-g2/m64-n2048/results.csv": "c7ecd13c5ea5f32e4b91180b1805554aef4dd8e697b0f6ccbcf6cc5fc9420d06",
+    "experiments/2026-08-29-a100-grouped-n-plan/raw/extracted-v2/2026-08-29-g2/m32-n512/results.csv": "ff21158fb86c139b5573a938eab7ca5cabe78fa61e4c50a7c147da6dabd5174f",
+    "experiments/2026-08-29-a100-grouped-n-plan/raw/extracted-v2/2026-08-29-g2/m128-n512/results.csv": "f52a42292184c559797988fe8c02026c0fdc09345f3c5a1fe607bd0f75de4188",
+    "experiments/2026-08-29-a100-grouped-n-plan/raw/extracted-v2/2026-08-29-g2/m256-n512-longk/results.csv": "2867f7ffafa739c9bcae844e4df13f841d38f5654490a10c7b760453d3103020",
+    "experiments/2026-08-29-a100-grouped-n-plan/raw/extracted-v2/2026-08-29-g2/m512-n512-longk/results.csv": "ac2693d1866752db1098bafecec01e35a58eab3fd8374c458927d2fcaffdbea0",
+    "experiments/2026-10-21-round-two-error-audit/verified/outer_errors.json": "f3815c659b18ec49428a2ea3bb0073ae05bfd18248eba1531aa77c2c2373fdc1",
+    "experiments/2026-10-20-offline-predictor/data/manifest.json": "bf237f25dc73e71721f02871e6639ef1eb0380d5b88534974014246dc57f6f72",
+    "experiments/2026-10-20-offline-predictor/data/selector_measurements.jsonl": "fa98a7a05ca858730029f0331c86a549adc294495d8c5beeea57f229a5659c7a"
+  },
+  "files": {
+    "mechanism_diagnosis.json": "f0bb36ea45d5d47d8769295741714403fe28fcc918caf33fa08e6d67d4f43892",
+    "p4-m256-k8192-n512.json": "e3aa9d8917c8ea9d0b9b5704e5cb3e6d108a80fc7a1f627a67d17e46a815a7f6",
+    "p4-m512-k4096-n512.json": "e42473e119acd31daae0dd77c0e3e23aaf48f0ac2d992435f950835a70e1e8b9",
+    "p4-m64-k1024-n512.json": "b3fa9c2d3abe636362dbdb9b616bc1c22632b84efbfbfaf08fe911b6ecd56ab5",
+    "p4-m64-k4096-n2048.json": "34eb31998974eb9b0293fb14e13f35449d18c20a1ccfc3c62b6fc346310d6afe",
+    "p4-m64-k8192-n512.json": "856d995b447ccecec65306813ce1d7b854390df814299f12d51edab2c6ca04ab"
+  }
+}

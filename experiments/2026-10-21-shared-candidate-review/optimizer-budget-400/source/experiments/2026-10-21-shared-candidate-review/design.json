@@ -1,0 +1,15 @@
+{
+  "status": "Fixed local engineering trials on an already inspected archive, not independent validation",
+  "variants": ["shared_linear_latency", "shared_linear_cost", "shared_mlp_cost"],
+  "prior": "Existing additive selector refit only on the current training fold, including its existing inner CV. Empirical timing prior derived from counts, not a physical timing identity.",
+  "residual": "One shared numerical scorer across all candidates, 18 standardized static features. Linear residual control; tanh hidden width 8 for learned interactions, with a linear skip connection.",
+  "loss": "Equal weight per shape. Log-latency squared error with half mass on host and half across observed fused candidates; plus exact expected relative regret over observed candidates (coefficient 0 for latency control, 1 otherwise); plus 0.001 L2 regularization.",
+  "policy": "softmin(log predicted latency / 0.05); these weights are not calibrated probabilities",
+  "training": "Analytic-gradient L-BFGS-B, at most 400 iterations and 900 function evaluations per start. Seeds 0 and 1 for nonlinear starts; select by training objective only. No outer-label hyperparameter search.",
+  "limits": {"fit_seconds": 30, "cache_entries": 128, "variant_seconds": 600, "review_process_seconds": 1800},
+  "inference": "Static candidates only; same hardware, host identity, axis domain and grouped-N support guards as before. Canonical ordering, exact ties prefer host then lexical family name. No near-tie margin.",
+  "acceptance": "Unchanged primary, leave-K, 328 deletion decisions, previous attacks and 34 one-percent stresses for every variant; additionally require gradient, missing-label, order/subset stability, serialization and bounded-runtime tests.",
+  "stop_rule": "Report all three predeclared results. Do not change features or objective in response to outer errors. Do not promote to default compiler or rewrite the frozen GPU package.",
+  "new_gpu_operations": 0,
+  "new_independent_labels": 0
+}

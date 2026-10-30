@@ -1,0 +1,159 @@
+{
+  "schema": "edmir.selector-strict-review-decision.v1",
+  "date": "2026-10-21",
+  "audit_round_complete": true,
+  "model_judgment_resolved": false,
+  "server_ready": false,
+  "compiler_admission": false,
+  "decision_scope": "Review conclusion only; no GPU launcher was invoked or modified.",
+  "original_primary_gate_passed": true,
+  "original_gate_limitation": "Priority check only rejected false host choices; it did not reject false fused choices. Original thresholds and metrics are preserved.",
+  "candidate": "interactions_joint",
+  "unresolved_evidence": {
+    "priority_regressions_over_five_percent": [
+      {
+        "shape": [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        "choice": "splitk4",
+        "regret": 0.11715481171548126
+      }
+    ],
+    "leave_k_out_metrics": {
+      "mean_regret": 0.04568411411020698,
+      "max_regret": 0.3956621312137951,
+      "host_regressions": 1
+    },
+    "most_sensitive_correct_priority_choice": {
+      "target": "host",
+      "observed_regret": 0.18126803835769478,
+      "success": true,
+      "epsilon_log": 0.00720789643777714,
+      "max_upward_relative_label_change": 0.0072339358488349775,
+      "min_multiplicative_factor": 0.992818018147156,
+      "primal_violation": 2.0816681711721685e-17,
+      "dual_residual": 6.938893903907228e-18,
+      "duality_gap": 8.673617379884035e-19,
+      "dual_sign_or_free_bound_violation": 0.0,
+      "complementarity_max_abs": 8.64006719652183e-18,
+      "refit_confirmed_choice": "host",
+      "refit_score_max_error": 6.106226635438361e-16
+    },
+    "group_feature_collision": {
+      "features": [
+        -2.0,
+        -3.0
+      ],
+      "rows": [
+        {
+          "shape": [
+            4,
+            64,
+            1024,
+            1024
+          ],
+          "family": "direct_groupedn2",
+          "ratio": 1.1416707376648754
+        },
+        {
+          "shape": [
+            4,
+            64,
+            2048,
+            1024
+          ],
+          "family": "splitk2_groupedn2",
+          "ratio": 1.0921052631578947
+        },
+        {
+          "shape": [
+            4,
+            64,
+            4096,
+            1024
+          ],
+          "family": "splitk4_groupedn2",
+          "ratio": 1.0964192465497948
+        },
+        {
+          "shape": [
+            4,
+            64,
+            8192,
+            1024
+          ],
+          "family": "splitk8_groupedn2",
+          "ratio": 0.8931593794076164
+        }
+      ],
+      "unavoidable_max_abs_log_error_at_least": 0.12274149326395567,
+      "unavoidable_multiplicative_error_factor_at_least": 1.130592117489821
+    },
+    "fresh_independent_performance_workloads": 0,
+    "historical_target": "legacy host wall timer; per-source CUTLASS host",
+    "targets_without_matched_labels_in_this_bundle": [
+      "prepared execution",
+      "merged host",
+      "compiler per-source cuBLAS fallback"
+    ]
+  },
+  "verification": {
+    "source_and_result_hashes_checked": true,
+    "numerical_reproduction_exact": true,
+    "tests_passed": {
+      "audit_tests": 6,
+      "selection_tests": 35,
+      "splitk_tests": 7,
+      "reliability_tests": 13
+    },
+    "total_tests_passed": 61,
+    "historical_csv_rows_verified": 599,
+    "frozen_package_sha256": "20e4df1a58ab838541d4212f4d99035b6312cf7ce93ae348327c138e2df4d1c5",
+    "kernel_template_build_passed": false
+  },
+  "next_revision_requirements": [
+    "Separate K and q in grouped-N cost representation; preserve the paired same-q denominator.",
+    "Represent the actual tile/thread geometry and serial split-K epilogue dependencies; distinguish source-derived counts from unknown service times.",
+    "Require symmetric checks for false host and false fused decisions; retain mean, worst-case and fixed-policy controls.",
+    "Define a bounded support/uncertainty policy before collecting new labels; refusing a decision does not prove host is fastest.",
+    "Keep all changes local and experimental until a revised decision passes the agreed local checks."
+  ],
+  "evidence_directory": "/Users/neo/code/llm-serving/experiments/2026-10-20-selector-decision-audit/certified_recheck",
+  "evidence_sha256": {
+    "audit.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "audit.stdout.txt": "7c95d29930c191a923021972b51567c85f7ce5d7717160c26694a87ed6ff4076",
+    "audit_tests.stderr.txt": "2f0029ea3d07574e959e1f7ba9d8cc8cff38c3b22555d33feab46b684f0c21e9",
+    "audit_tests.stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "evidence.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "evidence.stdout.txt": "30f60c54c67631be427399d341651ee92671a1667eaaa97b1e54c082f11ec090",
+    "evidence_verification.json": "e6a7fe5d290aa7aa29a2a736993e1a3080568ae36316808019c940c5793d907c",
+    "progress.json": "fe9b54fee75c1edffc2570ee69148ae81efde4896efc55c1c1a49979b5e54c22",
+    "reliability_tests.stderr.txt": "9652e22b547cbc31d5a96de74b2badcb672bcd39efeda3e920d5c9c3fa7e0c78",
+    "reliability_tests.stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "results.json": "2df2fc2a3e603fe8cdbc10666be3565dbc3951675bc927dcf62a9ecddf601773",
+    "robustness.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "robustness.stdout.txt": "5c90be5bd892f26c1fa0ebe34e2c5ea85cf1947ee038ae934eec6a59b2ce8e18",
+    "robustness_results.json": "245a5deb7f96d3bf9e7cb00a95c38e772eaf8fdb0e9e7993f9fd61d56df268aa",
+    "selection_tests.stderr.txt": "cf18f2bd1f45d1ec6ccb73d56926acd03c107f5316cc209a19189d7b3d487849",
+    "selection_tests.stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "splitk_tests.stderr.txt": "43012119b753356e5a887dbd064869fe6c6a572b27202138ea5f3353626469b9",
+    "splitk_tests.stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "structural_results.json": "e1558ba66da8f44107807dad04dfb4e370171060a8490abc02e80501c222f2e8",
+    "structure.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "structure.stdout.txt": "dca495ebf6b887e97424a2e78c80c0f72440c09155233e61b6ec9e01f94a3c41"
+  },
+  "audit_source_sha256": {
+    "candidate_model.py": "6f082ae25e78794d86038361dee62e2fa126b1917ae377dedb7f83b8f3b16430",
+    "finalize_review.py": "3df0d7c333b4be7681594dbdf46bd312f4891be567f7ace4d7a8b64579b18f98",
+    "robustness_review.py": "da2992d421bb52e83ae8b932b288fef2d8d5a3c4f3d2c09033ab1e9ff79efa49",
+    "run_audit.py": "d562edbfb3821ff467f2ba6dafe176a38ad169b744290db1ffd35ebe3a8cc52c",
+    "run_local_review.py": "6803afa7807b425d96eea60ea7d080463be6d49a62d9954b908e11da5bd91b30",
+    "structural_review.py": "c784ecb367339f1f020abecb2e11e4d0fa6010e0c98319f03348f20eea5b29ef",
+    "test_audit.py": "a90c5a82c0e85ce3ee53fb5ffe7e08d5f0f3e9a473549c5c722e8e8755446eaf",
+    "test_robustness.py": "e74e2ba71b3c701d81cb03ba706e794d898ad38f349d71882021ec37c9144a65",
+    "verify_evidence.py": "db138eaa856d7cceffc493ad98861d750856dd23e05f7ff8305301f2b878a92f"
+  }
+}

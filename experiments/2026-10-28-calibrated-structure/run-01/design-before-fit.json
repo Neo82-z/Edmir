@@ -1,0 +1,343 @@
+{
+  "settings": {
+    "epochs": 1000,
+    "learning_rate": 0.003,
+    "weight_decay": 0.001,
+    "temperature": 0.05,
+    "seeds": [
+      0,
+      1
+    ],
+    "gradient_clip": 10.0,
+    "width": 8,
+    "max_seconds_per_seed": 20.0,
+    "schedule": "linear decay to 1% of initial LR",
+    "muon_adjust_lr_fn": "match_rms_adamw",
+    "network_dtype": "float32"
+  },
+  "jobs": [
+    [
+      "p4",
+      "legacy",
+      "original",
+      "adamw",
+      0
+    ],
+    [
+      "p4",
+      "legacy",
+      "original",
+      "adamw",
+      1
+    ],
+    [
+      "p4",
+      "legacy",
+      "original",
+      "adamw",
+      2
+    ],
+    [
+      "p4",
+      "legacy",
+      "original",
+      "adamw",
+      3
+    ],
+    [
+      "p4",
+      "legacy",
+      "original",
+      "muon",
+      0
+    ],
+    [
+      "p4",
+      "legacy",
+      "original",
+      "muon",
+      1
+    ],
+    [
+      "p4",
+      "legacy",
+      "original",
+      "muon",
+      2
+    ],
+    [
+      "p4",
+      "legacy",
+      "original",
+      "muon",
+      3
+    ],
+    [
+      "p4",
+      "calibrated",
+      "original",
+      "adamw",
+      0
+    ],
+    [
+      "p4",
+      "calibrated",
+      "original",
+      "adamw",
+      1
+    ],
+    [
+      "p4",
+      "calibrated",
+      "original",
+      "adamw",
+      2
+    ],
+    [
+      "p4",
+      "calibrated",
+      "original",
+      "adamw",
+      3
+    ],
+    [
+      "p4",
+      "calibrated",
+      "original",
+      "muon",
+      0
+    ],
+    [
+      "p4",
+      "calibrated",
+      "original",
+      "muon",
+      1
+    ],
+    [
+      "p4",
+      "calibrated",
+      "original",
+      "muon",
+      2
+    ],
+    [
+      "p4",
+      "calibrated",
+      "original",
+      "muon",
+      3
+    ],
+    [
+      "p4",
+      "calibrated",
+      "workload",
+      "adamw",
+      0
+    ],
+    [
+      "p4",
+      "calibrated",
+      "workload",
+      "adamw",
+      1
+    ],
+    [
+      "p4",
+      "calibrated",
+      "workload",
+      "adamw",
+      2
+    ],
+    [
+      "p4",
+      "calibrated",
+      "workload",
+      "adamw",
+      3
+    ],
+    [
+      "p4",
+      "calibrated",
+      "workload",
+      "muon",
+      0
+    ],
+    [
+      "p4",
+      "calibrated",
+      "workload",
+      "muon",
+      1
+    ],
+    [
+      "p4",
+      "calibrated",
+      "workload",
+      "muon",
+      2
+    ],
+    [
+      "p4",
+      "calibrated",
+      "workload",
+      "muon",
+      3
+    ],
+    [
+      "p8",
+      "legacy",
+      "original",
+      "adamw",
+      0
+    ],
+    [
+      "p8",
+      "legacy",
+      "original",
+      "adamw",
+      1
+    ],
+    [
+      "p8",
+      "legacy",
+      "original",
+      "adamw",
+      2
+    ],
+    [
+      "p8",
+      "legacy",
+      "original",
+      "adamw",
+      3
+    ],
+    [
+      "p8",
+      "legacy",
+      "original",
+      "muon",
+      0
+    ],
+    [
+      "p8",
+      "legacy",
+      "original",
+      "muon",
+      1
+    ],
+    [
+      "p8",
+      "legacy",
+      "original",
+      "muon",
+      2
+    ],
+    [
+      "p8",
+      "legacy",
+      "original",
+      "muon",
+      3
+    ],
+    [
+      "p8",
+      "calibrated",
+      "original",
+      "adamw",
+      0
+    ],
+    [
+      "p8",
+      "calibrated",
+      "original",
+      "adamw",
+      1
+    ],
+    [
+      "p8",
+      "calibrated",
+      "original",
+      "adamw",
+      2
+    ],
+    [
+      "p8",
+      "calibrated",
+      "original",
+      "adamw",
+      3
+    ],
+    [
+      "p8",
+      "calibrated",
+      "original",
+      "muon",
+      0
+    ],
+    [
+      "p8",
+      "calibrated",
+      "original",
+      "muon",
+      1
+    ],
+    [
+      "p8",
+      "calibrated",
+      "original",
+      "muon",
+      2
+    ],
+    [
+      "p8",
+      "calibrated",
+      "original",
+      "muon",
+      3
+    ]
+  ],
+  "job_count": 40,
+  "worker_timeout_seconds": 60,
+  "total_seconds_cap": 600,
+  "purpose": "retrospective development; one fixed pass, no held-out driven retries",
+  "data_sha256": "de3b53d2b70ba7af8a354a03d84565a68c7119f950a04b964a35baffd68f4cc7",
+  "source_hashes": {
+    "EDM-IR/edmir/compiler/calibrated_candidate_selection.py": "c83c85c2491f08a71d54cb095a4b5f8b13bd0a783bfbf959dbc7f8c2613519d4",
+    "EDM-IR/tools/review_calibrated_structure.py": "c53e2e12e673d0455ba3007952d89e41db40d3b25d5cf3c9123fe28a62c0526e",
+    "EDM-IR/tests/calibrated_candidate_selection_test.py": "e6bb4b02ba2325b251d38f49d8de782232a0bd0681236bb4cedfeee8f2726fa9",
+    "experiments/2026-10-28-precision-scoring/datasets-with-evidence-contracts.json": "de3b53d2b70ba7af8a354a03d84565a68c7119f950a04b964a35baffd68f4cc7"
+  },
+  "protected_files": {
+    "experiments/2026-10-28-shape-evaluation/frozen/descriptions.json": "dcd9232dd8c2660553cafd56f890aeaa1e02519ed402e42c72d4bfb8ce65cc76",
+    "experiments/2026-10-28-shape-evaluation/frozen/protocol.json.sha256": "926b687bf78d183f54f013bab320ce9ef264c083fcec2432ddaeec8d0d4a7807",
+    "experiments/2026-10-28-shape-evaluation/frozen/descriptions.json.sha256": "bdae7c5d2540c05035254db0a4f77f9ace23d4df93d1c132b2beb1be69556038",
+    "experiments/2026-10-28-shape-evaluation/frozen/protocol.json": "3e2e8b03d31b8508c620029d32373135a2387b042ed68100b0eaa667270dfecf",
+    "EDM-IR/edmir/compiler/shape_decision_model.py": "6b428f0f56e7ffe01766d355817633aafc8fd5e16d45242ce20fc7a5ee302acb",
+    "experiments/2026-10-20-offline-predictor/data/manifest.json": "bf237f25dc73e71721f02871e6639ef1eb0380d5b88534974014246dc57f6f72",
+    "experiments/2026-10-20-offline-predictor/data/selector_measurements.jsonl": "fa98a7a05ca858730029f0331c86a549adc294495d8c5beeea57f229a5659c7a",
+    "experiments/2026-10-28-shape-evaluation/historical-pilot/linear_decision-fold0.json": "9c9928d79e2ecdd5d55980a2af3ec03d80aff51c7969a3b7ecb6598170f3fb20",
+    "experiments/2026-10-28-shape-evaluation/historical-pilot/linear_latency-fold3.json": "bf9f9925a87ce8f69a5ea90e15cd547b593a4dc29adce6395e2029547b81082c",
+    "experiments/2026-10-28-shape-evaluation/historical-pilot/mlp_decision-fold2.json": "6da561efa2f3807f61935c63086ee6db0a270e1b91efb604477e1f2caa092196",
+    "experiments/2026-10-28-shape-evaluation/historical-pilot/results.json": "05e71f68709467904d73b0360bc2b38779af5cb7c91e5b2365179b5ae127e7ec",
+    "experiments/2026-10-28-shape-evaluation/historical-pilot/mlp_decision-fold3.json": "8edcda8fd364f196f1c1dec093b11b1418dd635871233ca040e8c7a760237563",
+    "experiments/2026-10-28-shape-evaluation/historical-pilot/linear_latency-fold2.json": "e5935e5c82d850b2258d1edf5f7c1159a06f791feeb3e0b593693c77f9b7f90e",
+    "experiments/2026-10-28-shape-evaluation/historical-pilot/linear_decision-fold1.json": "f3023d7fd0596bed39fe493ddb35f4da75944a219a045fa530859523d002c602",
+    "experiments/2026-10-28-shape-evaluation/historical-pilot/linear_latency-fold1.json": "bd3d54a5bda9c94b67e0baacba9a37484e1f7bf3d7b537dfb8b5a1871cde30cd",
+    "experiments/2026-10-28-shape-evaluation/historical-pilot/linear_decision-fold2.json": "4bbfa747bd76585eeff050a594f616373886313637be71dff7bc5665ead51cd9",
+    "experiments/2026-10-28-shape-evaluation/historical-pilot/design-before-fit.json": "6c31b9eb7dd72afcd6e1b372f791e9ef108a676545b5e4b50ef13938e0b72955",
+    "experiments/2026-10-28-shape-evaluation/historical-pilot/mlp_decision-fold0.json": "bf802cbb471662faac1e9f37141eb74725f4a4a676db289b2e5bf1c58b61c3dd",
+    "experiments/2026-10-28-shape-evaluation/historical-pilot/mlp_decision-fold1.json": "488f1e876018da7b8600e5df3bde52f326c5b5434abad84426cea18d6974cd13",
+    "experiments/2026-10-28-shape-evaluation/historical-pilot/progress.json": "d90323aef24c31699de54c4f53ed5b41c78fce9975c9e77af5ac2aa214943d13",
+    "experiments/2026-10-28-shape-evaluation/historical-pilot/linear_decision-fold3.json": "e244b428961496c1b25c9d246a7092b7223fa9922c72b5a7a92f00805f249f51",
+    "experiments/2026-10-28-shape-evaluation/historical-pilot/linear_latency-fold0.json": "a2f2289a711ed03d5a653dc85a0336ee01daf8eb760be7b4dceed5a4d2573b8f"
+  },
+  "frozen_six_used": false,
+  "new_gpu_cost": 0,
+  "controls": "same architecture, seeds, schedule; isolate loss then host basis; AdamW/Muon each",
+  "muon": "official torch.optim.Muon hidden.weight only, match_rms_adamw; scalar AdamW; actual updates logged",
+  "optimizer_limit": "RMS heuristic does not guarantee equal realized effective step; no best-LR search",
+  "host_workload_basis": "existing seven empirical terms plus normalized remote MK and padded MKN counts; NNLS; training-fold ridge",
+  "calibrated_loss": "weighted log MSE + symmetric pair log-gap error + tau^2 KL(cost soft target || softmin predicted time)",
+  "all_candidate_evaluation": "always report provisional regret on complete measured valid subset; never count abstention as zero regret"
+}

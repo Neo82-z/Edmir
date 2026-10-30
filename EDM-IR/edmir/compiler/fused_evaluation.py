@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import csv
+import math
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, Sequence
@@ -20,6 +21,16 @@ class FusedMeasurement:
     remote_a_replay: int
     split_k_slices: int
     estimated_ctas_per_op: int
+
+    def validate(self) -> None:
+        if self.family not in FUSED_FAMILIES:
+            raise ValueError(f"unsupported fused family {self.family!r}")
+        for name in ("rows_per_peer", "k", "n", "remote_input_bytes", "remote_a_replay", "split_k_slices"):
+            value = getattr(self, name)
+            if type(value) is not int or value <= 0:
+                raise ValueError(f"{name} must be a positive integer")
+        if not math.isfinite(self.measured_ms) or self.measured_ms <= 0:
+            raise ValueError("measurement latency must be finite and positive")
 
     @property
     def shape(self) -> tuple[int, int, int]:
@@ -57,6 +68,7 @@ def _group_by_shape(
 ) -> dict[tuple[int, int, int], dict[str, FusedMeasurement]]:
     groups: dict[tuple[int, int, int], dict[str, FusedMeasurement]] = {}
     for row in measurements:
+        row.validate()
         families = groups.setdefault(row.shape, {})
         if row.family in families:
             raise ValueError(f"duplicate {row.family} measurement for shape {row.shape}")
@@ -131,6 +143,8 @@ def fit_and_evaluate_fused_boundary(
 ) -> dict:
     train_rows = tuple(train)
     heldout_rows = tuple(heldout)
+    if {row.shape for row in train_rows} & {row.shape for row in heldout_rows}:
+        raise ValueError("training and held-out workloads overlap")
     max_direct_k = fit_fused_k_boundary(train_rows)
     split_values = sorted({row.k for row in train_rows if row.k > max_direct_k})
     return {

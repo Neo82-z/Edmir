@@ -1,0 +1,54 @@
+{
+  "schema": "edmir.regime-collection-acceptance.v1",
+  "frozen_before_new_GPU_measurement": true,
+  "primary_model": "regime_max",
+  "challenger": "residual_depth",
+  "automatic_promotion": false,
+  "compiler_admission": false,
+  "scope": "Targeted mechanism validation; shapes chosen after inspecting development data, not an independent generalization benchmark.",
+  "execution": {
+    "package_sha256": "046cbfdac9750bf63d80b5800db9a67ea90dc67ecc95b98eebdaac39423b3f4d",
+    "preserve_measured_source_and_policy": true,
+    "current_repaired_runtime_tested": false,
+    "primary_warmup": 20,
+    "diagnostic_warmup": 200,
+    "iterations": 100,
+    "fresh_process_blocks": 3,
+    "profiler_in_primary_timing": false,
+    "discarded_samples": 0
+  },
+  "stop_and_preserve_logs": [
+    "Hardware or P2P topology does not match package requirements",
+    "Build, source identity, input identity or numerical correctness check fails",
+    "Runtime environment changes during a resumed stage",
+    "Insufficient time to start the next bounded process"
+  ],
+  "quality": {
+    "between_process_max_over_min_above": 1.10,
+    "within_process_last20_over_first20_outside": [0.90, 1.10],
+    "algorithm_configuration_must_be_constant_across_three_processes": true,
+    "flag_at_configuration_level": true,
+    "keep_all_raw_samples_and_flagged_errors": true,
+    "report_stable_subset_separately": true,
+    "process_direction_disagreement_is_reported_not_deleted": true,
+    "sample_ranges_are_not_confidence_intervals": true
+  },
+  "required_analysis_before_any_refit": [
+    "Score exactly frozen predictions; do not rescale against fresh anchor labels first",
+    "Compare repeat anchors with old medians, raw process directions, complete algorithm configurations and environment records",
+    "Report absolute percentage errors per candidate and macro averaged by shape, plus maximum error",
+    "Report all observed candidate pairs, signed predicted and measured differences, agreement across process blocks and relative loss of wrong directions",
+    "Report choices separately for all measured stable candidates, compiler host versus fused, and fused only",
+    "Report incomplete or quality-excluded candidates and restrict all optimum claims to the observed comparable subset",
+    "Keep warmup diagnostics separate from primary metrics",
+    "Keep changed environments or algorithms explicit; never silently pool or relabel the new context as the old one"
+  ],
+  "carried_forward_development_checks": {
+    "macro_shape_mean_absolute_percentage_error_at_most": 0.10,
+    "max_absolute_percentage_error_at_most": 0.25,
+    "wrong_pairs_with_choice_loss_above_0_10": 0,
+    "passing_is_not_sufficient_for_promotion_or_generalization": true
+  },
+  "challenger_requirement": "No promotion based only on mean error. Inspect direction count and maximum/mean choice loss against the primary on the same measured subset, plus the specific M256 and host failures. Any tradeoff requires an explicit new review; no automatic model or threshold change.",
+  "after_frozen_review": "Preserve this package and results. Any refit, new expression, new runtime or altered quality rule receives a separate experiment and identity."
+}

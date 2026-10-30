@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 
 from ..model import Program
+from ..execution_policy import dependency_policy, UNIFORM_PEER_POLICY
 from ..target import Target
 from ..verify import verify_program
 from .base import BackendArtifact
@@ -82,6 +83,9 @@ class CppManifestBackend:
         if not has_fused and target.communication_api != "host_nccl":
             raise ValueError("C++ runtime v0.1 implements only communication_api=host_nccl")
         target = target.resolve(program.problem, gemm_m=program.chunk_rows)
+        policy = dependency_policy(program)
+        if policy == UNIFORM_PEER_POLICY and (target.gemm_provider != "cutlass" or target.arch != "sm_80"):
+            raise ValueError("uniform peer policy requires the SM80 CUTLASS runtime")
         if target.world_size != program.problem.world_size:
             raise ValueError("target world size does not match Program")
         report = verify_program(program.problem, program)
@@ -126,6 +130,8 @@ class CppManifestBackend:
             "inline constexpr CommunicationApi kCommunicationApi = "
             f"{COMMUNICATION_API_ENUM[target.communication_api]};",
             f"inline constexpr std::string_view kStrategy = {_cpp_string(program.strategy)};",
+            "inline constexpr DependencyPolicy kDependencyPolicy = DependencyPolicy::"
+            + ("kUniformImmutablePeerV1;" if policy == UNIFORM_PEER_POLICY else "kResourceQueuesV1;"),
             "inline constexpr ProblemDesc kProblem{"
             f"{program.problem.world_size}, {program.problem.rows_per_peer}, "
             f"{program.problem.k}, {program.problem.n}, {DTYPE_ENUM[program.problem.dtype]}"
@@ -197,6 +203,7 @@ class CppManifestBackend:
                 "      std::span<const AccessDesc>{kAccesses},",
                 "      std::span<const DependencyDesc>{kDependencies},",
                 "      kFusedSchedule,",
+                "      kDependencyPolicy,",
                 "  };",
                 "}",
                 "",

@@ -1,0 +1,135 @@
+{
+  "kind": "profiled_diagnostic_not_a_timing_label",
+  "profiler": true,
+  "job": {
+    "stage": "mechanisms",
+    "workload_id": "w004",
+    "shape": [
+      4,
+      512,
+      4096,
+      512
+    ],
+    "family": "splitk2",
+    "candidate_id": "splitk2@prepared",
+    "metadata_mode": "prepared",
+    "implementation_id": "direct_peer_cutlass_sm80_q2_g1_prepared_metadata_v2",
+    "executable": "mechanism_w004_splitk2",
+    "repetition": 0,
+    "trial_order": 78,
+    "ordinal": 78
+  },
+  "context": {
+    "package_sha256": "54aff5ff71ff1dbab33a90348e84ec9d3bc1ea8b755e11d30c6ebd777bd6edc5",
+    "build_sha256": "95790bd5fe5316377d131af7d623077f91350d0a0d440123554359ad6ea42f93",
+    "topology": "\tGPU0\tGPU1\tGPU2\tGPU3\tNIC0\tNIC1\tNIC2\tNIC3\tCPU Affinity\tNUMA Affinity\tGPU NUMA ID\nGPU0\t X \tNV12\tNV12\tNV12\tNODE\tNODE\tSYS\tSYS\t0-63,128-191\t0\t\tN/A\nGPU1\tNV12\t X \tNV12\tNV12\tNODE\tNODE\tSYS\tSYS\t0-63,128-191\t0\t\tN/A\nGPU2\tNV12\tNV12\t X \tNV12\tNODE\tNODE\tSYS\tSYS\t0-63,128-191\t0\t\tN/A\nGPU3\tNV12\tNV12\tNV12\t X \tSYS\tSYS\tNODE\tNODE\t64-127,192-255\t1\t\tN/A\nNIC0\tNODE\tNODE\tNODE\tSYS\t X \tPIX\tSYS\tSYS\t\t\t\t\nNIC1\tNODE\tNODE\tNODE\tSYS\tPIX\t X \tSYS\tSYS\t\t\t\t\nNIC2\tSYS\tSYS\tSYS\tNODE\tSYS\tSYS\t X \tPIX\t\t\t\t\nNIC3\tSYS\tSYS\tSYS\tNODE\tSYS\tSYS\tPIX\t X \t\t\t\t\n\nLegend:\n\n  X    = Self\n  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)\n  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node\n  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)\n  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)\n  PIX  = Connection traversing at most a single PCIe bridge\n  NV#  = Connection traversing a bonded set of # NVLinks\n\nNIC Legend:\n\n  NIC0: rocep44s0f0\n  NIC1: rocep44s0f1\n  NIC2: rocep169s0f0\n  NIC3: rocep169s0f1\n\n",
+    "raw_topology": "\t\u001b[4mGPU0\tGPU1\tGPU2\tGPU3\tNIC0\tNIC1\tNIC2\tNIC3\tCPU Affinity\tNUMA Affinity\tGPU NUMA ID\u001b[0m\nGPU0\t X \tNV12\tNV12\tNV12\tNODE\tNODE\tSYS\tSYS\t0-63,128-191\t0\t\tN/A\nGPU1\tNV12\t X \tNV12\tNV12\tNODE\tNODE\tSYS\tSYS\t0-63,128-191\t0\t\tN/A\nGPU2\tNV12\tNV12\t X \tNV12\tNODE\tNODE\tSYS\tSYS\t0-63,128-191\t0\t\tN/A\nGPU3\tNV12\tNV12\tNV12\t X \tSYS\tSYS\tNODE\tNODE\t64-127,192-255\t1\t\tN/A\nNIC0\tNODE\tNODE\tNODE\tSYS\t X \tPIX\tSYS\tSYS\t\t\t\t\nNIC1\tNODE\tNODE\tNODE\tSYS\tPIX\t X \tSYS\tSYS\t\t\t\t\nNIC2\tSYS\tSYS\tSYS\tNODE\tSYS\tSYS\t X \tPIX\t\t\t\t\nNIC3\tSYS\tSYS\tSYS\tNODE\tSYS\tSYS\tPIX\t X \t\t\t\t\n\nLegend:\n\n  X    = Self\n  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)\n  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node\n  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)\n  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)\n  PIX  = Connection traversing at most a single PCIe bridge\n  NV#  = Connection traversing a bonded set of # NVLinks\n\nNIC Legend:\n\n  NIC0: rocep44s0f0\n  NIC1: rocep44s0f1\n  NIC2: rocep169s0f0\n  NIC3: rocep169s0f1\n\n",
+    "inventory": "0, 00000000:0A:00.0\n1, 00000000:44:00.0\n2, 00000000:4A:00.0\n3, 00000000:84:00.0\n",
+    "device_uuid_inventory": "0, GPU-4765aba9-7066-e92f-3cd6-0fcc239a5327, 00000000:0A:00.0, NVIDIA A100-SXM4-80GB\n1, GPU-e27d33d7-29c0-e97a-d0af-dd5b136cf804, 00000000:44:00.0, NVIDIA A100-SXM4-80GB\n2, GPU-899ccdb9-78bd-95ad-74e7-ac4c408aa190, 00000000:4A:00.0, NVIDIA A100-SXM4-80GB\n3, GPU-17cbc220-ba5f-a9b8-c369-a43542b7c9d9, 00000000:84:00.0, NVIDIA A100-SXM4-80GB\n",
+    "runtime": {
+      "driver_version": "13020",
+      "cuda_version": "12080",
+      "nccl_version": "22809",
+      "cublas_version": "120804",
+      "devices": [
+        {
+          "name": "NVIDIA A100-SXM4-80GB",
+          "pci_bus_id": "0000:0A:00.0",
+          "major": 8,
+          "minor": 0,
+          "sm_count": 108,
+          "total_memory": 85094825984,
+          "peers": [
+            true,
+            true,
+            true,
+            true
+          ]
+        },
+        {
+          "name": "NVIDIA A100-SXM4-80GB",
+          "pci_bus_id": "0000:44:00.0",
+          "major": 8,
+          "minor": 0,
+          "sm_count": 108,
+          "total_memory": 85094825984,
+          "peers": [
+            true,
+            true,
+            true,
+            true
+          ]
+        },
+        {
+          "name": "NVIDIA A100-SXM4-80GB",
+          "pci_bus_id": "0000:4A:00.0",
+          "major": 8,
+          "minor": 0,
+          "sm_count": 108,
+          "total_memory": 85094825984,
+          "peers": [
+            true,
+            true,
+            true,
+            true
+          ]
+        },
+        {
+          "name": "NVIDIA A100-SXM4-80GB",
+          "pci_bus_id": "0000:84:00.0",
+          "major": 8,
+          "minor": 0,
+          "sm_count": 108,
+          "total_memory": 85094825984,
+          "peers": [
+            true,
+            true,
+            true,
+            true
+          ]
+        }
+      ]
+    },
+    "loaded_library_sha256": {
+      "/usr/local/cuda-12.8/targets/x86_64-linux/lib/libcudart.so.12.8.90": "c3a75b33af334a3486d197dbd1584a2985183ba4688d237a2be5f2f679329920",
+      "/usr/local/cuda-12.8/targets/x86_64-linux/lib/libcublas.so.12.8.4.1": "031ce6c2cbfbb9468f040527cab5c599069ce5609e73e28f87503881063eac21",
+      "/usr/local/cuda-12.8/targets/x86_64-linux/lib/libcublasLt.so.12.8.4.1": "10b5e6631cf8115c661eb895ed1533826308b58f7956466f53d236a40c9b622c",
+      "/workspace/runpod-mechanism-collection/dependencies/nccl/build/lib/libnccl.so.2.28.9": "c9924c474b81b45e547862dce4de1c651130d48507c4f4f26a5896f5f0245436",
+      "/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33": "1fd75fe70354a416d75aef22bcae68c47bd25d20e2d0568c30b1a9838cf62f11",
+      "/usr/lib/x86_64-linux-gnu/libgcc_s.so.1": "d93224d2b0dab4247598be683adca02f5cf00586f99c187579cd7e92058fb7cb",
+      "/usr/lib/x86_64-linux-gnu/libc.so.6": "3a15d66867d83762c7f2f1e37359cb8f6c5743edb369c65285cb0b1c4f7498bf",
+      "/usr/lib/x86_64-linux-gnu/libdl.so.2": "c2994527172cc23b7fb0f7d611b71e00a37da27af12c2e5e9e0dc1a742886c96",
+      "/usr/lib/x86_64-linux-gnu/libpthread.so.0": "90491a21ce44efcf3bd4b65ec82501c091d7ebe7f8d9b341dd01d721001d9ecd",
+      "/usr/lib/x86_64-linux-gnu/librt.so.1": "6d072187d88e092e81561a44c03a4a41397319022c6d43519757cc051c576d82",
+      "/usr/lib/x86_64-linux-gnu/libm.so.6": "fce00b6f25f459cf4ae0b7fae4257909a1a8a86f9149e7c029a5d617baf1ccd0"
+    },
+    "measurement_environment": {
+      "CUDA_VISIBLE_DEVICES": "0,1,2,3"
+    },
+    "cuda_visible_devices": "0,1,2,3",
+    "environment_id": "mechanism-a100-p4-a969c223bb87f00cbf2f"
+  },
+  "nsys_version": "NVIDIA Nsight Systems version 2025.1.3.140-251335620677v0\n",
+  "command": [
+    "nsys",
+    "profile",
+    "--trace=cuda,osrt",
+    "--sample=none",
+    "--cpuctxsw=none",
+    "--force-overwrite=false",
+    "--output",
+    "/workspace/runpod-mechanism-collection/work/trace-m512q2/timeline",
+    "/workspace/runpod-mechanism-collection/work/build/mechanism_w004_splitk2",
+    "splitk2",
+    "/workspace/runpod-mechanism-collection/bundle-r01/data/w004/inputs.bin",
+    "/workspace/runpod-mechanism-collection/bundle-r01/data/w004/reference.bin",
+    "20",
+    "100",
+    "prepared"
+  ],
+  "note": "Binary stdout self-reports its uninstrumented policy; this external profiler receipt overrides that policy. Never import stdout as a primary measurement.",
+  "reports": {
+    "timeline.nsys-rep": "ab73f222d45e5a4f926e06a7cb6ed5ce2693f77013f97813c60264fbf20ecc09"
+  },
+  "state": "complete"
+}

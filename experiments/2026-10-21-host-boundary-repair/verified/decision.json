@@ -1,0 +1,103 @@
+{
+  "schema": "edmir.host-boundary-investigation-result.v1",
+  "date": "2026-10-21",
+  "local_accepted": false,
+  "investigation_complete": true,
+  "boundary_assessment": {
+    "candidate_accepted": false,
+    "checks": {
+      "unchanged_primary_gates_and_M512_exact_choices": true,
+      "M512_all_training_deletions_preserve_best": false,
+      "N_all_training_deletions_preserve_host": false,
+      "N_previous_attack_resisted": true,
+      "N_one_percent_stress_all_correct": false
+    },
+    "interpretation": "Retrospective engineering checks only. Passing is not independent GPU validation."
+  },
+  "gate": {
+    "passed": true,
+    "checks": {
+      "mean_no_worse_than_controls": true,
+      "max_no_worse_than_controls": true,
+      "host_regressions_no_more_than_old_relative": true,
+      "no_priority_false_host": true,
+      "no_priority_false_fused": true,
+      "priority_regret_at_most_five_percent": true,
+      "leave_k_max_no_worse_than_fixed": true,
+      "M512_primary_best_observed": true,
+      "M512_leave_K_best_observed": true,
+      "primary_mean_and_max_no_worse_than_accepted": true,
+      "stress_mean_and_max_no_worse_than_accepted": true
+    }
+  },
+  "numerical_replay_exact": true,
+  "total_tests": 90,
+  "tests": {
+    "selection_tests": 60,
+    "splitk_tests": 7,
+    "reliability_tests": 13,
+    "runner_tests": 3,
+    "previous_review_tests": 2,
+    "review_tests": 5
+  },
+  "scope": "retrospective local engineering acceptance; archived A100 P4 per-source CUTLASS only",
+  "new_independent_labels": 0,
+  "gpu_operations": 0,
+  "compiler_admission": false,
+  "remaining": "Candidate rejected: N one-percent stress and deletion regressions; M512 K4096 has one deletion regression. Prior accepted selector retained.",
+  "versions": {
+    "python": "3.12.14",
+    "numpy": "2.3.5",
+    "scipy": "1.16.3"
+  },
+  "source_sha256": {
+    "EDM-IR/tools/evaluate_traffic_selector.py": "6b28660533c8f31a725f1c5e09c38f3be64d9127782a953d9b8976052760ffe3",
+    "EDM-IR/tools/evaluate_execution_cost_selector.py": "0b8fc94a5c275e034197607cc8aa22f82ef522e4cecb9b1db13ee43bc0265740",
+    "EDM-IR/edmir/compiler/traffic_latency_selection.py": "f036089962bc01ab489f98669b061386ca978a2b72c4fcb7ab9571f898231fde",
+    "EDM-IR/edmir/compiler/additive_latency_selection.py": "af3ed191421c6eae474110c0a3022265f2a3a1f321d9dab8d1b85ff0ccd4c522",
+    "EDM-IR/edmir/compiler/execution_cost_selection.py": "30d8d2b2d69893a70a20f0775f11177d075304cea72183c94b46f7bf77b00e7f",
+    "EDM-IR/edmir/compiler/factorized_selection.py": "fb695e1615ff7a22b7e7bcd8d9e9fcaf4d4d173be25159c7aba0daeb0f41c1d1",
+    "EDM-IR/edmir/compiler/measurement_dataset.py": "c28fd8a8e79dd222612581e6b9c85f84ee21afabb8c42b58ccdc4c30851c50bf",
+    "EDM-IR/edmir/compiler/relative_selection.py": "47e425ce32d60577b1ee38e1e7a4f7f542dab06599b2ae1a8b694d7d09aed4c9",
+    "EDM-IR/edmir/compiler/two_stage_selection.py": "4d875a82ca57fbd07ce538a4fecf4db0d306c963945c010bcbe6cc05a2e8a8d2",
+    "EDM-IR/edmir/compiler/host_baseline.py": "e335c5a38dbbfd661fe4828aa1867fcb14bd4f82984f9dbcb8a20c805b9e2b75",
+    "experiments/2026-10-21-host-boundary-repair/review.py": "513d9217510692b06feba9f2984b9cfe729f22537d45cb72300ed4f60d47f08f",
+    "experiments/2026-10-21-host-boundary-repair/run_review.py": "638f4a04160edd1dc9e2a8abcf7cbfdfffc66a04f716d2dfb9d96081aa754f89",
+    "experiments/2026-10-21-host-boundary-repair/test_review.py": "c05746df3c0c4864b0772314f352cb35c4364f74f7ad5dbd340db66419eb0352",
+    "experiments/2026-10-21-host-boundary-repair/design.json": "3b4a15c8387f2ed3151d42220eb658e9133227e090b5ca0f562efb8091b25ba3",
+    "experiments/2026-10-21-host-boundary-repair/requirements-fit.txt": "a328fd1cf5402fff8e0c87457272ce115b5d520c34a563236609c7b586729435",
+    "experiments/2026-10-21-host-boundary-repair/assessment.py": "735627940c9e9b09f19ee19e0a407897311bb955cc4e58bea7146a851e408373",
+    "experiments/2026-10-21-host-boundary-repair/test_assessment.py": "34cf58b53ff62ebc167155192ace96dacb58ff4c49ad6cae968806e22530e819",
+    "EDM-IR/tests/traffic_latency_selection_test.py": "01650981fb387aae51eb8ad9578e7418653a1bf4b1a2f185fba51f7a854db6b2",
+    "EDM-IR/tools/predict_traffic_schedule.py": "fbc3bd67aaedaf3add21ff505a638d8b86a086d49a6037f405edd68cb2760c7c",
+    "EDM-IR/pyproject.toml": "0cd77b0a0e5833f2010edeceffeca1accafe2c69b66daa4d4bf18bd50450925a"
+  },
+  "evidence_sha256": {
+    "evaluate.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "evaluate.stdout.txt": "959b5df5d0e1913d97b690f70461a61214c710d6afb62712631657912f03f011",
+    "evidence.json": "e6a7fe5d290aa7aa29a2a736993e1a3080568ae36316808019c940c5793d907c",
+    "evidence.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "evidence.stdout.txt": "30f60c54c67631be427399d341651ee92671a1667eaaa97b1e54c082f11ec090",
+    "performance.json": "7170b65ee5286fe151fd7931f716be6c71b3e277e746094157b5fd60ee78285b",
+    "prediction_cli.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "prediction_cli.stdout.txt": "12f9526c736812482f4a685def5a9daa1f8b4dbe9bdaf31b9ce73ad440c9f23f",
+    "previous_review_tests.stderr.txt": "d63aaae215fce0c3c96e35d81e7d5cf5c0e23f5ce947ceb9798776556e83cc19",
+    "previous_review_tests.stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "priority_predictions.json": "925aebe83711882f3013c2e7d08e07a1ec4588c8656ccee2f0632b4ab9f58b59",
+    "reliability_tests.stderr.txt": "1d05f003789572c873f05e16db1e1410852a521ef8bb0c283d0f40b62ff22fe2",
+    "reliability_tests.stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "results.json": "0a1af3f54d36786fe5e8daf9d69540fdc3640486118a1ae60f3371278210850d",
+    "review.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "review.stdout.txt": "80b61eba3fbbe17f08cfc7ca2976675a0b27a9db1bd691d2f982e30ccfeef30e",
+    "review_results.json": "d5f31e966061e63c01535b7625cea319d385bed1307413d40ec822e0e8581def",
+    "review_tests.stderr.txt": "3026bec0868ef42f076339f34d846d8e0f9b807fdff2ec447fd5114d3804e4fa",
+    "review_tests.stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "runner_tests.stderr.txt": "843f1d0d952d6226c3349e5aa798d4dfb38e74189f450967e02b8f90540f3898",
+    "runner_tests.stdout.txt": "bd069411f09bc6ea759f1154da14ab3d9bd6a9f8505938ff86438110267e661f",
+    "selection_tests.stderr.txt": "9de89f1a012e92c1b8c053672323ea3821e35f9f5fb2a4b8779dae9eb1b8cd04",
+    "selection_tests.stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "selector.json": "f25a169deba476f79381490c4d6c0d42571f00b8f95c719cb1861e76e08a477a",
+    "splitk_tests.stderr.txt": "db1f311f9cb5a2833a929e51f505bf307858340cfda4d34a574e42df7519c29f",
+    "splitk_tests.stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

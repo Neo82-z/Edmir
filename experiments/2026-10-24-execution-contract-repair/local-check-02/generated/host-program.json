@@ -1,0 +1,950 @@
+{
+  "schema": "edmir.program.v1",
+  "problem": {
+    "schema": "edmir.problem.v1",
+    "world_size": 4,
+    "rows_per_peer": 512,
+    "k": 4096,
+    "n": 512,
+    "dtype": "float16",
+    "layout": "row_major",
+    "name": "a2a_gemm"
+  },
+  "strategy": "sequential",
+  "chunk_rows": 512,
+  "buffer_count": 4,
+  "buffers": [
+    {
+      "name": "stage.r0.slot0",
+      "rank": 0,
+      "role": "staging",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "input.s0.d0.c0",
+      "rank": 0,
+      "role": "input",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "stage.r1.slot1",
+      "rank": 1,
+      "role": "staging",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "input.s1.d1.c0",
+      "rank": 1,
+      "role": "input",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "stage.r2.slot2",
+      "rank": 2,
+      "role": "staging",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "input.s2.d2.c0",
+      "rank": 2,
+      "role": "input",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "stage.r3.slot3",
+      "rank": 3,
+      "role": "staging",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "input.s3.d3.c0",
+      "rank": 3,
+      "role": "input",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "stage.r0.slot1",
+      "rank": 0,
+      "role": "staging",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "input.s1.d0.c0",
+      "rank": 1,
+      "role": "input",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "stage.r1.slot2",
+      "rank": 1,
+      "role": "staging",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "input.s2.d1.c0",
+      "rank": 2,
+      "role": "input",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "stage.r2.slot3",
+      "rank": 2,
+      "role": "staging",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "input.s3.d2.c0",
+      "rank": 3,
+      "role": "input",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "stage.r3.slot0",
+      "rank": 3,
+      "role": "staging",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "input.s0.d3.c0",
+      "rank": 0,
+      "role": "input",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "stage.r0.slot2",
+      "rank": 0,
+      "role": "staging",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "input.s2.d0.c0",
+      "rank": 2,
+      "role": "input",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "stage.r1.slot3",
+      "rank": 1,
+      "role": "staging",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "input.s3.d1.c0",
+      "rank": 3,
+      "role": "input",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "stage.r2.slot0",
+      "rank": 2,
+      "role": "staging",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "input.s0.d2.c0",
+      "rank": 0,
+      "role": "input",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "stage.r3.slot1",
+      "rank": 3,
+      "role": "staging",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "input.s1.d3.c0",
+      "rank": 1,
+      "role": "input",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "stage.r0.slot3",
+      "rank": 0,
+      "role": "staging",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "input.s3.d0.c0",
+      "rank": 3,
+      "role": "input",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "stage.r1.slot0",
+      "rank": 1,
+      "role": "staging",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "input.s0.d1.c0",
+      "rank": 0,
+      "role": "input",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "stage.r2.slot1",
+      "rank": 2,
+      "role": "staging",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "input.s1.d2.c0",
+      "rank": 1,
+      "role": "input",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "stage.r3.slot2",
+      "rank": 3,
+      "role": "staging",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "input.s2.d3.c0",
+      "rank": 2,
+      "role": "input",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "ready.r0",
+      "rank": 0,
+      "role": "token",
+      "size_bytes": 0
+    },
+    {
+      "name": "ready.r1",
+      "rank": 1,
+      "role": "token",
+      "size_bytes": 0
+    },
+    {
+      "name": "ready.r2",
+      "rank": 2,
+      "role": "token",
+      "size_bytes": 0
+    },
+    {
+      "name": "ready.r3",
+      "rank": 3,
+      "role": "token",
+      "size_bytes": 0
+    },
+    {
+      "name": "weight.r0",
+      "rank": 0,
+      "role": "weight",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "output.s0.d0.c0",
+      "rank": 0,
+      "role": "output",
+      "size_bytes": 524288
+    },
+    {
+      "name": "weight.r1",
+      "rank": 1,
+      "role": "weight",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "output.s1.d1.c0",
+      "rank": 1,
+      "role": "output",
+      "size_bytes": 524288
+    },
+    {
+      "name": "weight.r2",
+      "rank": 2,
+      "role": "weight",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "output.s2.d2.c0",
+      "rank": 2,
+      "role": "output",
+      "size_bytes": 524288
+    },
+    {
+      "name": "weight.r3",
+      "rank": 3,
+      "role": "weight",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "output.s3.d3.c0",
+      "rank": 3,
+      "role": "output",
+      "size_bytes": 524288
+    },
+    {
+      "name": "output.s1.d0.c0",
+      "rank": 0,
+      "role": "output",
+      "size_bytes": 524288
+    },
+    {
+      "name": "output.s2.d1.c0",
+      "rank": 1,
+      "role": "output",
+      "size_bytes": 524288
+    },
+    {
+      "name": "output.s3.d2.c0",
+      "rank": 2,
+      "role": "output",
+      "size_bytes": 524288
+    },
+    {
+      "name": "output.s0.d3.c0",
+      "rank": 3,
+      "role": "output",
+      "size_bytes": 524288
+    },
+    {
+      "name": "output.s2.d0.c0",
+      "rank": 0,
+      "role": "output",
+      "size_bytes": 524288
+    },
+    {
+      "name": "output.s3.d1.c0",
+      "rank": 1,
+      "role": "output",
+      "size_bytes": 524288
+    },
+    {
+      "name": "output.s0.d2.c0",
+      "rank": 2,
+      "role": "output",
+      "size_bytes": 524288
+    },
+    {
+      "name": "output.s1.d3.c0",
+      "rank": 3,
+      "role": "output",
+      "size_bytes": 524288
+    },
+    {
+      "name": "output.s3.d0.c0",
+      "rank": 0,
+      "role": "output",
+      "size_bytes": 524288
+    },
+    {
+      "name": "output.s0.d1.c0",
+      "rank": 1,
+      "role": "output",
+      "size_bytes": 524288
+    },
+    {
+      "name": "output.s1.d2.c0",
+      "rank": 2,
+      "role": "output",
+      "size_bytes": 524288
+    },
+    {
+      "name": "output.s2.d3.c0",
+      "rank": 3,
+      "role": "output",
+      "size_bytes": 524288
+    }
+  ],
+  "ops": [
+    {
+      "id": "transfer.s0.d0.c0",
+      "kind": "transfer",
+      "rank": 0,
+      "queue": "comm",
+      "reads": [
+        "input.s0.d0.c0"
+      ],
+      "writes": [
+        "stage.r0.slot0"
+      ],
+      "tile": "s0.d0.c0",
+      "rows": 512,
+      "peer_rank": 0
+    },
+    {
+      "id": "transfer.s1.d1.c0",
+      "kind": "transfer",
+      "rank": 1,
+      "queue": "comm",
+      "reads": [
+        "input.s1.d1.c0"
+      ],
+      "writes": [
+        "stage.r1.slot1"
+      ],
+      "tile": "s1.d1.c0",
+      "rows": 512,
+      "peer_rank": 1
+    },
+    {
+      "id": "transfer.s2.d2.c0",
+      "kind": "transfer",
+      "rank": 2,
+      "queue": "comm",
+      "reads": [
+        "input.s2.d2.c0"
+      ],
+      "writes": [
+        "stage.r2.slot2"
+      ],
+      "tile": "s2.d2.c0",
+      "rows": 512,
+      "peer_rank": 2
+    },
+    {
+      "id": "transfer.s3.d3.c0",
+      "kind": "transfer",
+      "rank": 3,
+      "queue": "comm",
+      "reads": [
+        "input.s3.d3.c0"
+      ],
+      "writes": [
+        "stage.r3.slot3"
+      ],
+      "tile": "s3.d3.c0",
+      "rows": 512,
+      "peer_rank": 3
+    },
+    {
+      "id": "transfer.s1.d0.c0",
+      "kind": "transfer",
+      "rank": 0,
+      "queue": "comm",
+      "reads": [
+        "input.s1.d0.c0"
+      ],
+      "writes": [
+        "stage.r0.slot1"
+      ],
+      "tile": "s1.d0.c0",
+      "rows": 512,
+      "peer_rank": 1
+    },
+    {
+      "id": "transfer.s2.d1.c0",
+      "kind": "transfer",
+      "rank": 1,
+      "queue": "comm",
+      "reads": [
+        "input.s2.d1.c0"
+      ],
+      "writes": [
+        "stage.r1.slot2"
+      ],
+      "tile": "s2.d1.c0",
+      "rows": 512,
+      "peer_rank": 2
+    },
+    {
+      "id": "transfer.s3.d2.c0",
+      "kind": "transfer",
+      "rank": 2,
+      "queue": "comm",
+      "reads": [
+        "input.s3.d2.c0"
+      ],
+      "writes": [
+        "stage.r2.slot3"
+      ],
+      "tile": "s3.d2.c0",
+      "rows": 512,
+      "peer_rank": 3
+    },
+    {
+      "id": "transfer.s0.d3.c0",
+      "kind": "transfer",
+      "rank": 3,
+      "queue": "comm",
+      "reads": [
+        "input.s0.d3.c0"
+      ],
+      "writes": [
+        "stage.r3.slot0"
+      ],
+      "tile": "s0.d3.c0",
+      "rows": 512,
+      "peer_rank": 0
+    },
+    {
+      "id": "transfer.s2.d0.c0",
+      "kind": "transfer",
+      "rank": 0,
+      "queue": "comm",
+      "reads": [
+        "input.s2.d0.c0"
+      ],
+      "writes": [
+        "stage.r0.slot2"
+      ],
+      "tile": "s2.d0.c0",
+      "rows": 512,
+      "peer_rank": 2
+    },
+    {
+      "id": "transfer.s3.d1.c0",
+      "kind": "transfer",
+      "rank": 1,
+      "queue": "comm",
+      "reads": [
+        "input.s3.d1.c0"
+      ],
+      "writes": [
+        "stage.r1.slot3"
+      ],
+      "tile": "s3.d1.c0",
+      "rows": 512,
+      "peer_rank": 3
+    },
+    {
+      "id": "transfer.s0.d2.c0",
+      "kind": "transfer",
+      "rank": 2,
+      "queue": "comm",
+      "reads": [
+        "input.s0.d2.c0"
+      ],
+      "writes": [
+        "stage.r2.slot0"
+      ],
+      "tile": "s0.d2.c0",
+      "rows": 512,
+      "peer_rank": 0
+    },
+    {
+      "id": "transfer.s1.d3.c0",
+      "kind": "transfer",
+      "rank": 3,
+      "queue": "comm",
+      "reads": [
+        "input.s1.d3.c0"
+      ],
+      "writes": [
+        "stage.r3.slot1"
+      ],
+      "tile": "s1.d3.c0",
+      "rows": 512,
+      "peer_rank": 1
+    },
+    {
+      "id": "transfer.s3.d0.c0",
+      "kind": "transfer",
+      "rank": 0,
+      "queue": "comm",
+      "reads": [
+        "input.s3.d0.c0"
+      ],
+      "writes": [
+        "stage.r0.slot3"
+      ],
+      "tile": "s3.d0.c0",
+      "rows": 512,
+      "peer_rank": 3
+    },
+    {
+      "id": "transfer.s0.d1.c0",
+      "kind": "transfer",
+      "rank": 1,
+      "queue": "comm",
+      "reads": [
+        "input.s0.d1.c0"
+      ],
+      "writes": [
+        "stage.r1.slot0"
+      ],
+      "tile": "s0.d1.c0",
+      "rows": 512,
+      "peer_rank": 0
+    },
+    {
+      "id": "transfer.s1.d2.c0",
+      "kind": "transfer",
+      "rank": 2,
+      "queue": "comm",
+      "reads": [
+        "input.s1.d2.c0"
+      ],
+      "writes": [
+        "stage.r2.slot1"
+      ],
+      "tile": "s1.d2.c0",
+      "rows": 512,
+      "peer_rank": 1
+    },
+    {
+      "id": "transfer.s2.d3.c0",
+      "kind": "transfer",
+      "rank": 3,
+      "queue": "comm",
+      "reads": [
+        "input.s2.d3.c0"
+      ],
+      "writes": [
+        "stage.r3.slot2"
+      ],
+      "tile": "s2.d3.c0",
+      "rows": 512,
+      "peer_rank": 2
+    },
+    {
+      "id": "barrier.r0",
+      "kind": "barrier",
+      "rank": 0,
+      "queue": "control",
+      "reads": [
+        "stage.r0.slot0",
+        "stage.r0.slot1",
+        "stage.r0.slot2",
+        "stage.r0.slot3"
+      ],
+      "writes": [
+        "ready.r0"
+      ],
+      "tile": null,
+      "rows": 0,
+      "peer_rank": null
+    },
+    {
+      "id": "barrier.r1",
+      "kind": "barrier",
+      "rank": 1,
+      "queue": "control",
+      "reads": [
+        "stage.r1.slot1",
+        "stage.r1.slot2",
+        "stage.r1.slot3",
+        "stage.r1.slot0"
+      ],
+      "writes": [
+        "ready.r1"
+      ],
+      "tile": null,
+      "rows": 0,
+      "peer_rank": null
+    },
+    {
+      "id": "barrier.r2",
+      "kind": "barrier",
+      "rank": 2,
+      "queue": "control",
+      "reads": [
+        "stage.r2.slot2",
+        "stage.r2.slot3",
+        "stage.r2.slot0",
+        "stage.r2.slot1"
+      ],
+      "writes": [
+        "ready.r2"
+      ],
+      "tile": null,
+      "rows": 0,
+      "peer_rank": null
+    },
+    {
+      "id": "barrier.r3",
+      "kind": "barrier",
+      "rank": 3,
+      "queue": "control",
+      "reads": [
+        "stage.r3.slot3",
+        "stage.r3.slot0",
+        "stage.r3.slot1",
+        "stage.r3.slot2"
+      ],
+      "writes": [
+        "ready.r3"
+      ],
+      "tile": null,
+      "rows": 0,
+      "peer_rank": null
+    },
+    {
+      "id": "gemm.s0.d0.c0",
+      "kind": "gemm",
+      "rank": 0,
+      "queue": "compute",
+      "reads": [
+        "stage.r0.slot0",
+        "weight.r0",
+        "ready.r0"
+      ],
+      "writes": [
+        "output.s0.d0.c0"
+      ],
+      "tile": "s0.d0.c0",
+      "rows": 512,
+      "peer_rank": 0
+    },
+    {
+      "id": "gemm.s1.d1.c0",
+      "kind": "gemm",
+      "rank": 1,
+      "queue": "compute",
+      "reads": [
+        "stage.r1.slot1",
+        "weight.r1",
+        "ready.r1"
+      ],
+      "writes": [
+        "output.s1.d1.c0"
+      ],
+      "tile": "s1.d1.c0",
+      "rows": 512,
+      "peer_rank": 1
+    },
+    {
+      "id": "gemm.s2.d2.c0",
+      "kind": "gemm",
+      "rank": 2,
+      "queue": "compute",
+      "reads": [
+        "stage.r2.slot2",
+        "weight.r2",
+        "ready.r2"
+      ],
+      "writes": [
+        "output.s2.d2.c0"
+      ],
+      "tile": "s2.d2.c0",
+      "rows": 512,
+      "peer_rank": 2
+    },
+    {
+      "id": "gemm.s3.d3.c0",
+      "kind": "gemm",
+      "rank": 3,
+      "queue": "compute",
+      "reads": [
+        "stage.r3.slot3",
+        "weight.r3",
+        "ready.r3"
+      ],
+      "writes": [
+        "output.s3.d3.c0"
+      ],
+      "tile": "s3.d3.c0",
+      "rows": 512,
+      "peer_rank": 3
+    },
+    {
+      "id": "gemm.s1.d0.c0",
+      "kind": "gemm",
+      "rank": 0,
+      "queue": "compute",
+      "reads": [
+        "stage.r0.slot1",
+        "weight.r0",
+        "ready.r0"
+      ],
+      "writes": [
+        "output.s1.d0.c0"
+      ],
+      "tile": "s1.d0.c0",
+      "rows": 512,
+      "peer_rank": 1
+    },
+    {
+      "id": "gemm.s2.d1.c0",
+      "kind": "gemm",
+      "rank": 1,
+      "queue": "compute",
+      "reads": [
+        "stage.r1.slot2",
+        "weight.r1",
+        "ready.r1"
+      ],
+      "writes": [
+        "output.s2.d1.c0"
+      ],
+      "tile": "s2.d1.c0",
+      "rows": 512,
+      "peer_rank": 2
+    },
+    {
+      "id": "gemm.s3.d2.c0",
+      "kind": "gemm",
+      "rank": 2,
+      "queue": "compute",
+      "reads": [
+        "stage.r2.slot3",
+        "weight.r2",
+        "ready.r2"
+      ],
+      "writes": [
+        "output.s3.d2.c0"
+      ],
+      "tile": "s3.d2.c0",
+      "rows": 512,
+      "peer_rank": 3
+    },
+    {
+      "id": "gemm.s0.d3.c0",
+      "kind": "gemm",
+      "rank": 3,
+      "queue": "compute",
+      "reads": [
+        "stage.r3.slot0",
+        "weight.r3",
+        "ready.r3"
+      ],
+      "writes": [
+        "output.s0.d3.c0"
+      ],
+      "tile": "s0.d3.c0",
+      "rows": 512,
+      "peer_rank": 0
+    },
+    {
+      "id": "gemm.s2.d0.c0",
+      "kind": "gemm",
+      "rank": 0,
+      "queue": "compute",
+      "reads": [
+        "stage.r0.slot2",
+        "weight.r0",
+        "ready.r0"
+      ],
+      "writes": [
+        "output.s2.d0.c0"
+      ],
+      "tile": "s2.d0.c0",
+      "rows": 512,
+      "peer_rank": 2
+    },
+    {
+      "id": "gemm.s3.d1.c0",
+      "kind": "gemm",
+      "rank": 1,
+      "queue": "compute",
+      "reads": [
+        "stage.r1.slot3",
+        "weight.r1",
+        "ready.r1"
+      ],
+      "writes": [
+        "output.s3.d1.c0"
+      ],
+      "tile": "s3.d1.c0",
+      "rows": 512,
+      "peer_rank": 3
+    },
+    {
+      "id": "gemm.s0.d2.c0",
+      "kind": "gemm",
+      "rank": 2,
+      "queue": "compute",
+      "reads": [
+        "stage.r2.slot0",
+        "weight.r2",
+        "ready.r2"
+      ],
+      "writes": [
+        "output.s0.d2.c0"
+      ],
+      "tile": "s0.d2.c0",
+      "rows": 512,
+      "peer_rank": 0
+    },
+    {
+      "id": "gemm.s1.d3.c0",
+      "kind": "gemm",
+      "rank": 3,
+      "queue": "compute",
+      "reads": [
+        "stage.r3.slot1",
+        "weight.r3",
+        "ready.r3"
+      ],
+      "writes": [
+        "output.s1.d3.c0"
+      ],
+      "tile": "s1.d3.c0",
+      "rows": 512,
+      "peer_rank": 1
+    },
+    {
+      "id": "gemm.s3.d0.c0",
+      "kind": "gemm",
+      "rank": 0,
+      "queue": "compute",
+      "reads": [
+        "stage.r0.slot3",
+        "weight.r0",
+        "ready.r0"
+      ],
+      "writes": [
+        "output.s3.d0.c0"
+      ],
+      "tile": "s3.d0.c0",
+      "rows": 512,
+      "peer_rank": 3
+    },
+    {
+      "id": "gemm.s0.d1.c0",
+      "kind": "gemm",
+      "rank": 1,
+      "queue": "compute",
+      "reads": [
+        "stage.r1.slot0",
+        "weight.r1",
+        "ready.r1"
+      ],
+      "writes": [
+        "output.s0.d1.c0"
+      ],
+      "tile": "s0.d1.c0",
+      "rows": 512,
+      "peer_rank": 0
+    },
+    {
+      "id": "gemm.s1.d2.c0",
+      "kind": "gemm",
+      "rank": 2,
+      "queue": "compute",
+      "reads": [
+        "stage.r2.slot1",
+        "weight.r2",
+        "ready.r2"
+      ],
+      "writes": [
+        "output.s1.d2.c0"
+      ],
+      "tile": "s1.d2.c0",
+      "rows": 512,
+      "peer_rank": 1
+    },
+    {
+      "id": "gemm.s2.d3.c0",
+      "kind": "gemm",
+      "rank": 3,
+      "queue": "compute",
+      "reads": [
+        "stage.r3.slot2",
+        "weight.r3",
+        "ready.r3"
+      ],
+      "writes": [
+        "output.s2.d3.c0"
+      ],
+      "tile": "s2.d3.c0",
+      "rows": 512,
+      "peer_rank": 2
+    }
+  ],
+  "metadata": {
+    "remote_input_contract": {
+      "schema": "edmir.remote_publication.v1",
+      "mode": "immutable_external",
+      "visibility": "initialized_before_launch",
+      "reuse": "none_during_program"
+    },
+    "peer_order": "cyclic",
+    "dependencies": "derived"
+  }
+}

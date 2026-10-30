@@ -1,10 +1,12 @@
 from __future__ import annotations
 
+import math
 from dataclasses import asdict, dataclass, replace
 from typing import Any
 
 from .model import A2AGemmProblem, Program, TopologySnapshot
 from .schedule import build_fused_program, build_sequential_program
+from .host_baseline import PER_SOURCE_CUBLAS, host_baseline
 from .target import Target
 
 
@@ -162,16 +164,23 @@ class FusedEvidence:
     heldout_host_wins: int
 
     def validate(self) -> None:
-        if self.train_problems < 0 or self.heldout_problems < 0:
-            raise ValueError("fused evidence problem counts must be non-negative")
+        for name in ("train_problems", "heldout_problems", "heldout_host_wins"):
+            value = getattr(self, name)
+            if type(value) is not int or value < 0:
+                raise ValueError(f"fused evidence {name} must be a nonnegative integer")
+        for name in ("heldout_direction_accuracy", "heldout_max_selection_regret"):
+            value = getattr(self, name)
+            if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
+                raise ValueError(f"fused evidence {name} must be finite")
         if not 0.0 <= self.heldout_direction_accuracy <= 1.0:
             raise ValueError("heldout_direction_accuracy must be in [0, 1]")
         if self.heldout_max_selection_regret < 0.0:
             raise ValueError("heldout_max_selection_regret must be non-negative")
-        if self.heldout_host_wins < 0:
-            raise ValueError("heldout_host_wins must be non-negative")
+        if self.heldout_host_wins > self.heldout_problems:
+            raise ValueError("heldout_host_wins exceeds the held-out problem count")
 
     def admission_error(self) -> str | None:
+        self.validate()
         if self.heldout_problems < 30:
             return "evidence requires at least 30 held-out problems"
         if self.heldout_direction_accuracy < 0.99:
@@ -192,6 +201,7 @@ class FusedSelectionProfile:
     rule: FusedKRule
     evidence: FusedEvidence
     default_compiler_admission: bool = False
+    reference_host_baseline_id: str | None = None
 
     def validate(self) -> None:
         if not self.profile_id or not self.source:
@@ -204,6 +214,8 @@ class FusedSelectionProfile:
         self.envelope.validate()
         self.rule.validate()
         self.evidence.validate()
+        if self.reference_host_baseline_id is not None:
+            host_baseline(self.reference_host_baseline_id).validate()
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -211,6 +223,7 @@ class FusedSelectionProfile:
             "profile_id": self.profile_id,
             "source": self.source,
             "default_compiler_admission": self.default_compiler_admission,
+            "reference_host_baseline_id": self.reference_host_baseline_id,
             "environment": self.environment.to_dict(),
             "envelope": self.envelope.to_dict(),
             "rule": asdict(self.rule),
@@ -226,6 +239,7 @@ class FusedSelectionProfile:
             default_compiler_admission=bool(
                 value.get("default_compiler_admission", False)
             ),
+            reference_host_baseline_id=value.get("reference_host_baseline_id"),
             environment=FusedEnvironmentFingerprint.from_dict(value["environment"]),
             envelope=FusedShapeEnvelope.from_dict(value["envelope"]),
             rule=FusedKRule(
@@ -289,6 +303,7 @@ class FusedSelectionResult:
         return {
             "schema": SCHEMA_FUSED_SELECTION_REPORT,
             "profile": self.profile.to_dict(),
+            "fallback_host_baseline": PER_SOURCE_CUBLAS.to_dict(),
             "observed_environment": self.observed_environment.to_dict(),
             "selected_family": self.selected_family,
             "admitted": self.admitted,
@@ -326,8 +341,8 @@ def _candidate_decisions(
         FusedCandidateDecision(
             family="host",
             eligible=True,
-            gemm_provider="cublas",
-            gemm_kernel="library_default",
+            gemm_provider=PER_SOURCE_CUBLAS.gemm_provider,
+            gemm_kernel=PER_SOURCE_CUBLAS.gemm_kernel,
             communication_api="host_nccl",
             reason="safe fallback" if selected != "host" else "selected fallback",
         ),
@@ -378,6 +393,11 @@ def select_fused_a2a_gemm(
         rejection = "problem shape, dtype, or layout is outside the measured envelope"
     elif (error := profile.evidence.admission_error()) is not None:
         rejection = error
+    elif profile.reference_host_baseline_id != PER_SOURCE_CUBLAS.baseline_id:
+        rejection = (
+            "measured host baseline is missing or differs from the compiler's "
+            "per-source cuBLAS fallback; matched baseline evidence is required"
+        )
 
     family = None if rejection else profile.rule.family(problem.k)
     if rejection is None and family is None:
@@ -390,8 +410,8 @@ def select_fused_a2a_gemm(
             name="host-nccl-fallback",
             topology=topology,
             arch=observed_environment.arch,
-            gemm_provider="cublas",
-            gemm_kernel="library_default",
+            gemm_provider=PER_SOURCE_CUBLAS.gemm_provider,
+            gemm_kernel=PER_SOURCE_CUBLAS.gemm_kernel,
             communication_api="host_nccl",
         )
         admitted = False
@@ -423,6 +443,8 @@ def select_fused_a2a_gemm(
     selection_metadata = {
         "profile_id": profile.profile_id,
         "profile_source": profile.source,
+        "reference_host_baseline_id": profile.reference_host_baseline_id,
+        "fallback_host_baseline": PER_SOURCE_CUBLAS.to_dict(),
         "selected_family": selected,
         "admitted": admitted,
         "reason": reason,

@@ -1,0 +1,49 @@
+{
+  "schema": "edmir.mechanism-prediction-design.v1",
+  "status": "Development hypotheses fixed before this round of fits; all source measurements have already been inspected. Not blind preregistration.",
+  "models": [
+    "cutlass_depth",
+    "launch_detail",
+    "partition_detail",
+    "service_detail"
+  ],
+  "selected_variant": "service_detail",
+  "staged_changes": {
+    "cutlass_depth": "Prior 7-term fused model and separate host models, unchanged numeric baseline.",
+    "launch_detail": "Add exact per-execution cudaFuncSetAttribute opt-in call count / 16. Confounded with all grouped-N-only resource changes; coefficient is not an API microbenchmark.",
+    "partition_detail": "Add unique A footprint per K partition and logical B reads across M tiles. Preserve total A reads: partitioning K does not divide aggregate read bytes by q.",
+    "service_detail": "Add SM-spread deficit max(1-CTA_count/108,0) and q-1 serial boundaries per output tile. These distinguish lost available parallelism from CTA overhead, and chain depth from aggregate output bytes. SM spread is an upper-bound geometry proxy, not achieved occupancy."
+  },
+  "resource_audit": "Verify frozen CUDA launch source, compiled register dump, dynamic shared-memory type sizes and binary hash. Record raw resource bounds, not cudaOccupancyMaxActiveBlocksPerMultiprocessor results.",
+  "identifiability": "Registers, warps, shared-memory size and opt-in count vary only with g in these two kernel families. Audit affine collinearity; do not assign separately fitted physical costs to all of them.",
+  "data": "Same frozen 2026-10-21 package, 69 primary configurations, 63 stable configurations; no new GPU labels.",
+  "quality_rule": "Unchanged whole-configuration quality filtering; retain every raw sample and score flagged configurations separately.",
+  "loss": "Unchanged nonnegative squared-microsecond objective and per-shape weighting. Fixed 1e-6 ridge. At most 12 features, 4096 faces per solve, 10-second per-fit limit. No optimizer or regularization search.",
+  "validation": "Whole-shape leave-out plus in-sample residuals, candidate pair direction/regret, exact candidate support, unregularized rank, and fixed staged ablations. Additional fused-only leave-M-out stress test; unavailable hosts not fabricated.",
+  "report": "All staged results, including regressions. No silent promotion based only on in-sample fit.",
+  "development_acceptance": {
+    "macro_shape_mean_absolute_percentage_error_max": 0.1,
+    "max_candidate_absolute_percentage_error_max": 0.25,
+    "wrong_pair_decisions_with_over_10_percent_loss_max": 0,
+    "compiler_admission_even_if_passed": false
+  },
+  "new_policy_scenarios": {
+    "formula": "T_new = T_old * [a + (1-a) * (4/11) * b]",
+    "a": [
+      0.0,
+      0.25,
+      0.5
+    ],
+    "b": [
+      1.0,
+      1.25,
+      1.5,
+      3.0
+    ],
+    "status": "Assumption sensitivity only; kernel source and old measurement identities remain unchanged."
+  },
+  "no_gpu": true,
+  "no_neural_training": true,
+  "no_hyperparameter_search": true,
+  "no_automatic_selector_change": true
+}

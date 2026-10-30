@@ -1,0 +1,53 @@
+{
+  "schema": "edmir.metadata-ablation-design.v1",
+  "gpu_measurements_available": false,
+  "hardware": "4 x A100-SXM4-80GB; full NV12; sm_80; 108 SMs",
+  "shapes_P_M_K_N": [
+    [
+      4,
+      64,
+      1024,
+      512
+    ],
+    [
+      4,
+      64,
+      4096,
+      2048
+    ],
+    [
+      4,
+      64,
+      8192,
+      512
+    ],
+    [
+      4,
+      256,
+      8192,
+      512
+    ]
+  ],
+  "primary": "Prepared metadata for all 12 per-source/fused families; 2 existing merged hosts unchanged",
+  "legacy_controls": [
+    "host",
+    "host_compiler_cublas",
+    "direct",
+    "splitk4_groupedn2"
+  ],
+  "fresh_processes_per_candidate": 3,
+  "warmup": 20,
+  "iterations": 100,
+  "total_processes": 216,
+  "timed_samples": 21600,
+  "timing": "steady_clock around execute()+synchronize(); keep all intervals; profiler and NVTX off",
+  "changed_variable": "Prepare immutable operands, transfer sizes, participating ranks and dependency event mappings outside execution",
+  "invariants": [
+    "Same input/reference binaries",
+    "Same op order, CUDA/NCCL calls and dependency order",
+    "Same kernels, split-K, grouped-N, precision and topology",
+    "No predictor parameter changes",
+    "No old sample relabeling"
+  ],
+  "analysis": "Per-process median and mean; retain all 3 repeats and paired legacy/prepared ratios; no independence claim for 100 inner iterations; no automatic performance promotion"
+}

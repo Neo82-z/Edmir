@@ -1,0 +1,505 @@
+{
+  "schema": "edmir.program.v1",
+  "problem": {
+    "schema": "edmir.problem.v1",
+    "world_size": 4,
+    "rows_per_peer": 512,
+    "k": 4096,
+    "n": 512,
+    "dtype": "float16",
+    "layout": "row_major",
+    "name": "a2a_gemm"
+  },
+  "strategy": "fused",
+  "chunk_rows": 512,
+  "buffer_count": 1,
+  "buffers": [
+    {
+      "name": "input.s0.d0.c0",
+      "rank": 0,
+      "role": "input",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "weight.r0",
+      "rank": 0,
+      "role": "weight",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "output.s0.d0.c0",
+      "rank": 0,
+      "role": "output",
+      "size_bytes": 524288
+    },
+    {
+      "name": "input.s1.d1.c0",
+      "rank": 1,
+      "role": "input",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "weight.r1",
+      "rank": 1,
+      "role": "weight",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "output.s1.d1.c0",
+      "rank": 1,
+      "role": "output",
+      "size_bytes": 524288
+    },
+    {
+      "name": "input.s2.d2.c0",
+      "rank": 2,
+      "role": "input",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "weight.r2",
+      "rank": 2,
+      "role": "weight",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "output.s2.d2.c0",
+      "rank": 2,
+      "role": "output",
+      "size_bytes": 524288
+    },
+    {
+      "name": "input.s3.d3.c0",
+      "rank": 3,
+      "role": "input",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "weight.r3",
+      "rank": 3,
+      "role": "weight",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "output.s3.d3.c0",
+      "rank": 3,
+      "role": "output",
+      "size_bytes": 524288
+    },
+    {
+      "name": "input.s1.d0.c0",
+      "rank": 1,
+      "role": "input",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "output.s1.d0.c0",
+      "rank": 0,
+      "role": "output",
+      "size_bytes": 524288
+    },
+    {
+      "name": "input.s2.d1.c0",
+      "rank": 2,
+      "role": "input",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "output.s2.d1.c0",
+      "rank": 1,
+      "role": "output",
+      "size_bytes": 524288
+    },
+    {
+      "name": "input.s3.d2.c0",
+      "rank": 3,
+      "role": "input",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "output.s3.d2.c0",
+      "rank": 2,
+      "role": "output",
+      "size_bytes": 524288
+    },
+    {
+      "name": "input.s0.d3.c0",
+      "rank": 0,
+      "role": "input",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "output.s0.d3.c0",
+      "rank": 3,
+      "role": "output",
+      "size_bytes": 524288
+    },
+    {
+      "name": "input.s2.d0.c0",
+      "rank": 2,
+      "role": "input",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "output.s2.d0.c0",
+      "rank": 0,
+      "role": "output",
+      "size_bytes": 524288
+    },
+    {
+      "name": "input.s3.d1.c0",
+      "rank": 3,
+      "role": "input",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "output.s3.d1.c0",
+      "rank": 1,
+      "role": "output",
+      "size_bytes": 524288
+    },
+    {
+      "name": "input.s0.d2.c0",
+      "rank": 0,
+      "role": "input",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "output.s0.d2.c0",
+      "rank": 2,
+      "role": "output",
+      "size_bytes": 524288
+    },
+    {
+      "name": "input.s1.d3.c0",
+      "rank": 1,
+      "role": "input",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "output.s1.d3.c0",
+      "rank": 3,
+      "role": "output",
+      "size_bytes": 524288
+    },
+    {
+      "name": "input.s3.d0.c0",
+      "rank": 3,
+      "role": "input",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "output.s3.d0.c0",
+      "rank": 0,
+      "role": "output",
+      "size_bytes": 524288
+    },
+    {
+      "name": "input.s0.d1.c0",
+      "rank": 0,
+      "role": "input",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "output.s0.d1.c0",
+      "rank": 1,
+      "role": "output",
+      "size_bytes": 524288
+    },
+    {
+      "name": "input.s1.d2.c0",
+      "rank": 1,
+      "role": "input",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "output.s1.d2.c0",
+      "rank": 2,
+      "role": "output",
+      "size_bytes": 524288
+    },
+    {
+      "name": "input.s2.d3.c0",
+      "rank": 2,
+      "role": "input",
+      "size_bytes": 4194304
+    },
+    {
+      "name": "output.s2.d3.c0",
+      "rank": 3,
+      "role": "output",
+      "size_bytes": 524288
+    }
+  ],
+  "ops": [
+    {
+      "id": "fused_transfer_gemm.s0.d0.c0",
+      "kind": "fused_transfer_gemm",
+      "rank": 0,
+      "queue": "compute",
+      "reads": [
+        "input.s0.d0.c0",
+        "weight.r0"
+      ],
+      "writes": [
+        "output.s0.d0.c0"
+      ],
+      "tile": "s0.d0.c0",
+      "rows": 512,
+      "peer_rank": 0
+    },
+    {
+      "id": "fused_transfer_gemm.s1.d1.c0",
+      "kind": "fused_transfer_gemm",
+      "rank": 1,
+      "queue": "compute",
+      "reads": [
+        "input.s1.d1.c0",
+        "weight.r1"
+      ],
+      "writes": [
+        "output.s1.d1.c0"
+      ],
+      "tile": "s1.d1.c0",
+      "rows": 512,
+      "peer_rank": 1
+    },
+    {
+      "id": "fused_transfer_gemm.s2.d2.c0",
+      "kind": "fused_transfer_gemm",
+      "rank": 2,
+      "queue": "compute",
+      "reads": [
+        "input.s2.d2.c0",
+        "weight.r2"
+      ],
+      "writes": [
+        "output.s2.d2.c0"
+      ],
+      "tile": "s2.d2.c0",
+      "rows": 512,
+      "peer_rank": 2
+    },
+    {
+      "id": "fused_transfer_gemm.s3.d3.c0",
+      "kind": "fused_transfer_gemm",
+      "rank": 3,
+      "queue": "compute",
+      "reads": [
+        "input.s3.d3.c0",
+        "weight.r3"
+      ],
+      "writes": [
+        "output.s3.d3.c0"
+      ],
+      "tile": "s3.d3.c0",
+      "rows": 512,
+      "peer_rank": 3
+    },
+    {
+      "id": "fused_transfer_gemm.s1.d0.c0",
+      "kind": "fused_transfer_gemm",
+      "rank": 0,
+      "queue": "compute",
+      "reads": [
+        "input.s1.d0.c0",
+        "weight.r0"
+      ],
+      "writes": [
+        "output.s1.d0.c0"
+      ],
+      "tile": "s1.d0.c0",
+      "rows": 512,
+      "peer_rank": 1
+    },
+    {
+      "id": "fused_transfer_gemm.s2.d1.c0",
+      "kind": "fused_transfer_gemm",
+      "rank": 1,
+      "queue": "compute",
+      "reads": [
+        "input.s2.d1.c0",
+        "weight.r1"
+      ],
+      "writes": [
+        "output.s2.d1.c0"
+      ],
+      "tile": "s2.d1.c0",
+      "rows": 512,
+      "peer_rank": 2
+    },
+    {
+      "id": "fused_transfer_gemm.s3.d2.c0",
+      "kind": "fused_transfer_gemm",
+      "rank": 2,
+      "queue": "compute",
+      "reads": [
+        "input.s3.d2.c0",
+        "weight.r2"
+      ],
+      "writes": [
+        "output.s3.d2.c0"
+      ],
+      "tile": "s3.d2.c0",
+      "rows": 512,
+      "peer_rank": 3
+    },
+    {
+      "id": "fused_transfer_gemm.s0.d3.c0",
+      "kind": "fused_transfer_gemm",
+      "rank": 3,
+      "queue": "compute",
+      "reads": [
+        "input.s0.d3.c0",
+        "weight.r3"
+      ],
+      "writes": [
+        "output.s0.d3.c0"
+      ],
+      "tile": "s0.d3.c0",
+      "rows": 512,
+      "peer_rank": 0
+    },
+    {
+      "id": "fused_transfer_gemm.s2.d0.c0",
+      "kind": "fused_transfer_gemm",
+      "rank": 0,
+      "queue": "compute",
+      "reads": [
+        "input.s2.d0.c0",
+        "weight.r0"
+      ],
+      "writes": [
+        "output.s2.d0.c0"
+      ],
+      "tile": "s2.d0.c0",
+      "rows": 512,
+      "peer_rank": 2
+    },
+    {
+      "id": "fused_transfer_gemm.s3.d1.c0",
+      "kind": "fused_transfer_gemm",
+      "rank": 1,
+      "queue": "compute",
+      "reads": [
+        "input.s3.d1.c0",
+        "weight.r1"
+      ],
+      "writes": [
+        "output.s3.d1.c0"
+      ],
+      "tile": "s3.d1.c0",
+      "rows": 512,
+      "peer_rank": 3
+    },
+    {
+      "id": "fused_transfer_gemm.s0.d2.c0",
+      "kind": "fused_transfer_gemm",
+      "rank": 2,
+      "queue": "compute",
+      "reads": [
+        "input.s0.d2.c0",
+        "weight.r2"
+      ],
+      "writes": [
+        "output.s0.d2.c0"
+      ],
+      "tile": "s0.d2.c0",
+      "rows": 512,
+      "peer_rank": 0
+    },
+    {
+      "id": "fused_transfer_gemm.s1.d3.c0",
+      "kind": "fused_transfer_gemm",
+      "rank": 3,
+      "queue": "compute",
+      "reads": [
+        "input.s1.d3.c0",
+        "weight.r3"
+      ],
+      "writes": [
+        "output.s1.d3.c0"
+      ],
+      "tile": "s1.d3.c0",
+      "rows": 512,
+      "peer_rank": 1
+    },
+    {
+      "id": "fused_transfer_gemm.s3.d0.c0",
+      "kind": "fused_transfer_gemm",
+      "rank": 0,
+      "queue": "compute",
+      "reads": [
+        "input.s3.d0.c0",
+        "weight.r0"
+      ],
+      "writes": [
+        "output.s3.d0.c0"
+      ],
+      "tile": "s3.d0.c0",
+      "rows": 512,
+      "peer_rank": 3
+    },
+    {
+      "id": "fused_transfer_gemm.s0.d1.c0",
+      "kind": "fused_transfer_gemm",
+      "rank": 1,
+      "queue": "compute",
+      "reads": [
+        "input.s0.d1.c0",
+        "weight.r1"
+      ],
+      "writes": [
+        "output.s0.d1.c0"
+      ],
+      "tile": "s0.d1.c0",
+      "rows": 512,
+      "peer_rank": 0
+    },
+    {
+      "id": "fused_transfer_gemm.s1.d2.c0",
+      "kind": "fused_transfer_gemm",
+      "rank": 2,
+      "queue": "compute",
+      "reads": [
+        "input.s1.d2.c0",
+        "weight.r2"
+      ],
+      "writes": [
+        "output.s1.d2.c0"
+      ],
+      "tile": "s1.d2.c0",
+      "rows": 512,
+      "peer_rank": 1
+    },
+    {
+      "id": "fused_transfer_gemm.s2.d3.c0",
+      "kind": "fused_transfer_gemm",
+      "rank": 3,
+      "queue": "compute",
+      "reads": [
+        "input.s2.d3.c0",
+        "weight.r3"
+      ],
+      "writes": [
+        "output.s2.d3.c0"
+      ],
+      "tile": "s2.d3.c0",
+      "rows": 512,
+      "peer_rank": 2
+    }
+  ],
+  "metadata": {
+    "remote_input_contract": {
+      "schema": "edmir.remote_publication.v1",
+      "mode": "immutable_external",
+      "visibility": "initialized_before_launch",
+      "reuse": "none_during_program"
+    },
+    "peer_order": "cyclic",
+    "dependencies": "derived",
+    "fusion": "device_initiated_transfer_plus_gemm",
+    "requires_communication_api": "nccl_device",
+    "dependency_policy": "uniform_immutable_peer_v1"
+  }
+}

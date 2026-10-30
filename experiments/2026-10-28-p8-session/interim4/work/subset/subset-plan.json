@@ -1,0 +1,1365 @@
+{
+  "schema": "edmir.budget-subset.v1",
+  "created_epoch": 1793164137.5791438,
+  "original_package_sha256": "f3b02144cc37e11a19991543c74b27906925219189c02e19ce9195a0376cc7c4",
+  "selection": {
+    "shape5": [
+      "host",
+      "host_merged_cutlass",
+      "host_merged_cublaslt",
+      "splitk4",
+      "splitk4_groupedn2",
+      "splitk8_groupedn2"
+    ],
+    "shape6": [
+      "host",
+      "host_merged_cutlass",
+      "host_merged_cublaslt",
+      "splitk8",
+      "splitk8_groupedn2",
+      "splitk16_groupedn2"
+    ],
+    "shape3": [
+      "host",
+      "host_merged_cutlass",
+      "host_merged_cublaslt",
+      "splitk2",
+      "splitk8"
+    ],
+    "shape7": [
+      "host",
+      "host_merged_cutlass",
+      "host_merged_cublaslt",
+      "splitk8_groupedn2",
+      "splitk16_groupedn2"
+    ]
+  },
+  "jobs": [
+    {
+      "stage": "shape5",
+      "workload_id": "w005",
+      "shape": [
+        8,
+        64,
+        4096,
+        2048
+      ],
+      "family": "splitk8_groupedn2",
+      "candidate_id": "splitk8_groupedn2@prepared_immutable",
+      "metadata_mode": "prepared",
+      "dependency_policy": "uniform_immutable_peer_v1",
+      "primary": true,
+      "implementation_id": "direct_peer_cutlass_sm80_q8_g2_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "executable": "p8_w005_splitk8_groupedn2_immutable",
+      "repetition": 0,
+      "trial_order": 208,
+      "ordinal": 208
+    },
+    {
+      "stage": "shape5",
+      "workload_id": "w005",
+      "shape": [
+        8,
+        64,
+        4096,
+        2048
+      ],
+      "family": "host_merged_cublaslt",
+      "candidate_id": "host_merged_cublaslt@merged",
+      "metadata_mode": "merged",
+      "dependency_policy": "resource_queues_v1",
+      "primary": true,
+      "implementation_id": "host_nccl_cublaslt_merged_v1",
+      "executable": "p8_w005_host",
+      "repetition": 0,
+      "trial_order": 210,
+      "ordinal": 210
+    },
+    {
+      "stage": "shape5",
+      "workload_id": "w005",
+      "shape": [
+        8,
+        64,
+        4096,
+        2048
+      ],
+      "family": "host",
+      "candidate_id": "host@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "primary": true,
+      "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+      "executable": "p8_w005_host",
+      "repetition": 0,
+      "trial_order": 213,
+      "ordinal": 213
+    },
+    {
+      "stage": "shape5",
+      "workload_id": "w005",
+      "shape": [
+        8,
+        64,
+        4096,
+        2048
+      ],
+      "family": "host_merged_cutlass",
+      "candidate_id": "host_merged_cutlass@merged",
+      "metadata_mode": "merged",
+      "dependency_policy": "resource_queues_v1",
+      "primary": true,
+      "implementation_id": "host_nccl_cutlass_sm80_merged_v1",
+      "executable": "p8_w005_host",
+      "repetition": 0,
+      "trial_order": 215,
+      "ordinal": 215
+    },
+    {
+      "stage": "shape5",
+      "workload_id": "w005",
+      "shape": [
+        8,
+        64,
+        4096,
+        2048
+      ],
+      "family": "splitk4_groupedn2",
+      "candidate_id": "splitk4_groupedn2@prepared_immutable",
+      "metadata_mode": "prepared",
+      "dependency_policy": "uniform_immutable_peer_v1",
+      "primary": true,
+      "implementation_id": "direct_peer_cutlass_sm80_q4_g2_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "executable": "p8_w005_splitk4_groupedn2_immutable",
+      "repetition": 0,
+      "trial_order": 220,
+      "ordinal": 220
+    },
+    {
+      "stage": "shape5",
+      "workload_id": "w005",
+      "shape": [
+        8,
+        64,
+        4096,
+        2048
+      ],
+      "family": "splitk4",
+      "candidate_id": "splitk4@prepared_immutable",
+      "metadata_mode": "prepared",
+      "dependency_policy": "uniform_immutable_peer_v1",
+      "primary": true,
+      "implementation_id": "direct_peer_cutlass_sm80_q4_g1_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "executable": "p8_w005_splitk4_immutable",
+      "repetition": 0,
+      "trial_order": 223,
+      "ordinal": 223
+    },
+    {
+      "stage": "shape5",
+      "workload_id": "w005",
+      "shape": [
+        8,
+        64,
+        4096,
+        2048
+      ],
+      "family": "splitk8_groupedn2",
+      "candidate_id": "splitk8_groupedn2@prepared_immutable",
+      "metadata_mode": "prepared",
+      "dependency_policy": "uniform_immutable_peer_v1",
+      "primary": true,
+      "implementation_id": "direct_peer_cutlass_sm80_q8_g2_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "executable": "p8_w005_splitk8_groupedn2_immutable",
+      "repetition": 1,
+      "trial_order": 226,
+      "ordinal": 226
+    },
+    {
+      "stage": "shape5",
+      "workload_id": "w005",
+      "shape": [
+        8,
+        64,
+        4096,
+        2048
+      ],
+      "family": "host_merged_cutlass",
+      "candidate_id": "host_merged_cutlass@merged",
+      "metadata_mode": "merged",
+      "dependency_policy": "resource_queues_v1",
+      "primary": true,
+      "implementation_id": "host_nccl_cutlass_sm80_merged_v1",
+      "executable": "p8_w005_host",
+      "repetition": 1,
+      "trial_order": 228,
+      "ordinal": 228
+    },
+    {
+      "stage": "shape5",
+      "workload_id": "w005",
+      "shape": [
+        8,
+        64,
+        4096,
+        2048
+      ],
+      "family": "splitk4",
+      "candidate_id": "splitk4@prepared_immutable",
+      "metadata_mode": "prepared",
+      "dependency_policy": "uniform_immutable_peer_v1",
+      "primary": true,
+      "implementation_id": "direct_peer_cutlass_sm80_q4_g1_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "executable": "p8_w005_splitk4_immutable",
+      "repetition": 1,
+      "trial_order": 229,
+      "ordinal": 229
+    },
+    {
+      "stage": "shape5",
+      "workload_id": "w005",
+      "shape": [
+        8,
+        64,
+        4096,
+        2048
+      ],
+      "family": "host",
+      "candidate_id": "host@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "primary": true,
+      "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+      "executable": "p8_w005_host",
+      "repetition": 1,
+      "trial_order": 237,
+      "ordinal": 237
+    },
+    {
+      "stage": "shape5",
+      "workload_id": "w005",
+      "shape": [
+        8,
+        64,
+        4096,
+        2048
+      ],
+      "family": "splitk4_groupedn2",
+      "candidate_id": "splitk4_groupedn2@prepared_immutable",
+      "metadata_mode": "prepared",
+      "dependency_policy": "uniform_immutable_peer_v1",
+      "primary": true,
+      "implementation_id": "direct_peer_cutlass_sm80_q4_g2_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "executable": "p8_w005_splitk4_groupedn2_immutable",
+      "repetition": 1,
+      "trial_order": 238,
+      "ordinal": 238
+    },
+    {
+      "stage": "shape5",
+      "workload_id": "w005",
+      "shape": [
+        8,
+        64,
+        4096,
+        2048
+      ],
+      "family": "host_merged_cublaslt",
+      "candidate_id": "host_merged_cublaslt@merged",
+      "metadata_mode": "merged",
+      "dependency_policy": "resource_queues_v1",
+      "primary": true,
+      "implementation_id": "host_nccl_cublaslt_merged_v1",
+      "executable": "p8_w005_host",
+      "repetition": 1,
+      "trial_order": 240,
+      "ordinal": 240
+    },
+    {
+      "stage": "shape5",
+      "workload_id": "w005",
+      "shape": [
+        8,
+        64,
+        4096,
+        2048
+      ],
+      "family": "splitk4_groupedn2",
+      "candidate_id": "splitk4_groupedn2@prepared_immutable",
+      "metadata_mode": "prepared",
+      "dependency_policy": "uniform_immutable_peer_v1",
+      "primary": true,
+      "implementation_id": "direct_peer_cutlass_sm80_q4_g2_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "executable": "p8_w005_splitk4_groupedn2_immutable",
+      "repetition": 2,
+      "trial_order": 241,
+      "ordinal": 241
+    },
+    {
+      "stage": "shape5",
+      "workload_id": "w005",
+      "shape": [
+        8,
+        64,
+        4096,
+        2048
+      ],
+      "family": "splitk4",
+      "candidate_id": "splitk4@prepared_immutable",
+      "metadata_mode": "prepared",
+      "dependency_policy": "uniform_immutable_peer_v1",
+      "primary": true,
+      "implementation_id": "direct_peer_cutlass_sm80_q4_g1_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "executable": "p8_w005_splitk4_immutable",
+      "repetition": 2,
+      "trial_order": 242,
+      "ordinal": 242
+    },
+    {
+      "stage": "shape5",
+      "workload_id": "w005",
+      "shape": [
+        8,
+        64,
+        4096,
+        2048
+      ],
+      "family": "host_merged_cublaslt",
+      "candidate_id": "host_merged_cublaslt@merged",
+      "metadata_mode": "merged",
+      "dependency_policy": "resource_queues_v1",
+      "primary": true,
+      "implementation_id": "host_nccl_cublaslt_merged_v1",
+      "executable": "p8_w005_host",
+      "repetition": 2,
+      "trial_order": 250,
+      "ordinal": 250
+    },
+    {
+      "stage": "shape5",
+      "workload_id": "w005",
+      "shape": [
+        8,
+        64,
+        4096,
+        2048
+      ],
+      "family": "splitk8_groupedn2",
+      "candidate_id": "splitk8_groupedn2@prepared_immutable",
+      "metadata_mode": "prepared",
+      "dependency_policy": "uniform_immutable_peer_v1",
+      "primary": true,
+      "implementation_id": "direct_peer_cutlass_sm80_q8_g2_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "executable": "p8_w005_splitk8_groupedn2_immutable",
+      "repetition": 2,
+      "trial_order": 253,
+      "ordinal": 253
+    },
+    {
+      "stage": "shape5",
+      "workload_id": "w005",
+      "shape": [
+        8,
+        64,
+        4096,
+        2048
+      ],
+      "family": "host",
+      "candidate_id": "host@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "primary": true,
+      "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+      "executable": "p8_w005_host",
+      "repetition": 2,
+      "trial_order": 254,
+      "ordinal": 254
+    },
+    {
+      "stage": "shape5",
+      "workload_id": "w005",
+      "shape": [
+        8,
+        64,
+        4096,
+        2048
+      ],
+      "family": "host_merged_cutlass",
+      "candidate_id": "host_merged_cutlass@merged",
+      "metadata_mode": "merged",
+      "dependency_policy": "resource_queues_v1",
+      "primary": true,
+      "implementation_id": "host_nccl_cutlass_sm80_merged_v1",
+      "executable": "p8_w005_host",
+      "repetition": 2,
+      "trial_order": 256,
+      "ordinal": 256
+    },
+    {
+      "stage": "shape6",
+      "workload_id": "w006",
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "family": "host",
+      "candidate_id": "host@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "primary": true,
+      "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+      "executable": "p8_w006_host",
+      "repetition": 0,
+      "trial_order": 258,
+      "ordinal": 258
+    },
+    {
+      "stage": "shape6",
+      "workload_id": "w006",
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "family": "host_merged_cublaslt",
+      "candidate_id": "host_merged_cublaslt@merged",
+      "metadata_mode": "merged",
+      "dependency_policy": "resource_queues_v1",
+      "primary": true,
+      "implementation_id": "host_nccl_cublaslt_merged_v1",
+      "executable": "p8_w006_host",
+      "repetition": 0,
+      "trial_order": 260,
+      "ordinal": 260
+    },
+    {
+      "stage": "shape6",
+      "workload_id": "w006",
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "family": "splitk16_groupedn2",
+      "candidate_id": "splitk16_groupedn2@prepared_immutable",
+      "metadata_mode": "prepared",
+      "dependency_policy": "uniform_immutable_peer_v1",
+      "primary": true,
+      "implementation_id": "direct_peer_cutlass_sm80_q16_g2_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "executable": "p8_w006_splitk16_groupedn2_immutable",
+      "repetition": 0,
+      "trial_order": 262,
+      "ordinal": 262
+    },
+    {
+      "stage": "shape6",
+      "workload_id": "w006",
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "family": "host_merged_cutlass",
+      "candidate_id": "host_merged_cutlass@merged",
+      "metadata_mode": "merged",
+      "dependency_policy": "resource_queues_v1",
+      "primary": true,
+      "implementation_id": "host_nccl_cutlass_sm80_merged_v1",
+      "executable": "p8_w006_host",
+      "repetition": 0,
+      "trial_order": 263,
+      "ordinal": 263
+    },
+    {
+      "stage": "shape6",
+      "workload_id": "w006",
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "family": "splitk8_groupedn2",
+      "candidate_id": "splitk8_groupedn2@prepared_immutable",
+      "metadata_mode": "prepared",
+      "dependency_policy": "uniform_immutable_peer_v1",
+      "primary": true,
+      "implementation_id": "direct_peer_cutlass_sm80_q8_g2_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "executable": "p8_w006_splitk8_groupedn2_immutable",
+      "repetition": 0,
+      "trial_order": 268,
+      "ordinal": 268
+    },
+    {
+      "stage": "shape6",
+      "workload_id": "w006",
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "family": "splitk8",
+      "candidate_id": "splitk8@prepared_immutable",
+      "metadata_mode": "prepared",
+      "dependency_policy": "uniform_immutable_peer_v1",
+      "primary": true,
+      "implementation_id": "direct_peer_cutlass_sm80_q8_g1_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "executable": "p8_w006_splitk8_immutable",
+      "repetition": 0,
+      "trial_order": 271,
+      "ordinal": 271
+    },
+    {
+      "stage": "shape6",
+      "workload_id": "w006",
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "family": "splitk8_groupedn2",
+      "candidate_id": "splitk8_groupedn2@prepared_immutable",
+      "metadata_mode": "prepared",
+      "dependency_policy": "uniform_immutable_peer_v1",
+      "primary": true,
+      "implementation_id": "direct_peer_cutlass_sm80_q8_g2_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "executable": "p8_w006_splitk8_groupedn2_immutable",
+      "repetition": 1,
+      "trial_order": 275,
+      "ordinal": 275
+    },
+    {
+      "stage": "shape6",
+      "workload_id": "w006",
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "family": "splitk8",
+      "candidate_id": "splitk8@prepared_immutable",
+      "metadata_mode": "prepared",
+      "dependency_policy": "uniform_immutable_peer_v1",
+      "primary": true,
+      "implementation_id": "direct_peer_cutlass_sm80_q8_g1_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "executable": "p8_w006_splitk8_immutable",
+      "repetition": 1,
+      "trial_order": 283,
+      "ordinal": 283
+    },
+    {
+      "stage": "shape6",
+      "workload_id": "w006",
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "family": "host",
+      "candidate_id": "host@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "primary": true,
+      "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+      "executable": "p8_w006_host",
+      "repetition": 1,
+      "trial_order": 286,
+      "ordinal": 286
+    },
+    {
+      "stage": "shape6",
+      "workload_id": "w006",
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "family": "splitk16_groupedn2",
+      "candidate_id": "splitk16_groupedn2@prepared_immutable",
+      "metadata_mode": "prepared",
+      "dependency_policy": "uniform_immutable_peer_v1",
+      "primary": true,
+      "implementation_id": "direct_peer_cutlass_sm80_q16_g2_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "executable": "p8_w006_splitk16_groupedn2_immutable",
+      "repetition": 1,
+      "trial_order": 287,
+      "ordinal": 287
+    },
+    {
+      "stage": "shape6",
+      "workload_id": "w006",
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "family": "host_merged_cublaslt",
+      "candidate_id": "host_merged_cublaslt@merged",
+      "metadata_mode": "merged",
+      "dependency_policy": "resource_queues_v1",
+      "primary": true,
+      "implementation_id": "host_nccl_cublaslt_merged_v1",
+      "executable": "p8_w006_host",
+      "repetition": 1,
+      "trial_order": 288,
+      "ordinal": 288
+    },
+    {
+      "stage": "shape6",
+      "workload_id": "w006",
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "family": "host_merged_cutlass",
+      "candidate_id": "host_merged_cutlass@merged",
+      "metadata_mode": "merged",
+      "dependency_policy": "resource_queues_v1",
+      "primary": true,
+      "implementation_id": "host_nccl_cutlass_sm80_merged_v1",
+      "executable": "p8_w006_host",
+      "repetition": 1,
+      "trial_order": 290,
+      "ordinal": 290
+    },
+    {
+      "stage": "shape6",
+      "workload_id": "w006",
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "family": "host_merged_cutlass",
+      "candidate_id": "host_merged_cutlass@merged",
+      "metadata_mode": "merged",
+      "dependency_policy": "resource_queues_v1",
+      "primary": true,
+      "implementation_id": "host_nccl_cutlass_sm80_merged_v1",
+      "executable": "p8_w006_host",
+      "repetition": 2,
+      "trial_order": 292,
+      "ordinal": 292
+    },
+    {
+      "stage": "shape6",
+      "workload_id": "w006",
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "family": "splitk16_groupedn2",
+      "candidate_id": "splitk16_groupedn2@prepared_immutable",
+      "metadata_mode": "prepared",
+      "dependency_policy": "uniform_immutable_peer_v1",
+      "primary": true,
+      "implementation_id": "direct_peer_cutlass_sm80_q16_g2_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "executable": "p8_w006_splitk16_groupedn2_immutable",
+      "repetition": 2,
+      "trial_order": 293,
+      "ordinal": 293
+    },
+    {
+      "stage": "shape6",
+      "workload_id": "w006",
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "family": "splitk8",
+      "candidate_id": "splitk8@prepared_immutable",
+      "metadata_mode": "prepared",
+      "dependency_policy": "uniform_immutable_peer_v1",
+      "primary": true,
+      "implementation_id": "direct_peer_cutlass_sm80_q8_g1_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "executable": "p8_w006_splitk8_immutable",
+      "repetition": 2,
+      "trial_order": 297,
+      "ordinal": 297
+    },
+    {
+      "stage": "shape6",
+      "workload_id": "w006",
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "family": "host",
+      "candidate_id": "host@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "primary": true,
+      "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+      "executable": "p8_w006_host",
+      "repetition": 2,
+      "trial_order": 298,
+      "ordinal": 298
+    },
+    {
+      "stage": "shape6",
+      "workload_id": "w006",
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "family": "splitk8_groupedn2",
+      "candidate_id": "splitk8_groupedn2@prepared_immutable",
+      "metadata_mode": "prepared",
+      "dependency_policy": "uniform_immutable_peer_v1",
+      "primary": true,
+      "implementation_id": "direct_peer_cutlass_sm80_q8_g2_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "executable": "p8_w006_splitk8_groupedn2_immutable",
+      "repetition": 2,
+      "trial_order": 299,
+      "ordinal": 299
+    },
+    {
+      "stage": "shape6",
+      "workload_id": "w006",
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "family": "host_merged_cublaslt",
+      "candidate_id": "host_merged_cublaslt@merged",
+      "metadata_mode": "merged",
+      "dependency_policy": "resource_queues_v1",
+      "primary": true,
+      "implementation_id": "host_nccl_cublaslt_merged_v1",
+      "executable": "p8_w006_host",
+      "repetition": 2,
+      "trial_order": 304,
+      "ordinal": 304
+    },
+    {
+      "stage": "shape3",
+      "workload_id": "w003",
+      "shape": [
+        8,
+        256,
+        8192,
+        512
+      ],
+      "family": "splitk8",
+      "candidate_id": "splitk8@prepared_immutable",
+      "metadata_mode": "prepared",
+      "dependency_policy": "uniform_immutable_peer_v1",
+      "primary": true,
+      "implementation_id": "direct_peer_cutlass_sm80_q8_g1_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "executable": "p8_w003_splitk8_immutable",
+      "repetition": 0,
+      "trial_order": 117,
+      "ordinal": 117
+    },
+    {
+      "stage": "shape3",
+      "workload_id": "w003",
+      "shape": [
+        8,
+        256,
+        8192,
+        512
+      ],
+      "family": "host",
+      "candidate_id": "host@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "primary": true,
+      "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+      "executable": "p8_w003_host",
+      "repetition": 0,
+      "trial_order": 119,
+      "ordinal": 119
+    },
+    {
+      "stage": "shape3",
+      "workload_id": "w003",
+      "shape": [
+        8,
+        256,
+        8192,
+        512
+      ],
+      "family": "host_merged_cublaslt",
+      "candidate_id": "host_merged_cublaslt@merged",
+      "metadata_mode": "merged",
+      "dependency_policy": "resource_queues_v1",
+      "primary": true,
+      "implementation_id": "host_nccl_cublaslt_merged_v1",
+      "executable": "p8_w003_host",
+      "repetition": 0,
+      "trial_order": 120,
+      "ordinal": 120
+    },
+    {
+      "stage": "shape3",
+      "workload_id": "w003",
+      "shape": [
+        8,
+        256,
+        8192,
+        512
+      ],
+      "family": "host_merged_cutlass",
+      "candidate_id": "host_merged_cutlass@merged",
+      "metadata_mode": "merged",
+      "dependency_policy": "resource_queues_v1",
+      "primary": true,
+      "implementation_id": "host_nccl_cutlass_sm80_merged_v1",
+      "executable": "p8_w003_host",
+      "repetition": 0,
+      "trial_order": 121,
+      "ordinal": 121
+    },
+    {
+      "stage": "shape3",
+      "workload_id": "w003",
+      "shape": [
+        8,
+        256,
+        8192,
+        512
+      ],
+      "family": "splitk2",
+      "candidate_id": "splitk2@prepared_immutable",
+      "metadata_mode": "prepared",
+      "dependency_policy": "uniform_immutable_peer_v1",
+      "primary": true,
+      "implementation_id": "direct_peer_cutlass_sm80_q2_g1_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "executable": "p8_w003_splitk2_immutable",
+      "repetition": 0,
+      "trial_order": 122,
+      "ordinal": 122
+    },
+    {
+      "stage": "shape3",
+      "workload_id": "w003",
+      "shape": [
+        8,
+        256,
+        8192,
+        512
+      ],
+      "family": "host_merged_cutlass",
+      "candidate_id": "host_merged_cutlass@merged",
+      "metadata_mode": "merged",
+      "dependency_policy": "resource_queues_v1",
+      "primary": true,
+      "implementation_id": "host_nccl_cutlass_sm80_merged_v1",
+      "executable": "p8_w003_host",
+      "repetition": 1,
+      "trial_order": 130,
+      "ordinal": 130
+    },
+    {
+      "stage": "shape3",
+      "workload_id": "w003",
+      "shape": [
+        8,
+        256,
+        8192,
+        512
+      ],
+      "family": "splitk8",
+      "candidate_id": "splitk8@prepared_immutable",
+      "metadata_mode": "prepared",
+      "dependency_policy": "uniform_immutable_peer_v1",
+      "primary": true,
+      "implementation_id": "direct_peer_cutlass_sm80_q8_g1_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "executable": "p8_w003_splitk8_immutable",
+      "repetition": 1,
+      "trial_order": 132,
+      "ordinal": 132
+    },
+    {
+      "stage": "shape3",
+      "workload_id": "w003",
+      "shape": [
+        8,
+        256,
+        8192,
+        512
+      ],
+      "family": "splitk2",
+      "candidate_id": "splitk2@prepared_immutable",
+      "metadata_mode": "prepared",
+      "dependency_policy": "uniform_immutable_peer_v1",
+      "primary": true,
+      "implementation_id": "direct_peer_cutlass_sm80_q2_g1_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "executable": "p8_w003_splitk2_immutable",
+      "repetition": 1,
+      "trial_order": 135,
+      "ordinal": 135
+    },
+    {
+      "stage": "shape3",
+      "workload_id": "w003",
+      "shape": [
+        8,
+        256,
+        8192,
+        512
+      ],
+      "family": "host_merged_cublaslt",
+      "candidate_id": "host_merged_cublaslt@merged",
+      "metadata_mode": "merged",
+      "dependency_policy": "resource_queues_v1",
+      "primary": true,
+      "implementation_id": "host_nccl_cublaslt_merged_v1",
+      "executable": "p8_w003_host",
+      "repetition": 1,
+      "trial_order": 138,
+      "ordinal": 138
+    },
+    {
+      "stage": "shape3",
+      "workload_id": "w003",
+      "shape": [
+        8,
+        256,
+        8192,
+        512
+      ],
+      "family": "host",
+      "candidate_id": "host@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "primary": true,
+      "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+      "executable": "p8_w003_host",
+      "repetition": 1,
+      "trial_order": 139,
+      "ordinal": 139
+    },
+    {
+      "stage": "shape3",
+      "workload_id": "w003",
+      "shape": [
+        8,
+        256,
+        8192,
+        512
+      ],
+      "family": "splitk2",
+      "candidate_id": "splitk2@prepared_immutable",
+      "metadata_mode": "prepared",
+      "dependency_policy": "uniform_immutable_peer_v1",
+      "primary": true,
+      "implementation_id": "direct_peer_cutlass_sm80_q2_g1_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "executable": "p8_w003_splitk2_immutable",
+      "repetition": 2,
+      "trial_order": 143,
+      "ordinal": 143
+    },
+    {
+      "stage": "shape3",
+      "workload_id": "w003",
+      "shape": [
+        8,
+        256,
+        8192,
+        512
+      ],
+      "family": "host_merged_cublaslt",
+      "candidate_id": "host_merged_cublaslt@merged",
+      "metadata_mode": "merged",
+      "dependency_policy": "resource_queues_v1",
+      "primary": true,
+      "implementation_id": "host_nccl_cublaslt_merged_v1",
+      "executable": "p8_w003_host",
+      "repetition": 2,
+      "trial_order": 145,
+      "ordinal": 145
+    },
+    {
+      "stage": "shape3",
+      "workload_id": "w003",
+      "shape": [
+        8,
+        256,
+        8192,
+        512
+      ],
+      "family": "host_merged_cutlass",
+      "candidate_id": "host_merged_cutlass@merged",
+      "metadata_mode": "merged",
+      "dependency_policy": "resource_queues_v1",
+      "primary": true,
+      "implementation_id": "host_nccl_cutlass_sm80_merged_v1",
+      "executable": "p8_w003_host",
+      "repetition": 2,
+      "trial_order": 149,
+      "ordinal": 149
+    },
+    {
+      "stage": "shape3",
+      "workload_id": "w003",
+      "shape": [
+        8,
+        256,
+        8192,
+        512
+      ],
+      "family": "host",
+      "candidate_id": "host@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "primary": true,
+      "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+      "executable": "p8_w003_host",
+      "repetition": 2,
+      "trial_order": 152,
+      "ordinal": 152
+    },
+    {
+      "stage": "shape3",
+      "workload_id": "w003",
+      "shape": [
+        8,
+        256,
+        8192,
+        512
+      ],
+      "family": "splitk8",
+      "candidate_id": "splitk8@prepared_immutable",
+      "metadata_mode": "prepared",
+      "dependency_policy": "uniform_immutable_peer_v1",
+      "primary": true,
+      "implementation_id": "direct_peer_cutlass_sm80_q8_g1_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "executable": "p8_w003_splitk8_immutable",
+      "repetition": 2,
+      "trial_order": 155,
+      "ordinal": 155
+    },
+    {
+      "stage": "shape7",
+      "workload_id": "w007",
+      "shape": [
+        8,
+        512,
+        8192,
+        512
+      ],
+      "family": "splitk16_groupedn2",
+      "candidate_id": "splitk16_groupedn2@prepared_immutable",
+      "metadata_mode": "prepared",
+      "dependency_policy": "uniform_immutable_peer_v1",
+      "primary": true,
+      "implementation_id": "direct_peer_cutlass_sm80_q16_g2_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "executable": "p8_w007_splitk16_groupedn2_immutable",
+      "repetition": 0,
+      "trial_order": 309,
+      "ordinal": 309
+    },
+    {
+      "stage": "shape7",
+      "workload_id": "w007",
+      "shape": [
+        8,
+        512,
+        8192,
+        512
+      ],
+      "family": "host_merged_cublaslt",
+      "candidate_id": "host_merged_cublaslt@merged",
+      "metadata_mode": "merged",
+      "dependency_policy": "resource_queues_v1",
+      "primary": true,
+      "implementation_id": "host_nccl_cublaslt_merged_v1",
+      "executable": "p8_w007_host",
+      "repetition": 0,
+      "trial_order": 311,
+      "ordinal": 311
+    },
+    {
+      "stage": "shape7",
+      "workload_id": "w007",
+      "shape": [
+        8,
+        512,
+        8192,
+        512
+      ],
+      "family": "host_merged_cutlass",
+      "candidate_id": "host_merged_cutlass@merged",
+      "metadata_mode": "merged",
+      "dependency_policy": "resource_queues_v1",
+      "primary": true,
+      "implementation_id": "host_nccl_cutlass_sm80_merged_v1",
+      "executable": "p8_w007_host",
+      "repetition": 0,
+      "trial_order": 312,
+      "ordinal": 312
+    },
+    {
+      "stage": "shape7",
+      "workload_id": "w007",
+      "shape": [
+        8,
+        512,
+        8192,
+        512
+      ],
+      "family": "splitk8_groupedn2",
+      "candidate_id": "splitk8_groupedn2@prepared_immutable",
+      "metadata_mode": "prepared",
+      "dependency_policy": "uniform_immutable_peer_v1",
+      "primary": true,
+      "implementation_id": "direct_peer_cutlass_sm80_q8_g2_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "executable": "p8_w007_splitk8_groupedn2_immutable",
+      "repetition": 0,
+      "trial_order": 315,
+      "ordinal": 315
+    },
+    {
+      "stage": "shape7",
+      "workload_id": "w007",
+      "shape": [
+        8,
+        512,
+        8192,
+        512
+      ],
+      "family": "host",
+      "candidate_id": "host@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "primary": true,
+      "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+      "executable": "p8_w007_host",
+      "repetition": 0,
+      "trial_order": 322,
+      "ordinal": 322
+    },
+    {
+      "stage": "shape7",
+      "workload_id": "w007",
+      "shape": [
+        8,
+        512,
+        8192,
+        512
+      ],
+      "family": "splitk16_groupedn2",
+      "candidate_id": "splitk16_groupedn2@prepared_immutable",
+      "metadata_mode": "prepared",
+      "dependency_policy": "uniform_immutable_peer_v1",
+      "primary": true,
+      "implementation_id": "direct_peer_cutlass_sm80_q16_g2_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "executable": "p8_w007_splitk16_groupedn2_immutable",
+      "repetition": 1,
+      "trial_order": 326,
+      "ordinal": 326
+    },
+    {
+      "stage": "shape7",
+      "workload_id": "w007",
+      "shape": [
+        8,
+        512,
+        8192,
+        512
+      ],
+      "family": "splitk8_groupedn2",
+      "candidate_id": "splitk8_groupedn2@prepared_immutable",
+      "metadata_mode": "prepared",
+      "dependency_policy": "uniform_immutable_peer_v1",
+      "primary": true,
+      "implementation_id": "direct_peer_cutlass_sm80_q8_g2_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "executable": "p8_w007_splitk8_groupedn2_immutable",
+      "repetition": 1,
+      "trial_order": 333,
+      "ordinal": 333
+    },
+    {
+      "stage": "shape7",
+      "workload_id": "w007",
+      "shape": [
+        8,
+        512,
+        8192,
+        512
+      ],
+      "family": "host_merged_cutlass",
+      "candidate_id": "host_merged_cutlass@merged",
+      "metadata_mode": "merged",
+      "dependency_policy": "resource_queues_v1",
+      "primary": true,
+      "implementation_id": "host_nccl_cutlass_sm80_merged_v1",
+      "executable": "p8_w007_host",
+      "repetition": 1,
+      "trial_order": 334,
+      "ordinal": 334
+    },
+    {
+      "stage": "shape7",
+      "workload_id": "w007",
+      "shape": [
+        8,
+        512,
+        8192,
+        512
+      ],
+      "family": "host",
+      "candidate_id": "host@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "primary": true,
+      "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+      "executable": "p8_w007_host",
+      "repetition": 1,
+      "trial_order": 335,
+      "ordinal": 335
+    },
+    {
+      "stage": "shape7",
+      "workload_id": "w007",
+      "shape": [
+        8,
+        512,
+        8192,
+        512
+      ],
+      "family": "host_merged_cublaslt",
+      "candidate_id": "host_merged_cublaslt@merged",
+      "metadata_mode": "merged",
+      "dependency_policy": "resource_queues_v1",
+      "primary": true,
+      "implementation_id": "host_nccl_cublaslt_merged_v1",
+      "executable": "p8_w007_host",
+      "repetition": 1,
+      "trial_order": 336,
+      "ordinal": 336
+    },
+    {
+      "stage": "shape7",
+      "workload_id": "w007",
+      "shape": [
+        8,
+        512,
+        8192,
+        512
+      ],
+      "family": "splitk16_groupedn2",
+      "candidate_id": "splitk16_groupedn2@prepared_immutable",
+      "metadata_mode": "prepared",
+      "dependency_policy": "uniform_immutable_peer_v1",
+      "primary": true,
+      "implementation_id": "direct_peer_cutlass_sm80_q16_g2_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "executable": "p8_w007_splitk16_groupedn2_immutable",
+      "repetition": 2,
+      "trial_order": 337,
+      "ordinal": 337
+    },
+    {
+      "stage": "shape7",
+      "workload_id": "w007",
+      "shape": [
+        8,
+        512,
+        8192,
+        512
+      ],
+      "family": "host_merged_cutlass",
+      "candidate_id": "host_merged_cutlass@merged",
+      "metadata_mode": "merged",
+      "dependency_policy": "resource_queues_v1",
+      "primary": true,
+      "implementation_id": "host_nccl_cutlass_sm80_merged_v1",
+      "executable": "p8_w007_host",
+      "repetition": 2,
+      "trial_order": 342,
+      "ordinal": 342
+    },
+    {
+      "stage": "shape7",
+      "workload_id": "w007",
+      "shape": [
+        8,
+        512,
+        8192,
+        512
+      ],
+      "family": "host_merged_cublaslt",
+      "candidate_id": "host_merged_cublaslt@merged",
+      "metadata_mode": "merged",
+      "dependency_policy": "resource_queues_v1",
+      "primary": true,
+      "implementation_id": "host_nccl_cublaslt_merged_v1",
+      "executable": "p8_w007_host",
+      "repetition": 2,
+      "trial_order": 346,
+      "ordinal": 346
+    },
+    {
+      "stage": "shape7",
+      "workload_id": "w007",
+      "shape": [
+        8,
+        512,
+        8192,
+        512
+      ],
+      "family": "host",
+      "candidate_id": "host@prepared",
+      "metadata_mode": "prepared",
+      "dependency_policy": "resource_queues_v1",
+      "primary": true,
+      "implementation_id": "host_nccl_cutlass_sm80_per_source_v1_prepared_metadata_v2",
+      "executable": "p8_w007_host",
+      "repetition": 2,
+      "trial_order": 347,
+      "ordinal": 347
+    },
+    {
+      "stage": "shape7",
+      "workload_id": "w007",
+      "shape": [
+        8,
+        512,
+        8192,
+        512
+      ],
+      "family": "splitk8_groupedn2",
+      "candidate_id": "splitk8_groupedn2@prepared_immutable",
+      "metadata_mode": "prepared",
+      "dependency_policy": "uniform_immutable_peer_v1",
+      "primary": true,
+      "implementation_id": "direct_peer_cutlass_sm80_q8_g2_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "executable": "p8_w007_splitk8_groupedn2_immutable",
+      "repetition": 2,
+      "trial_order": 348,
+      "ordinal": 348
+    }
+  ],
+  "deadline_epoch": 1793165400,
+  "reason": "Fresh-process startup/teardown limits complete full matrix within rental cap. Fixed mechanism contrasts selected from prior mechanism plan, not measured speed. Full matrix failed numerical correctness on shape5 splitk16 g1 before this collection. All original rows retained separately.",
+  "independent_validation": false,
+  "compiler_admission": false,
+  "full_candidate_oracle": false,
+  "frozen_six_used": false
+}

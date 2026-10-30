@@ -1,0 +1,86 @@
+EDM-IR 最新阅读清单（核对日期：2026-10-30）
+按与当前问题的相关性排列；“最新”指本次更新，不表示每篇都是新发表。
+论文、预印本、官方代码/文档分别标注。只列原始来源，不附转载 PDF。
+
+优先阅读的论文
+
+1. NeuSight — Forecasting GPU Performance for Deep Learning Training and Inference
+   Seonho Lee, Amar Phanishayee, Divya Mahajan；ASPLOS 2025；arXiv v3。
+   论文：https://arxiv.org/abs/2407.13853v3
+   出版 DOI：https://doi.org/10.1145/3669940.3707265
+   代码：https://github.com/sitar-lab/NeuSight
+   看点：tile 粒度、物理约束下的利用率建模、未见模型/硬件评价。
+   这是之前讨论的那篇顶会论文；预测准确不等于执行加速。
+
+2. Insights into DeepSeek-V3: Scaling Challenges and Reflections on Hardware for AI Architectures
+   DeepSeek 作者团队；ISCA 2025 Industry Track；arXiv v2，2025-12-23 修订。
+   论文：https://arxiv.org/abs/2505.09343v2
+   看点：MoE 计算/通信权衡、内存和互连瓶颈、软硬件协同。
+   边界：其大规模集群与硬件常数不能直接作为我们的 A100 标签。
+
+3. NCCL EP: Towards a Unified Expert Parallel Communication API for NCCL
+   NVIDIA；2026，arXiv v3 预印本。
+   论文：https://arxiv.org/abs/2603.13606v3
+   当前实现：https://github.com/NVIDIA/nccl-extensions/tree/main/nccl_ep
+   看点：dispatch/combine、低延迟与高吞吐模式、vLLM 接入评价。
+   注意：原 NVIDIA/nccl/contrib/nccl_ep 已迁移到上述仓库。
+
+4. GPU-Initiated Networking for NCCL
+   NVIDIA；2025，arXiv v2 预印本。
+   论文：https://arxiv.org/abs/2511.15076v2
+   代码：https://github.com/NVIDIA/nccl
+   看点：Device API、设备发起通信、完成语义和 proxy 路径。
+   边界：区分节点内 LSA 与跨节点 GIN/RDMA；不能混用通信代价。
+
+5. Demystifying NCCL: An In-depth Analysis of GPU Communication Protocols and Algorithms
+   Zhiyi Hu 等，含 NVIDIA 作者；arXiv v3，2026-03-02 修订。
+   论文：https://arxiv.org/abs/2507.04786v3
+   对照实现：https://github.com/NVIDIA/nccl
+   微基准：https://github.com/NVIDIA/nccl-tests
+   看点：Simple/LL/LL128、channel、分块与启动组织；理解延迟/吞吐切换。
+
+6. Entwine: Coordinating Tiled Computation and Fine-Grained Communication across GPUs
+   Kai Ma 等；2026-09，arXiv v1 预印本；不在这里宣称已录用某会议。
+   论文：https://arxiv.org/abs/2609.11562v1
+   看点：tile 生产顺序、细粒度发布、通信预算、共享资源争用的消融。
+   边界：GEMM–ReduceScatter 与层内算子链，不是我们的 routed MoE 子图，也不是完整在线服务。
+
+DeepSeek 的较新模型/推理背景（按需要补读）
+
+7. DeepSeek-V4.1-Flash: Pushing the Limits of KV Cache Compression
+   DeepSeek-AI；2026-09-17，技术报告/预印本。
+   论文：https://arxiv.org/abs/2609.19969
+   看点：长输入负载的 prefill、KV 容量与传输压力；将成本与请求结构联系起来。
+   边界：用于理解部署瓶颈，不把 KV 压缩当作本论文的贡献或实验结果。
+
+8. DeepSeek-V4: Towards Highly Efficient Million-Token Context Intelligence
+   DeepSeek-AI；2026，技术报告/预印本。
+   论文：https://arxiv.org/abs/2606.19348
+   看点：MoE 与长上下文的系统设计；阅读时区分模型能力、计算量和服务吞吐。
+
+直接配套的官方实现/测量资料（以下不是论文）
+
+9. DeepEP 与公开 profile-data
+   https://github.com/deepseek-ai/DeepEP
+   https://github.com/deepseek-ai/profile-data
+   看点：通信资源预算、dispatch/combine、prefill/decode 时间线。
+   本地已核对 DeepEP f6aa38fe06cd4a0489e7730365d4e0114970a2f3，
+   profile-data 449602428a1b023acb8a505d4f34fef536535db6。
+   边界：旧 H800 时间线与新 API 代际分开；kernel 重合比例不等于隐藏通信收益。
+
+10. DeepInfer benchmark 与 DeepGEMM
+    https://github.com/deepseek-ai/DeepInfer/blob/main/examples/README.md
+    https://github.com/deepseek-ai/DeepGEMM
+    看点：预热、稳态计时、日志/分析窗口分离，基线是否真正执行。
+    本地源码固定版本见 experiments/2026-10-29-cpu-preparation/source-manifest.json。
+    边界：借测量方法；SM100 引擎或 Hopper+ 算子不等于 A100 可运行。
+
+11. NVIDIA NCCL Device API、Nsight Systems、Nsight Compute
+    https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/usage/deviceapi.html
+    https://docs.nvidia.com/nsight-systems/UserGuide/index.html#focused-profiling
+    https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html#workload-durations
+    看点：同步/内存语义、短窗口时间线、profiling 扰动。
+    正式耗时与 profiler 运行分开；计数器缺失明确记录。
+
+建议先读 1、2、3、6，再按具体问题查 4、5、9—11；7、8 属于应用背景。
+本清单不是“所有最新论文”的穷尽检索，也不意味着已在本项目复现全部工作。

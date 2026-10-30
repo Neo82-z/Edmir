@@ -1,0 +1,722 @@
+{
+  "model": {
+    "schema": "edmir.shape-decision.v1",
+    "variant": "linear_latency",
+    "features": [
+      "host",
+      "merged_host",
+      "geometry_unknown",
+      "uniform_dependencies",
+      "prepared",
+      "log_P",
+      "log_M",
+      "log_K",
+      "log_N",
+      "log_SM",
+      "log_q",
+      "log_group_N",
+      "log_gemms_per_destination",
+      "log_logical_flops",
+      "log_A_bytes",
+      "log_B_bytes",
+      "log_remote_input_bytes",
+      "log_m_tiles",
+      "log_n_tiles",
+      "log_output_tiles",
+      "log_ctas",
+      "log_K_iterations",
+      "valid_tile_fraction",
+      "last_M_fraction",
+      "last_N_fraction",
+      "reference_waves",
+      "last_wave_fraction",
+      "log_epilogue_edges",
+      "log_padded_work",
+      "group_x_K_depth",
+      "q_x_output_tiles"
+    ],
+    "width": 0,
+    "means": [
+      0.5,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.609437912434108,
+      4.374669616744559,
+      7.647690858947724,
+      6.151761840321211,
+      4.691347882229122,
+      1.1897371205854335,
+      0.7487351389296152,
+      1.609437912434108,
+      18.849131409528706,
+      12.700250352267357,
+      14.489013071583976,
+      15.185152201023389,
+      0.8661789354330244,
+      1.541490796410355,
+      1.776121565338974,
+      2.3831261700449975,
+      3.558971062970604,
+      0.9314516129032298,
+      0.9516129032258108,
+      0.9798387096774234,
+      1.0935483870967786,
+      0.1354241338112306,
+      1.1966719821109886,
+      18.94415965043256,
+      0.3863686213928681,
+      1.7276029396365118
+    ],
+    "scales": [
+      0.5000000000000011,
+      0.1,
+      0.1,
+      0.1,
+      0.1,
+      0.1,
+      0.5828608941960152,
+      0.9224147757744856,
+      0.7801205484169791,
+      0.1,
+      0.7334921249407808,
+      0.13945951539483256,
+      0.1,
+      1.3685089682807607,
+      1.132636056673529,
+      1.1856895121728503,
+      1.1326401453260195,
+      0.3517374553128123,
+      0.6082110411286883,
+      0.7835635215615531,
+      1.1950281020707363,
+      1.2535430208796712,
+      0.17197474283980685,
+      0.147825022417931,
+      0.1,
+      0.40276102245261464,
+      0.15428109220820665,
+      1.6807171747756515,
+      1.3400254088471724,
+      1.0651449311193786,
+      2.810767921427276
+    ],
+    "theta": [
+      -0.0038098163371549187,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -6.481239021197768e-10,
+      -0.08453945056573707,
+      -0.12860047710099812,
+      -0.017164544642085795,
+      1.777711007796032e-09,
+      0.8729699831197808,
+      0.034812554817209365,
+      -6.481239021197768e-10,
+      -0.1426013100222539,
+      -0.15619579855896576,
+      -0.12591234694284606,
+      -0.1562833251580285,
+      0.257945969638953,
+      0.13725831873020986,
+      0.08729935787832938,
+      0.21286039985908414,
+      1.3111958219290267,
+      0.06000234670292574,
+      0.06444245106726103,
+      0.009606235656754255,
+      0.05639940687676079,
+      0.022615510616483803,
+      -0.13870142630526824,
+      -0.15439211399490682,
+      0.09058410590864364,
+      0.016053360780237922,
+      6.453501148750896
+    ],
+    "execution_context": "a100-sxm4-80gb-p4-2026-08-29",
+    "world_size": 4,
+    "training_shapes": [
+      [
+        4,
+        32,
+        1024,
+        512
+      ],
+      [
+        4,
+        32,
+        4096,
+        512
+      ],
+      [
+        4,
+        32,
+        8192,
+        512
+      ],
+      [
+        4,
+        64,
+        512,
+        128
+      ],
+      [
+        4,
+        64,
+        512,
+        256
+      ],
+      [
+        4,
+        64,
+        512,
+        1024
+      ],
+      [
+        4,
+        64,
+        512,
+        2048
+      ],
+      [
+        4,
+        64,
+        1024,
+        128
+      ],
+      [
+        4,
+        64,
+        1024,
+        256
+      ],
+      [
+        4,
+        64,
+        1024,
+        512
+      ],
+      [
+        4,
+        64,
+        1024,
+        1024
+      ],
+      [
+        4,
+        64,
+        1024,
+        2048
+      ],
+      [
+        4,
+        64,
+        2048,
+        128
+      ],
+      [
+        4,
+        64,
+        2048,
+        256
+      ],
+      [
+        4,
+        64,
+        2048,
+        512
+      ],
+      [
+        4,
+        64,
+        2048,
+        1024
+      ],
+      [
+        4,
+        64,
+        4096,
+        128
+      ],
+      [
+        4,
+        64,
+        4096,
+        256
+      ],
+      [
+        4,
+        64,
+        4096,
+        512
+      ],
+      [
+        4,
+        64,
+        4096,
+        1024
+      ],
+      [
+        4,
+        64,
+        8192,
+        128
+      ],
+      [
+        4,
+        64,
+        8192,
+        512
+      ],
+      [
+        4,
+        64,
+        8192,
+        2048
+      ],
+      [
+        4,
+        128,
+        512,
+        512
+      ],
+      [
+        4,
+        128,
+        1024,
+        512
+      ],
+      [
+        4,
+        128,
+        2048,
+        512
+      ],
+      [
+        4,
+        128,
+        4096,
+        512
+      ],
+      [
+        4,
+        128,
+        8192,
+        512
+      ],
+      [
+        4,
+        256,
+        2048,
+        512
+      ],
+      [
+        4,
+        256,
+        4096,
+        512
+      ],
+      [
+        4,
+        512,
+        4096,
+        512
+      ]
+    ],
+    "training_sources": [
+      "bf237f25dc73e71721f02871e6639ef1eb0380d5b88534974014246dc57f6f72"
+    ],
+    "settings": {
+      "epochs": 100,
+      "learning_rate": 0.003,
+      "weight_decay": 0.001,
+      "temperature": 0.05,
+      "seeds": [
+        0,
+        1
+      ],
+      "gradient_clip": 10.0,
+      "batching": "all training shapes; equal shape mass",
+      "max_seconds": 10.0
+    },
+    "runs": [
+      {
+        "seed": 0,
+        "initial_loss": 0.03443541692458727,
+        "final_loss": 0.034094286666945056,
+        "epochs": 100,
+        "gradient_norm": 0.0023792398151841034,
+        "initial_loss_worsened": false,
+        "convergence_claim": false
+      }
+    ],
+    "selected_start": 0,
+    "seconds": 0.02476845809724182,
+    "compiler_admission": false,
+    "physical_service_parameters_identified": false
+  },
+  "evaluation": {
+    "decisions": [
+      {
+        "shape": [
+          4,
+          32,
+          512,
+          512
+        ],
+        "chosen": "splitk2",
+        "scores_log_us": {
+          "direct": 6.022269693874627,
+          "host": 6.014650061200316,
+          "splitk16": 6.566618177083973,
+          "splitk2": 5.826096982680615,
+          "splitk4": 5.8737190589753965,
+          "splitk8": 6.121799302926347
+        },
+        "measured_us": {
+          "direct": 312.40000000000003,
+          "host": 569.5,
+          "splitk16": 664.3,
+          "splitk2": 303.59999999999997,
+          "splitk4": 335.8,
+          "splitk8": 422.09999999999997
+        },
+        "regret": 0.0,
+        "host_wins": false,
+        "fused_wins": true,
+        "wrong_host_to_fused": false,
+        "wrong_fused_to_host": false,
+        "order_invariant": true,
+        "mape": 0.15450108241448696
+      },
+      {
+        "shape": [
+          4,
+          32,
+          2048,
+          512
+        ],
+        "chosen": "splitk4",
+        "scores_log_us": {
+          "direct": 6.3982087953676725,
+          "host": 6.390589162693363,
+          "splitk16": 6.498132907449997,
+          "splitk2": 6.158218499271647,
+          "splitk4": 6.12686028871254,
+          "splitk8": 6.244020901372631
+        },
+        "measured_us": {
+          "direct": 598.7,
+          "host": 587.7,
+          "splitk16": 701.5,
+          "splitk2": 437.90000000000003,
+          "splitk4": 380.90000000000003,
+          "splitk8": 465.4
+        },
+        "regret": 0.0,
+        "host_wins": false,
+        "fused_wins": true,
+        "wrong_host_to_fused": false,
+        "wrong_fused_to_host": false,
+        "order_invariant": true,
+        "mape": 0.07659252913853602
+      },
+      {
+        "shape": [
+          4,
+          64,
+          512,
+          512
+        ],
+        "chosen": "splitk2",
+        "scores_log_us": {
+          "direct": 6.052913538365796,
+          "direct_groupedn2": 6.129178036114054,
+          "host": 6.045293905691485,
+          "splitk16": 6.597262021575142,
+          "splitk16_groupedn2": 6.465242588327351,
+          "splitk2": 5.856740827171785,
+          "splitk2_groupedn2": 5.901733790912713,
+          "splitk4": 5.9043629034665654,
+          "splitk4_groupedn2": 5.8913660399910555,
+          "splitk8": 6.152443147417516,
+          "splitk8_groupedn2": 6.080682245035943
+        },
+        "measured_us": {
+          "direct": 314.8,
+          "direct_groupedn2": 346.1,
+          "host": 564.9,
+          "splitk16": 701.6,
+          "splitk16_groupedn2": 790.2,
+          "splitk2": 312.8,
+          "splitk2_groupedn2": 335.2,
+          "splitk4": 336.9,
+          "splitk4_groupedn2": 355.9,
+          "splitk8": 441.09999999999997,
+          "splitk8_groupedn2": 492.0
+        },
+        "regret": 0.0,
+        "host_wins": false,
+        "fused_wins": true,
+        "wrong_host_to_fused": false,
+        "wrong_fused_to_host": false,
+        "order_invariant": true,
+        "mape": 0.15019420662453797
+      },
+      {
+        "shape": [
+          4,
+          64,
+          2048,
+          2048
+        ],
+        "chosen": "splitk2",
+        "scores_log_us": {
+          "direct": 6.593777664008883,
+          "host": 6.586158031334573,
+          "splitk16": 6.866359044996348,
+          "splitk2": 6.2895214794250025,
+          "splitk4": 6.296681183471472,
+          "splitk8": 6.48062671288902
+        },
+        "measured_us": {
+          "direct": 620.8000000000001,
+          "host": 594.9,
+          "splitk16": 951.0999999999999,
+          "splitk2": 471.9,
+          "splitk4": 498.7,
+          "splitk8": 652.5999999999999
+        },
+        "regret": 0.0,
+        "host_wins": false,
+        "fused_wins": true,
+        "wrong_host_to_fused": false,
+        "wrong_fused_to_host": false,
+        "order_invariant": true,
+        "mape": 0.10581503351572204
+      },
+      {
+        "shape": [
+          4,
+          64,
+          4096,
+          2048
+        ],
+        "chosen": "splitk4",
+        "scores_log_us": {
+          "direct": 6.797198361107364,
+          "host": 6.789578728433055,
+          "splitk16": 6.9676506956885,
+          "splitk2": 6.485049722152604,
+          "splitk4": 6.476953121017512,
+          "splitk8": 6.632337370714605
+        },
+        "measured_us": {
+          "direct": 1068.1000000000001,
+          "host": 645.3,
+          "splitk16": 1148.1,
+          "splitk2": 724.8,
+          "splitk4": 720.9,
+          "splitk8": 825.2
+        },
+        "regret": 0.11715481171548126,
+        "host_wins": true,
+        "fused_wins": false,
+        "wrong_host_to_fused": true,
+        "wrong_fused_to_host": false,
+        "order_invariant": true,
+        "mape": 0.1480217304504028
+      },
+      {
+        "shape": [
+          4,
+          64,
+          8192,
+          256
+        ],
+        "chosen": "splitk4",
+        "scores_log_us": {
+          "direct": 6.814697536957497,
+          "direct_groupedn2": 7.177569777390165,
+          "host": 6.8070779042831875,
+          "splitk16": 6.730483171195001,
+          "splitk16_groupedn2": 6.841422554801844,
+          "splitk2": 6.58561514560343,
+          "splitk2_groupedn2": 6.900890726110761,
+          "splitk4": 6.523106033471698,
+          "splitk4_groupedn2": 6.7740729200514505,
+          "splitk8": 6.581127638489981,
+          "splitk8_groupedn2": 6.763807890638786
+        },
+        "measured_us": {
+          "direct": 1883.6,
+          "direct_groupedn2": 2315.6,
+          "host": 817.8,
+          "splitk16": 792.0,
+          "splitk16_groupedn2": 922.0,
+          "splitk2": 1078.6,
+          "splitk2_groupedn2": 1305.5,
+          "splitk4": 721.7,
+          "splitk4_groupedn2": 849.9,
+          "splitk8": 636.7,
+          "splitk8_groupedn2": 742.6
+        },
+        "regret": 0.13350086382911885,
+        "host_wins": false,
+        "fused_wins": true,
+        "wrong_host_to_fused": false,
+        "wrong_fused_to_host": false,
+        "order_invariant": true,
+        "mape": 0.189231721920216
+      },
+      {
+        "shape": [
+          4,
+          64,
+          8192,
+          1024
+        ],
+        "chosen": "splitk4",
+        "scores_log_us": {
+          "direct": 6.90702732416809,
+          "direct_groupedn2": 7.171893758156639,
+          "host": 6.8994076914937805,
+          "splitk16": 6.898276657419208,
+          "splitk16_groupedn2": 6.882996068602731,
+          "splitk2": 6.6239943440270075,
+          "splitk2_groupedn2": 6.86137823074069,
+          "splitk4": 6.583108194249269,
+          "splitk4_groupedn2": 6.7485800167252075,
+          "splitk8": 6.682321351876987,
+          "splitk8_groupedn2": 6.764273493227254
+        },
+        "measured_us": {
+          "direct": 1918.7,
+          "direct_groupedn2": 2302.1,
+          "host": 944.1,
+          "splitk16": 1095.2,
+          "splitk16_groupedn2": 999.7,
+          "splitk2": 1106.9,
+          "splitk2_groupedn2": 1286.8999999999999,
+          "splitk4": 764.0,
+          "splitk4_groupedn2": 844.1999999999999,
+          "splitk8": 850.8,
+          "splitk8_groupedn2": 759.9
+        },
+        "regret": 0.005395446769311807,
+        "host_wins": false,
+        "fused_wins": true,
+        "wrong_host_to_fused": false,
+        "wrong_fused_to_host": false,
+        "order_invariant": true,
+        "mape": 0.1752396960199829
+      },
+      {
+        "shape": [
+          4,
+          256,
+          8192,
+          512
+        ],
+        "chosen": "splitk4",
+        "scores_log_us": {
+          "direct": 6.996238569479529,
+          "host": 6.988618936805219,
+          "splitk16": 7.110965776767516,
+          "splitk2": 6.680074842504515,
+          "splitk4": 6.664085786998543,
+          "splitk8": 6.804213731514077
+        },
+        "measured_us": {
+          "direct": 2139.1,
+          "host": 1268.8,
+          "splitk16": 1490.3,
+          "splitk2": 1233.5,
+          "splitk4": 1074.1000000000001,
+          "splitk8": 1180.8000000000002
+        },
+        "regret": 0.0,
+        "host_wins": false,
+        "fused_wins": true,
+        "wrong_host_to_fused": false,
+        "wrong_fused_to_host": false,
+        "order_invariant": true,
+        "mape": 0.2789413282121061
+      },
+      {
+        "shape": [
+          4,
+          512,
+          2048,
+          512
+        ],
+        "chosen": "splitk2",
+        "scores_log_us": {
+          "direct": 6.786643489474663,
+          "host": 6.779023856800353,
+          "splitk16": 7.3349567064212176,
+          "splitk2": 6.455751675346533,
+          "splitk4": 6.5033050499780645,
+          "splitk8": 6.778108196464492
+        },
+        "measured_us": {
+          "direct": 636.9,
+          "host": 727.9,
+          "splitk16": 1089.6,
+          "splitk2": 627.1,
+          "splitk4": 673.6,
+          "splitk8": 848.3000000000001
+        },
+        "regret": 0.0,
+        "host_wins": false,
+        "fused_wins": true,
+        "wrong_host_to_fused": false,
+        "wrong_fused_to_host": false,
+        "order_invariant": true,
+        "mape": 0.1775527495624801
+      },
+      {
+        "shape": [
+          4,
+          512,
+          8192,
+          512
+        ],
+        "chosen": "splitk2",
+        "scores_log_us": {
+          "direct": 7.197482470903864,
+          "host": 7.189862838229554,
+          "splitk16": 7.58794151415094,
+          "splitk2": 6.854683114384601,
+          "splitk4": 6.8790877294636905,
+          "splitk8": 7.110073291048103
+        },
+        "measured_us": {
+          "direct": 2336.9,
+          "host": 1529.8,
+          "splitk16": 2010.6000000000001,
+          "splitk2": 1830.0,
+          "splitk4": 1807.9,
+          "splitk8": 2022.8999999999999
+        },
+        "regret": 0.1962348019348934,
+        "host_wins": true,
+        "fused_wins": false,
+        "wrong_host_to_fused": true,
+        "wrong_fused_to_host": false,
+        "order_invariant": true,
+        "mape": 0.3197899900736789
+      }
+    ],
+    "mean_regret": 0.04522859242488053,
+    "max_regret": 0.1962348019348934,
+    "host_winning_shapes": 2,
+    "fused_winning_shapes": 8,
+    "wrong_host_to_fused": 2,
+    "wrong_fused_to_host": 0,
+    "all_order_invariant": true
+  }
+}
