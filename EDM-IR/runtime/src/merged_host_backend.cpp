@@ -4,6 +4,7 @@
 #include <cuda_runtime_api.h>
 #include <cublasLt.h>
 #include <nccl.h>
+#include "edmir/runtime/nccl_group.hpp"
 #include <numeric>
 #include <sstream>
 #include <stdexcept>
@@ -44,13 +45,14 @@ class MergedHostBackend::Impl {
   };
   ProgramView program;
   MergedProvider provider;
+  std::shared_ptr<NcclGroup> group;
   UniformWorkload work;
   std::vector<Rank> ranks;
   std::vector<void*> external;
   bool prepared = false;
 
-  Impl(ProgramView p, MergedProvider v)
-      : program(p), provider(v), work(uniform_workload(p)), ranks(p.problem.world_size),
+  Impl(ProgramView p, MergedProvider v, std::shared_ptr<NcclGroup> shared_group)
+      : program(p), provider(v), group(std::move(shared_group)), work(uniform_workload(p)), ranks(p.problem.world_size),
         external(p.buffers.size(), nullptr) {
     if (work.fused || p.dependency_policy != DependencyPolicy::kResourceQueuesV1 ||
         p.communication_api != CommunicationApi::kHostNCCL ||
@@ -67,7 +69,6 @@ class MergedHostBackend::Impl {
       auto& r = ranks[d];
       if (r.compute) cudaStreamSynchronize(r.compute);
       if (r.communication) cudaStreamSynchronize(r.communication);
-      if (r.comm) ncclCommDestroy(r.comm);
       if (r.preference) cublasLtMatmulPreferenceDestroy(r.preference);
       if (r.operation) cublasLtMatmulDescDestroy(r.operation);
       if (r.a) cublasLtMatrixLayoutDestroy(r.a);
@@ -137,12 +138,11 @@ class MergedHostBackend::Impl {
     int count = 0;
     check(cudaGetDeviceCount(&count));
     if (count < program.problem.world_size) throw std::runtime_error("insufficient visible GPUs");
-    std::vector<ncclComm_t> comms(ranks.size());
     std::vector<int> devices(ranks.size());
     std::iota(devices.begin(), devices.end(), 0);
-    const auto initialized = ncclCommInitAll(comms.data(), static_cast<int>(ranks.size()), devices.data());
+    if (!group) group = std::make_shared<NcclGroup>(devices);
+    const auto& comms = group->for_devices(devices);
     for (std::size_t d = 0; d < ranks.size(); ++d) ranks[d].comm = comms[d];
-    check(initialized);
     const auto& p = program.problem;
     for (std::size_t d = 0; d < ranks.size(); ++d) {
       check(cudaSetDevice(static_cast<int>(d)));
@@ -227,7 +227,8 @@ class MergedHostBackend::Impl {
   }
 };
 
-MergedHostBackend::MergedHostBackend(ProgramView p, MergedProvider v) : impl_(std::make_unique<Impl>(p, v)) {}
+MergedHostBackend::MergedHostBackend(ProgramView p, MergedProvider v, std::shared_ptr<NcclGroup> group)
+    : impl_(std::make_unique<Impl>(p, v, std::move(group))) {}
 MergedHostBackend::~MergedHostBackend() = default;
 void MergedHostBackend::prepare() { impl_->prepare(); }
 void MergedHostBackend::execute() { impl_->execute(); }

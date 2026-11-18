@@ -23,6 +23,8 @@ MERGED_FAMILIES = ("host_merged_cutlass", "host_merged_cublaslt")
 
 
 def implementation_id(family, metadata_mode, *, dependency_policy="resource_queues_v1"):
+    fp32 = family.endswith("_fp32reduce")
+    family = family.removesuffix("_fp32reduce")
     from edmir.compiler.execution_policy import POLICIES, LEGACY_POLICY
     if dependency_policy not in POLICIES or (family in BASELINES and dependency_policy != LEGACY_POLICY):
         raise ValueError("dependency policy does not match candidate")
@@ -34,7 +36,13 @@ def implementation_id(family, metadata_mode, *, dependency_policy="resource_queu
         result = BASELINES[family].baseline_id
     else:
         q, g = parse_schedule_family(family)
+        if fp32 and q == 1:
+            raise ValueError("FP32 cross-partition candidate needs q > 1")
         result = f"direct_peer_cutlass_sm80_q{q}_g{g}"
+    if fp32:
+        if family in BASELINES:
+            raise ValueError("FP32 cross-partition candidate must be fused")
+        result += "_fp32reduce_v1"
     return (result + ("_prepared_metadata_v2" if metadata_mode == "prepared" else "")
             + ("_"+dependency_policy if dependency_policy != LEGACY_POLICY else ""))
 
@@ -52,6 +60,8 @@ def metadata_candidates():
 
 
 def program_artifact(shape, family, *, dependency_policy="resource_queues_v1"):
+    fp32 = family.endswith("_fp32reduce")
+    family = family.removesuffix("_fp32reduce")
     p, m, k, n = shape
     problem = A2AGemmProblem(p, m, k, n)
     topology = TopologySnapshot(p, ("planned-A100",)*p, tuple((True,)*p for _ in range(p)))
@@ -62,18 +72,18 @@ def program_artifact(shape, family, *, dependency_policy="resource_queues_v1"):
               "sm80_64x128x32"+(f"_splitk{q}" if q > 1 else ""))
     target = Target("selector-experiment", topology, arch="sm_80", gemm_provider=provider,
                     gemm_kernel=kernel, communication_api="host_nccl" if host else "nccl_device",
-                    fused_schedule=FusedScheduleContract(g))
+                    fused_schedule=FusedScheduleContract(g, "serial_fp32" if fp32 else "serial_fp16"))
     program = build_sequential_program(problem) if host else build_fused_program(problem, chunk_rows=m)
     from edmir.compiler.execution_policy import with_dependency_policy
     program = with_dependency_policy(program, dependency_policy)
     return CppManifestBackend().emit(program, target)
 
 
-def matrix(rows, columns, stream):
+def matrix(rows, columns, stream, seed=SEED):
     """Integer avalanche mixing; exact FP16 dyadic values, no RNG-library state."""
     import numpy as np
     x = np.arange(rows*columns, dtype=np.uint32)
-    x ^= np.uint32((SEED+stream*0x9e3779b9) & 0xffffffff)
+    x ^= np.uint32((seed+stream*0x9e3779b9) & 0xffffffff)
     x ^= x >> np.uint32(16)
     x *= np.uint32(0x7feb352d)
     x ^= x >> np.uint32(15)
@@ -83,17 +93,17 @@ def matrix(rows, columns, stream):
     return values.astype("<f2").reshape(rows, columns)
 
 
-def write_inputs(shape, root):
+def write_inputs(shape, root, *, seed=SEED):
     """Canonical A[source,destination], then W[destination]; C uses the same order."""
     import numpy as np
     p, m, k, n = shape
     root.mkdir(parents=True, exist_ok=False)
-    weights = [matrix(k, n, p*p+d) for d in range(p)]
+    weights = [matrix(k, n, p*p+d, seed) for d in range(p)]
     input_path, reference_path = root/"inputs.bin", root/"reference.bin"
     with input_path.open("xb") as inputs, reference_path.open("xb") as outputs:
         for source in range(p):
             for destination in range(p):
-                a = matrix(m, k, source*p+destination)
+                a = matrix(m, k, source*p+destination, seed)
                 inputs.write(a.tobytes(order="C"))
                 c = a.astype(np.float32) @ weights[destination].astype(np.float32)
                 if c.dtype != np.float32 or not np.isfinite(c).all():
@@ -101,7 +111,7 @@ def write_inputs(shape, root):
                 outputs.write(c.astype("<f4").tobytes(order="C"))
         for w in weights:
             inputs.write(w.tobytes(order="C"))
-    return {"shape": list(shape), "input_seed": SEED, "input_sha256": sha256(input_path),
+    return {"shape": list(shape), "input_seed": seed, "input_sha256": sha256(input_path),
             "reference_sha256": sha256(reference_path),
             "input_bytes": input_path.stat().st_size, "reference_bytes": reference_path.stat().st_size,
             "generator": "uint32 avalanche v1; (low5bits-16)/32 exactly represented in FP16",

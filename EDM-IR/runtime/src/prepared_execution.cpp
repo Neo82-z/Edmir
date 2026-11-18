@@ -2,13 +2,14 @@
 
 #include <algorithm>
 #include <stdexcept>
+#include <numeric>
 #include <string>
 
 #include "edmir/runtime/validate.hpp"
 
 namespace edmir::runtime {
 
-PreparedExecution prepare_execution(ProgramView p) {
+PreparedExecution prepare_execution(ProgramView p, bool pipeline_control_order) {
   const auto report = validate_program(p);
   if (!report.valid()) {
     std::string message = "invalid ProgramView for execution preparation";
@@ -16,7 +17,15 @@ PreparedExecution prepare_execution(ProgramView p) {
     throw std::invalid_argument(message);
   }
   PreparedExecution result;
-  result.order = topological_order(p);
+  if (pipeline_control_order) {
+    if (p.strategy != "pipelined" || std::any_of(p.dependencies.begin(), p.dependencies.end(),
+        [](auto edge){ return edge.src_op >= edge.dst_op; }))
+      throw std::invalid_argument("declared-order pipeline requires forward dependencies");
+    result.order.resize(p.ops.size());
+    std::iota(result.order.begin(), result.order.end(), std::size_t{0});
+  } else {
+    result.order = topological_order(p);
+  }
   result.ops.resize(p.ops.size());
   for (std::size_t i = 0; i < p.ops.size(); ++i) {
     const auto& op = p.ops[i];

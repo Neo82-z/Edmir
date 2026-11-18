@@ -20,7 +20,14 @@
 #include "edmir/runtime/cuda_backend.hpp"
 #include "edmir/runtime/merged_host_backend.hpp"
 #include "edmir/runtime/uniform_workload.hpp"
+#ifdef EDMIR_SELECTOR_BATCH
+#include "edmir_batch.hpp"
+#include <nvtx3/nvToolsExt.h>
+#include "edmir/runtime/nccl_group.hpp"
+#include <set>
+#else
 #include "edmir_program.hpp"
+#endif
 
 namespace {
 using namespace edmir::runtime;
@@ -81,6 +88,11 @@ std::string implementation(ProgramView p, const UniformWorkload& w, const std::s
   if (family == "host_merged_cutlass") return "host_nccl_cutlass_sm80_merged_v1";
   if (family == "host_merged_cublaslt") return "host_nccl_cublaslt_merged_v1";
   if (!w.fused) {
+    if (p.strategy == "pipelined" && p.buffer_count == 2 &&
+        p.chunk_rows == p.problem.rows_per_peer && p.gemm_provider == GemmProvider::kCUTLASS &&
+        p.gemm_kernel == GemmKernel::kSm80_64x128x32 &&
+        (family == "pipeline" || family == "pipeline_serial"))
+      return family + "_cutlass_sm80_double_buffer_v1";
     if (p.strategy != "sequential") throw std::invalid_argument("host schedule is not sequential");
     if (family == "host" && p.gemm_provider == GemmProvider::kCUTLASS &&
         p.gemm_kernel == GemmKernel::kSm80_64x128x32)
@@ -89,12 +101,39 @@ std::string implementation(ProgramView p, const UniformWorkload& w, const std::s
       return "host_nccl_cublas_per_source_v1";
   } else if (p.gemm_provider == GemmProvider::kCUTLASS) {
     const int q = gemm_kernel_split_k_slices(p.gemm_kernel), g = p.fused_schedule.n_tiles_per_cta;
+    const bool fp32 = p.fused_schedule.split_k_reduction == SplitKReduction::kSerialFP32;
     const auto expected = (q == 1 ? std::string("direct") : "splitk"+std::to_string(q))+
-        (g == 1 ? "" : "_groupedn2");
+        (g == 1 ? "" : "_groupedn2") + (fp32 ? "_fp32reduce" : "");
     if (family == expected)
-      return "direct_peer_cutlass_sm80_q"+std::to_string(q)+"_g"+std::to_string(g);
+      return "direct_peer_cutlass_sm80_q"+std::to_string(q)+"_g"+std::to_string(g)+
+          (fp32 ? "_fp32reduce_v1" : "");
   }
   throw std::invalid_argument("family label does not match the compiled program");
+}
+
+struct NumericalFailure : std::runtime_error {
+  Accuracy accuracy;
+  NumericalFailure(const char* phase, Accuracy a) : std::runtime_error(phase), accuracy(a) {}
+};
+
+std::string measurement_identity(ProgramView p, const UniformWorkload& w,
+                                 const std::string& family, const std::string& mode) {
+  auto identity = implementation(p, w, family);
+  if (mode == "prepared") identity += "_prepared_metadata_v2";
+  if (p.dependency_policy != DependencyPolicy::kResourceQueuesV1)
+    identity += "_" + std::string(dependency_policy_name(p.dependency_policy));
+  return identity;
+}
+
+std::string precision_json(ProgramView p, const std::string& family) {
+  const bool opaque = family == "host_merged_cublaslt";
+  const bool split = gemm_kernel_split_k_slices(p.gemm_kernel) > 1;
+  const bool fp32 = p.fused_schedule.split_k_reduction == SplitKReduction::kSerialFP32;
+  return "{\"input\":\"fp16\",\"weight\":\"fp16\",\"output\":\"fp16\",\"accumulator\":\"fp32\","
+      "\"accumulator_evidence\":" + quote(opaque ? "api_requested" : "source") +
+      ",\"partial\":" + quote(opaque ? "unknown" : !split ? "none" : fp32 ? "fp32" : "fp16") +
+      ",\"reduction\":" + quote(opaque ? "library_unknown" : !split ? "single_output_cast" :
+                                  fp32 ? "serial_fp32_then_fp16" : "serial_fp16_feedback") + "}";
 }
 
 std::string runtime_json(ProgramView p);
@@ -102,11 +141,8 @@ std::string runtime_json(ProgramView p);
 template<class Backend>
 void measure(Backend& backend, ProgramView p, const UniformWorkload& w, const std::string& family,
              const std::string& inputs, const std::string& reference, int warmup, int iterations,
-             const std::string& metadata_mode) {
-  auto identity = implementation(p, w, family);
-  if (metadata_mode == "prepared") identity += "_prepared_metadata_v2";
-  if (p.dependency_policy != DependencyPolicy::kResourceQueuesV1)
-    identity += "_" + std::string(dependency_policy_name(p.dependency_policy));
+             const std::string& metadata_mode, int seed = 20261020, bool verify_only = false, bool diagnostic = false) {
+  const auto identity = measurement_identity(p, w, family, metadata_mode);
   backend.prepare();
   std::ifstream file(inputs, std::ios::binary);
   if (!file) throw std::runtime_error("cannot open experiment inputs");
@@ -119,8 +155,27 @@ void measure(Backend& backend, ProgramView p, const UniformWorkload& w, const st
   require_end(file);
   backend.execute(); backend.synchronize();
   const auto before = verify(backend, p, w, reference);
-  if (!before.passed()) throw std::runtime_error("initial numerical correctness failed");
+  if (!before.passed()) throw NumericalFailure("initial numerical correctness failed", before);
+  if (verify_only) {
+    std::cout << std::setprecision(17) << "{\"family\":" << quote(family) << ",\"correctness_passed\":true,\"check_only\":true,\"input_seed\":" << seed
+              << ",\"implementation_id\":" << quote(identity)
+              << ",\"precision\":" << precision_json(p, family)
+              << ",\"error_contract\":\"max_abs_over_max_1_abs_ref_le_0.02_v1\",\"nonfinite_outputs\":0"
+              << ",\"max_abs_error\":" << before.absolute << ",\"max_rel_error\":" << before.relative << ",\"checked_elements\":" << before.checked << "}\n";
+    return;
+  }
   for (int i = 0; i < warmup; ++i) { backend.execute(); backend.synchronize(); }
+#ifdef EDMIR_SELECTOR_BATCH
+  if (diagnostic) {
+    nvtxRangePushA("edmir.w1.capture");
+    for (int i=0; i<3; ++i) { backend.execute(); backend.synchronize(); }
+    nvtxRangePop();
+    const auto after = verify(backend, p, w, reference);
+    if (!after.passed()) throw NumericalFailure("post-trace numerical correctness failed", after);
+    std::cout << "{\"family\":" << quote(family) << ",\"diagnostic_only\":true,\"executions\":3}\n";
+    return;
+  }
+#endif
   std::vector<double> times;
   times.reserve(iterations);
   for (int i = 0; i < iterations; ++i) {
@@ -130,7 +185,7 @@ void measure(Backend& backend, ProgramView p, const UniformWorkload& w, const st
     times.push_back(std::chrono::duration<double, std::milli>(end-start).count());
   }
   const auto after = verify(backend, p, w, reference);
-  if (!after.passed()) throw std::runtime_error("post-timing numerical correctness failed");
+  if (!after.passed()) throw NumericalFailure("post-timing numerical correctness failed", after);
   auto sorted = times;
   std::sort(sorted.begin(), sorted.end());
   const auto n = sorted.size();
@@ -138,9 +193,12 @@ void measure(Backend& backend, ProgramView p, const UniformWorkload& w, const st
   const double total_ms = std::accumulate(times.begin(), times.end(), 0.0);
   std::string algorithm = std::string(gemm_kernel_name(p.gemm_kernel));
   if constexpr (requires { backend.algorithm_id(); }) algorithm = backend.algorithm_id();
+  const auto runtime = runtime_json(p);
   std::cout << std::setprecision(17)
     << "{\"family\":" << quote(family) << ",\"implementation_id\":" << quote(identity)
     << ",\"gemm_algorithm_id\":" << quote(algorithm)
+    << ",\"precision\":" << precision_json(p, family)
+    << ",\"error_contract\":\"max_abs_over_max_1_abs_ref_le_0.02_v1\""
     << ",\"shape\":[" << p.problem.world_size << ',' << p.problem.rows_per_peer << ','
     << p.problem.k << ',' << p.problem.n << "],\"warmup\":" << warmup << ",\"iterations\":" << iterations
     << ",\"median_ms\":" << median << ",\"correctness_passed\":true"
@@ -154,9 +212,9 @@ void measure(Backend& backend, ProgramView p, const UniformWorkload& w, const st
     << ",\"max_abs_error\":" << std::max(before.absolute, after.absolute)
     << ",\"max_rel_error\":" << std::max(before.relative, after.relative)
     << ",\"checked_elements\":" << after.checked << ",\"nonfinite_outputs\":0"
-    << ",\"atol\":0.02,\"rtol\":0.02,\"input_seed\":20261020"
+    << ",\"atol\":0.02,\"rtol\":0.02,\"input_seed\":" << seed
     << ",\"correctness_reference\":\"CPU_FP32_on_identical_FP16_inputs\""
-    << ",\"runtime\":" << runtime_json(p) << ",\"samples_ms\":[";
+    << ",\"runtime\":" << runtime << ",\"samples_ms\":[";
   for (std::size_t i = 0; i < times.size(); ++i) { if (i) std::cout << ','; std::cout << times[i]; }
   std::cout << "]}\n";
 }
@@ -200,6 +258,7 @@ std::string runtime_json(ProgramView p) {
 }
 }
 
+#ifndef EDMIR_SELECTOR_BATCH
 int main(int argc, char** argv) {
   try {
     if (argc == 2 && std::string(argv[1]) == "--inspect") {
@@ -234,3 +293,70 @@ int main(int argc, char** argv) {
     return 1;
   }
 }
+
+#else
+int main(int argc, char** argv) {
+  using namespace edmir::runtime;
+  try {
+    if (argc == 2 && std::string(argv[1]) == "--inspect") {
+      std::cout << runtime_json(edmir_batch::candidates.front().program()) << '\n';
+      return 0;
+    }
+    if (argc < 6 || (std::string(argv[1]) != "--measure" && std::string(argv[1]) != "--check" && std::string(argv[1]) != "--trace"))
+      throw std::invalid_argument("usage: shape_runner --check|--measure|--trace INPUT REFERENCE SEED FAMILY...");
+    if constexpr (std::endian::native != std::endian::little)
+      throw std::invalid_argument("little endian input required");
+    const bool verify_only = std::string(argv[1]) == "--check";
+    const bool diagnostic = std::string(argv[1]) == "--trace";
+    if (diagnostic && argc != 6) throw std::invalid_argument("trace expects one candidate");
+    const int seed = std::stoi(argv[4]);
+    std::set<std::string> seen;
+    std::vector<edmir_batch::Candidate> jobs;
+    for (int i = 5; i < argc; ++i) {
+      const auto& all = edmir_batch::candidates;
+      auto it = std::find_if(all.begin(), all.end(), [&](auto c){ return c.name == argv[i]; });
+      if (it == all.end() || !seen.insert(argv[i]).second)
+        throw std::invalid_argument("unknown or duplicate batch candidate");
+      jobs.push_back(*it);
+    }
+    std::vector<int> devices(jobs.front().program().problem.world_size);
+    std::iota(devices.begin(), devices.end(), 0);
+    auto group = std::make_shared<NcclGroup>(devices);
+    for (const auto& job : jobs) {
+      const auto p = job.program();
+      const auto w = uniform_workload(p);
+      const std::string family(job.name);
+      try {
+        if (family == "host_merged_cutlass" || family == "host_merged_cublaslt") {
+          MergedHostBackend backend(p, family == "host_merged_cutlass" ? MergedProvider::kCUTLASS : MergedProvider::kCuBLASLt, group);
+          measure(backend, p, w, family, argv[2], argv[3], 20, 100, "merged", seed, verify_only, diagnostic);
+        } else {
+          CudaBackendOptions options;
+          options.prepare_metadata = true;
+          options.group = group;
+          options.pipeline_control_order = p.strategy == "pipelined";
+          options.enable_nvtx = diagnostic;
+          CudaBackend backend(p, options);
+          measure(backend, p, w, family, argv[2], argv[3], 20, 100, "prepared", seed, verify_only, diagnostic);
+        }
+      } catch (const NumericalFailure& failure) {
+        const auto& a = failure.accuracy;
+        std::cout << std::setprecision(17) << "{\"family\":" << quote(family)
+                  << ",\"implementation_id\":" << quote(measurement_identity(p, w, family,
+                      (family == "host_merged_cutlass" || family == "host_merged_cublaslt") ? "merged" : "prepared"))
+                  << ",\"precision\":" << precision_json(p, family)
+                  << ",\"error_contract\":\"max_abs_over_max_1_abs_ref_le_0.02_v1\""
+                  << ",\"correctness_passed\":false,\"median_ms\":null,\"input_seed\":" << seed
+                  << ",\"failure\":" << quote(failure.what()) << ",\"max_abs_error\":" << a.absolute
+                  << ",\"max_rel_error\":" << a.relative << ",\"nonfinite_outputs\":" << a.nonfinite
+                  << ",\"checked_elements\":" << a.checked << "}\n";
+      }
+      std::cout.flush();
+    }
+    return 0;
+  } catch (const std::exception& error) {
+    std::cerr << "shape batch failed: " << error.what() << '\n';
+    return 1;
+  }
+}
+#endif

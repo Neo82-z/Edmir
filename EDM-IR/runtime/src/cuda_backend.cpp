@@ -14,6 +14,7 @@
 #include <cublas_v2.h>
 #include <cuda_runtime.h>
 #include <nccl.h>
+#include "edmir/runtime/nccl_group.hpp"
 #include <nvtx3/nvToolsExt.h>
 
 #include "edmir/runtime/validate.hpp"
@@ -147,14 +148,16 @@ class CudaBackend::Impl {
     if (restricted_policy()) validate_uniform_peer_policy(program_);
     else if (program_.dependency_policy != DependencyPolicy::kResourceQueuesV1)
       throw std::invalid_argument("unknown dependency policy");
-    if (options_.prepare_metadata) prepared_execution_ = prepare_execution(program_);
+    if (options_.pipeline_control_order && !options_.prepare_metadata)
+      throw std::invalid_argument("matched pipeline requires prepared metadata");
+    if (options_.prepare_metadata)
+      prepared_execution_ = prepare_execution(program_, options_.pipeline_control_order);
     const auto world_size = static_cast<std::size_t>(program_.problem.world_size);
     configure_devices(world_size);
     ranks_.resize(world_size);
     try {
-      std::vector<ncclComm_t> communicators(world_size);
-      EDMIR_NCCL(ncclCommInitAll(
-          communicators.data(), static_cast<int>(world_size), options_.devices.data()));
+      if (!options_.group) options_.group = std::make_shared<NcclGroup>(options_.devices);
+      const auto& communicators = options_.group->for_devices(options_.devices);
       for (std::size_t rank = 0; rank < world_size; ++rank) {
         ranks_[rank].communicator = communicators[rank];
       }
@@ -733,8 +736,13 @@ class CudaBackend::Impl {
       if (ranks_[rank].comm != nullptr) cudaStreamDestroy(ranks_[rank].comm);
       if (ranks_[rank].compute != nullptr) cudaStreamDestroy(ranks_[rank].compute);
       if (ranks_[rank].control != nullptr) cudaStreamDestroy(ranks_[rank].control);
-      if (ranks_[rank].communicator != nullptr) ncclCommDestroy(ranks_[rank].communicator);
+
     }
+    ranks_.clear();
+    buffers_.clear();
+    events_.clear();
+    incoming_.clear();
+    options_.group.reset();
     prepared_ = false;
   }
 

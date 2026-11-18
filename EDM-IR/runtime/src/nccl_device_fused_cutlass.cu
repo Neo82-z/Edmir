@@ -1,6 +1,8 @@
 #include "edmir/runtime/nccl_device_fused.hpp"
+#include "edmir/runtime/split_k_workspace.hpp"
 
 #include <nccl_device.h>
+#include <algorithm>
 
 #include "cutlass/device_kernel.h"
 #include "cutlass_sm80_gemm.cuh"
@@ -39,14 +41,15 @@ cudaError_t launch(
     cudaStream_t stream) {
   using Element = typename Gemm::ElementA;
   using Kernel = typename Gemm::GemmKernel;
+  using Output = typename Gemm::ElementC;
   using Swizzle = typename Gemm::ThreadblockSwizzle;
 
   typename Gemm::Arguments arguments{
       {m, n, k},
       {static_cast<const Element*>(weight), k},
       {static_cast<const Element*>(weight), n},
-      {static_cast<Element*>(output), n},
-      {static_cast<Element*>(output), n},
+      {static_cast<Output*>(output), n},
+      {static_cast<Output*>(output), n},
       {1.0f, 0.0f},
       split_k_slices,
   };
@@ -88,6 +91,12 @@ cudaError_t launch(
   return cudaGetLastError();
 }
 
+__global__ void finalize_fp16(const float* partial, cutlass::half_t* output, std::size_t count) {
+  for (std::size_t i = std::size_t(blockIdx.x) * blockDim.x + threadIdx.x;
+       i < count; i += std::size_t(blockDim.x) * gridDim.x)
+    output[i] = cutlass::half_t(partial[i]);
+}
+
 }  // namespace
 
 cudaError_t launch_lsa_cutlass_gemm_f16_sm80(
@@ -102,6 +111,26 @@ cudaError_t launch_lsa_cutlass_gemm_f16_sm80(
     void* output,
     void* workspace,
     cudaStream_t stream) {
+  if (schedule.split_k_reduction == SplitKReduction::kSerialFP32) {
+    const int q = gemm_kernel_split_k_slices(kernel);
+    if (q <= 1 || !workspace || m <= 0 || n <= 0 ||
+        (schedule.n_tiles_per_cta != 1 && schedule.n_tiles_per_cta != 2))
+      return cudaErrorInvalidValue;
+    const auto layout = split_k_workspace(kernel, schedule, m, n);
+    auto* partial = reinterpret_cast<float*>(static_cast<char*>(workspace) + layout.partial_offset);
+    const auto status = schedule.n_tiles_per_cta == 1
+        ? launch<detail::Sm80Gemm<64, 128, 32, 64, true, float>>(
+            input_window, source_rank, m, n, k, weight, partial, workspace, q, stream)
+        : launch<detail::Sm80Gemm<64, 256, 32, 64, true, float>>(
+            input_window, source_rank, m, n, k, weight, partial, workspace, q, stream);
+    if (status != cudaSuccess) return status;
+    const auto count = std::size_t(m) * n;
+    const auto blocks = static_cast<unsigned>(std::min<std::size_t>((count + 255) / 256, 65535));
+    // Same stream: all serial partitions finish before the sole FP16 conversion.
+    finalize_fp16<<<blocks, 256, 0, stream>>>(partial, static_cast<cutlass::half_t*>(output), count);
+    return cudaGetLastError();
+  }
+  if (schedule.split_k_reduction != SplitKReduction::kSerialFP16) return cudaErrorInvalidValue;
   if (schedule.n_tiles_per_cta == 2) {
     switch (kernel) {
       case GemmKernel::kSm80_128x128x32:
@@ -163,13 +192,7 @@ cudaError_t launch_lsa_cutlass_gemm_f16_sm80(
 
 std::size_t lsa_cutlass_workspace_size(
     GemmKernel kernel, FusedScheduleDesc schedule, int m, int n) {
-  if (gemm_kernel_split_k_slices(kernel) == 1) return 0;
-  const auto tile_m = gemm_kernel_threadblock_m(kernel);
-  const auto tile_n = gemm_kernel_threadblock_n(kernel) * schedule.n_tiles_per_cta;
-  if (tile_m <= 0 || tile_n <= 0) return 0;
-  const auto m_tiles = static_cast<std::size_t>((m + tile_m - 1) / tile_m);
-  const auto n_tiles = static_cast<std::size_t>((n + tile_n - 1) / tile_n);
-  return m_tiles * n_tiles * sizeof(int);
+  return split_k_workspace(kernel, schedule, m, n).total_bytes;
 }
 
 }  // namespace edmir::runtime

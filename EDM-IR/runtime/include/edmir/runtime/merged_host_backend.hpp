@@ -11,7 +11,7 @@ enum class MergedProvider { kCUTLASS, kCuBLASLt };
 // source-ordered [P*M,K] storage. It is not a compiler fallback implementation.
 class MergedHostBackend {
  public:
-  MergedHostBackend(ProgramView program, MergedProvider provider);
+  MergedHostBackend(ProgramView program, MergedProvider provider, std::shared_ptr<NcclGroup> group = {});
   ~MergedHostBackend();
   MergedHostBackend(const MergedHostBackend&) = delete;
   MergedHostBackend& operator=(const MergedHostBackend&) = delete;

@@ -41,6 +41,6 @@ struct PreparedExecution {
 
 // Pure host preparation. The caller must keep ProgramView storage alive and
 // immutable until the executor is destroyed, including its backing arrays.
-PreparedExecution prepare_execution(ProgramView program);
+PreparedExecution prepare_execution(ProgramView program, bool pipeline_control_order = false);
 
 }  // namespace edmir::runtime

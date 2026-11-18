@@ -1,0 +1,64 @@
+name: edmir-logs
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:9.5.6
+    environment:
+      discovery.type: single-node
+      cluster.name: edmir-operations
+      xpack.security.enabled: 'true'
+      xpack.security.enrollment.enabled: 'false'
+      xpack.license.self_generated.type: basic
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD:?Run setup.py init first}
+      ES_JAVA_OPTS: -Xms2g -Xmx2g
+    mem_limit: 4g
+    ports: ['127.0.0.1:19200:9200']
+    volumes: ['esdata:/usr/share/elasticsearch/data']
+    healthcheck:
+      test: ['CMD-SHELL', 'curl -fsS -u "elastic:$${ELASTIC_PASSWORD}" http://localhost:9200/_cluster/health >/dev/null']
+      interval: 10s
+      timeout: 5s
+      retries: 60
+    restart: unless-stopped
+    logging: &logging
+      driver: json-file
+      options: {max-size: 10m, max-file: '3'}
+  kibana:
+    image: docker.elastic.co/kibana/kibana:9.5.6
+    environment:
+      SERVER_HOST: 0.0.0.0
+      SERVER_NAME: edmir-log-center
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+      ELASTICSEARCH_USERNAME: kibana_system
+      ELASTICSEARCH_PASSWORD: ${KIBANA_PASSWORD:?Run setup.py init first}
+      XPACK_SECURITY_ENCRYPTIONKEY: ${KIBANA_ENCRYPTION_KEY}
+      XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY: ${KIBANA_ENCRYPTION_KEY}
+      XPACK_REPORTING_ENCRYPTIONKEY: ${KIBANA_ENCRYPTION_KEY}
+      TELEMETRY_ENABLED: 'false'
+      TELEMETRY_OPTIN: 'false'
+      NODE_OPTIONS: --max-old-space-size=1536
+    mem_limit: 2g
+    ports: ['127.0.0.1:15601:5601']
+    volumes:
+      - ./kibana.yml:/usr/share/kibana/config/kibana.yml:ro
+    depends_on:
+      elasticsearch: {condition: service_healthy}
+    restart: unless-stopped
+    logging: *logging
+  logstash:
+    image: docker.elastic.co/logstash/logstash:9.5.6
+    environment:
+      LS_JAVA_OPTS: -Xms768m -Xmx768m
+      LOGSTASH_PASSWORD: ${LOGSTASH_PASSWORD:?Run setup.py init first}
+    mem_limit: 2g
+    volumes:
+      - ./logstash/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
+      - ./logstash/pipeline.conf:/usr/share/logstash/pipeline/logstash.conf:ro
+      - ./.local/events:/events:ro
+      - lsdata:/usr/share/logstash/data
+    depends_on:
+      elasticsearch: {condition: service_healthy}
+    restart: unless-stopped
+    logging: *logging
+volumes:
+  esdata:
+  lsdata:

@@ -59,6 +59,16 @@ ValidationReport validate_program(ProgramView program) {
              program.communication_api != CommunicationApi::kNCCLDevice) {
     report.errors.emplace_back("grouped-N runtime requires NCCL Device API fusion");
   }
+  if (program.fused_schedule.split_k_reduction != SplitKReduction::kSerialFP16 &&
+      program.fused_schedule.split_k_reduction != SplitKReduction::kSerialFP32) {
+    report.errors.emplace_back("invalid split-K reduction contract");
+  }
+  if (program.fused_schedule.split_k_reduction == SplitKReduction::kSerialFP32 &&
+      (program.gemm_provider != GemmProvider::kCUTLASS ||
+       program.communication_api != CommunicationApi::kNCCLDevice ||
+       gemm_kernel_split_k_slices(program.gemm_kernel) == 1)) {
+    report.errors.emplace_back("FP32 cross-partition storage requires fused CUTLASS split-K");
+  }
   if (program.gemm_provider == GemmProvider::kCUTLASS) {
     if (program.arch != "sm_80") {
       report.errors.emplace_back("CUTLASS v0.1 requires arch=sm_80");

@@ -225,6 +225,7 @@ def build_pipelined_program(
     *,
     chunk_rows: int,
     buffer_count: int = 2,
+    serialize_on_rank: bool = False,
 ) -> Program:
     builder = ProgramBuilder(
         problem,
@@ -256,7 +257,10 @@ def build_pipelined_program(
         builder.transfer(tile=tile, src=src, dst=dst, stage=stage, rows=chunk_rows)
         pending.append((tile, src, dst, stage))
     emit_gemms()
-    return builder.build(metadata={"peer_order": "cyclic", "dependencies": "derived"})
+    metadata = {"peer_order": "cyclic", "dependencies": "derived"}
+    if serialize_on_rank:
+        metadata["serialize_pipeline_on_rank"] = True
+    return builder.build(metadata=metadata)
 
 
 def build_fused_program(

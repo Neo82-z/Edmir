@@ -189,8 +189,11 @@ struct DependencyDesc {
   std::int32_t buffer;
 };
 
+enum class SplitKReduction : std::uint8_t { kSerialFP16, kSerialFP32 };
+
 struct FusedScheduleDesc {
   std::int32_t n_tiles_per_cta = 1;
+  SplitKReduction split_k_reduction = SplitKReduction::kSerialFP16;
 };
 
 enum class DependencyPolicy : std::uint8_t {

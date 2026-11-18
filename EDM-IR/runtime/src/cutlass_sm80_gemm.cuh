@@ -19,13 +19,14 @@ template <
     int ThreadblockN,
     int WarpM,
     int WarpN,
-    bool SplitKSerial = false>
+    bool SplitKSerial = false,
+    class OutputElement = Sm80Element>
 using Sm80Gemm = cutlass::gemm::device::Gemm<
     Sm80Element,
     Sm80Layout,
     Sm80Element,
     Sm80Layout,
-    Sm80Element,
+    OutputElement,
     Sm80Layout,
     Sm80Accumulator,
     cutlass::arch::OpClassTensorOp,
@@ -33,7 +34,9 @@ using Sm80Gemm = cutlass::gemm::device::Gemm<
     cutlass::gemm::GemmShape<ThreadblockM, ThreadblockN, 32>,
     cutlass::gemm::GemmShape<WarpM, WarpN, 32>,
     cutlass::gemm::GemmShape<16, 8, 16>,
-    Sm80Epilogue,
+    cutlass::epilogue::thread::LinearCombination<
+        OutputElement, 128 / cutlass::sizeof_bits<OutputElement>::value,
+        Sm80Accumulator, Sm80Accumulator>,
     cutlass::gemm::threadblock::GemmIdentityThreadblockSwizzle<>,
     3,
     8,

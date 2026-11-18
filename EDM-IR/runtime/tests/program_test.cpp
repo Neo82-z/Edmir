@@ -105,6 +105,14 @@ int main() {
   grouped_n.gemm_kernel = GemmKernel::kSm80_64x128x32;
   grouped_n.fused_schedule.n_tiles_per_cta = 2;
   assert(validate_program(grouped_n).valid());
+  auto invalid_precision = grouped_n;
+  invalid_precision.fused_schedule.split_k_reduction = SplitKReduction::kSerialFP32;
+  assert(!validate_program(invalid_precision).valid());  // q=1 has no cross-partition buffer
+  auto split_precision = invalid_precision;
+  split_precision.gemm_kernel = GemmKernel::kSm80_64x128x32SplitK2;
+  assert(validate_program(split_precision).valid());
+  split_precision.communication_api = CommunicationApi::kHostNCCL;
+  assert(!validate_program(split_precision).valid());
   auto unsupported_grouped_n = grouped_n;
   unsupported_grouped_n.fused_schedule.n_tiles_per_cta = 4;
   assert(!validate_program(unsupported_grouped_n).valid());

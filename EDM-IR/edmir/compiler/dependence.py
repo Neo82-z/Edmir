@@ -123,6 +123,10 @@ def derive_dependencies(program: Program) -> DependenceResult:
 
         resources = ((f"rank{op.rank}.compute",) if policy == UNIFORM_PEER_POLICY
                      else op.resources())
+        if program.strategy == "pipelined" and program.metadata.get("serialize_pipeline_on_rank") is True:
+            # Same ordered operations and buffers, with a cross-stream wait on
+            # each participating GPU. A transfer uses both sender and receiver.
+            resources += tuple(resource.split(".")[0] + ".serial" for resource in resources)
         for resource in resources:
             previous = last_on_resource.get(resource)
             if previous is not None:

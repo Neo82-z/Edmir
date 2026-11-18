@@ -140,6 +140,7 @@ ncclResult_t ncclCommInitAll(ncclComm_t* comm, int count, const int* devices) {
   }
   return ncclSuccess;
 }
+ncclResult_t ncclCommAbort(ncclComm_t comm) { log_call("comm_abort", comm); return ncclSuccess; }
 ncclResult_t ncclCommDestroy(ncclComm_t comm) { log_call("comm_destroy", comm); return ncclSuccess; }
 ncclResult_t ncclMemAlloc(void** ptr, size_t bytes) {
   *ptr = handle<void*>(); log_call("nccl_malloc", *ptr, bytes); return ncclSuccess;

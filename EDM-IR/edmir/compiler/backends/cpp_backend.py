@@ -140,6 +140,8 @@ class CppManifestBackend:
             f"inline constexpr std::int32_t kBufferCount = {program.buffer_count};",
             "inline constexpr FusedScheduleDesc kFusedSchedule{"
             f"{target.fused_schedule.n_tiles_per_cta}"
+            + (", SplitKReduction::kSerialFP32" if target.fused_schedule.split_k_reduction == "serial_fp32" else "")
+            +
             "};",
             "",
             f"inline constexpr std::array<BufferDesc, {len(program.buffers)}> kBuffers{{{{",

@@ -57,22 +57,30 @@ class FusedScheduleContract:
     """
 
     n_tiles_per_cta: int = 1
+    split_k_reduction: str = "serial_fp16"
 
     def validate(self) -> None:
         if self.n_tiles_per_cta <= 0:
             raise ValueError("fused n_tiles_per_cta must be positive")
+        if self.split_k_reduction not in {"serial_fp16", "serial_fp32"}:
+            raise ValueError("unknown split-K intermediate storage contract")
 
     @property
     def runtime_implemented(self) -> bool:
         return self.n_tiles_per_cta in {1, 2}
 
-    def to_dict(self) -> dict[str, int]:
-        return {"n_tiles_per_cta": self.n_tiles_per_cta}
+    def to_dict(self) -> dict:
+        result = {"n_tiles_per_cta": self.n_tiles_per_cta}
+        # Preserve old manifest identities for the unchanged FP16 path.
+        if self.split_k_reduction != "serial_fp16":
+            result["split_k_reduction"] = self.split_k_reduction
+        return result
 
     @classmethod
     def from_dict(cls, value: dict | None) -> "FusedScheduleContract":
         value = {} if value is None else value
-        contract = cls(n_tiles_per_cta=int(value.get("n_tiles_per_cta", 1)))
+        contract = cls(n_tiles_per_cta=int(value.get("n_tiles_per_cta", 1)),
+                       split_k_reduction=value.get("split_k_reduction", "serial_fp16"))
         contract.validate()
         return contract
 
@@ -162,6 +170,11 @@ class Target:
                 "CUDA reference targets require gemm_kernel=auto or lsa_naive_f16"
             )
         self.fused_schedule.validate()
+        if self.fused_schedule.split_k_reduction == "serial_fp32" and (
+            self.gemm_provider != "cutlass" or self.communication_api != "nccl_device"
+            or self.gemm_kernel not in GEMM_KERNEL_SPLIT_K
+        ):
+            raise ValueError("FP32 cross-partition storage requires an explicit fused CUTLASS split-K kernel")
         if self.fused_schedule.n_tiles_per_cta > 1:
             if self.gemm_provider != "cutlass":
                 raise ValueError("grouped-N reuse requires gemm_provider=cutlass")

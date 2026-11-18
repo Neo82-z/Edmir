@@ -9,6 +9,8 @@
 
 namespace edmir::runtime {
 
+class NcclGroup;
+
 struct CudaBackendOptions {
   // Maps logical Program ranks to CUDA device ordinals. An empty vector uses
   // {0, ..., world_size - 1}, which composes naturally with CUDA_VISIBLE_DEVICES.
@@ -19,6 +21,8 @@ struct CudaBackendOptions {
   // Opt in for the versioned metadata experiment. Keep legacy execution as
   // the default so existing callers do not silently change baseline identity.
   bool prepare_metadata = false;
+  bool pipeline_control_order = false;
+  std::shared_ptr<NcclGroup> group;  // Optional communicator lifetime shared by serial benchmark candidates.
 };
 
 class CudaBackend {
