@@ -1,0 +1,122 @@
+{
+  "schema": "edmir.p1-order-control.v1",
+  "created_utc": "2026-11-18T02:56:26.587177+00:00",
+  "no_timing_labels_available": true,
+  "observed_collector_status": {
+    "groups": 5,
+    "last_job": {
+      "shape": "b2",
+      "phase": "check",
+      "seed": 20261101,
+      "repetition": 0,
+      "order": [
+        "host",
+        "host_merged_cutlass",
+        "host_merged_cublaslt",
+        "direct",
+        "splitk2",
+        "splitk4",
+        "splitk8",
+        "splitk16",
+        "direct_groupedn2",
+        "splitk2_groupedn2",
+        "splitk4_groupedn2",
+        "splitk8_groupedn2",
+        "splitk16_groupedn2"
+      ]
+    },
+    "last_process_seconds": 135.14060831069946,
+    "collect": null,
+    "trace": null,
+    "trace_receipts": 0,
+    "last_log": [
+      "1/51 b1 check rows=13",
+      "2/51 b1 check rows=13",
+      "3/51 b1 check rows=13",
+      "4/51 b2 check rows=13",
+      "5/51 b2 check rows=13"
+    ],
+    "observed_utc": "2026-11-18T02:55:55.213648+00:00"
+  },
+  "reason": "Original six rotated/reversed orders put pipeline_serial before pipeline in every pair. Add a prelabel balanced control rather than attribute an order-confounded comparison to overlap.",
+  "jobs": [
+    {
+      "shape": "m512",
+      "phase": "pair",
+      "seed": 20261020,
+      "repetition": 0,
+      "order": [
+        "pipeline_serial",
+        "pipeline",
+        "splitk4",
+        "splitk4_groupedn2"
+      ]
+    },
+    {
+      "shape": "m512",
+      "phase": "pair",
+      "seed": 20261020,
+      "repetition": 1,
+      "order": [
+        "splitk4_groupedn2",
+        "splitk4",
+        "pipeline",
+        "pipeline_serial"
+      ]
+    },
+    {
+      "shape": "m512",
+      "phase": "pair",
+      "seed": 20261101,
+      "repetition": 2,
+      "order": [
+        "pipeline",
+        "splitk4",
+        "splitk4_groupedn2",
+        "pipeline_serial"
+      ]
+    },
+    {
+      "shape": "m512",
+      "phase": "pair",
+      "seed": 20261101,
+      "repetition": 3,
+      "order": [
+        "pipeline_serial",
+        "splitk4_groupedn2",
+        "splitk4",
+        "pipeline"
+      ]
+    },
+    {
+      "shape": "m512",
+      "phase": "pair",
+      "seed": 20261102,
+      "repetition": 4,
+      "order": [
+        "splitk4",
+        "splitk4_groupedn2",
+        "pipeline_serial",
+        "pipeline"
+      ]
+    },
+    {
+      "shape": "m512",
+      "phase": "pair",
+      "seed": 20261102,
+      "repetition": 5,
+      "order": [
+        "pipeline",
+        "pipeline_serial",
+        "splitk4_groupedn2",
+        "splitk4"
+      ]
+    }
+  ],
+  "primary_p1": "these six forward/reverse matched-seed blocks",
+  "original_six_blocks": "retained as secondary unbalanced-order replication; never select the better set",
+  "no_predictor_or_shape_changes": true,
+  "extra_estimated_seconds": 250,
+  "within_original_25_usd_cap": true,
+  "ordinary_timing_before_all_traces": true
+}

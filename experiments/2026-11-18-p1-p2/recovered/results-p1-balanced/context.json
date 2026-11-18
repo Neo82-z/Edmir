@@ -1,0 +1,192 @@
+{
+  "package": "53ffa1e6fdee987eeb92179d48566b42c4b43ec38ce6559b542854cf2b69a0b4",
+  "build": "dbfde162232dfcd9dd7f44f49b71636348146d3a76da559ef27d3392a028b44f",
+  "hardware": {
+    "gpu": "NVIDIA A100-SXM4-80GB",
+    "arch": "sm_80",
+    "sm_count": 108,
+    "link_label": "NV12",
+    "full_peer_access": true,
+    "world_size": 8,
+    "driver_version": "13000",
+    "cuda_version": "12080",
+    "nccl_version": "22809",
+    "cublas_version": "120804"
+  },
+  "gpu_inventory": "0, GPU-58e2124d-02d4-fa7a-ec21-49e27a8c5c8d, 00000000:43:00.0, NVIDIA A100-SXM4-80GB\n1, GPU-11015798-472c-5ae0-f0e2-50245d0d3b15, 00000000:46:00.0, NVIDIA A100-SXM4-80GB\n2, GPU-3080a86e-3c09-fa65-f36b-b3533568fa86, 00000000:49:00.0, NVIDIA A100-SXM4-80GB\n3, GPU-c58770cb-6ff3-62d3-f5ff-e3adcbf6afff, 00000000:4C:00.0, NVIDIA A100-SXM4-80GB\n4, GPU-5c6425fc-51f8-36b3-4aec-e6c4bdb5d853, 00000000:63:00.0, NVIDIA A100-SXM4-80GB\n5, GPU-b6b3742b-68aa-8955-5b0f-8d5b891af003, 00000000:66:00.0, NVIDIA A100-SXM4-80GB\n6, GPU-9772c181-8e76-5f4d-7fd6-a3605d3de0be, 00000000:69:00.0, NVIDIA A100-SXM4-80GB\n7, GPU-adf92305-3b1a-afdd-b707-8e80c9bf6d21, 00000000:6C:00.0, NVIDIA A100-SXM4-80GB",
+  "loaded_libraries": {
+    "/usr/local/cuda/lib64/libcudart.so.12": "c3a75b33af334a3486d197dbd1584a2985183ba4688d237a2be5f2f679329920",
+    "/usr/local/cuda/lib64/libcublas.so.12": "031ce6c2cbfbb9468f040527cab5c599069ce5609e73e28f87503881063eac21",
+    "/usr/local/cuda/lib64/libcublasLt.so.12": "10b5e6631cf8115c661eb895ed1533826308b58f7956466f53d236a40c9b622c",
+    "/workspace/dependencies/nccl/build/lib/libnccl.so.2": "c885aad793ee494b4cd6a22a63b9616895ffde95c3d37f57eb10a382c9277e92",
+    "/lib/x86_64-linux-gnu/libstdc++.so.6": "a68762c86d371e6041f03f03a33a78fa235809ae7d81c90185940c93c3535aed",
+    "/lib/x86_64-linux-gnu/libgcc_s.so.1": "02f3f192bf5f79b811f1e34a650fea443d407408703448906585232383957f60",
+    "/lib/x86_64-linux-gnu/libc.so.6": "e7a914a33fd4f6d25057b8d48c7c5f3d55ab870ec4ee27693d6c5f3a532e6226",
+    "/lib/x86_64-linux-gnu/libdl.so.2": "efb09ce48f6ecdf4803547ef500bc371f9485e8c34b80913313c4a7cdb109664",
+    "/lib/x86_64-linux-gnu/libpthread.so.0": "8886af025eed1782e4b4675918250bf902206dab45151b6bc7f22b9c7249f6ae",
+    "/lib/x86_64-linux-gnu/librt.so.1": "5c070d1a8ff908c799bce07f86dadef98512a8aa0643fed917598f96fc1256e1",
+    "/lib/x86_64-linux-gnu/libm.so.6": "c09178edd7fbc58aa8415f4bbe54dd76c5ff6c6398ba3e56e5a4743fd7e9adfc"
+  },
+  "topology": "GPU0\tGPU1\tGPU2\tGPU3\tGPU4\tGPU5\tGPU6\tGPU7\tCPU Affinity\tNUMA Affinity\tGPU NUMA ID\nGPU0\t X \tNV12\tNV12\tNV12\tNV12\tNV12\tNV12\tNV12\t0-119\t0\t\tN/A\nGPU1\tNV12\t X \tNV12\tNV12\tNV12\tNV12\tNV12\tNV12\t0-119\t0\t\tN/A\nGPU2\tNV12\tNV12\t X \tNV12\tNV12\tNV12\tNV12\tNV12\t0-119\t0\t\tN/A\nGPU3\tNV12\tNV12\tNV12\t X \tNV12\tNV12\tNV12\tNV12\t0-119\t0\t\tN/A\nGPU4\tNV12\tNV12\tNV12\tNV12\t X \tNV12\tNV12\tNV12\t120-239\t1\t\tN/A\nGPU5\tNV12\tNV12\tNV12\tNV12\tNV12\t X \tNV12\tNV12\t120-239\t1\t\tN/A\nGPU6\tNV12\tNV12\tNV12\tNV12\tNV12\tNV12\t X \tNV12\t120-239\t1\t\tN/A\nGPU7\tNV12\tNV12\tNV12\tNV12\tNV12\tNV12\tNV12\t X \t120-239\t1\t\tN/A\n\nLegend:\n\n  X    = Self\n  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)\n  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node\n  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)\n  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)\n  PIX  = Connection traversing at most a single PCIe bridge\n  NV#  = Connection traversing a bonded set of # NVLinks",
+  "runtime": {
+    "driver_version": "13000",
+    "cuda_version": "12080",
+    "nccl_version": "22809",
+    "cublas_version": "120804",
+    "devices": [
+      {
+        "name": "NVIDIA A100-SXM4-80GB",
+        "pci_bus_id": "0000:43:00.0",
+        "major": 8,
+        "minor": 0,
+        "sm_count": 108,
+        "total_memory": 85093777408,
+        "peers": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ]
+      },
+      {
+        "name": "NVIDIA A100-SXM4-80GB",
+        "pci_bus_id": "0000:46:00.0",
+        "major": 8,
+        "minor": 0,
+        "sm_count": 108,
+        "total_memory": 85093777408,
+        "peers": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ]
+      },
+      {
+        "name": "NVIDIA A100-SXM4-80GB",
+        "pci_bus_id": "0000:49:00.0",
+        "major": 8,
+        "minor": 0,
+        "sm_count": 108,
+        "total_memory": 85093777408,
+        "peers": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ]
+      },
+      {
+        "name": "NVIDIA A100-SXM4-80GB",
+        "pci_bus_id": "0000:4C:00.0",
+        "major": 8,
+        "minor": 0,
+        "sm_count": 108,
+        "total_memory": 85093777408,
+        "peers": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ]
+      },
+      {
+        "name": "NVIDIA A100-SXM4-80GB",
+        "pci_bus_id": "0000:63:00.0",
+        "major": 8,
+        "minor": 0,
+        "sm_count": 108,
+        "total_memory": 85093777408,
+        "peers": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ]
+      },
+      {
+        "name": "NVIDIA A100-SXM4-80GB",
+        "pci_bus_id": "0000:66:00.0",
+        "major": 8,
+        "minor": 0,
+        "sm_count": 108,
+        "total_memory": 85093777408,
+        "peers": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ]
+      },
+      {
+        "name": "NVIDIA A100-SXM4-80GB",
+        "pci_bus_id": "0000:69:00.0",
+        "major": 8,
+        "minor": 0,
+        "sm_count": 108,
+        "total_memory": 85093777408,
+        "peers": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ]
+      },
+      {
+        "name": "NVIDIA A100-SXM4-80GB",
+        "pci_bus_id": "0000:6C:00.0",
+        "major": 8,
+        "minor": 0,
+        "sm_count": 108,
+        "total_memory": 85093777408,
+        "peers": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ]
+      }
+    ]
+  },
+  "measurement_env": {
+    "NCCL_VERSION": "2.25.1-1",
+    "CUDA_VERSION": "12.8.1",
+    "LD_LIBRARY_PATH": "/usr/local/cuda/lib64"
+  },
+  "sealed_runner": "5ee8b6a7fc880bcafec2ae98e27aab05b55b9de7ee02a27cd1c303bf2b6ec643",
+  "plan": "8f252d1b8e6af196768f486a4cbabe4ea97b18e5e49f8e8d6f5228acfafed6e2",
+  "balanced_plan": "edaef467256e4217fdcc47a337f4891e7d692a4d557f57fa1dd4f0890ac934bc",
+  "balanced_runner": "0e50c0f03a82225103b41d16618c6fccfd3fd3bfd545cd85f7ea9a9b2a6a7585"
+}

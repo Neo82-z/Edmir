@@ -1,0 +1,112 @@
+{
+  "reviewed_utc": "2026-11-18T04:26:13.004022+00:00",
+  "status": "required_application_windows_and_expected_launches_verified_with_session_warnings_retained",
+  "cases": [
+    {
+      "case": "m512-pipeline_serial",
+      "family": "pipeline_serial",
+      "required_window_coverage_passed": true,
+      "gpu_devices": 8,
+      "executions": 3,
+      "gemm_launches_per_device": 24,
+      "nccl_launches_per_device": 42,
+      "runtime_api_counts_all_three_executions": {
+        "cudaMemcpyAsync_v3020": 24,
+        "cudaEventRecord_v3020": 1224,
+        "cudaStreamWaitEvent_v3020": 2676,
+        "cudaLaunchKernel_v7000": 192,
+        "cudaStreamGetCaptureInfo_v2_v11030": 336,
+        "cudaGetFuncBySymbol_v11000": 336,
+        "cuLaunchKernelEx": 336,
+        "cudaStreamSynchronize_v3020": 72
+      },
+      "warnings_retained": [
+        "Scheduling information is absent. The thread activity is deduced based on OS runtime libraries traces. This is inaccurate and does not take into account asynchronous interrupts and exception faults.",
+        "Not all NVTX events might have been collected.",
+        "No NVTX events collected. Does the process use NVTX?",
+        "Not all CUDA events might have been collected.",
+        "Not all OS runtime libraries events might have been collected."
+      ]
+    },
+    {
+      "case": "m512-pipeline",
+      "family": "pipeline",
+      "required_window_coverage_passed": true,
+      "gpu_devices": 8,
+      "executions": 3,
+      "gemm_launches_per_device": 24,
+      "nccl_launches_per_device": 42,
+      "runtime_api_counts_all_three_executions": {
+        "cudaMemcpyAsync_v3020": 24,
+        "cudaEventRecord_v3020": 1224,
+        "cudaStreamWaitEvent_v3020": 2256,
+        "cudaLaunchKernel_v7000": 192,
+        "cudaStreamGetCaptureInfo_v2_v11030": 336,
+        "cudaGetFuncBySymbol_v11000": 336,
+        "cuLaunchKernelEx": 336,
+        "cudaStreamSynchronize_v3020": 72
+      },
+      "warnings_retained": [
+        "Scheduling information is absent. The thread activity is deduced based on OS runtime libraries traces. This is inaccurate and does not take into account asynchronous interrupts and exception faults.",
+        "Not all NVTX events might have been collected.",
+        "No NVTX events collected. Does the process use NVTX?",
+        "Not all CUDA events might have been collected.",
+        "Not all OS runtime libraries events might have been collected."
+      ]
+    },
+    {
+      "case": "m512-splitk4",
+      "family": "splitk4",
+      "required_window_coverage_passed": true,
+      "gpu_devices": 8,
+      "executions": 3,
+      "gemm_launches_per_device": 24,
+      "nccl_launches_per_device": 0,
+      "runtime_api_counts_all_three_executions": {
+        "cudaLaunchKernel_v7000": 192,
+        "cudaEventRecord_v3020": 360,
+        "cudaStreamWaitEvent_v3020": 504,
+        "cudaStreamSynchronize_v3020": 72
+      },
+      "warnings_retained": [
+        "Scheduling information is absent. The thread activity is deduced based on OS runtime libraries traces. This is inaccurate and does not take into account asynchronous interrupts and exception faults.",
+        "Not all NVTX events might have been collected.",
+        "No NVTX events collected. Does the process use NVTX?",
+        "Not all CUDA events might have been collected.",
+        "Not all OS runtime libraries events might have been collected."
+      ]
+    },
+    {
+      "case": "m512-splitk4_groupedn2",
+      "family": "splitk4_groupedn2",
+      "required_window_coverage_passed": true,
+      "gpu_devices": 8,
+      "executions": 3,
+      "gemm_launches_per_device": 24,
+      "nccl_launches_per_device": 0,
+      "runtime_api_counts_all_three_executions": {
+        "cudaLaunchKernel_v7000": 192,
+        "cudaEventRecord_v3020": 360,
+        "cudaStreamWaitEvent_v3020": 504,
+        "cudaStreamSynchronize_v3020": 72
+      },
+      "warnings_retained": [
+        "Scheduling information is absent. The thread activity is deduced based on OS runtime libraries traces. This is inaccurate and does not take into account asynchronous interrupts and exception faults.",
+        "Not all NVTX events might have been collected.",
+        "No NVTX events collected. Does the process use NVTX?",
+        "Not all CUDA events might have been collected.",
+        "Not all OS runtime libraries events might have been collected."
+      ]
+    }
+  ],
+  "paired_dependency_wait_delta_per_execution": 140,
+  "q4_g1_g2_runtime_api_counts_equal": true,
+  "interpretation": [
+    "No incompatible-driver or illegal-device-access error appears in these records.",
+    "Session warnings about potentially incomplete CUDA/NVTX/OSRT collection remain recorded; no claim of loss-free whole-session capture.",
+    "All required application execute/operation ranges and the expected GEMM/NCCL launches are present on all eight devices.",
+    "CPU context-switch sampling was intentionally disabled; OSRT cannot establish CPU scheduling residency.",
+    "GPU kernel temporal coexistence is diagnostic only. Trace timestamps do not replace unprofiled latency.",
+    "The original parser used shortName=Kernel and missed CUTLASS names; the corrected parser uses demangled names and top-level NCCL function prefixes. Original script/output and correction receipt are retained."
+  ]
+}

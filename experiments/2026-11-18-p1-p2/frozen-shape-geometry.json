@@ -1,0 +1,170 @@
+{
+  "scope": "Descriptive arithmetic for fixed q4/g2 only; not a refitted predictor or hardware occupancy measurement",
+  "formula_source_paths": [
+    "EDM-IR/runtime/src/nccl_device_fused_cutlass.cu",
+    "EDM-IR/runtime/src/cutlass_sm80_gemm.cuh"
+  ],
+  "source_sha256": {
+    "EDM-IR/runtime/src/nccl_device_fused_cutlass.cu": "7ffaca4001da1fb2d374e13e0bffc624eaa2fb83e32febd72e3e67048db1ea9e",
+    "EDM-IR/runtime/src/cutlass_sm80_gemm.cuh": "708c14f788fb8b5e6e767e82ac99036d3feea05d8a4bea2bc76f55504d203eca"
+  },
+  "rows": [
+    {
+      "shape_id": "b1",
+      "shape_P_M_K_N": [
+        8,
+        56,
+        3072,
+        776
+      ],
+      "q4g2_source_geometry": {
+        "tile_mnk": [
+          64,
+          256,
+          32
+        ],
+        "m_tiles": 1,
+        "n_tiles": 4,
+        "ctas_per_source_destination_gemm": 16,
+        "k_iterations_per_cta": 24,
+        "valid_output_fraction": 0.6630859375
+      },
+      "axis_relation_to_primary_training": {
+        "K": "unseen K, below fixed training K=8192",
+        "M_below_training_range": true,
+        "N_above_training_range": false
+      }
+    },
+    {
+      "shape_id": "b2",
+      "shape_P_M_K_N": [
+        8,
+        72,
+        3072,
+        776
+      ],
+      "q4g2_source_geometry": {
+        "tile_mnk": [
+          64,
+          256,
+          32
+        ],
+        "m_tiles": 2,
+        "n_tiles": 4,
+        "ctas_per_source_destination_gemm": 32,
+        "k_iterations_per_cta": 24,
+        "valid_output_fraction": 0.42626953125
+      },
+      "axis_relation_to_primary_training": {
+        "K": "unseen K, below fixed training K=8192",
+        "M_below_training_range": false,
+        "N_above_training_range": false
+      }
+    },
+    {
+      "shape_id": "b3",
+      "shape_P_M_K_N": [
+        8,
+        64,
+        3072,
+        3328
+      ],
+      "q4g2_source_geometry": {
+        "tile_mnk": [
+          64,
+          256,
+          32
+        ],
+        "m_tiles": 1,
+        "n_tiles": 13,
+        "ctas_per_source_destination_gemm": 52,
+        "k_iterations_per_cta": 24,
+        "valid_output_fraction": 1.0
+      },
+      "axis_relation_to_primary_training": {
+        "K": "unseen K, below fixed training K=8192",
+        "M_below_training_range": false,
+        "N_above_training_range": true
+      }
+    },
+    {
+      "shape_id": "b4",
+      "shape_P_M_K_N": [
+        8,
+        64,
+        3072,
+        3584
+      ],
+      "q4g2_source_geometry": {
+        "tile_mnk": [
+          64,
+          256,
+          32
+        ],
+        "m_tiles": 1,
+        "n_tiles": 14,
+        "ctas_per_source_destination_gemm": 56,
+        "k_iterations_per_cta": 24,
+        "valid_output_fraction": 1.0
+      },
+      "axis_relation_to_primary_training": {
+        "K": "unseen K, below fixed training K=8192",
+        "M_below_training_range": false,
+        "N_above_training_range": true
+      }
+    },
+    {
+      "shape_id": "b5",
+      "shape_P_M_K_N": [
+        8,
+        320,
+        6144,
+        768
+      ],
+      "q4g2_source_geometry": {
+        "tile_mnk": [
+          64,
+          256,
+          32
+        ],
+        "m_tiles": 5,
+        "n_tiles": 3,
+        "ctas_per_source_destination_gemm": 60,
+        "k_iterations_per_cta": 48,
+        "valid_output_fraction": 1.0
+      },
+      "axis_relation_to_primary_training": {
+        "K": "unseen K, below fixed training K=8192",
+        "M_below_training_range": false,
+        "N_above_training_range": false
+      }
+    },
+    {
+      "shape_id": "b6",
+      "shape_P_M_K_N": [
+        8,
+        96,
+        6144,
+        2560
+      ],
+      "q4g2_source_geometry": {
+        "tile_mnk": [
+          64,
+          256,
+          32
+        ],
+        "m_tiles": 2,
+        "n_tiles": 10,
+        "ctas_per_source_destination_gemm": 80,
+        "k_iterations_per_cta": 48,
+        "valid_output_fraction": 0.75
+      },
+      "axis_relation_to_primary_training": {
+        "K": "unseen K, below fixed training K=8192",
+        "M_below_training_range": false,
+        "N_above_training_range": true
+      }
+    }
+  ],
+  "note": "Tile tail and CTA count vary jointly; these shapes do not isolate a causal effect of one feature."
+}

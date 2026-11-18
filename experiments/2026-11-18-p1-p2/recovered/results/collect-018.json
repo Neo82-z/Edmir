@@ -1,0 +1,128 @@
+{
+  "job": {
+    "shape": "m512",
+    "phase": "check",
+    "seed": 20261020,
+    "repetition": 0,
+    "order": [
+      "pipeline_serial",
+      "pipeline",
+      "splitk4",
+      "splitk4_groupedn2"
+    ]
+  },
+  "context": "d183fe57e06d395e55b3635ee1d950fc5a2a8c855e00c5511e380dde3e4bde62",
+  "input": {
+    "shape": [
+      8,
+      512,
+      8192,
+      512
+    ],
+    "input_seed": 20261020,
+    "input_sha256": "3f8b24a299efef3a262dbd76a48f9311468733bd543cb8a4b6ed2ae0db89f95a",
+    "reference_sha256": "a9840f288548c88c4024ab6883bdebd7f67ca25d2735555a64a7e36a25b77a11",
+    "input_bytes": 603979776,
+    "reference_bytes": 67108864,
+    "generator": "uint32 avalanche v1; (low5bits-16)/32 exactly represented in FP16",
+    "reference": "CPU_FP32_on_identical_FP16_inputs",
+    "numpy_version": "2.3.5"
+  },
+  "rows": [
+    {
+      "family": "pipeline_serial",
+      "correctness_passed": true,
+      "check_only": true,
+      "input_seed": 20261020,
+      "implementation_id": "pipeline_serial_cutlass_sm80_double_buffer_v1_prepared_metadata_v2",
+      "precision": {
+        "input": "fp16",
+        "weight": "fp16",
+        "output": "fp16",
+        "accumulator": "fp32",
+        "accumulator_evidence": "source",
+        "partial": "none",
+        "reduction": "single_output_cast"
+      },
+      "error_contract": "max_abs_over_max_1_abs_ref_le_0.02_v1",
+      "nonfinite_outputs": 0,
+      "max_abs_error": 0.015625,
+      "max_rel_error": 0.0004880429477794046,
+      "checked_elements": 16777216
+    },
+    {
+      "family": "pipeline",
+      "correctness_passed": true,
+      "check_only": true,
+      "input_seed": 20261020,
+      "implementation_id": "pipeline_cutlass_sm80_double_buffer_v1_prepared_metadata_v2",
+      "precision": {
+        "input": "fp16",
+        "weight": "fp16",
+        "output": "fp16",
+        "accumulator": "fp32",
+        "accumulator_evidence": "source",
+        "partial": "none",
+        "reduction": "single_output_cast"
+      },
+      "error_contract": "max_abs_over_max_1_abs_ref_le_0.02_v1",
+      "nonfinite_outputs": 0,
+      "max_abs_error": 0.015625,
+      "max_rel_error": 0.0004880429477794046,
+      "checked_elements": 16777216
+    },
+    {
+      "family": "splitk4",
+      "correctness_passed": true,
+      "check_only": true,
+      "input_seed": 20261020,
+      "implementation_id": "direct_peer_cutlass_sm80_q4_g1_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "precision": {
+        "input": "fp16",
+        "weight": "fp16",
+        "output": "fp16",
+        "accumulator": "fp32",
+        "accumulator_evidence": "source",
+        "partial": "fp16",
+        "reduction": "serial_fp16_feedback"
+      },
+      "error_contract": "max_abs_over_max_1_abs_ref_le_0.02_v1",
+      "nonfinite_outputs": 0,
+      "max_abs_error": 0.029296875,
+      "max_rel_error": 0.0126953125,
+      "checked_elements": 16777216
+    },
+    {
+      "family": "splitk4_groupedn2",
+      "correctness_passed": true,
+      "check_only": true,
+      "input_seed": 20261020,
+      "implementation_id": "direct_peer_cutlass_sm80_q4_g2_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "precision": {
+        "input": "fp16",
+        "weight": "fp16",
+        "output": "fp16",
+        "accumulator": "fp32",
+        "accumulator_evidence": "source",
+        "partial": "fp16",
+        "reduction": "serial_fp16_feedback"
+      },
+      "error_contract": "max_abs_over_max_1_abs_ref_le_0.02_v1",
+      "nonfinite_outputs": 0,
+      "max_abs_error": 0.029296875,
+      "max_rel_error": 0.0126953125,
+      "checked_elements": 16777216
+    }
+  ],
+  "order": [
+    "pipeline_serial",
+    "pipeline",
+    "splitk4",
+    "splitk4_groupedn2"
+  ],
+  "excluded_by_numerical_check": [],
+  "stdout": "collect-018-1794972230711744725.stdout",
+  "stdout_sha256": "f4dd366056372de1bccc1df9489ba92e14b3fb1565394f59c7539bd7350c7144",
+  "stderr": "collect-018-1794972230711744725.stderr",
+  "process_seconds": 37.06742787361145
+}

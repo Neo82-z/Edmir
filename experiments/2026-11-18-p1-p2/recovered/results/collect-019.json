@@ -1,0 +1,128 @@
+{
+  "job": {
+    "shape": "m512",
+    "phase": "check",
+    "seed": 20261101,
+    "repetition": 0,
+    "order": [
+      "pipeline_serial",
+      "pipeline",
+      "splitk4",
+      "splitk4_groupedn2"
+    ]
+  },
+  "context": "d183fe57e06d395e55b3635ee1d950fc5a2a8c855e00c5511e380dde3e4bde62",
+  "input": {
+    "shape": [
+      8,
+      512,
+      8192,
+      512
+    ],
+    "input_seed": 20261101,
+    "input_sha256": "4ffb9eee7dcffe06e4c83eeca195eaf78cd7ff1e0730f6b68fc71c6b753c96e0",
+    "reference_sha256": "41272847977ff8f73fb1e6152a851bbe30aa40059eb30954f7fe6539ef95ae9d",
+    "input_bytes": 603979776,
+    "reference_bytes": 67108864,
+    "generator": "uint32 avalanche v1; (low5bits-16)/32 exactly represented in FP16",
+    "reference": "CPU_FP32_on_identical_FP16_inputs",
+    "numpy_version": "2.3.5"
+  },
+  "rows": [
+    {
+      "family": "pipeline_serial",
+      "correctness_passed": true,
+      "check_only": true,
+      "input_seed": 20261101,
+      "implementation_id": "pipeline_serial_cutlass_sm80_double_buffer_v1_prepared_metadata_v2",
+      "precision": {
+        "input": "fp16",
+        "weight": "fp16",
+        "output": "fp16",
+        "accumulator": "fp32",
+        "accumulator_evidence": "source",
+        "partial": "none",
+        "reduction": "single_output_cast"
+      },
+      "error_contract": "max_abs_over_max_1_abs_ref_le_0.02_v1",
+      "nonfinite_outputs": 0,
+      "max_abs_error": 0.015625,
+      "max_rel_error": 0.0004880429477794046,
+      "checked_elements": 16777216
+    },
+    {
+      "family": "pipeline",
+      "correctness_passed": true,
+      "check_only": true,
+      "input_seed": 20261101,
+      "implementation_id": "pipeline_cutlass_sm80_double_buffer_v1_prepared_metadata_v2",
+      "precision": {
+        "input": "fp16",
+        "weight": "fp16",
+        "output": "fp16",
+        "accumulator": "fp32",
+        "accumulator_evidence": "source",
+        "partial": "none",
+        "reduction": "single_output_cast"
+      },
+      "error_contract": "max_abs_over_max_1_abs_ref_le_0.02_v1",
+      "nonfinite_outputs": 0,
+      "max_abs_error": 0.015625,
+      "max_rel_error": 0.0004880429477794046,
+      "checked_elements": 16777216
+    },
+    {
+      "family": "splitk4",
+      "correctness_passed": true,
+      "check_only": true,
+      "input_seed": 20261101,
+      "implementation_id": "direct_peer_cutlass_sm80_q4_g1_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "precision": {
+        "input": "fp16",
+        "weight": "fp16",
+        "output": "fp16",
+        "accumulator": "fp32",
+        "accumulator_evidence": "source",
+        "partial": "fp16",
+        "reduction": "serial_fp16_feedback"
+      },
+      "error_contract": "max_abs_over_max_1_abs_ref_le_0.02_v1",
+      "nonfinite_outputs": 0,
+      "max_abs_error": 0.0283203125,
+      "max_rel_error": 0.0146484375,
+      "checked_elements": 16777216
+    },
+    {
+      "family": "splitk4_groupedn2",
+      "correctness_passed": true,
+      "check_only": true,
+      "input_seed": 20261101,
+      "implementation_id": "direct_peer_cutlass_sm80_q4_g2_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "precision": {
+        "input": "fp16",
+        "weight": "fp16",
+        "output": "fp16",
+        "accumulator": "fp32",
+        "accumulator_evidence": "source",
+        "partial": "fp16",
+        "reduction": "serial_fp16_feedback"
+      },
+      "error_contract": "max_abs_over_max_1_abs_ref_le_0.02_v1",
+      "nonfinite_outputs": 0,
+      "max_abs_error": 0.0283203125,
+      "max_rel_error": 0.0146484375,
+      "checked_elements": 16777216
+    }
+  ],
+  "order": [
+    "pipeline_serial",
+    "pipeline",
+    "splitk4",
+    "splitk4_groupedn2"
+  ],
+  "excluded_by_numerical_check": [],
+  "stdout": "collect-019-1794972267791631245.stdout",
+  "stdout_sha256": "c1c6693b586a904baac24f3acb5de10dc3e56182939a3a5809a5d8756f6b0b5e",
+  "stderr": "collect-019-1794972267791631245.stderr",
+  "process_seconds": 36.94465970993042
+}

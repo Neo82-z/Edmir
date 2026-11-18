@@ -1,0 +1,10 @@
+{
+  "recorded_utc": "2026-11-18T04:22:55.159551+00:00",
+  "change": "Classify kernels by demangledName instead of shortName; add expected per-device GEMM and NCCL launch counts.",
+  "reason": "Nsight shortName=Kernel omitted CUTLASS GEMMs from category/overlap accounting. Full symbol confirms cutlass::Kernel; no measurement or primary timing metric is changed.",
+  "original_script_sha256": "701b32ce99f26eed1fde229d28ebdd7750a38b36e3655b10ab61cf1e220262ae",
+  "corrected_script_sha256": "f53366dc29f02cb5110e1f714856c4ea889e66e5bf2640f5eb4609676b0125e4",
+  "original_script_and_output_preserved": true,
+  "new_gpu_collection": false,
+  "classification_detail": "Only top-level NCCL kernel function prefixes count as NCCL; a fused GEMM template may contain ncclDevComm in its argument types."
+}

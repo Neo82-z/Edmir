@@ -1,0 +1,23 @@
+{
+  "created_utc": "2026-11-18T03:18:07.299401+00:00",
+  "observed_main_groups": 15,
+  "timing_labels_seen": false,
+  "primary_p1": "balanced-p1-plan.json; six same-seed reversed-order process blocks",
+  "primary_p2": "fixed supported ranking top1 against all numerically admitted observed candidates",
+  "secondary_p2": [
+    "top2/top3 chosen by distinct selection block",
+    "equal-budget fixed-order k1/k2/k3",
+    "fixed q4/g2",
+    "strong host chosen by separate selection block from merged CUTLASS and cuBLASLt",
+    "verification best-host oracle labelled as hindsight diagnostic"
+  ],
+  "gate": "mean <=1%, max<=3%, no worse mean/max than fixed k1 and independently selected host, full original candidate surface and both directions >2%",
+  "search_cost_scope": "Only actual joint-selection workflow process cost available; no isolated top-k deployment search cost claim",
+  "files": {
+    "analyze.py": "d7b0e27d30be43e41bbe6b45fe09d9b2cbc99fd7e130062a6df9d63597a0f166",
+    "analyze_traces.py": "701b32ce99f26eed1fde229d28ebdd7750a38b36e3655b10ab61cf1e220262ae",
+    "balanced-p1-plan.json": "edaef467256e4217fdcc47a337f4891e7d692a4d557f57fa1dd4f0890ac934bc",
+    "preregistered-predictions.json": "b18040a235668c995351c6498c02a91248e6268e158e32c4d5d59bc2881eec89"
+  },
+  "prelabel_correction": "Per-block oracle also uses final numerically eligible candidate intersection. Same gate and comparison definitions."
+}

@@ -1,0 +1,57 @@
+{
+  "schema": "edmir.w1-shared-score.v1",
+  "variant": "coupled_geometry",
+  "ridge": 0.01,
+  "training_shapes": [
+    [
+      8,
+      64,
+      8192,
+      1024
+    ],
+    [
+      8,
+      256,
+      8192,
+      512
+    ],
+    [
+      8,
+      512,
+      8192,
+      512
+    ]
+  ],
+  "shape_axis_ranges": {
+    "P": [
+      8,
+      8
+    ],
+    "M": [
+      64,
+      512
+    ],
+    "K": [
+      8192,
+      8192
+    ],
+    "N": [
+      512,
+      1024
+    ]
+  },
+  "design_rank": 28,
+  "coefficient_count": 45,
+  "constant_training_features": [
+    "prepared",
+    "log_P",
+    "log_K",
+    "log_SM"
+  ],
+  "created_utc": "2026-11-18T03:26:58.688743+00:00",
+  "interpretation": [
+    "The fixed training shapes have K=8192 only; both held-out K values test extrapolation.",
+    "The stored standardized design rank is lower than its coefficient count. Ridge still provides a defined regularized solution; this does not demonstrate optimizer non-convergence.",
+    "Redundant or constant training features cannot independently identify every physical effect. Do not equate more coefficients with better identifiable extrapolation."
+  ]
+}

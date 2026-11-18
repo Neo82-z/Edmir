@@ -1,0 +1,40 @@
+P1/P2 阅读入口
+
+先读 REPORT.txt：结果、失败分类、论文可用结论与统计口径。
+再读 BILLING_STATUS.txt：GPU 平台删除与保留卷费用；它与实验完成状态分开。
+
+正式数据唯一入口
+recovered/recovery-manifest.json     远端最终 279 文件清单
+recovered/results/                  主体 51 组原始输出、解析记录、上下文
+recovered/results-p1-balanced/      主 P1 六组反转顺序配对
+recovered/results/diagnostic/       四份原始 Nsight 报告与 SQLite
+recovered/session/                 准备、运行、修正、设备状态及退出记录
+transfer-verification.json         回传大小与哈希核验
+
+分析与图表
+analysis.json                      预先指定的主要性能分析
+block-regret-summary.json          独立进程区组的另一统计口径
+ranking-diagnostics.json           排序翻转与误选稳定性描述
+trace-analysis.json                完整符号解析后的追踪结果
+trace-manual-review.json            逐设备计数、API 差异与会话告警审查
+figures/                           PDF、SVG、PNG 图表；不是新的测量数据
+local-closure-audit.json            本地派生材料哈希与保护文件检查
+
+冻结与复现身份
+bundle/plan.json                    既定形状、候选、种子、验证/选择区组
+bundle/source/                     本轮编译使用的源码快照
+bundle/files.json                   原始执行包封存清单
+preregistered-predictions.json      测前评分、排名与候选准入范围
+analysis-preregistration.json       主评价方法和分析脚本封存回执
+balanced-p1-plan.json               测前指定的 P1 主配对
+protection-before.json             模型/系数/六形状等 18 个保护文件
+frozen-primary-model.json           固定主模型；未在本轮训练
+
+非正式数据入口，避免混用
+checkpoint/                        运行期间的增量安全副本；不是最终分析来源
+inputs/                            可重建的合成算子输入和 CPU 参考，不是模型权重
+payload/、payload.tar.gz            原始上传包，保留测前运行封装修正的历史
+trace-analysis-initial-shortnames.json 初版解析输出，已被完整符号解析纠正
+analyze_traces.py                   原封存分析脚本，保留不改；使用 analyze_traces_full_names.py 重算最终追踪结果
+
+不在本轮范围：模型重训、修改冻结形状、FP32 候选替换、真实 BF16 MoE 引擎接入、端到端 A/B、新 GPU/模型下载。

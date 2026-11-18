@@ -1,0 +1,27 @@
+{
+  "command": [
+    "/opt/edmir-nsys/opt/nvidia/nsight-systems/2025.5.2/bin/nsys",
+    "profile",
+    "--trace=cuda,nvtx,osrt",
+    "--sample=none",
+    "--cpuctxsw=none",
+    "--cuda-event-trace=false",
+    "--capture-range=nvtx",
+    "--capture-range-end=stop",
+    "-p",
+    "edmir.w1.capture",
+    "-e",
+    "NSYS_NVTX_PROFILER_REGISTER_ONLY=0",
+    "-o",
+    "/workspace/p1p2/results/diagnostic/m512-pipeline_serial/timeline",
+    "/workspace/p1p2/build/w1_m512_batch",
+    "--trace",
+    "/workspace/p1p2/inputs/m512/20261020/inputs.bin",
+    "/workspace/p1p2/inputs/m512/20261020/reference.bin",
+    "20261020",
+    "pipeline_serial"
+  ],
+  "version": "NVIDIA Nsight Systems version 2025.5.2.266-255236693005v0",
+  "context": "d183fe57e06d395e55b3635ee1d950fc5a2a8c855e00c5511e380dde3e4bde62",
+  "purpose": "diagnostic_only"
+}
