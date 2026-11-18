@@ -1,0 +1,170 @@
+Evidence-grounded additions for the EDM-IR manuscript
+2026-11-17. Draft prose; not yet merged into LaTeX.
+
+Scope and measurement units
+
+We distinguish changes in execution semantics from changes in the latency
+model. Our recent experiments use four balanced FP16 All-to-All--GEMM
+development shapes on eight A100 SXM4 80 GB GPUs connected through NVLink.
+The shapes are (P,M,K,N)=(8,64,8192,1024), (8,512,8192,512),
+(8,64,4096,2048), and (8,256,8192,512), where M denotes rows per
+source--destination block. These synthetic shapes do not establish the
+frequency of equivalent operators in a routed MoE workload.
+
+The three recent collection windows contain 42,000 raw timing samples.
+This count describes repeated executions, not independent shape coverage.
+The November 11 and November 16 windows check correctness on three input
+seeds but measure latency on one seed. The final window measures three
+seeds, each under six balanced candidate orders. We summarize each
+candidate within a process block by the median of 100 executions, and
+report both cross-block summaries and block-level selection losses.
+Profiling runs are separate from the unprofiled latency labels.
+
+Numerical admission and candidate identity
+
+Latency comparisons are restricted to candidates passing all prescribed
+full-output checks. Failed candidates remain in the record and are not
+assigned artificial high-latency labels. Candidate identity includes the
+implementation, reduction precision, execution context, and correctness
+contract. In particular, FP32 accumulation inside a GEMM does not imply
+that intermediate split-K outputs avoid FP16 rounding. The serial FP16
+feedback implementation exhibits failures that can be missed by sampled
+output checks. Sixteen newly measured FP32-partial implementation--shape
+combinations pass all 48 prescribed checks, although this is not a proof
+for arbitrary inputs.
+
+The original geometric feature vector maps six admitted FP16/FP32
+reduction pairs to identical inputs despite measured FP32 slowdowns of
+6.64--27.99%. This is a concrete representational collision. Accounting
+for partial-buffer precision and final conversion distinguishes these
+candidates; reusing the FP16 latency as an FP32 label would conceal the
+cost of satisfying the numerical contract.
+
+Baseline and execution evidence
+
+Host-side execution is not a single baseline. In the November 11 window,
+the faster measured merged host implementation is 1.78--2.32 times faster
+than the per-source host implementation across the four shapes. Relative
+to the faster measured merged host, the best admitted fused candidate
+achieves ratios of 1.74--3.08 in that window and 1.69--3.16 in the
+November 16 window. These are measured candidate-oracle ratios within
+each window. They do not quantify selector quality or serving speedup,
+and the host implementations do not exhaust all possible library or
+collective configurations.
+
+Grouping has a conditional effect. For (8,64,8192,1024), doubling the N
+group size increases latency by approximately 19--20% at q=1 but reduces
+latency by 7.3--9.8% at q=8 in the November 11 measurements. This sign
+change rules out logical request reduction alone as a sufficient latency
+criterion. The transformation also changes CTA count, warps per CTA,
+staging requirements, and split-K execution depth; these effects are not
+isolated by that comparison.
+
+A matched staged-pipeline comparison is available on two development
+shapes. Relative to its serialized control, the pipeline reduces latency
+by 10.33--16.36% on M512 and 7.09--9.99% on large N across three blocks.
+It remains slower than the measured merged host and direct fused paths.
+This establishes a benefit for the tested schedule, not an optimal
+pipeline or a measured fraction of hidden communication.
+
+Scoring model and development ablation
+
+The frozen W1 scorer is a shared log-latency ridge regression, not an
+iteratively trained neural classifier. It minimizes weighted squared
+log-latency error with a fixed ridge coefficient of 0.01. Shapes receive
+equal mass, with equal host and fused mass within a shape. Host/fused
+selection is induced by the lowest candidate score after admission.
+
+In leave-one-development-shape-out diagnosis, extending the original
+geometry with coupling and reduction-precision features reduces mean
+selection regret from 12.60% to 1.22% and maximum regret from 47.36% to
+3.05%. Pair-direction errors decrease from 74/393 to 63/393. However,
+both variants still select a non-optimal candidate on two of four shapes.
+On these same observed shapes, a retrospective fixed q4/g2 comparator
+has mean regret of 1.04% and maximum regret of 2.92%. Consequently, this
+ablation supports mitigation of severe errors, not superiority over
+simple selection rules or independent generalization.
+
+Final balanced-order replication
+
+For (8,64,4096,2048), we freeze both scorers before the final collection
+and measure six candidates under three seeds and six balanced orders.
+The aggregate medians are 623.575, 626.784, 631.104, and 645.252 microseconds
+for q2, q4, q4/g2, and q8/g2, respectively; the merged cuBLASLt and
+CUTLASS hosts take 1170.600 and 1176.205 microseconds.
+
+Both frozen scorers select q8/g2. This candidate is fastest in none of
+the 18 blocks, with aggregate regret of 3.48%, mean block regret of
+4.68%, and worst-block regret of 8.42%. All six aggregate pairwise
+orders among the four fused candidates are reversed by the scorer,
+whereas all 144 block-level fused-versus-host comparisons favor fused.
+Thus a correct coarse execution-family decision can coexist with an
+incorrect within-family ranking. The 144 comparisons come from one
+shape and do not establish bidirectional host/fused accuracy.
+
+The distinction between decision loss and predicted benefit is material.
+The coupled scorer predicts q8/g2 to take only 61.74% of q2 latency;
+the measured aggregate ratio is 103.48%. The resulting modest regret
+therefore does not imply a calibrated relative performance estimate.
+q2 outperforms q8/g2 in 17 of 18 blocks, while the closely spaced q2,
+q4, and q4/g2 candidates exchange ranks. Removing an entire seed group
+can change the aggregate winner from q2 to q4. We retain every block
+and avoid claiming a universal ordering among these close candidates.
+
+Diagnosis and limitations
+
+Exhausting all 720 permutations of the six-candidate input list leaves
+each frozen model's scores and decision unchanged. Auditing the eight
+saved ridge solutions gives relative normal-equation residuals below
+6.14e-17. These checks do not support enumeration order or incomplete
+optimization of the specified ridge objective as explanations for the
+observed errors.
+
+The large-N fold instead extrapolates on two shape axes: its training
+shapes have K=8192 and N in {512,1024}, while the query has K=4096 and
+N=2048. Geometric counts and their interactions are mapped to latency
+by unconstrained regression coefficients; they are not measured
+nonnegative service times. Rank deficiency alone also does not explain
+the two examined fused score contrasts, whose training-nullspace
+projections are negligible. The evidence points to limitations in the
+learned execution-cost relation and its transfer across shape
+combinations, without uniquely attributing the error to a particular
+loss, regularization term, or hardware contention mechanism.
+
+The final window uses a new session identity. It is a descriptive
+replication of frozen predictions, not silent admission of the old
+model into a new execution contract. The six reserved shapes remain
+unevaluated. These experiments do not demonstrate BF16 behavior,
+real expert-routing frequencies, end-to-end MoE or vLLM speedup, or
+an intrakernel communication-overlap fraction. The predictor is
+retained with these limitations rather than further tuned on the
+replication outcomes.
+
+Suggested tables/figures, using existing measurements only
+
+1. Separate rows for each execution generation, including P, baseline
+   identity, precision, dependency strategy, correctness protocol,
+   timing scope, and shape coverage. Never plot generations as if
+   only the scoring model changed.
+2. Candidate medians and block distributions for the final six-way
+   comparison; place frozen predicted latency beside measured latency.
+3. Development ablation with top-1 mistakes, pair-direction mistakes,
+   mean/worst regret, and the fixed q4/g2 comparator in the same table.
+4. Correctness failures and FP32 cost pairs; show invalid candidates
+   as invalid, not as missing or slow.
+
+Source mapping (llm-serving repository)
+
+Raw integrity and frozen-solution audit:
+  experiments/2026-11-17-evidence-synthesis/results.json
+Historical inventory and saved model comparisons:
+  experiments/2026-11-17-evidence-synthesis/history-audit.json
+Final balanced replication:
+  experiments/2026-11-17-final-operator/analysis.json
+Precision and four-shape ablation:
+  experiments/2026-11-16-precision-analysis/attempt-01/
+Matched pipeline, host and q/g comparisons:
+  experiments/2026-11-11-w1-local-analysis/analysis.json
+
+Claims above use measured effects or explicitly labeled inference.
+No new predictor fitting or device experiment was performed for this text.

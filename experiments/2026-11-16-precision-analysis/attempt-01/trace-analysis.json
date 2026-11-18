@@ -1,0 +1,896 @@
+{
+  "cases": [
+    {
+      "case": "large-n-q2",
+      "shape": "large_n",
+      "candidate": "splitk2",
+      "diagnostic_only": true,
+      "capture_us": 8275.686,
+      "capture_per_execution_over_unprofiled_median": 4.517200921268848,
+      "note": "Ratio includes profiler/NVTX and diagnostic workload effects; not a correction factor.",
+      "kernel_types": {
+        "lsa_cutlass_gemm": {
+          "count": 192,
+          "median_us": 59.055499999999995
+        }
+      },
+      "per_gpu": [
+        {
+          "device": 0,
+          "kernel_count": 24,
+          "span_us": 7826.959,
+          "kernel_interval_union_us": 1396.149,
+          "kernel_present_fraction": 0.17837694052057765
+        },
+        {
+          "device": 1,
+          "kernel_count": 24,
+          "span_us": 7803.783,
+          "kernel_interval_union_us": 1388.051,
+          "kernel_present_fraction": 0.1778689899501306
+        },
+        {
+          "device": 2,
+          "kernel_count": 24,
+          "span_us": 7811.825,
+          "kernel_interval_union_us": 1387.06,
+          "kernel_present_fraction": 0.17755902109942298
+        },
+        {
+          "device": 3,
+          "kernel_count": 24,
+          "span_us": 7820.551,
+          "kernel_interval_union_us": 1395.511,
+          "kernel_present_fraction": 0.1784415190182891
+        },
+        {
+          "device": 4,
+          "kernel_count": 24,
+          "span_us": 7788.157,
+          "kernel_interval_union_us": 1399.162,
+          "kernel_present_fraction": 0.17965251599319326
+        },
+        {
+          "device": 5,
+          "kernel_count": 24,
+          "span_us": 7795.177,
+          "kernel_interval_union_us": 1398.544,
+          "kernel_present_fraction": 0.17941144889974917
+        },
+        {
+          "device": 6,
+          "kernel_count": 24,
+          "span_us": 7785.115,
+          "kernel_interval_union_us": 1415.547,
+          "kernel_present_fraction": 0.18182737184999836
+        },
+        {
+          "device": 7,
+          "kernel_count": 24,
+          "span_us": 7789.815,
+          "kernel_interval_union_us": 1366.641,
+          "kernel_present_fraction": 0.17543946807465902
+        }
+      ],
+      "iterations": [
+        {
+          "iteration": 21,
+          "gpu_ids": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "kernel_count": 64,
+          "gpu_envelope_us": 2795.639
+        },
+        {
+          "iteration": 22,
+          "gpu_ids": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "kernel_count": 64,
+          "gpu_envelope_us": 2657.179
+        },
+        {
+          "iteration": 23,
+          "gpu_ids": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "kernel_count": 64,
+          "gpu_envelope_us": 2432.672
+        }
+      ],
+      "runtime_api_counts": {
+        "cudaLaunchKernel_v7000": 192,
+        "cudaEventRecord_v3020": 360,
+        "cudaStreamWaitEvent_v3020": 504,
+        "cudaStreamSynchronize_v3020": 72
+      }
+    },
+    {
+      "case": "large-n-q8-g2",
+      "shape": "large_n",
+      "candidate": "splitk8_groupedn2",
+      "diagnostic_only": true,
+      "capture_us": 8535.775,
+      "capture_per_execution_over_unprofiled_median": 4.579682595379259,
+      "note": "Ratio includes profiler/NVTX and diagnostic workload effects; not a correction factor.",
+      "kernel_types": {
+        "lsa_cutlass_gemm": {
+          "count": 192,
+          "median_us": 53.984
+        }
+      },
+      "per_gpu": [
+        {
+          "device": 0,
+          "kernel_count": 24,
+          "span_us": 8012.655,
+          "kernel_interval_union_us": 1312.367,
+          "kernel_present_fraction": 0.16378678477982642
+        },
+        {
+          "device": 1,
+          "kernel_count": 24,
+          "span_us": 7901.994,
+          "kernel_interval_union_us": 1299.73,
+          "kernel_present_fraction": 0.1644812689050384
+        },
+        {
+          "device": 2,
+          "kernel_count": 24,
+          "span_us": 7904.974,
+          "kernel_interval_union_us": 1301.114,
+          "kernel_present_fraction": 0.16459434275179147
+        },
+        {
+          "device": 3,
+          "kernel_count": 24,
+          "span_us": 7933.605,
+          "kernel_interval_union_us": 1308.696,
+          "kernel_present_fraction": 0.16495603196781286
+        },
+        {
+          "device": 4,
+          "kernel_count": 24,
+          "span_us": 7935.257,
+          "kernel_interval_union_us": 1308.601,
+          "kernel_present_fraction": 0.16490971874004837
+        },
+        {
+          "device": 5,
+          "kernel_count": 24,
+          "span_us": 7942.946,
+          "kernel_interval_union_us": 1317.618,
+          "kernel_present_fraction": 0.16588530250614822
+        },
+        {
+          "device": 6,
+          "kernel_count": 24,
+          "span_us": 7949.292,
+          "kernel_interval_union_us": 1327.574,
+          "kernel_present_fraction": 0.16700531317757605
+        },
+        {
+          "device": 7,
+          "kernel_count": 24,
+          "span_us": 7954.201,
+          "kernel_interval_union_us": 1288.955,
+          "kernel_present_fraction": 0.16204707424416356
+        }
+      ],
+      "iterations": [
+        {
+          "iteration": 21,
+          "gpu_ids": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "kernel_count": 64,
+          "gpu_envelope_us": 2977.271
+        },
+        {
+          "iteration": 22,
+          "gpu_ids": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "kernel_count": 64,
+          "gpu_envelope_us": 2540.958
+        },
+        {
+          "iteration": 23,
+          "gpu_ids": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "kernel_count": 64,
+          "gpu_envelope_us": 2533.634
+        }
+      ],
+      "runtime_api_counts": {
+        "cudaLaunchKernel_v7000": 192,
+        "cudaEventRecord_v3020": 360,
+        "cudaStreamWaitEvent_v3020": 504,
+        "cudaStreamSynchronize_v3020": 72
+      }
+    },
+    {
+      "case": "m256-q4-g1",
+      "shape": "m256",
+      "candidate": "splitk4",
+      "diagnostic_only": true,
+      "capture_us": 8246.025,
+      "capture_per_execution_over_unprofiled_median": 2.9737909769555344,
+      "note": "Ratio includes profiler/NVTX and diagnostic workload effects; not a correction factor.",
+      "kernel_types": {
+        "lsa_cutlass_gemm": {
+          "count": 192,
+          "median_us": 95.0715
+        }
+      },
+      "per_gpu": [
+        {
+          "device": 0,
+          "kernel_count": 24,
+          "span_us": 7798.946,
+          "kernel_interval_union_us": 2263.274,
+          "kernel_present_fraction": 0.29020254788275235
+        },
+        {
+          "device": 1,
+          "kernel_count": 24,
+          "span_us": 7784.158,
+          "kernel_interval_union_us": 2260.878,
+          "kernel_present_fraction": 0.2904460572357344
+        },
+        {
+          "device": 2,
+          "kernel_count": 24,
+          "span_us": 7791.75,
+          "kernel_interval_union_us": 2260.599,
+          "kernel_present_fraction": 0.2901272499759361
+        },
+        {
+          "device": 3,
+          "kernel_count": 24,
+          "span_us": 7798.234,
+          "kernel_interval_union_us": 2263.092,
+          "kernel_present_fraction": 0.2902057055482049
+        },
+        {
+          "device": 4,
+          "kernel_count": 24,
+          "span_us": 7807.731,
+          "kernel_interval_union_us": 2261.95,
+          "kernel_present_fraction": 0.2897064460852967
+        },
+        {
+          "device": 5,
+          "kernel_count": 24,
+          "span_us": 7818.749,
+          "kernel_interval_union_us": 2264.655,
+          "kernel_present_fraction": 0.28964416174505664
+        },
+        {
+          "device": 6,
+          "kernel_count": 24,
+          "span_us": 7810.193,
+          "kernel_interval_union_us": 2274.235,
+          "kernel_present_fraction": 0.2911880666713358
+        },
+        {
+          "device": 7,
+          "kernel_count": 24,
+          "span_us": 7809.227,
+          "kernel_interval_union_us": 2228.24,
+          "kernel_present_fraction": 0.28533425907583426
+        }
+      ],
+      "iterations": [
+        {
+          "iteration": 21,
+          "gpu_ids": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "kernel_count": 64,
+          "gpu_envelope_us": 2910.841
+        },
+        {
+          "iteration": 22,
+          "gpu_ids": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "kernel_count": 64,
+          "gpu_envelope_us": 2536.448
+        },
+        {
+          "iteration": 23,
+          "gpu_ids": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "kernel_count": 64,
+          "gpu_envelope_us": 2507.458
+        }
+      ],
+      "runtime_api_counts": {
+        "cudaLaunchKernel_v7000": 192,
+        "cudaEventRecord_v3020": 360,
+        "cudaStreamWaitEvent_v3020": 504,
+        "cudaStreamSynchronize_v3020": 72
+      }
+    },
+    {
+      "case": "m256-q4-g2",
+      "shape": "m256",
+      "candidate": "splitk4_groupedn2",
+      "diagnostic_only": true,
+      "capture_us": 8505.075,
+      "capture_per_execution_over_unprofiled_median": 4.012910558886643,
+      "note": "Ratio includes profiler/NVTX and diagnostic workload effects; not a correction factor.",
+      "kernel_types": {
+        "lsa_cutlass_gemm": {
+          "count": 192,
+          "median_us": 78.239
+        }
+      },
+      "per_gpu": [
+        {
+          "device": 0,
+          "kernel_count": 24,
+          "span_us": 8052.9,
+          "kernel_interval_union_us": 1880.035,
+          "kernel_present_fraction": 0.2334606166722547
+        },
+        {
+          "device": 1,
+          "kernel_count": 24,
+          "span_us": 8019.608,
+          "kernel_interval_union_us": 1851.884,
+          "kernel_present_fraction": 0.23091951626563292
+        },
+        {
+          "device": 2,
+          "kernel_count": 24,
+          "span_us": 8025.404,
+          "kernel_interval_union_us": 1853.498,
+          "kernel_present_fraction": 0.23095385603017618
+        },
+        {
+          "device": 3,
+          "kernel_count": 24,
+          "span_us": 8039.127,
+          "kernel_interval_union_us": 1868.599,
+          "kernel_present_fraction": 0.23243804955438568
+        },
+        {
+          "device": 4,
+          "kernel_count": 24,
+          "span_us": 8049.006,
+          "kernel_interval_union_us": 1858.011,
+          "kernel_present_fraction": 0.23083732326699719
+        },
+        {
+          "device": 5,
+          "kernel_count": 24,
+          "span_us": 8062.711,
+          "kernel_interval_union_us": 1870.673,
+          "kernel_present_fraction": 0.23201538539580546
+        },
+        {
+          "device": 6,
+          "kernel_count": 24,
+          "span_us": 8072.944,
+          "kernel_interval_union_us": 1878.554,
+          "kernel_present_fraction": 0.23269751406673947
+        },
+        {
+          "device": 7,
+          "kernel_count": 24,
+          "span_us": 8108.421,
+          "kernel_interval_union_us": 1840.211,
+          "kernel_present_fraction": 0.22695059864306502
+        }
+      ],
+      "iterations": [
+        {
+          "iteration": 21,
+          "gpu_ids": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "kernel_count": 64,
+          "gpu_envelope_us": 2941.151
+        },
+        {
+          "iteration": 22,
+          "gpu_ids": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "kernel_count": 64,
+          "gpu_envelope_us": 2613.499
+        },
+        {
+          "iteration": 23,
+          "gpu_ids": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "kernel_count": 64,
+          "gpu_envelope_us": 2602.225
+        }
+      ],
+      "runtime_api_counts": {
+        "cudaLaunchKernel_v7000": 192,
+        "cudaEventRecord_v3020": 360,
+        "cudaStreamWaitEvent_v3020": 504,
+        "cudaStreamSynchronize_v3020": 72
+      }
+    },
+    {
+      "case": "m256-q8-g1",
+      "shape": "m256",
+      "candidate": "splitk8",
+      "diagnostic_only": true,
+      "capture_us": 8039.753,
+      "capture_per_execution_over_unprofiled_median": 2.7341760227501317,
+      "note": "Ratio includes profiler/NVTX and diagnostic workload effects; not a correction factor.",
+      "kernel_types": {
+        "lsa_cutlass_gemm": {
+          "count": 192,
+          "median_us": 104.0795
+        }
+      },
+      "per_gpu": [
+        {
+          "device": 0,
+          "kernel_count": 24,
+          "span_us": 7583.59,
+          "kernel_interval_union_us": 2470.093,
+          "kernel_present_fraction": 0.32571552523277236
+        },
+        {
+          "device": 1,
+          "kernel_count": 24,
+          "span_us": 7555.517,
+          "kernel_interval_union_us": 2461.384,
+          "kernel_present_fraction": 0.32577307416554024
+        },
+        {
+          "device": 2,
+          "kernel_count": 24,
+          "span_us": 7562.307,
+          "kernel_interval_union_us": 2463.831,
+          "kernel_present_fraction": 0.3258041494480454
+        },
+        {
+          "device": 3,
+          "kernel_count": 24,
+          "span_us": 7564.789,
+          "kernel_interval_union_us": 2455.132,
+          "kernel_present_fraction": 0.3245473204870618
+        },
+        {
+          "device": 4,
+          "kernel_count": 24,
+          "span_us": 7582.293,
+          "kernel_interval_union_us": 2480.604,
+          "kernel_present_fraction": 0.32715749707904984
+        },
+        {
+          "device": 5,
+          "kernel_count": 24,
+          "span_us": 7591.168,
+          "kernel_interval_union_us": 2467.304,
+          "kernel_present_fraction": 0.3250229740667049
+        },
+        {
+          "device": 6,
+          "kernel_count": 24,
+          "span_us": 7598.077,
+          "kernel_interval_union_us": 2477.108,
+          "kernel_present_fraction": 0.32601775422912926
+        },
+        {
+          "device": 7,
+          "kernel_count": 24,
+          "span_us": 7599.952,
+          "kernel_interval_union_us": 2414.831,
+          "kernel_present_fraction": 0.31774292785007063
+        }
+      ],
+      "iterations": [
+        {
+          "iteration": 21,
+          "gpu_ids": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "kernel_count": 64,
+          "gpu_envelope_us": 2737.219
+        },
+        {
+          "iteration": 22,
+          "gpu_ids": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "kernel_count": 64,
+          "gpu_envelope_us": 2504.488
+        },
+        {
+          "iteration": 23,
+          "gpu_ids": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "kernel_count": 64,
+          "gpu_envelope_us": 2465.772
+        }
+      ],
+      "runtime_api_counts": {
+        "cudaLaunchKernel_v7000": 192,
+        "cudaEventRecord_v3020": 360,
+        "cudaStreamWaitEvent_v3020": 504,
+        "cudaStreamSynchronize_v3020": 72
+      }
+    },
+    {
+      "case": "m256-q8-g2",
+      "shape": "m256",
+      "candidate": "splitk8_groupedn2",
+      "diagnostic_only": true,
+      "capture_us": 8434.225,
+      "capture_per_execution_over_unprofiled_median": 4.029014916845863,
+      "note": "Ratio includes profiler/NVTX and diagnostic workload effects; not a correction factor.",
+      "kernel_types": {
+        "lsa_cutlass_gemm": {
+          "count": 192,
+          "median_us": 73.0235
+        }
+      },
+      "per_gpu": [
+        {
+          "device": 0,
+          "kernel_count": 24,
+          "span_us": 7968.864,
+          "kernel_interval_union_us": 1736.914,
+          "kernel_present_fraction": 0.21796256028462777
+        },
+        {
+          "device": 1,
+          "kernel_count": 24,
+          "span_us": 7954.583,
+          "kernel_interval_union_us": 1732.177,
+          "kernel_present_fraction": 0.21775836646622457
+        },
+        {
+          "device": 2,
+          "kernel_count": 24,
+          "span_us": 7963.395,
+          "kernel_interval_union_us": 1732.86,
+          "kernel_present_fraction": 0.21760317050705133
+        },
+        {
+          "device": 3,
+          "kernel_count": 24,
+          "span_us": 7982.07,
+          "kernel_interval_union_us": 1750.227,
+          "kernel_present_fraction": 0.21926981346943838
+        },
+        {
+          "device": 4,
+          "kernel_count": 24,
+          "span_us": 7975.731,
+          "kernel_interval_union_us": 1740.094,
+          "kernel_present_fraction": 0.21817360690825707
+        },
+        {
+          "device": 5,
+          "kernel_count": 24,
+          "span_us": 7992.957,
+          "kernel_interval_union_us": 1747.536,
+          "kernel_present_fraction": 0.21863448033062108
+        },
+        {
+          "device": 6,
+          "kernel_count": 24,
+          "span_us": 8004.653,
+          "kernel_interval_union_us": 1762.14,
+          "kernel_present_fraction": 0.2201394613857715
+        },
+        {
+          "device": 7,
+          "kernel_count": 24,
+          "span_us": 8012.301,
+          "kernel_interval_union_us": 1717.329,
+          "kernel_present_fraction": 0.21433655575345958
+        }
+      ],
+      "iterations": [
+        {
+          "iteration": 21,
+          "gpu_ids": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "kernel_count": 64,
+          "gpu_envelope_us": 2876.742
+        },
+        {
+          "iteration": 22,
+          "gpu_ids": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "kernel_count": 64,
+          "gpu_envelope_us": 2621.133
+        },
+        {
+          "iteration": 23,
+          "gpu_ids": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "kernel_count": 64,
+          "gpu_envelope_us": 2549.65
+        }
+      ],
+      "runtime_api_counts": {
+        "cudaLaunchKernel_v7000": 192,
+        "cudaEventRecord_v3020": 360,
+        "cudaStreamWaitEvent_v3020": 504,
+        "cudaStreamSynchronize_v3020": 72
+      }
+    },
+    {
+      "case": "m512-fp32-q8-g2",
+      "shape": "m512",
+      "candidate": "splitk8_groupedn2_fp32reduce",
+      "diagnostic_only": true,
+      "capture_us": 10124.702,
+      "capture_per_execution_over_unprofiled_median": 3.2534854691848905,
+      "note": "Ratio includes profiler/NVTX and diagnostic workload effects; not a correction factor.",
+      "kernel_types": {
+        "finalize_fp16": {
+          "count": 192,
+          "median_us": 3.36
+        },
+        "lsa_cutlass_gemm": {
+          "count": 192,
+          "median_us": 106.095
+        }
+      },
+      "per_gpu": [
+        {
+          "device": 0,
+          "kernel_count": 48,
+          "span_us": 9629.312,
+          "kernel_interval_union_us": 2598.47,
+          "kernel_present_fraction": 0.26985001628361405
+        },
+        {
+          "device": 1,
+          "kernel_count": 48,
+          "span_us": 9628.118,
+          "kernel_interval_union_us": 2582.399,
+          "kernel_present_fraction": 0.26821430730283946
+        },
+        {
+          "device": 2,
+          "kernel_count": 48,
+          "span_us": 9635.527,
+          "kernel_interval_union_us": 2582.834,
+          "kernel_present_fraction": 0.268053215978742
+        },
+        {
+          "device": 3,
+          "kernel_count": 48,
+          "span_us": 9624.374,
+          "kernel_interval_union_us": 2592.683,
+          "kernel_present_fraction": 0.2693871830001619
+        },
+        {
+          "device": 4,
+          "kernel_count": 48,
+          "span_us": 9641.596,
+          "kernel_interval_union_us": 2600.437,
+          "kernel_present_fraction": 0.2697102222495114
+        },
+        {
+          "device": 5,
+          "kernel_count": 48,
+          "span_us": 9649.869,
+          "kernel_interval_union_us": 2589.631,
+          "kernel_present_fraction": 0.26835918705217654
+        },
+        {
+          "device": 6,
+          "kernel_count": 48,
+          "span_us": 9671.571,
+          "kernel_interval_union_us": 2610.037,
+          "kernel_present_fraction": 0.2698669120042649
+        },
+        {
+          "device": 7,
+          "kernel_count": 48,
+          "span_us": 9702.886,
+          "kernel_interval_union_us": 2563.848,
+          "kernel_present_fraction": 0.26423560989998235
+        }
+      ],
+      "iterations": [
+        {
+          "iteration": 21,
+          "gpu_ids": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "kernel_count": 128,
+          "gpu_envelope_us": 3468.31
+        },
+        {
+          "iteration": 22,
+          "gpu_ids": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "kernel_count": 128,
+          "gpu_envelope_us": 3189.69
+        },
+        {
+          "iteration": 23,
+          "gpu_ids": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "kernel_count": 128,
+          "gpu_envelope_us": 3189.853
+        }
+      ],
+      "runtime_api_counts": {
+        "cudaLaunchKernel_v7000": 384,
+        "cudaEventRecord_v3020": 360,
+        "cudaStreamWaitEvent_v3020": 504,
+        "cudaStreamSynchronize_v3020": 72
+      }
+    }
+  ],
+  "limitations": [
+    "No profiler time used as training label",
+    "Kernel interval presence is not SM occupancy or useful compute utilization",
+    "Gaps include submission, synchronization, other work and instrumentation; not attributed to CPU alone",
+    "CUDA event tracing may perturb dependency arrows; no intrakernel overlap or bandwidth conclusion"
+  ]
+}

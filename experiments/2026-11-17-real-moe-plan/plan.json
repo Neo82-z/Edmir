@@ -1,0 +1,259 @@
+{
+  "schema": "edmir.real-moe-plan.v1",
+  "created_date": "2026-11-17",
+  "status": "proposal_for_review",
+  "executable": false,
+  "permissions": {
+    "gpu_start": false,
+    "cpu_rental": false,
+    "storage_creation": false,
+    "asset_download": false,
+    "predictor_training": false,
+    "predictor_modification": false
+  },
+  "scope": "native_vllm_baseline_and_workload_characterization_not_edmir_serving_speedup",
+  "model": {
+    "id": "zai-org/GLM-4.7-Flash",
+    "revision": "7dd20894a642a0aa287e9827cb1a1f7f91386b67",
+    "dtype": "bfloat16",
+    "quantization": null,
+    "weight_bytes": 62444175504,
+    "weight_file_count": 48,
+    "assets_ready": false,
+    "num_layers": 47,
+    "moe_layer_ids": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46
+    ],
+    "num_experts": 64,
+    "top_k": 4,
+    "num_shared_experts": 1,
+    "config_sha256": "dc9b97c7c9bed726a2e6939da4234d5c43abb3edec8812068c9a1af1dbc13acb",
+    "logical_projections": [
+      {
+        "name": "gate_up",
+        "K": 2048,
+        "N": 3072
+      },
+      {
+        "name": "down",
+        "K": 1536,
+        "N": 2048
+      }
+    ]
+  },
+  "engine": {
+    "name": "vllm",
+    "version": "0.20.1",
+    "image": "vllm/vllm-openai@sha256:bf0486e51765766a069f6eb26a63a06748859a568b24200acd3aa4edb58f3d35",
+    "image_ready": false,
+    "runtime_validated": false,
+    "platform": "linux/amd64",
+    "tp": 1,
+    "dp": 8,
+    "ep": 8,
+    "pp": 1,
+    "dtype": "bfloat16",
+    "moe_backend": "triton",
+    "all2all_backend": "allgather_reducescatter",
+    "attention_backend": "TRITON_MLA",
+    "max_model_len": 4608,
+    "max_num_seqs_per_dp": 32,
+    "max_num_batched_tokens_per_dp": 4096,
+    "kv_cache_bytes_per_gpu": 17179869184,
+    "chunked_prefill": true,
+    "prefix_caching": false,
+    "speculative_decoding": false,
+    "eplb": false,
+    "dbo": false,
+    "performance_eager": false,
+    "seed": 20261117,
+    "cli_validated": false
+  },
+  "hardware": {
+    "gpu": "A100 SXM4 80GB",
+    "gpu_count": 8,
+    "node_count": 1,
+    "required_interconnect": "NVLink/NVSwitch",
+    "topology_verified": false
+  },
+  "workloads": [
+    {
+      "id": "S1",
+      "input_tokens": 512,
+      "output_tokens": 128,
+      "max_client_concurrency": 1,
+      "requests_per_block": 32,
+      "repetitions": 3
+    },
+    {
+      "id": "S32",
+      "input_tokens": 512,
+      "output_tokens": 128,
+      "max_client_concurrency": 32,
+      "requests_per_block": 128,
+      "repetitions": 3
+    },
+    {
+      "id": "L1",
+      "input_tokens": 4096,
+      "output_tokens": 128,
+      "max_client_concurrency": 1,
+      "requests_per_block": 32,
+      "repetitions": 3
+    },
+    {
+      "id": "L32",
+      "input_tokens": 4096,
+      "output_tokens": 128,
+      "max_client_concurrency": 32,
+      "requests_per_block": 128,
+      "repetitions": 3
+    }
+  ],
+  "block_orders": [
+    [
+      "S1",
+      "S32",
+      "L1",
+      "L32"
+    ],
+    [
+      "L32",
+      "L1",
+      "S32",
+      "S1"
+    ],
+    [
+      "S32",
+      "L32",
+      "S1",
+      "L1"
+    ]
+  ],
+  "sampling": {
+    "temperature": 0,
+    "ignore_eos_performance": true,
+    "natural_stop_functional_requests": 8,
+    "warmup_batches_per_block": 2,
+    "corpus_frozen": false,
+    "corpus_sha256": null,
+    "performance_blocks": 12,
+    "performance_requests": 960,
+    "performance_input_tokens": 2211840,
+    "performance_output_tokens": 122880
+  },
+  "diagnostics": {
+    "separate_from_timing": true,
+    "scope": "sampled_steps_not_all_traffic",
+    "max_steps_each_category_per_workload": 3,
+    "categories": [
+      "pure_prefill",
+      "pure_decode",
+      "mixed"
+    ],
+    "max_router_records_per_workload": 3312,
+    "all_source_ranks": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "requires_global_step_and_token_phase": true,
+    "requires_actual_backend_geometry": true,
+    "old_route_output_sufficient": false,
+    "mixed_phase_adapter_ready": false,
+    "nsys_windows": 4,
+    "ncu_required": false
+  },
+  "acceptance": {
+    "performance_successful_requests": 960,
+    "complete_performance_blocks": 12,
+    "output_tokens_each": 128,
+    "complete_rank_count": 8,
+    "router_conservation_top_k": 4,
+    "drift_flag_range_over_median": 0.1,
+    "maximum_extra_repeat_per_unstable_workload": 1,
+    "all_raw_files_hash_verified": true,
+    "speedup_required": false,
+    "end_to_end_edmir_claim_allowed": false
+  },
+  "readiness": {
+    "plan_reviewed": false,
+    "assets_ready": false,
+    "fixed_image_cpu_checks_passed": false,
+    "request_corpus_frozen": false,
+    "full_step_rank_collector_ready": false,
+    "gpu_ready": false
+  },
+  "protected_hashes": {
+    "EDM-IR/edmir/compiler/w1_candidate_selection.py": "767b5e6068d1cfba7981533d76fc768ce20b2bb5ecaf5725b5ee21706f13ed18",
+    "experiments/2026-11-16-precision-analysis/attempt-01/coupled_geometry-grouped.json": "31460fafada032deea5c15809c16d7036d1ea0c6f0cf036e04d21e941e34a1b2",
+    "experiments/2026-11-16-precision-analysis/attempt-01/coupled_geometry-large_n.json": "9877a7b8be5a616a577c182e3d3814b938b75fab498ad93e6d2c434fc84680c7",
+    "experiments/2026-11-16-precision-analysis/attempt-01/coupled_geometry-m256.json": "31ade62bf848ead40c6c2b35e3956287b2dd668c7097a8749726785912476220",
+    "experiments/2026-11-16-precision-analysis/attempt-01/coupled_geometry-m512.json": "d4bbfe656123ebc3b96259c272152b79389bf783aff5a52cb7278d9d3cc65513",
+    "experiments/2026-11-16-precision-analysis/attempt-01/original_geometry-grouped.json": "078dfa13a53f38549c3b94d9d043ce04b4e1037caaa65f90270a6c01bf437a25",
+    "experiments/2026-11-16-precision-analysis/attempt-01/original_geometry-large_n.json": "998653b83ae94ea23b0ee8ec259f96eab5d3ba28e27e58d0bdd31e237d92948e",
+    "experiments/2026-11-16-precision-analysis/attempt-01/original_geometry-m256.json": "b54d8536794ab608770ea454c02a761a007994e65cb80f244f97522ad1dfe232",
+    "experiments/2026-11-16-precision-analysis/attempt-01/original_geometry-m512.json": "1073763894319b1e699515f97a1eccf0e1cdef4dfa2662d8eaba1072e4e64ee0",
+    "experiments/2026-11-17-final-operator/frozen-predictions/coupled_geometry-large_n.json": "9877a7b8be5a616a577c182e3d3814b938b75fab498ad93e6d2c434fc84680c7",
+    "experiments/2026-11-17-final-operator/frozen-predictions/original_geometry-large_n.json": "998653b83ae94ea23b0ee8ec259f96eab5d3ba28e27e58d0bdd31e237d92948e",
+    "experiments/2026-11-17-final-operator/frozen-predictions/preregistered.json": "bf2c8b89dc76160cd1daf9830f347e4fb2fbb7aa5721508d3d73c6a5b6541a2e",
+    "experiments/2026-11-17-final-operator/frozen-predictions/w1_candidate_selection.py": "767b5e6068d1cfba7981533d76fc768ce20b2bb5ecaf5725b5ee21706f13ed18"
+  },
+  "notes": [
+    "GLM source registration verified; actual image and A100 runtime not yet verified.",
+    "GLM BF16 EP execution is outside the frozen FP16 selector contract.",
+    "Same-sized tensors do not establish an identical communication or kernel contract.",
+    "No local downloads; remote storage reuse must be confirmed before future provisioning.",
+    "New plan does not authorize paid resources or override existing budget caps."
+  ]
+}

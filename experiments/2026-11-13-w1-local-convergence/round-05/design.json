@@ -1,0 +1,18 @@
+{
+  "variants": [
+    "original_geometry",
+    "coupled_geometry"
+  ],
+  "ridge": 0.01,
+  "split": "leave one entire development shape out; all seeds/processes/candidates stay together",
+  "loss": "weighted squared log latency; fixed diagnostic, no optimizer or parameter search",
+  "training_mass": "equal shape mass; equal host/fused mass within shape",
+  "no_online_admission": true,
+  "frozen_shapes_read": false,
+  "prior_labels_used": false,
+  "limitations": [
+    "All four shapes influenced prior design: this is not an independent test",
+    "No host-best shape; reverse host/fused accuracy cannot be claimed",
+    "Logical coupling counts do not identify actual occupancy, contention or overlap"
+  ]
+}

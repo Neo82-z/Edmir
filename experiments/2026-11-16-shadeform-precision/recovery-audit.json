@@ -1,0 +1,438 @@
+{
+  "scope": "development_only_no_fitting_no_frozen_shapes",
+  "verified_files": 210,
+  "stages": [
+    {
+      "name": "m512",
+      "pilot_valid": true,
+      "complete": true,
+      "completed": [
+        {
+          "index": 0,
+          "phase": "check",
+          "rows": 17,
+          "excluded": []
+        },
+        {
+          "index": 1,
+          "phase": "check",
+          "rows": 17,
+          "excluded": []
+        },
+        {
+          "index": 2,
+          "phase": "check",
+          "rows": 17,
+          "excluded": []
+        },
+        {
+          "index": 3,
+          "phase": "measure",
+          "rows": 13,
+          "excluded": [
+            "splitk16_groupedn2",
+            "splitk8",
+            "splitk8_groupedn2",
+            "splitk16"
+          ]
+        },
+        {
+          "index": 4,
+          "phase": "measure",
+          "rows": 13,
+          "excluded": [
+            "splitk8",
+            "splitk8_groupedn2",
+            "splitk16",
+            "splitk16_groupedn2"
+          ]
+        },
+        {
+          "index": 5,
+          "phase": "measure",
+          "rows": 13,
+          "excluded": [
+            "splitk16_groupedn2",
+            "splitk8",
+            "splitk8_groupedn2",
+            "splitk16"
+          ]
+        }
+      ],
+      "missing": [],
+      "traces": {
+        "m512-fp32-q8-g2": "hash_verified_contents_require_review"
+      }
+    },
+    {
+      "name": "large_n",
+      "pilot_valid": true,
+      "complete": true,
+      "completed": [
+        {
+          "index": 0,
+          "phase": "check",
+          "rows": 17,
+          "excluded": []
+        },
+        {
+          "index": 1,
+          "phase": "check",
+          "rows": 17,
+          "excluded": []
+        },
+        {
+          "index": 2,
+          "phase": "check",
+          "rows": 17,
+          "excluded": []
+        },
+        {
+          "index": 3,
+          "phase": "measure",
+          "rows": 15,
+          "excluded": [
+            "splitk16_groupedn2",
+            "splitk16"
+          ]
+        },
+        {
+          "index": 4,
+          "phase": "measure",
+          "rows": 15,
+          "excluded": [
+            "splitk16_groupedn2",
+            "splitk16"
+          ]
+        },
+        {
+          "index": 5,
+          "phase": "measure",
+          "rows": 15,
+          "excluded": [
+            "splitk16",
+            "splitk16_groupedn2"
+          ]
+        }
+      ],
+      "missing": [],
+      "traces": {
+        "large-n-q2": "hash_verified_contents_require_review",
+        "large-n-q8-g2": "hash_verified_contents_require_review"
+      }
+    },
+    {
+      "name": "m256",
+      "pilot_valid": true,
+      "complete": true,
+      "completed": [
+        {
+          "index": 0,
+          "phase": "check",
+          "rows": 17,
+          "excluded": []
+        },
+        {
+          "index": 1,
+          "phase": "check",
+          "rows": 17,
+          "excluded": []
+        },
+        {
+          "index": 2,
+          "phase": "check",
+          "rows": 17,
+          "excluded": []
+        },
+        {
+          "index": 3,
+          "phase": "measure",
+          "rows": 15,
+          "excluded": [
+            "splitk16_groupedn2",
+            "splitk16"
+          ]
+        },
+        {
+          "index": 4,
+          "phase": "measure",
+          "rows": 15,
+          "excluded": [
+            "splitk16_groupedn2",
+            "splitk16"
+          ]
+        },
+        {
+          "index": 5,
+          "phase": "measure",
+          "rows": 15,
+          "excluded": [
+            "splitk16_groupedn2",
+            "splitk16"
+          ]
+        }
+      ],
+      "missing": [],
+      "traces": {
+        "m256-q4-g1": "hash_verified_contents_require_review",
+        "m256-q4-g2": "hash_verified_contents_require_review",
+        "m256-q8-g1": "hash_verified_contents_require_review",
+        "m256-q8-g2": "hash_verified_contents_require_review"
+      }
+    },
+    {
+      "name": "grouped",
+      "pilot_valid": true,
+      "complete": true,
+      "completed": [
+        {
+          "index": 0,
+          "phase": "check",
+          "rows": 17,
+          "excluded": []
+        },
+        {
+          "index": 1,
+          "phase": "check",
+          "rows": 17,
+          "excluded": []
+        },
+        {
+          "index": 2,
+          "phase": "check",
+          "rows": 17,
+          "excluded": []
+        },
+        {
+          "index": 3,
+          "phase": "measure",
+          "rows": 15,
+          "excluded": [
+            "splitk16_groupedn2",
+            "splitk16"
+          ]
+        },
+        {
+          "index": 4,
+          "phase": "measure",
+          "rows": 15,
+          "excluded": [
+            "splitk16",
+            "splitk16_groupedn2"
+          ]
+        },
+        {
+          "index": 5,
+          "phase": "measure",
+          "rows": 15,
+          "excluded": [
+            "splitk16",
+            "splitk16_groupedn2"
+          ]
+        }
+      ],
+      "missing": [],
+      "traces": {}
+    }
+  ],
+  "completed_groups": 24,
+  "planned_groups": 24,
+  "correctness_check_rows": 204,
+  "valid_timing_rows": 174,
+  "raw_timing_samples": 17400,
+  "numerical_failures": [
+    {
+      "shape": "m512",
+      "seed": 20261020,
+      "family": "splitk16",
+      "failure": "initial numerical correctness failed",
+      "max_abs_error": 0.0625,
+      "max_rel_error": 0.0283203125
+    },
+    {
+      "shape": "m512",
+      "seed": 20261020,
+      "family": "splitk16_groupedn2",
+      "failure": "initial numerical correctness failed",
+      "max_abs_error": 0.0625,
+      "max_rel_error": 0.0283203125
+    },
+    {
+      "shape": "m512",
+      "seed": 20261101,
+      "family": "splitk8",
+      "failure": "initial numerical correctness failed",
+      "max_abs_error": 0.0458984375,
+      "max_rel_error": 0.0205078125
+    },
+    {
+      "shape": "m512",
+      "seed": 20261101,
+      "family": "splitk16",
+      "failure": "initial numerical correctness failed",
+      "max_abs_error": 0.05859375,
+      "max_rel_error": 0.02734375
+    },
+    {
+      "shape": "m512",
+      "seed": 20261101,
+      "family": "splitk8_groupedn2",
+      "failure": "initial numerical correctness failed",
+      "max_abs_error": 0.0458984375,
+      "max_rel_error": 0.0205078125
+    },
+    {
+      "shape": "m512",
+      "seed": 20261101,
+      "family": "splitk16_groupedn2",
+      "failure": "initial numerical correctness failed",
+      "max_abs_error": 0.05859375,
+      "max_rel_error": 0.02734375
+    },
+    {
+      "shape": "m512",
+      "seed": 20261102,
+      "family": "splitk16",
+      "failure": "initial numerical correctness failed",
+      "max_abs_error": 0.0625,
+      "max_rel_error": 0.0244140625
+    },
+    {
+      "shape": "m512",
+      "seed": 20261102,
+      "family": "splitk16_groupedn2",
+      "failure": "initial numerical correctness failed",
+      "max_abs_error": 0.0625,
+      "max_rel_error": 0.0244140625
+    },
+    {
+      "shape": "large_n",
+      "seed": 20261020,
+      "family": "splitk16",
+      "failure": "initial numerical correctness failed",
+      "max_abs_error": 0.0458984375,
+      "max_rel_error": 0.0205078125
+    },
+    {
+      "shape": "large_n",
+      "seed": 20261020,
+      "family": "splitk16_groupedn2",
+      "failure": "initial numerical correctness failed",
+      "max_abs_error": 0.0458984375,
+      "max_rel_error": 0.0205078125
+    },
+    {
+      "shape": "large_n",
+      "seed": 20261101,
+      "family": "splitk16",
+      "failure": "initial numerical correctness failed",
+      "max_abs_error": 0.0419921875,
+      "max_rel_error": 0.0234375
+    },
+    {
+      "shape": "large_n",
+      "seed": 20261101,
+      "family": "splitk16_groupedn2",
+      "failure": "initial numerical correctness failed",
+      "max_abs_error": 0.0419921875,
+      "max_rel_error": 0.0234375
+    },
+    {
+      "shape": "m256",
+      "seed": 20261020,
+      "family": "splitk16",
+      "failure": "initial numerical correctness failed",
+      "max_abs_error": 0.0556640625,
+      "max_rel_error": 0.0283203125
+    },
+    {
+      "shape": "m256",
+      "seed": 20261020,
+      "family": "splitk16_groupedn2",
+      "failure": "initial numerical correctness failed",
+      "max_abs_error": 0.0556640625,
+      "max_rel_error": 0.0283203125
+    },
+    {
+      "shape": "m256",
+      "seed": 20261101,
+      "family": "splitk16",
+      "failure": "initial numerical correctness failed",
+      "max_abs_error": 0.0556640625,
+      "max_rel_error": 0.02734375
+    },
+    {
+      "shape": "m256",
+      "seed": 20261101,
+      "family": "splitk16_groupedn2",
+      "failure": "initial numerical correctness failed",
+      "max_abs_error": 0.0556640625,
+      "max_rel_error": 0.02734375
+    },
+    {
+      "shape": "m256",
+      "seed": 20261102,
+      "family": "splitk16",
+      "failure": "initial numerical correctness failed",
+      "max_abs_error": 0.05859375,
+      "max_rel_error": 0.0234375
+    },
+    {
+      "shape": "m256",
+      "seed": 20261102,
+      "family": "splitk16_groupedn2",
+      "failure": "initial numerical correctness failed",
+      "max_abs_error": 0.05859375,
+      "max_rel_error": 0.0234375
+    },
+    {
+      "shape": "grouped",
+      "seed": 20261020,
+      "family": "splitk16",
+      "failure": "initial numerical correctness failed",
+      "max_abs_error": 0.0546875,
+      "max_rel_error": 0.025390625
+    },
+    {
+      "shape": "grouped",
+      "seed": 20261020,
+      "family": "splitk16_groupedn2",
+      "failure": "initial numerical correctness failed",
+      "max_abs_error": 0.0546875,
+      "max_rel_error": 0.025390625
+    },
+    {
+      "shape": "grouped",
+      "seed": 20261101,
+      "family": "splitk16",
+      "failure": "initial numerical correctness failed",
+      "max_abs_error": 0.0517578125,
+      "max_rel_error": 0.0234375
+    },
+    {
+      "shape": "grouped",
+      "seed": 20261101,
+      "family": "splitk16_groupedn2",
+      "failure": "initial numerical correctness failed",
+      "max_abs_error": 0.0517578125,
+      "max_rel_error": 0.0234375
+    },
+    {
+      "shape": "grouped",
+      "seed": 20261102,
+      "family": "splitk16",
+      "failure": "initial numerical correctness failed",
+      "max_abs_error": 0.056640625,
+      "max_rel_error": 0.0224609375
+    },
+    {
+      "shape": "grouped",
+      "seed": 20261102,
+      "family": "splitk16_groupedn2",
+      "failure": "initial numerical correctness failed",
+      "max_abs_error": 0.056640625,
+      "max_rel_error": 0.0224609375
+    }
+  ],
+  "complete_protocol": true
+}

@@ -1,0 +1,65 @@
+{
+  "kind": "CPU_arithmetic_diagnostic_not_GPU_measurement",
+  "shape_PMKN": [
+    8,
+    512,
+    8192,
+    512
+  ],
+  "seed": 20261101,
+  "fixed_row_indices": [
+    0,
+    73,
+    146,
+    219,
+    292,
+    365,
+    438,
+    511
+  ],
+  "source_destination_pairs": 64,
+  "checked_elements": 262144,
+  "fraction_of_full_output": 0.015625,
+  "input_hashes": {
+    "inputs.bin": "4ffb9eee7dcffe06e4c83eeca195eaf78cd7ff1e0730f6b68fc71c6b753c96e0",
+    "reference.bin": "41272847977ff8f73fb1e6152a851bbe30aa40059eb30954f7fe6539ef95ae9d"
+  },
+  "reference_max_abs_difference": 0.0,
+  "recurrence": "D_i=FP16(FP32_dot(A_i,B_i)+FP32(D_(i-1))); D_-1=0",
+  "precision_contract": "max(abs(error)/max(1,abs(reference))) <= 0.02; not atol+rtol allclose",
+  "q_results": {
+    "1": {
+      "max_abs_error": 0.015625,
+      "max_scaled_error": 0.00048804294783622026,
+      "failed_elements": 0
+    },
+    "2": {
+      "max_abs_error": 0.017578125,
+      "max_scaled_error": 0.00390625,
+      "failed_elements": 0
+    },
+    "4": {
+      "max_abs_error": 0.0224609375,
+      "max_scaled_error": 0.0107421875,
+      "failed_elements": 0
+    },
+    "8": {
+      "max_abs_error": 0.0458984375,
+      "max_scaled_error": 0.0146484375,
+      "failed_elements": 0
+    },
+    "16": {
+      "max_abs_error": 0.0478515625,
+      "max_scaled_error": 0.0185546875,
+      "failed_elements": 0
+    }
+  },
+  "elapsed_seconds": 1.133788375,
+  "numpy_version": "2.0.2",
+  "limitations": [
+    "No saved GPU output elements to compare coordinate-by-coordinate",
+    "Does not validate semaphore ordering, races or real GPU FP32 intermediates",
+    "Only 1/64 of M512 output elements for one development seed",
+    "No latency/occupancy/communication prediction"
+  ]
+}

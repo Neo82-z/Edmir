@@ -1,0 +1,40 @@
+真实 MoE 采集器：本地准备与验收
+日期：2026-11-17
+
+本轮范围
+用户已同意按 2026-11-17 的八卡 A100 方案进行本地准备。没有开 GPU、租 CPU、创建存储或下载模型、tokenizer、镜像。只读取了官方 vLLM 的少量源文件以核对采集位置和接口。预测器、参数、候选实现、六个冻结形状均不参与本轮修改/训练。
+
+新增入口
+EDM-IR/tools/build_real_moe_corpus.py：生成并冻结受控请求文本与测量顺序。
+EDM-IR/tools/prepare_real_moe.py：将来在固定的远端 CPU 镜像里检查已有资产、生成精确 token IDs、核对引擎 API/依赖/源文件及 Nsight 工具；没有下载逻辑。
+EDM-IR/tools/run_real_moe.py：默认只做文本/计划检查；baseline、routes、trace 三种模式。真正运行必须显式 --execute，并持有成功的 CPU 回执、固定资产和新的实例预算/平台自动删除回执。
+EDM-IR/tools/analyze_real_moe.py：本地性能、路由和 Nsight SQLite 分析。没有预测器导入或拟合。
+
+本地已实现
+1. 128 条受控任务文本：中文 43、英文 43、代码 42；任务说明在上下文前，模板与截断规则固定。它们是为实验编写的结构化自然语言/代码任务，不是假称采自真实用户的生产流量。C1 取前 32 条，C32 取 128 条，三次重复复用原文本；两组同时存在请求数/内容子集和启动排空差异，不能把对比写成纯并发因果效果。
+2. 12 个正式测量块的顺序冻结，总 960 请求。客户端闭环限流、完整输出 token/事件时间戳、失败/超时、部分完成回执和低频 GPU/引擎指标入口已接通。
+3. 路由按真实来源切片。AgRs 先 gather 后 routing 时，仅将本 rank 对应片段搬回 CPU，不在八张卡上重复复制全部结果。dummy、padding 和真实 token 分离；记录执行步、层、rank、token 身份、prefill/decode/mixed。
+4. 使用实际 Triton backend 的排序/分配与 padding 元数据核对专家行数，保留真实张量 shape/stride/dtype 和 kernel 配置。只复制本卡专家块；未识别路径保留原始几何及失败，不伪造 M_kernel。
+5. 路由诊断启用 eager 和同步调度，并额外使用 CPU collective 对齐步骤；其耗时不能作为正式性能。baseline 使用原生 worker 和 Graph 配置。trace 保留 Graph 并使用 NVTX/短时 Nsight 窗口；没有 GPU 张量导出和诊断同步。
+6. 按同一 rank/时间域计算区间并集和交集；未知 kernel 不自动归为计算或通信。Nsight 进程/rank 和 kernel 分类要有实际证据。不同窗口或 eager/Graph 的结果不混合。
+7. 采集器绑定 vLLM 0.20.1 的官方源文件哈希；实际镜像不一致时拒绝使用这套钩子。不是依赖一个同名版本号就放行。
+
+冻结边界
+文本内容 SHA256：683cf6be668d7e701890dc6761d674193fa9c360d7023d1dcffee4f14413db96
+精确 512/4096 token IDs 尚未生成：本机没有使用/下载真实 tokenizer。已实现离线生成、保留原生 assistant 后缀、raw/HF/vLLM 一致性检查。字符编码器仅在临时单元测试中验证截断协议，未保存成真实 token 包。
+性能统计口径为 AsyncLLM 客户端流式调用，包含引擎排队，不含 HTTP 网络与在线 tokenization。多 token 合并事件不会伪造逐 token ITL。
+
+验证回执
+unit-tests.txt：CPU 测试结果。
+cpu-scale-check.json：完整九步采样规模与 32768 行 gather 切片的合成规模检查。
+upstream-api-audit.json：官方源代码的静态接口检查；不是固定镜像导入成功或 GPU 成功。
+failure-cases.json：负向测试中被明确拒绝的错误，全部为 synthetic_test。
+protection-before.json / readiness.json：封存文件哈希与当前就绪状态。
+
+目前不能宣称的部分
+固定镜像实际导入、真正 tokenizer 的 token IDs、A100 上的 hook/NCCL/Graph/kernel 实测均未完成。因此当前是本地采集代码准备完毕，不能写成 G0/GPU 已就绪。
+Nsight Graph replay 下的逐层关联仍需实际 trace 验收；拿不到对应事件时，G4 标记未完成，不猜测共享专家或等待归属。
+没有 BF16 EDM-IR 接入，没有 serving 加速结果，没有新训练数据或新的预测器评分。
+
+下一步需要的是远端无 GPU 环境
+在可以复用到目标八卡的存储上准备固定权重、tokenizer、镜像及 Nsight；先执行 prepare_real_moe.py 得到完整 CPU 回执。此前不进入 GPU 阶段。远端资源/下载没有在本轮启动。

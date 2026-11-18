@@ -1,0 +1,447 @@
+{
+  "cases": [
+    {
+      "case": "m512-fp32-q8-g2",
+      "stage": "m512",
+      "diagnostic_only": true,
+      "status": "eight_gpu_kernels_and_operator_ranges_present",
+      "kernels_per_gpu": [
+        [
+          0,
+          48
+        ],
+        [
+          1,
+          48
+        ],
+        [
+          2,
+          48
+        ],
+        [
+          3,
+          48
+        ],
+        [
+          4,
+          48
+        ],
+        [
+          5,
+          48
+        ],
+        [
+          6,
+          48
+        ],
+        [
+          7,
+          48
+        ]
+      ],
+      "completed_operator_ranges": 192,
+      "kernel_configurations": [
+        {
+          "kernel": "finalize_fp16",
+          "grid": [
+            1024,
+            1,
+            1
+          ],
+          "block": [
+            256,
+            1,
+            1
+          ],
+          "registers_per_thread": 16,
+          "static_shared_bytes": 0,
+          "dynamic_shared_bytes": 0,
+          "launches": 192
+        },
+        {
+          "kernel": "lsa_cutlass_gemm",
+          "grid": [
+            8,
+            2,
+            8
+          ],
+          "block": [
+            256,
+            1,
+            1
+          ],
+          "registers_per_thread": 134,
+          "static_shared_bytes": 0,
+          "dynamic_shared_bytes": 61440,
+          "launches": 192
+        }
+      ]
+    },
+    {
+      "case": "large-n-q2",
+      "stage": "large_n",
+      "diagnostic_only": true,
+      "status": "eight_gpu_kernels_and_operator_ranges_present",
+      "kernels_per_gpu": [
+        [
+          0,
+          24
+        ],
+        [
+          1,
+          24
+        ],
+        [
+          2,
+          24
+        ],
+        [
+          3,
+          24
+        ],
+        [
+          4,
+          24
+        ],
+        [
+          5,
+          24
+        ],
+        [
+          6,
+          24
+        ],
+        [
+          7,
+          24
+        ]
+      ],
+      "completed_operator_ranges": 192,
+      "kernel_configurations": [
+        {
+          "kernel": "lsa_cutlass_gemm",
+          "grid": [
+            1,
+            16,
+            2
+          ],
+          "block": [
+            128,
+            1,
+            1
+          ],
+          "registers_per_thread": 140,
+          "static_shared_bytes": 0,
+          "dynamic_shared_bytes": 36864,
+          "launches": 192
+        }
+      ]
+    },
+    {
+      "case": "large-n-q8-g2",
+      "stage": "large_n",
+      "diagnostic_only": true,
+      "status": "eight_gpu_kernels_and_operator_ranges_present",
+      "kernels_per_gpu": [
+        [
+          0,
+          24
+        ],
+        [
+          1,
+          24
+        ],
+        [
+          2,
+          24
+        ],
+        [
+          3,
+          24
+        ],
+        [
+          4,
+          24
+        ],
+        [
+          5,
+          24
+        ],
+        [
+          6,
+          24
+        ],
+        [
+          7,
+          24
+        ]
+      ],
+      "completed_operator_ranges": 192,
+      "kernel_configurations": [
+        {
+          "kernel": "lsa_cutlass_gemm",
+          "grid": [
+            1,
+            8,
+            8
+          ],
+          "block": [
+            256,
+            1,
+            1
+          ],
+          "registers_per_thread": 134,
+          "static_shared_bytes": 0,
+          "dynamic_shared_bytes": 61440,
+          "launches": 192
+        }
+      ]
+    },
+    {
+      "case": "m256-q4-g1",
+      "stage": "m256",
+      "diagnostic_only": true,
+      "status": "eight_gpu_kernels_and_operator_ranges_present",
+      "kernels_per_gpu": [
+        [
+          0,
+          24
+        ],
+        [
+          1,
+          24
+        ],
+        [
+          2,
+          24
+        ],
+        [
+          3,
+          24
+        ],
+        [
+          4,
+          24
+        ],
+        [
+          5,
+          24
+        ],
+        [
+          6,
+          24
+        ],
+        [
+          7,
+          24
+        ]
+      ],
+      "completed_operator_ranges": 192,
+      "kernel_configurations": [
+        {
+          "kernel": "lsa_cutlass_gemm",
+          "grid": [
+            4,
+            4,
+            4
+          ],
+          "block": [
+            128,
+            1,
+            1
+          ],
+          "registers_per_thread": 140,
+          "static_shared_bytes": 0,
+          "dynamic_shared_bytes": 36864,
+          "launches": 192
+        }
+      ]
+    },
+    {
+      "case": "m256-q4-g2",
+      "stage": "m256",
+      "diagnostic_only": true,
+      "status": "eight_gpu_kernels_and_operator_ranges_present",
+      "kernels_per_gpu": [
+        [
+          0,
+          24
+        ],
+        [
+          1,
+          24
+        ],
+        [
+          2,
+          24
+        ],
+        [
+          3,
+          24
+        ],
+        [
+          4,
+          24
+        ],
+        [
+          5,
+          24
+        ],
+        [
+          6,
+          24
+        ],
+        [
+          7,
+          24
+        ]
+      ],
+      "completed_operator_ranges": 192,
+      "kernel_configurations": [
+        {
+          "kernel": "lsa_cutlass_gemm",
+          "grid": [
+            4,
+            2,
+            4
+          ],
+          "block": [
+            256,
+            1,
+            1
+          ],
+          "registers_per_thread": 134,
+          "static_shared_bytes": 0,
+          "dynamic_shared_bytes": 61440,
+          "launches": 192
+        }
+      ]
+    },
+    {
+      "case": "m256-q8-g1",
+      "stage": "m256",
+      "diagnostic_only": true,
+      "status": "eight_gpu_kernels_and_operator_ranges_present",
+      "kernels_per_gpu": [
+        [
+          0,
+          24
+        ],
+        [
+          1,
+          24
+        ],
+        [
+          2,
+          24
+        ],
+        [
+          3,
+          24
+        ],
+        [
+          4,
+          24
+        ],
+        [
+          5,
+          24
+        ],
+        [
+          6,
+          24
+        ],
+        [
+          7,
+          24
+        ]
+      ],
+      "completed_operator_ranges": 192,
+      "kernel_configurations": [
+        {
+          "kernel": "lsa_cutlass_gemm",
+          "grid": [
+            4,
+            4,
+            8
+          ],
+          "block": [
+            128,
+            1,
+            1
+          ],
+          "registers_per_thread": 140,
+          "static_shared_bytes": 0,
+          "dynamic_shared_bytes": 36864,
+          "launches": 192
+        }
+      ]
+    },
+    {
+      "case": "m256-q8-g2",
+      "stage": "m256",
+      "diagnostic_only": true,
+      "status": "eight_gpu_kernels_and_operator_ranges_present",
+      "kernels_per_gpu": [
+        [
+          0,
+          24
+        ],
+        [
+          1,
+          24
+        ],
+        [
+          2,
+          24
+        ],
+        [
+          3,
+          24
+        ],
+        [
+          4,
+          24
+        ],
+        [
+          5,
+          24
+        ],
+        [
+          6,
+          24
+        ],
+        [
+          7,
+          24
+        ]
+      ],
+      "completed_operator_ranges": 192,
+      "kernel_configurations": [
+        {
+          "kernel": "lsa_cutlass_gemm",
+          "grid": [
+            4,
+            2,
+            8
+          ],
+          "block": [
+            256,
+            1,
+            1
+          ],
+          "registers_per_thread": 134,
+          "static_shared_bytes": 0,
+          "dynamic_shared_bytes": 61440,
+          "launches": 192
+        }
+      ]
+    }
+  ],
+  "all_seven_covered": true,
+  "limitations": [
+    "Profiler durations are excluded from timing labels.",
+    "CUDA event completion tracing was enabled; event-based dependency arrows can be perturbed.",
+    "Kernel coverage/configuration does not directly measure HBM/NVLink traffic or prove within-kernel overlap."
+  ]
+}

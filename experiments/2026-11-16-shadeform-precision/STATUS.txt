@@ -1,0 +1,17 @@
+八卡精度与候选准入验证，2026-11-16：已完成并停费
+
+实例 edmir-precision-a100x8-20261116 已删除；Shadeform 显示 Running 0、No running instances。
+费用约 $12.29（账户余额 $40.40 → $28.11，尚未另核最终发票），低于 $15 上限。
+用户已明确取消原一小时时限；费用上限保留。没有新增持久存储。
+
+四个开发形状全部完成：24/24 区组，204 条正确性检查，174 条有效计时记录，17,400 个原始样本。
+新增 FP32 中间归并候选：48/48 检查通过；输入和输出为 FP16。
+旧路径 24 条数值失败完整保留，相应未准入候选不进入正式计时。
+7 份 Nsight Systems 时间线覆盖 8 个 GPU；210 个回收文件校验无差异。
+六个冻结形状未动；未训练预测器，未运行 BF16 或 vLLM 推理。
+
+原 11:50 UTC 截止造成的中断记录保留，续跑完成时间为 12:18:13 UTC。
+最终采集状态见 recovered/results-precision/extension-status.json，完整性见 recovery-audit.json。
+原 recovered/results-precision/status.json 的 interrupted 仅记录首次截止，不表示最终采集未完成。
+
+完整结论见 REPORT.txt；费用关闭记录见 billing-closeout.json。

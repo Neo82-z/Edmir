@@ -1,0 +1,54 @@
+{
+  "timestamp": "2026-11-01T17:49:17+08:00",
+  "source": "https://api.runpod.io/graphql",
+  "query": "{gpuTypes(input:{id:\"NVIDIA A100-SXM4-80GB\"}){id one:lowestPrice(input:{gpuCount:1,secureCloud:true}){stockStatus uninterruptablePrice} eight:lowestPrice(input:{gpuCount:8,secureCloud:true}){stockStatus uninterruptablePrice} community:lowestPrice(input:{gpuCount:8,secureCloud:false}){stockStatus uninterruptablePrice}} dataCenters{id gpuAvailability(input:{gpuCount:8}){id stockStatus}}}",
+  "market": [
+    {
+      "id": "NVIDIA A100-SXM4-80GB",
+      "one": {
+        "stockStatus": "Low",
+        "uninterruptablePrice": 1.79
+      },
+      "eight": {
+        "stockStatus": null,
+        "uninterruptablePrice": null
+      },
+      "community": {
+        "stockStatus": null,
+        "uninterruptablePrice": null
+      }
+    }
+  ],
+  "datacenters": [
+    {
+      "id": "EU-RO-1",
+      "stockStatus": null
+    },
+    {
+      "id": "EUR-IS-1",
+      "stockStatus": null
+    },
+    {
+      "id": "US-CA-2",
+      "stockStatus": null
+    },
+    {
+      "id": "US-KS-2",
+      "stockStatus": null
+    },
+    {
+      "id": "US-MD-1",
+      "stockStatus": null
+    },
+    {
+      "id": "US-MO-1",
+      "stockStatus": null
+    },
+    {
+      "id": "US-WA-1",
+      "stockStatus": null
+    }
+  ],
+  "account_console": "background page timed out",
+  "orders_created": 0
+}

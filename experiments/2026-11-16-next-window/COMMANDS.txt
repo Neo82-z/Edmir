@@ -1,0 +1,32 @@
+2026-11-16 最新约束：禁止本地下载。今天只讨论方案，不启动 GPU、不创建付费资源。下列旧下载示例不可在本机执行；远端 CPU/共享存储方案及当轮费用尚待确定。
+
+本地核验（在仓库根目录）
+python3 EDM-IR/tools/run_precision_followup.py --plan experiments/2026-11-16-next-window/operator-plan.json --bundle experiments/2026-11-13-w1-local-convergence/gpu-bundle-v2 --dry-run
+
+既有底包
+/Users/neo/Documents/工作/交付/edmir-next-window-precompiled-2026-11-14-v2.tar.gz
+SHA256 ad0004740501eb74de4f9d5cb8494c59584875f8dafed3e20c54dea943c846ad
+原包保留，只将本轮增量放到 /workspace/followup。复用原离线环境准备方法；不得使用旧 window/run_window.py 重跑四点。
+
+GPU 算子入口（仅填写当轮授权、实例和平台保护后）
+python3 /workspace/followup/run_precision_followup.py --plan /workspace/followup/operator-plan.json --bundle /workspace/precision-bundle --inputs /workspace/inputs --build-dir /workspace/build-precision --out /workspace/results-balanced-large-n --guard /workspace/followup/operator-guard.json
+
+模型下载准备（无 GPU 的准备环境，不在付费八卡阶段临时下载）
+hf download zai-org/GLM-4.7-Flash --revision 7dd20894a642a0aa287e9827cb1a1f7f91386b67 --local-dir /absolute/path/to/model-assets
+下载工具需提前安装。model-manifest.json 保存分片及辅助文件的期望哈希；下载完成不等于验证完成。
+
+CPU 资产核验
+python3 run_native_moe_smoke.py --manifest model-manifest.json --requests native-requests.json --model-dir /absolute/path/to/model-assets --out /absolute/path/to/new-asset-check --verify-hashes
+
+固定引擎镜像（准备好镜像层后再租 GPU）
+vllm/vllm-openai@sha256:bf0486e51765766a069f6eb26a63a06748859a568b24200acd3aa4edb58f3d35
+镜像内部执行原生入口；使用独立的卷映射，不混入算子 CUDA 12.8 环境。
+
+原生基线（入口需 fresh native-guard.json，且平台停止规则仍有效）
+python3 run_native_moe_smoke.py --manifest model-manifest.json --requests native-requests.json --model-dir /models/GLM-4.7-Flash --out /results/native-baseline --mode baseline --guard native-guard.json --execute
+
+单独原生路由诊断
+python3 run_native_moe_smoke.py --manifest model-manifest.json --requests native-requests.json --model-dir /models/GLM-4.7-Flash --out /results/native-routes --mode routes --guard native-guard.json --execute
+
+每次输出目录必须新建；不同模式使用不同进程；原生请求不能与算子计时同时执行。
+本脚本的采集截止不是平台停止计费，完成后仍须回收、核对 SHA256 并在平台停费。

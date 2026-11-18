@@ -1,0 +1,113 @@
+{
+  "source": "official tag v0.20.1",
+  "checks": [
+    {
+      "file": "vllm/forward_context.py",
+      "callable": "set_forward_context",
+      "required_arguments": [
+        "vllm_config",
+        "num_tokens_across_dp"
+      ],
+      "passed": true
+    },
+    {
+      "file": "vllm/v1/worker/gpu_model_runner.py",
+      "callable": "_prepare_inputs",
+      "required_arguments": [
+        "self",
+        "scheduler_output",
+        "num_scheduled_tokens"
+      ],
+      "passed": true
+    },
+    {
+      "file": "vllm/v1/worker/gpu_model_runner.py",
+      "callable": "_dummy_run",
+      "required_arguments": [
+        "self",
+        "num_tokens"
+      ],
+      "passed": true
+    },
+    {
+      "file": "vllm/model_executor/layers/fused_moe/router/base_router.py",
+      "callable": "select_experts",
+      "required_arguments": [
+        "self",
+        "hidden_states",
+        "router_logits"
+      ],
+      "passed": true
+    },
+    {
+      "file": "vllm/model_executor/layers/fused_moe/runner/moe_runner.py",
+      "callable": "_forward_impl",
+      "required_arguments": [
+        "self",
+        "layer",
+        "hidden_states",
+        "router_logits"
+      ],
+      "passed": true
+    },
+    {
+      "file": "vllm/model_executor/layers/fused_moe/runner/moe_runner.py",
+      "callable": "do_naive_dispatch_combine",
+      "required_arguments": [
+        "self"
+      ],
+      "passed": true
+    },
+    {
+      "file": "vllm/model_executor/layers/fused_moe/fused_moe.py",
+      "callable": "invoke_fused_moe_triton_kernel",
+      "required_arguments": [
+        "A",
+        "B",
+        "C",
+        "sorted_token_ids",
+        "expert_ids",
+        "num_tokens_post_padded",
+        "config"
+      ],
+      "passed": true
+    },
+    {
+      "file": "vllm/v1/engine/async_llm.py",
+      "callable": "from_engine_args",
+      "required_arguments": [
+        "engine_args",
+        "stat_loggers"
+      ],
+      "passed": true
+    },
+    {
+      "file": "vllm/v1/engine/async_llm.py",
+      "callable": "start_profile",
+      "required_arguments": [
+        "self"
+      ],
+      "passed": true
+    },
+    {
+      "file": "vllm/v1/engine/async_llm.py",
+      "callable": "stop_profile",
+      "required_arguments": [
+        "self"
+      ],
+      "passed": true
+    },
+    {
+      "file": "vllm/v1/metrics/loggers.py",
+      "callable": "record",
+      "required_arguments": [
+        "scheduler_stats",
+        "iteration_stats"
+      ],
+      "passed": true
+    }
+  ],
+  "all_passed": true,
+  "fixed_image_import_test": false,
+  "GPU_hook_test": false
+}

@@ -1,0 +1,125 @@
+{
+  "workloads": {
+    "S1": {
+      "sampled_steps": 6,
+      "captured_token_observations": 1539,
+      "sampled_routed_rows": 283176,
+      "categories": {
+        "pure_decode": {
+          "expert_step_layer_observations": 8832,
+          "zero_fraction": 0.9375,
+          "nonzero_M_range": [
+            1,
+            1
+          ],
+          "nonzero_le128_fraction": 1.0
+        },
+        "pure_prefill": {
+          "expert_step_layer_observations": 8832,
+          "zero_fraction": 0.0552536231884058,
+          "nonzero_M_range": [
+            1,
+            453
+          ],
+          "nonzero_le128_fraction": 0.9665627996164909
+        }
+      }
+    },
+    "S32": {
+      "sampled_steps": 6,
+      "captured_token_observations": 49248,
+      "sampled_routed_rows": 9061632,
+      "categories": {
+        "pure_decode": {
+          "expert_step_layer_observations": 8832,
+          "zero_fraction": 0.7672101449275363,
+          "nonzero_M_range": [
+            1,
+            32
+          ],
+          "nonzero_le128_fraction": 1.0
+        },
+        "pure_prefill": {
+          "expert_step_layer_observations": 8832,
+          "zero_fraction": 0.009057971014492754,
+          "nonzero_M_range": [
+            1,
+            9205
+          ],
+          "nonzero_le128_fraction": 0.0545018281535649
+        }
+      }
+    },
+    "L1": {
+      "sampled_steps": 6,
+      "captured_token_observations": 12291,
+      "sampled_routed_rows": 2261544,
+      "categories": {
+        "pure_decode": {
+          "expert_step_layer_observations": 8832,
+          "zero_fraction": 0.9375,
+          "nonzero_M_range": [
+            1,
+            1
+          ],
+          "nonzero_le128_fraction": 1.0
+        },
+        "pure_prefill": {
+          "expert_step_layer_observations": 8832,
+          "zero_fraction": 0.01596467391304348,
+          "nonzero_M_range": [
+            1,
+            2297
+          ],
+          "nonzero_le128_fraction": 0.34552985847428375
+        }
+      }
+    },
+    "L32": {
+      "sampled_steps": 7,
+      "captured_token_observations": 131168,
+      "sampled_routed_rows": 24134912,
+      "categories": {
+        "mixed": {
+          "expert_step_layer_observations": 8832,
+          "zero_fraction": 0.003283514492753623,
+          "nonzero_M_range": [
+            1,
+            14425
+          ],
+          "nonzero_le128_fraction": 0.02703623764625696
+        },
+        "pure_decode": {
+          "expert_step_layer_observations": 8832,
+          "zero_fraction": 0.5569519927536232,
+          "nonzero_M_range": [
+            1,
+            27
+          ],
+          "nonzero_le128_fraction": 1.0
+        },
+        "pure_prefill": {
+          "expert_step_layer_observations": 2944,
+          "zero_fraction": 0.0030570652173913045,
+          "nonzero_M_range": [
+            1,
+            14298
+          ],
+          "nonzero_le128_fraction": 0.029982964224872233
+        }
+      }
+    }
+  },
+  "scope": "first three observed steps per global phase; not production frequency or time-weighted coverage",
+  "logical_projections": {
+    "gate_up": {
+      "K": 2048,
+      "N": 3072
+    },
+    "down": {
+      "K": 1536,
+      "N": 2048
+    }
+  },
+  "predictor_evaluated": false
+}

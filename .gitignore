@@ -54,3 +54,30 @@ experiments/2026-10-21-runpod-mechanism-collection/remote-run-01/server-backup/w
 experiments/2026-10-24-execution-contract-repair/legacy-api-test
 experiments/2026-10-24-fused-dependency-audit/capture
 experiments/2026-10-28-p8-session/*/work/correctness-diagnostic/diagnostic
+
+# Downloaded packages, extracted tools, and compressed raw observations stay local.
+*.deb
+*.whl
+*.tgz
+*.sqlite.gz
+*.jsonl.gz
+*.ndjson.gz
+/experiments/2026-11-14-next-window/cpu-prebuild/tools/
+**/build-precision/edmir_*
+**/build-precision/w1_*_batch
+**/build-precision/w1_*_layout
+# Account configuration and paid-session receipts are not research artifacts.
+/experiments/2026-11-11-w1-session/
+/experiments/2026-11-17-real-moe-gpu-quote/
+/experiments/2026-11-17-remote-cpu-budget/
+/experiments/2026-11-17-resource-check/
+experiments/**/session.json
+experiments/**/session-plan.json
+experiments/**/platform-cleanup.json
+experiments/**/billing-closeout.json
+experiments/**/guard.json
+experiments/**/platform-guard.json
+experiments/**/extension-guard.json
+experiments/**/authorization.json
+experiments/**/volume-identity.json
+/ops/log-center/SHADEFORM_CPU.txt

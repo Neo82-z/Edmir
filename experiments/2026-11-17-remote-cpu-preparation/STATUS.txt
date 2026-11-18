@@ -1,0 +1,69 @@
+远端 CPU 模型准备验收与交接
+2026-11-17；本文件以实际远端验收取代先前“资产待准备”的状态。
+
+结果
+已在 Shadeform / Verda / helsinki-finland-2 完成下载和无 GPU 离线验证。
+CPU 实例 edmir-moe-assets-cpu-20261117 已通过平台删除，Running=0。
+独立 500 GB 卷 edmir-moe-assets-20261117 保留，平台状态 Not mounted。
+本机只回收日志、校验回执、固定请求 token IDs 和代码；没有下载权重、tokenizer 资产、镜像或 Nsight 二进制。
+预测器及六个冻结形状相关的 17 个保护文件哈希不变。
+
+资产身份与位置
+卷 ID：5c647cb1-fed1-48ed-b7bf-52fd04c329b0
+卷 ext4 UUID：34464844-e985-4623-a0e2-3e7cdf43624c
+CPU 阶段根目录：/mnt/vdb/edmir-assets
+未来必须挂载到 Verda 同一 helsinki-finland-2 区域实例；不与 Excess Supply/Omaha 互通。
+重新挂载时以卷 ID / 文件系统 UUID 核对，不能盲目假设设备仍叫 /dev/vdb，也不能重新格式化已有卷。
+
+模型：zai-org/GLM-4.7-Flash，BF16 非量化
+revision：7dd20894a642a0aa287e9827cb1a1f7f91386b67
+位置：model/
+48 个权重分片，共 62,444,175,504 字节；54/54 个模型及辅助文件通过固定清单 SHA256。
+完整 tensor header / offsets / dtype / index 映射检查通过，9703 个 tensor。
+保留上游元数据告警：index.metadata.total_size 填的是参数个数 31,221,488,576，而非 payload 字节数 62,442,983,168。
+原文件未修改；仅对哈希固定且精确等于实际参数数目的已知情况记录告警，其他不一致继续报错。
+这是资产完整性验证，不是已经运行模型或验证生成结果。
+
+镜像：vllm/vllm-openai@sha256:bf0486e51765766a069f6eb26a63a06748859a568b24200acd3aa4edb58f3d35
+卷内归档：vllm-0.20.1-amd64.docker.tar（8,230,630,912 字节）
+SHA256：3e52284234d31e1e94c3a8f42ccf913b13f3beb1287d0e1be782fda9688f0725
+27 个 blob 全部校验、manifest 依赖完整；已实际 docker load 重载。
+重载在原 Docker daemon 上完成，并非空白 daemon 重装测试；另有独立逐 blob 校验。
+本地标签：edmir/vllm:0.20.1-locked
+容器实测：vLLM 0.20.1、PyTorch 2.11.0+cu130、CUDA build 13.0、Transformers 5.7.0、tokenizers 0.22.2。
+CPU 容器 network=none / pull=never / 无 GPU 暴露，torch.cuda.is_available=False。
+SM80 二进制声明和 12 个采集涉及的引擎源文件哈希已核对。
+
+Nsight：tools/nsight-systems/2025.1.3/
+版本 2025.1.3.140；937 个文件逐项留存哈希，离线容器内版本及采集参数检查通过。
+
+请求集和执行包
+原 128 条中文/英文/代码请求内容保持不变，形成 256 组精确长度 token ID 请求（512 / 4096 各 128）。
+另有 8 个短功能请求。三种 tokenizer 路径 raw/HF/vLLM 一致，未手工改正则。
+请求包：records/cpu-check-attempt02/requests-tokenized.json
+请求包 SHA256：da66ae0674465689c8a9eeb2bf07d083dc5537cb44afbeebed083510930523fd
+CPU 通过回执：records/cpu-check-attempt02/cpu-receipt.json
+代码：code/；最终可传输包 cpu-preparation-final-code.tar.gz；27 个文件哈希见 code-files-final-sha256.json。
+所有采集入口、baseline/routes/trace 参数均在真实固定镜像内做了 CPU 静态接口检查。
+
+本轮发现和修正
+1. Docker 29 containerd 的 image ID 口径变化：最初按 config digest 判断产生误报。现同时验证固定 manifest、config、平台和全部 blob，旧失败保留。
+2. 上游模型 index.total_size 单位问题：保留完整告警及原始文件；不把参数数目冒充字节。
+3. Transformers 5 apply_chat_template 默认返回映射：采集器显式 return_dict=False，避免把映射与 token ID 列表比较。真实 tokenizer 复验通过。
+修正限定在准备/采集/校验代码。20 个采集测试及 4 个资产审计测试通过，日志在本目录。
+原失败 preparation-status.json / attempt01 回执保留，不覆盖或伪装成功。
+当前成功依据为 ASSET_HANDOFF.json 和 cpu-check-attempt02 回执。
+
+后续八卡边界
+尚未启动 GPU。实际宿主 CUDA 13 驱动兼容性、A100 NVLink 拓扑、JIT、CUDA Graph、跨 rank 路由/后端采集仍须实机验证。
+正式下一轮前核对驱动与镜像，不将宿主 CPU 镜像名“CUDA 12.8”当成 GPU 兼容性证明。
+后续只需挂载此卷、docker load 现有归档、使用固定代码和请求包；不得在 GPU 阶段偷偷更新镜像/模型。
+CPU 通过不等于正式八卡原生性能基线已经完成。
+GPU 具体执行参数仍以 ../2026-11-17-real-moe-local/COMMANDS.txt 和固定源码为准，新的计费 guard 需当轮建立。
+
+回收与费用
+32 份远端回执及请求记录已回传本地，并逐个比对 SHA256，详见 recovery-verification.json。
+CPU 平台删除已核实，详见 platform-cleanup.json。此次账户余额显示从 $22.27 到 $22.04，差额约 $0.23；不是最终分项账单。
+500 GB 卷按已确认报价 $0.14/小时，即 $3.36/天，删除 CPU 不会停止存储费。
+按本次预算，存储计划到 2026-11-18 14:11（Asia/Singapore，UTC 06:11）复核；卷没有自动删除设置。
+此时限不是承诺自动停费。若继续保留会继续收费；删除卷会永久失去已下载资产，需用户另行决定。

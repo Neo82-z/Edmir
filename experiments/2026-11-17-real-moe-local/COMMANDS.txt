@@ -1,0 +1,51 @@
+命令说明：下面的 GPU 命令只作交接模板，本轮不得执行。没有有效资产回执和实例计费兜底时入口会拒绝运行。
+
+现在可执行的本地检查（不需要 torch/vLLM/模型）
+cd /Users/neo/code/llm-serving
+python3 -m unittest discover -s EDM-IR/tests -p real_moe_collection_test.py -v
+python3 EDM-IR/tools/run_real_moe.py --corpus experiments/2026-11-17-real-moe-local/corpus/requests-source.json --out /tmp/edmir-real-moe-inspection-new
+最后一个输出目录必须不存在；默认模式绝不会创建 GPU 引擎。
+
+将来远端 CPU 准备（所有资产预先就位、断网模式、没有 GPU 设备）
+设置 EDMIR_CODE_ROOT、EDMIR_MODEL_DIR、EDMIR_PREP_OUT，路径均在远端。
+export HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1
+export PYTHONPATH="$EDMIR_CODE_ROOT/EDM-IR"
+python "$EDMIR_CODE_ROOT/EDM-IR/tools/prepare_real_moe.py" \
+  --model-dir "$EDMIR_MODEL_DIR" \
+  --manifest "$EDMIR_CODE_ROOT/experiments/2026-11-16-next-window/model-manifest.json" \
+  --source-lock "$EDMIR_CODE_ROOT/experiments/2026-11-17-real-moe-local/vllm-source-lock.json" \
+  --corpus "$EDMIR_CODE_ROOT/experiments/2026-11-17-real-moe-local/corpus/requests-source.json" \
+  --out "$EDMIR_PREP_OUT"
+该工具不下载任何缺失文件；资产、Nsight 或依赖不全时留下失败回执并退出。
+
+将来 GPU 运行所需的共同参数
+python EDM-IR/tools/run_real_moe.py --execute --mode baseline \
+  --corpus experiments/2026-11-17-real-moe-local/corpus/requests-source.json \
+  --tokens "$EDMIR_PREP_OUT/requests-tokenized.json" \
+  --cpu-receipt "$EDMIR_PREP_OUT/cpu-receipt.json" \
+  --manifest experiments/2026-11-16-next-window/model-manifest.json \
+  --model-dir "$EDMIR_MODEL_DIR" \
+  --source-lock experiments/2026-11-17-real-moe-local/vllm-source-lock.json \
+  --guard "$EDMIR_NEW_PLATFORM_GUARD" --out "$EDMIR_NEW_OUTPUT"
+还需 EDMIR_INSTANCE_ID 与当轮已核实实例一致。当前没有生成任何授权 guard。
+routes 与 trace 使用独立输出目录和同一套资产参数，不覆盖 baseline 数据。
+
+trace 的 Nsight 外层模板（先在远端 CPU 用该版本 --help 确认可用选项）
+nsys profile --trace=cuda,nvtx,osrt --sample=none --cpuctxsw=none \
+  --capture-range=cudaProfilerApi --capture-range-end=repeat:4 \
+  --cuda-graph-trace=node --output "$EDMIR_TRACE_PREFIX" \
+  python EDM-IR/tools/run_real_moe.py --execute --mode trace [其余共同参数]
+程序在四个 workload 的预热结束后分别 start_profile/stop_profile。
+是否支持 nvtx-precapture、能否覆盖整个 worker process tree 必须由实际安装版本及 trace 验收；原始 Graph 节点和 CUDA/NCCL 记录保留，不使用 kernel 名称猜测因果关系。
+
+回收后本地分析
+python3 EDM-IR/tools/analyze_real_moe.py --mode performance --input [baseline目录] --out [新的performance.json]
+python3 EDM-IR/tools/analyze_real_moe.py --mode routes --input [routes目录/workers] --out [新的routes.json]
+nsys export --type sqlite --output [新的trace.sqlite] [trace.nsys-rep]
+python3 EDM-IR/tools/analyze_real_moe.py --mode nsys-inventory --input [trace.sqlite] --out [新的inventory.json]
+核对 worker PID/UUID/rank 后提供 rank-map.json；核对 CUDA/NVTX/实现后提供 kernel-classes.json。
+python3 EDM-IR/tools/analyze_real_moe.py --mode timeline --input [trace.sqlite] --rank-map [rank-map.json] --kernel-classes [kernel-classes.json] --out [新的timeline.json]
+
+rank-map 条目格式：{"globalPid:deviceId":{"rank":0,"evidence":"worker PID/UUID 对应回执"}}
+kernel-classes 条目格式：{"完整 kernel 名称":{"kind":"communication","evidence":"对应 CUDA collective/实现证据"}}
+未分类 kernel 保持 unknown，原始 trace 始终保留。

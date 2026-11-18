@@ -1,0 +1,27 @@
+{
+  "kind": "profiled_diagnostic_only",
+  "case": "m256-q4-g2",
+  "version": "NVIDIA Nsight Systems version 2025.1.3.140-251335620677v0",
+  "command": [
+    "nsys",
+    "profile",
+    "--trace=cuda,nvtx,osrt",
+    "--sample=none",
+    "--cpuctxsw=none",
+    "--capture-range=nvtx",
+    "--capture-range-end=stop",
+    "-p",
+    "edmir.w1.capture",
+    "-e",
+    "NSYS_NVTX_PROFILER_REGISTER_ONLY=0",
+    "-o",
+    "/workspace/results-precision/m256/diagnostic/m256-q4-g2/timeline",
+    "/workspace/build-precision/w1_m256_batch",
+    "--trace",
+    "/workspace/inputs/m256/20261020/inputs.bin",
+    "/workspace/inputs/m256/20261020/reference.bin",
+    "20261020",
+    "splitk4_groupedn2"
+  ],
+  "context": "675d569e2750430083f3229e6649c4132e487f44ceb13eaf9a44f3c2c93978a3"
+}

@@ -1,0 +1,47 @@
+真实 MoE 八卡 A100 实验结果（2026-11-17）
+
+结论：原生 vLLM 性能基线及专家路由诊断完成；四条件 CUDA 时间线未完成。GPU 实例已删除，平台显示 Running 0；500 GB 模型卷保留。
+实例：Verda / helsinki-finland-2 / 6711de91-f052-42c3-857e-222cb3b49bec。GPU 计算费删除前最后观察为 $15.70，最终账单尚未读取；删除后余额页面显示 $5.98。$18 自动删除兜底未被撤销。持久卷继续收费；准备时报价 $0.14/小时（约 $3.36/天），不表示已停全部费用。
+
+1. 固定环境与范围
+8×A100 SXM4 80GB；driver 580.178.04；MIG 关闭；八卡全互联 NV12。FP16/BF16 小矩阵计算及八 rank NCCL all-reduce/all-gather/reduce-scatter 预检通过。
+GLM-4.7-Flash BF16，revision 7dd20894a642a0aa287e9827cb1a1f7f91386b67；vLLM 0.20.1、PyTorch 2.11.0+cu130。固定镜像 digest 与 CPU 回执保留。TP1 / DP8 / EP8；Triton MoE；allgather_reducescatter；TRITON_MLA；关闭 prefix cache、DBO、EPLB 与 speculative。
+使用既有持久卷中的模型、tokenizer 与镜像；本机未下载模型或镜像。预测器未运行或修改，17 个预测器/预注册/冻结形状保护文件 SHA256 全部不变。
+
+2. 原生性能基线
+固定 128 条受控合成源请求（中文/英文/代码），tokenizer 生成精确 512 或 4096 输入 token；正式输出固定 128 token、ignore_eos=True、temperature=0。
+四条件各三次，共 12 组、960 个正式请求、122880 个输出 token，全部成功；8 个短功能请求也均生成了非空输出。短功能请求仅验证生成链路，未评估答案质量。
+计时范围为 native AsyncLLM streaming（包含引擎排队，不含 HTTP/tokenizer）；本轮不是 HTTP API 服务压测，也不是最大吞吐搜索。预热、模型加载与诊断采集不计入正式基线。
+下表 TPS 为三轮中位数及范围；TTFT/TPOT 为各轮请求 p50 的中位数，单位 ms，不能当作全部请求的合并分位数。
+条件 | 输入/并发 | 输出 TPS 中位数 [范围] | TTFT p50 中位数 | TPOT p50 中位数
+S1 | 512/1 | 39.56 [39.37, 39.59] | 115.03 | 24.42
+S32 | 512/32 | 874.94 [874.10, 900.65] | 278.31 | 33.66
+L1 | 4096/1 | 38.46 [37.10, 38.82] | 222.08 | 24.28
+L32 | 4096/32 | 691.33 [671.08, 774.35] | 1287.26 | 36.60
+稳定性：L32 吞吐 range/median=14.94%；S32 TTFT p50 range/median=40.15%，超过预设 10% 标记线。其余已检查项目未越线。保留全部轮次，不排除较慢结果。
+L32 各轮 5 秒间隔遥测中 SM 时钟均为 1410 MHz；利用率和功耗不同。稀疏遥测不能排除更短变化，也不能据此确定调度或硬件为根因。详见 telemetry-analysis.json。
+
+3. 专家路由与形状
+独立 eager / synchronous 诊断，四条件共 320 个正式请求全部完成；其延迟不进入性能比较。每种全局阶段取最先三个实际出现的步骤，不足三个则保留实际数量。
+共采样 25 个步骤，覆盖全部 8 rank、46 个 MoE 层。所有已采样步骤的路由计数均满足真实 token 数×top-4；真实 token、dummy 和 tile padding 分开记账。gate/up 与 down 的物理 kernel 形状、dtype、stride、tile 配置、专家归属和 padding 全部通过一致性校验。
+S1: 6 个采样步骤，1539 个 token 观测，283176 个跨层路由分配；kernel_geometry_complete=True。
+S32: 6 个采样步骤，49248 个 token 观测，9061632 个跨层路由分配；kernel_geometry_complete=True。
+L1: 6 个采样步骤，12291 个 token 观测，2261544 个跨层路由分配；kernel_geometry_complete=True。
+L32: 7 个采样步骤，131168 个 token 观测，24134912 个跨层路由分配；kernel_geometry_complete=True。
+逻辑投影：gate/up K=2048,N=3072；down K=1536,N=2048。采样的单并发 decode 非空专家 M=1；高并发 decode 的非空 M 也远小于全局请求并发与总 token 数。长输入高并发存在 mixed 步骤。
+这些结果支持区分请求并发、专家 token 行数与实际执行 padding。采样频率不是生产流量频率，更不是执行耗时占比；本轮没有证明原四点或六个保留形状覆盖了真实应用的某个百分比。
+
+4. 时间线与失败
+第一次 Nsight 启动提示默认 CUDA Event 完成追踪可能扰动执行/引入伪依赖，主动中止并保留日志。第二次显式关闭 cuda-event-trace，保持 CUDA/NVTX/OSRT 追踪、关闭 CPU sampling/context switch sampling。
+08:03:36 UTC，GPU 1 出现驱动 Xid 69；随后 worker 报 CUDA unspecified launch failure / CUBLAS_STATUS_INTERNAL_ERROR，引擎退出。尚不能区分 profiler/驱动兼容性、执行路径或设备因素；不把它归因于预测器。原生基线和路由诊断在此事件之前独立完成并通过验收。
+保留两个 .nsys-rep 片段及对应 SQLite；两个片段均含八卡 CUDA kernel，并已用 worker PID/device/UUID 回执验证 rank 映射。四条件时间线未完成，失败窗口不能作为正常稳态数据；尚不报告 overlap 比例、通信隐藏收益或因果结论。
+启动预检第一次 torchrun 因断网容器自动主机名解析失败退出；显式 loopback 后八 rank 预检通过。此失败与模型数值、预测器无关。
+初次本地路由解析在文件尚未回传完整时得到 EOF，保留该解析结果与说明。之后全部远端文件哈希匹配，最终完整解析和路由/几何校验通过；没有修补或丢弃原始路由记录。
+
+5. 回收与可写入论文的范围
+267 个远端文件、1138030206 字节（约 1.14 GB）已回传，SHA256 与远端清单逐项一致；267 个文件包括失败记录，不含模型、镜像及编译缓存。
+可以使用：该固定软硬件和请求条件下的原生性能及三轮波动；真实 MoE 的专家行数、逻辑/物理形状差异及 padding；已验证的采集方法和限制。
+不能使用：EDM-IR 已接入 vLLM、端到端加速、预测器在真实 MoE 上胜出、真实生产形状覆盖率、完整通信隐藏比例。预测器继续封存。
+后续先在本地分析这些已收回数据。时间线兼容性问题应先做版本/日志核对，再另行决定是否需要补采，不默认再租机。
+
+关键文件：performance-final.json；routes-analysis-final.json；application-shape-summary.json；timeline-coverage.json；timeline-rank-map.json；recovery-verification.json；platform-cleanup.json；protection-after.json；recovered/（原始日志与回执）。

@@ -1,0 +1,704 @@
+{
+  "schema": "edmir.next-window.2026-11-14",
+  "source_manifest_sha256": "da2f74ce4043e3b83f08b939e53ba840ec1c174d14c2b0fdd02b7da0ae9d32b3",
+  "source_plan_sha256": "1e530ee2545716eec20ea23713c9074c4f9071cd028d04cdaf50e78c5affb8a8",
+  "shapes": {
+    "grouped": [
+      8,
+      64,
+      8192,
+      1024
+    ],
+    "m512": [
+      8,
+      512,
+      8192,
+      512
+    ],
+    "large_n": [
+      8,
+      64,
+      4096,
+      2048
+    ],
+    "m256": [
+      8,
+      256,
+      8192,
+      512
+    ]
+  },
+  "seeds": [
+    20261020,
+    20261101,
+    20261102
+  ],
+  "stages": [
+    {
+      "name": "m512",
+      "source_job_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "jobs": [
+        {
+          "shape": "m512",
+          "phase": "check",
+          "seed": 20261020,
+          "repetition": 0,
+          "order": [
+            "host",
+            "host_merged_cutlass",
+            "host_merged_cublaslt",
+            "direct",
+            "splitk2",
+            "splitk4",
+            "splitk8",
+            "splitk16",
+            "direct_groupedn2",
+            "splitk2_groupedn2",
+            "splitk4_groupedn2",
+            "splitk8_groupedn2",
+            "splitk16_groupedn2",
+            "splitk8_fp32reduce",
+            "splitk8_groupedn2_fp32reduce",
+            "splitk16_fp32reduce",
+            "splitk16_groupedn2_fp32reduce"
+          ]
+        },
+        {
+          "shape": "m512",
+          "phase": "check",
+          "seed": 20261101,
+          "repetition": 0,
+          "order": [
+            "host",
+            "host_merged_cutlass",
+            "host_merged_cublaslt",
+            "direct",
+            "splitk2",
+            "splitk4",
+            "splitk8",
+            "splitk16",
+            "direct_groupedn2",
+            "splitk2_groupedn2",
+            "splitk4_groupedn2",
+            "splitk8_groupedn2",
+            "splitk16_groupedn2",
+            "splitk8_fp32reduce",
+            "splitk8_groupedn2_fp32reduce",
+            "splitk16_fp32reduce",
+            "splitk16_groupedn2_fp32reduce"
+          ]
+        },
+        {
+          "shape": "m512",
+          "phase": "check",
+          "seed": 20261102,
+          "repetition": 0,
+          "order": [
+            "host",
+            "host_merged_cutlass",
+            "host_merged_cublaslt",
+            "direct",
+            "splitk2",
+            "splitk4",
+            "splitk8",
+            "splitk16",
+            "direct_groupedn2",
+            "splitk2_groupedn2",
+            "splitk4_groupedn2",
+            "splitk8_groupedn2",
+            "splitk16_groupedn2",
+            "splitk8_fp32reduce",
+            "splitk8_groupedn2_fp32reduce",
+            "splitk16_fp32reduce",
+            "splitk16_groupedn2_fp32reduce"
+          ]
+        },
+        {
+          "shape": "m512",
+          "phase": "measure",
+          "seed": 20261020,
+          "repetition": 0,
+          "order": [
+            "direct_groupedn2",
+            "splitk2",
+            "splitk2_groupedn2",
+            "splitk16_groupedn2",
+            "direct",
+            "splitk8",
+            "splitk8_groupedn2",
+            "splitk8_groupedn2_fp32reduce",
+            "host_merged_cutlass",
+            "splitk16",
+            "splitk16_fp32reduce",
+            "splitk4_groupedn2",
+            "splitk16_groupedn2_fp32reduce",
+            "host_merged_cublaslt",
+            "splitk8_fp32reduce",
+            "host",
+            "splitk4"
+          ]
+        },
+        {
+          "shape": "m512",
+          "phase": "measure",
+          "seed": 20261020,
+          "repetition": 1,
+          "order": [
+            "splitk8",
+            "splitk8_groupedn2",
+            "splitk8_groupedn2_fp32reduce",
+            "host_merged_cutlass",
+            "splitk16",
+            "splitk16_fp32reduce",
+            "splitk4_groupedn2",
+            "splitk16_groupedn2_fp32reduce",
+            "host_merged_cublaslt",
+            "splitk8_fp32reduce",
+            "host",
+            "splitk4",
+            "direct_groupedn2",
+            "splitk2",
+            "splitk2_groupedn2",
+            "splitk16_groupedn2",
+            "direct"
+          ]
+        },
+        {
+          "shape": "m512",
+          "phase": "measure",
+          "seed": 20261020,
+          "repetition": 2,
+          "order": [
+            "splitk16_fp32reduce",
+            "splitk4_groupedn2",
+            "splitk16_groupedn2_fp32reduce",
+            "host_merged_cublaslt",
+            "splitk8_fp32reduce",
+            "host",
+            "splitk4",
+            "direct_groupedn2",
+            "splitk2",
+            "splitk2_groupedn2",
+            "splitk16_groupedn2",
+            "direct",
+            "splitk8",
+            "splitk8_groupedn2",
+            "splitk8_groupedn2_fp32reduce",
+            "host_merged_cutlass",
+            "splitk16"
+          ]
+        }
+      ],
+      "traces": [
+        "m512-fp32-q8-g2"
+      ]
+    },
+    {
+      "name": "large_n",
+      "source_job_indices": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "jobs": [
+        {
+          "shape": "large_n",
+          "phase": "check",
+          "seed": 20261020,
+          "repetition": 0,
+          "order": [
+            "host",
+            "host_merged_cutlass",
+            "host_merged_cublaslt",
+            "direct",
+            "splitk2",
+            "splitk4",
+            "splitk8",
+            "splitk16",
+            "direct_groupedn2",
+            "splitk2_groupedn2",
+            "splitk4_groupedn2",
+            "splitk8_groupedn2",
+            "splitk16_groupedn2",
+            "splitk8_fp32reduce",
+            "splitk8_groupedn2_fp32reduce",
+            "splitk16_fp32reduce",
+            "splitk16_groupedn2_fp32reduce"
+          ]
+        },
+        {
+          "shape": "large_n",
+          "phase": "check",
+          "seed": 20261101,
+          "repetition": 0,
+          "order": [
+            "host",
+            "host_merged_cutlass",
+            "host_merged_cublaslt",
+            "direct",
+            "splitk2",
+            "splitk4",
+            "splitk8",
+            "splitk16",
+            "direct_groupedn2",
+            "splitk2_groupedn2",
+            "splitk4_groupedn2",
+            "splitk8_groupedn2",
+            "splitk16_groupedn2",
+            "splitk8_fp32reduce",
+            "splitk8_groupedn2_fp32reduce",
+            "splitk16_fp32reduce",
+            "splitk16_groupedn2_fp32reduce"
+          ]
+        },
+        {
+          "shape": "large_n",
+          "phase": "check",
+          "seed": 20261102,
+          "repetition": 0,
+          "order": [
+            "host",
+            "host_merged_cutlass",
+            "host_merged_cublaslt",
+            "direct",
+            "splitk2",
+            "splitk4",
+            "splitk8",
+            "splitk16",
+            "direct_groupedn2",
+            "splitk2_groupedn2",
+            "splitk4_groupedn2",
+            "splitk8_groupedn2",
+            "splitk16_groupedn2",
+            "splitk8_fp32reduce",
+            "splitk8_groupedn2_fp32reduce",
+            "splitk16_fp32reduce",
+            "splitk16_groupedn2_fp32reduce"
+          ]
+        },
+        {
+          "shape": "large_n",
+          "phase": "measure",
+          "seed": 20261020,
+          "repetition": 0,
+          "order": [
+            "splitk4",
+            "splitk8_fp32reduce",
+            "host_merged_cutlass",
+            "splitk16_groupedn2_fp32reduce",
+            "direct",
+            "splitk16_groupedn2",
+            "host_merged_cublaslt",
+            "splitk8",
+            "direct_groupedn2",
+            "splitk8_groupedn2_fp32reduce",
+            "splitk8_groupedn2",
+            "splitk4_groupedn2",
+            "splitk16_fp32reduce",
+            "splitk16",
+            "splitk2",
+            "host",
+            "splitk2_groupedn2"
+          ]
+        },
+        {
+          "shape": "large_n",
+          "phase": "measure",
+          "seed": 20261020,
+          "repetition": 1,
+          "order": [
+            "splitk16_groupedn2",
+            "host_merged_cublaslt",
+            "splitk8",
+            "direct_groupedn2",
+            "splitk8_groupedn2_fp32reduce",
+            "splitk8_groupedn2",
+            "splitk4_groupedn2",
+            "splitk16_fp32reduce",
+            "splitk16",
+            "splitk2",
+            "host",
+            "splitk2_groupedn2",
+            "splitk4",
+            "splitk8_fp32reduce",
+            "host_merged_cutlass",
+            "splitk16_groupedn2_fp32reduce",
+            "direct"
+          ]
+        },
+        {
+          "shape": "large_n",
+          "phase": "measure",
+          "seed": 20261020,
+          "repetition": 2,
+          "order": [
+            "splitk8_groupedn2",
+            "splitk4_groupedn2",
+            "splitk16_fp32reduce",
+            "splitk16",
+            "splitk2",
+            "host",
+            "splitk2_groupedn2",
+            "splitk4",
+            "splitk8_fp32reduce",
+            "host_merged_cutlass",
+            "splitk16_groupedn2_fp32reduce",
+            "direct",
+            "splitk16_groupedn2",
+            "host_merged_cublaslt",
+            "splitk8",
+            "direct_groupedn2",
+            "splitk8_groupedn2_fp32reduce"
+          ]
+        }
+      ],
+      "traces": [
+        "large-n-q2",
+        "large-n-q8-g2"
+      ]
+    },
+    {
+      "name": "m256",
+      "source_job_indices": [
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "jobs": [
+        {
+          "shape": "m256",
+          "phase": "check",
+          "seed": 20261020,
+          "repetition": 0,
+          "order": [
+            "host",
+            "host_merged_cutlass",
+            "host_merged_cublaslt",
+            "direct",
+            "splitk2",
+            "splitk4",
+            "splitk8",
+            "splitk16",
+            "direct_groupedn2",
+            "splitk2_groupedn2",
+            "splitk4_groupedn2",
+            "splitk8_groupedn2",
+            "splitk16_groupedn2",
+            "splitk8_fp32reduce",
+            "splitk8_groupedn2_fp32reduce",
+            "splitk16_fp32reduce",
+            "splitk16_groupedn2_fp32reduce"
+          ]
+        },
+        {
+          "shape": "m256",
+          "phase": "check",
+          "seed": 20261101,
+          "repetition": 0,
+          "order": [
+            "host",
+            "host_merged_cutlass",
+            "host_merged_cublaslt",
+            "direct",
+            "splitk2",
+            "splitk4",
+            "splitk8",
+            "splitk16",
+            "direct_groupedn2",
+            "splitk2_groupedn2",
+            "splitk4_groupedn2",
+            "splitk8_groupedn2",
+            "splitk16_groupedn2",
+            "splitk8_fp32reduce",
+            "splitk8_groupedn2_fp32reduce",
+            "splitk16_fp32reduce",
+            "splitk16_groupedn2_fp32reduce"
+          ]
+        },
+        {
+          "shape": "m256",
+          "phase": "check",
+          "seed": 20261102,
+          "repetition": 0,
+          "order": [
+            "host",
+            "host_merged_cutlass",
+            "host_merged_cublaslt",
+            "direct",
+            "splitk2",
+            "splitk4",
+            "splitk8",
+            "splitk16",
+            "direct_groupedn2",
+            "splitk2_groupedn2",
+            "splitk4_groupedn2",
+            "splitk8_groupedn2",
+            "splitk16_groupedn2",
+            "splitk8_fp32reduce",
+            "splitk8_groupedn2_fp32reduce",
+            "splitk16_fp32reduce",
+            "splitk16_groupedn2_fp32reduce"
+          ]
+        },
+        {
+          "shape": "m256",
+          "phase": "measure",
+          "seed": 20261020,
+          "repetition": 0,
+          "order": [
+            "splitk4",
+            "splitk8",
+            "splitk16_groupedn2",
+            "splitk16_fp32reduce",
+            "splitk16",
+            "direct",
+            "splitk4_groupedn2",
+            "direct_groupedn2",
+            "splitk2_groupedn2",
+            "host_merged_cublaslt",
+            "splitk16_groupedn2_fp32reduce",
+            "host",
+            "splitk8_fp32reduce",
+            "splitk2",
+            "host_merged_cutlass",
+            "splitk8_groupedn2_fp32reduce",
+            "splitk8_groupedn2"
+          ]
+        },
+        {
+          "shape": "m256",
+          "phase": "measure",
+          "seed": 20261020,
+          "repetition": 1,
+          "order": [
+            "direct",
+            "splitk4_groupedn2",
+            "direct_groupedn2",
+            "splitk2_groupedn2",
+            "host_merged_cublaslt",
+            "splitk16_groupedn2_fp32reduce",
+            "host",
+            "splitk8_fp32reduce",
+            "splitk2",
+            "host_merged_cutlass",
+            "splitk8_groupedn2_fp32reduce",
+            "splitk8_groupedn2",
+            "splitk4",
+            "splitk8",
+            "splitk16_groupedn2",
+            "splitk16_fp32reduce",
+            "splitk16"
+          ]
+        },
+        {
+          "shape": "m256",
+          "phase": "measure",
+          "seed": 20261020,
+          "repetition": 2,
+          "order": [
+            "splitk16_groupedn2_fp32reduce",
+            "host",
+            "splitk8_fp32reduce",
+            "splitk2",
+            "host_merged_cutlass",
+            "splitk8_groupedn2_fp32reduce",
+            "splitk8_groupedn2",
+            "splitk4",
+            "splitk8",
+            "splitk16_groupedn2",
+            "splitk16_fp32reduce",
+            "splitk16",
+            "direct",
+            "splitk4_groupedn2",
+            "direct_groupedn2",
+            "splitk2_groupedn2",
+            "host_merged_cublaslt"
+          ]
+        }
+      ],
+      "traces": [
+        "m256-q4-g1",
+        "m256-q4-g2",
+        "m256-q8-g1",
+        "m256-q8-g2"
+      ]
+    },
+    {
+      "name": "grouped",
+      "source_job_indices": [
+        12,
+        13,
+        14,
+        15,
+        16,
+        17
+      ],
+      "jobs": [
+        {
+          "shape": "grouped",
+          "phase": "check",
+          "seed": 20261020,
+          "repetition": 0,
+          "order": [
+            "host",
+            "host_merged_cutlass",
+            "host_merged_cublaslt",
+            "direct",
+            "splitk2",
+            "splitk4",
+            "splitk8",
+            "splitk16",
+            "direct_groupedn2",
+            "splitk2_groupedn2",
+            "splitk4_groupedn2",
+            "splitk8_groupedn2",
+            "splitk16_groupedn2",
+            "splitk8_fp32reduce",
+            "splitk8_groupedn2_fp32reduce",
+            "splitk16_fp32reduce",
+            "splitk16_groupedn2_fp32reduce"
+          ]
+        },
+        {
+          "shape": "grouped",
+          "phase": "check",
+          "seed": 20261101,
+          "repetition": 0,
+          "order": [
+            "host",
+            "host_merged_cutlass",
+            "host_merged_cublaslt",
+            "direct",
+            "splitk2",
+            "splitk4",
+            "splitk8",
+            "splitk16",
+            "direct_groupedn2",
+            "splitk2_groupedn2",
+            "splitk4_groupedn2",
+            "splitk8_groupedn2",
+            "splitk16_groupedn2",
+            "splitk8_fp32reduce",
+            "splitk8_groupedn2_fp32reduce",
+            "splitk16_fp32reduce",
+            "splitk16_groupedn2_fp32reduce"
+          ]
+        },
+        {
+          "shape": "grouped",
+          "phase": "check",
+          "seed": 20261102,
+          "repetition": 0,
+          "order": [
+            "host",
+            "host_merged_cutlass",
+            "host_merged_cublaslt",
+            "direct",
+            "splitk2",
+            "splitk4",
+            "splitk8",
+            "splitk16",
+            "direct_groupedn2",
+            "splitk2_groupedn2",
+            "splitk4_groupedn2",
+            "splitk8_groupedn2",
+            "splitk16_groupedn2",
+            "splitk8_fp32reduce",
+            "splitk8_groupedn2_fp32reduce",
+            "splitk16_fp32reduce",
+            "splitk16_groupedn2_fp32reduce"
+          ]
+        },
+        {
+          "shape": "grouped",
+          "phase": "measure",
+          "seed": 20261020,
+          "repetition": 0,
+          "order": [
+            "splitk8_groupedn2",
+            "splitk16_groupedn2",
+            "splitk4_groupedn2",
+            "direct",
+            "host",
+            "direct_groupedn2",
+            "host_merged_cublaslt",
+            "splitk2_groupedn2",
+            "splitk16_groupedn2_fp32reduce",
+            "splitk8",
+            "splitk16",
+            "splitk16_fp32reduce",
+            "host_merged_cutlass",
+            "splitk8_fp32reduce",
+            "splitk8_groupedn2_fp32reduce",
+            "splitk4",
+            "splitk2"
+          ]
+        },
+        {
+          "shape": "grouped",
+          "phase": "measure",
+          "seed": 20261020,
+          "repetition": 1,
+          "order": [
+            "direct_groupedn2",
+            "host_merged_cublaslt",
+            "splitk2_groupedn2",
+            "splitk16_groupedn2_fp32reduce",
+            "splitk8",
+            "splitk16",
+            "splitk16_fp32reduce",
+            "host_merged_cutlass",
+            "splitk8_fp32reduce",
+            "splitk8_groupedn2_fp32reduce",
+            "splitk4",
+            "splitk2",
+            "splitk8_groupedn2",
+            "splitk16_groupedn2",
+            "splitk4_groupedn2",
+            "direct",
+            "host"
+          ]
+        },
+        {
+          "shape": "grouped",
+          "phase": "measure",
+          "seed": 20261020,
+          "repetition": 2,
+          "order": [
+            "splitk16",
+            "splitk16_fp32reduce",
+            "host_merged_cutlass",
+            "splitk8_fp32reduce",
+            "splitk8_groupedn2_fp32reduce",
+            "splitk4",
+            "splitk2",
+            "splitk8_groupedn2",
+            "splitk16_groupedn2",
+            "splitk4_groupedn2",
+            "direct",
+            "host",
+            "direct_groupedn2",
+            "host_merged_cublaslt",
+            "splitk2_groupedn2",
+            "splitk16_groupedn2_fp32reduce",
+            "splitk8"
+          ]
+        }
+      ],
+      "traces": []
+    }
+  ]
+}

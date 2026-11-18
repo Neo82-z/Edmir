@@ -1,0 +1,36 @@
+{
+  "scope": "planning only; local downloads deleted at user request",
+  "GPU_started": false,
+  "frozen_shapes_read": false,
+  "operator_plan_validated": true,
+  "operator_compilation": "reuse unchanged SHA-bound precompiled SM80 binaries",
+  "serving_script": "CPU checks only; GPU/API integration not yet executed",
+  "serving_model": "zai-org/GLM-4.7-Flash",
+  "serving_revision": "7dd20894a642a0aa287e9827cb1a1f7f91386b67",
+  "model_weight_bytes": 62444175504,
+  "engine": "vLLM 0.20.1 pinned image, separate from CUDA 12.8 operator environment",
+  "blockers": [
+    "62.44 GB model weights need staging and hash verification before GPU rental",
+    "8.23 GB pinned amd64 engine image needs staging and driver compatibility check",
+    "tokenizer behavior must be checked in pinned engine; prior regex warning retained",
+    "native routed-experts output lacks scheduler-step/source-rank metadata needed for expert M distribution",
+    "BF16 EDM-IR replacement and complete-layer correctness are not yet implemented/validated"
+  ],
+  "native_smoke_can_precede_selector_perfection": true,
+  "native_parallelism": {
+    "TP": 4,
+    "DP": 2,
+    "EP": 8,
+    "num_attention_heads": 20,
+    "experts": 64,
+    "CPU_divisibility_check": "passed"
+  },
+  "preparation_policy": {
+    "local_downloads_allowed": false,
+    "GPU_start_allowed": false,
+    "automatic_resume": false,
+    "next_action": "review remote CPU preparation and storage reuse plan before any paid provisioning"
+  },
+  "asset_preparation_completed": false,
+  "latest_cleanup_receipt": "../2026-11-16-offline-assets/cleanup-receipt.json"
+}

@@ -1,0 +1,22 @@
+官方资料，核对日期 2026-11-16
+
+vLLM 0.20.1 模型支持表（列有 Glm4MoeLiteForCausalLM / GLM-4.7-Flash）：
+https://docs.vllm.ai/en/v0.20.1/models/supported_models/
+
+vLLM 0.20.1 专家并行部署（EP=TP×DP；实验性接口，需按固定镜像核验）：
+https://docs.vllm.ai/en/v0.20.1/serving/expert_parallel_deployment/
+
+vLLM 0.20.1 routed experts 官方示例（AsyncLLM；返回的第一维为 prompt+generated-1）：
+https://docs.vllm.ai/en/v0.20.1/examples/offline_inference/routed_experts_e2e/
+
+vLLM 0.20.1 LLM API：
+https://docs.vllm.ai/en/v0.20.1/api/vllm/entrypoints/llm/
+
+固定模型配置（已通过 HTTPS 拉取并对照原 config.json SHA256）：
+https://huggingface.co/zai-org/GLM-4.7-Flash/resolve/7dd20894a642a0aa287e9827cb1a1f7f91386b67/config.json
+
+上述接口说明不是 A100 实际运行通过证据；版本、模型、dtype、TP/EP 和结果需要真机回执。
+
+vLLM 内部数据并行负载均衡及 Async 多引擎客户端：
+https://docs.vllm.ai/en/v0.20.1/serving/data_parallel_deployment/
+https://docs.vllm.ai/en/v0.20.1/api/vllm/v1/engine/core_client/

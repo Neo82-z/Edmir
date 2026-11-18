@@ -1,0 +1,441 @@
+{
+  "schema": "edmir.paper-closure-plan.v1",
+  "date": "2026-10-31",
+  "status": "design_complete_execution_unsealed",
+  "source_commit": "10ce3d39ba30446f589375b8226aac851a549bc9",
+  "paper_commit": "57408cff6c6480a0b69cf9911e668fc511ffebc6",
+  "main_document": "EDM-IR/docs/PAPER_EXPERIMENT_CLOSURE_PLAN_2026-10-31.md",
+  "scope": {
+    "operator": {
+      "gpu": "A100 SXM4 80GB",
+      "world_size": 8,
+      "fabric": "single NVLink/NVSwitch domain verified on target",
+      "dtype": "FP16"
+    },
+    "mechanism_control_world_size": 4,
+    "application": {
+      "gpu": "A100 SXM4 80GB",
+      "EP": 8,
+      "dtype": "BF16",
+      "primary_model_asset": "GLM-4.7-Flash",
+      "debug_model_asset": "DeepSeek-V2-Lite-Chat",
+      "compatibility_backup": "Qwen3.6-35B-A3B",
+      "model_selection_before_evaluation": true,
+      "one_formal_model_only": true
+    },
+    "H100_may_replace_P8_evidence": false
+  },
+  "claims": [
+    {
+      "id": "C1",
+      "claim": "映射计数与执行工作",
+      "evidence_status": "已有局部依据；完整执行和精度合同待审查",
+      "closure_status": "open"
+    },
+    {
+      "id": "C2",
+      "claim": "通信暴露与联合资源机制",
+      "evidence_status": "流水化与服务证据待测",
+      "closure_status": "open"
+    },
+    {
+      "id": "C3",
+      "claim": "结构化表达的选择价值",
+      "evidence_status": "历史开发回放；未通过新身份验收",
+      "closure_status": "open"
+    },
+    {
+      "id": "C4",
+      "claim": "独立形状的可靠选择",
+      "evidence_status": "六形状未评价",
+      "closure_status": "open"
+    },
+    {
+      "id": "C5",
+      "claim": "选择和调优的净收益",
+      "evidence_status": "完整摊销待测",
+      "closure_status": "open"
+    },
+    {
+      "id": "C6",
+      "claim": "真实MoE代表性",
+      "evidence_status": "有统计接口；真实GPU路由待采",
+      "closure_status": "open"
+    },
+    {
+      "id": "C7",
+      "claim": "完整推理收益和质量",
+      "evidence_status": "完整BF16层/引擎A/B待实现和验证",
+      "closure_status": "open"
+    },
+    {
+      "id": "C8",
+      "claim": "可复核性",
+      "evidence_status": "已有历史材料；新实验材料待产生",
+      "closure_status": "open"
+    }
+  ],
+  "stages": [
+    {
+      "id": "E0",
+      "name": "本地准备与数值合同",
+      "depends_on": [],
+      "claims": [
+        "C1",
+        "C8"
+      ],
+      "requires_gpu": false,
+      "status": "planned",
+      "deliverables": [
+        "多候选运行器",
+        "固定流水化/串行控制",
+        "BF16完整层接口",
+        "超时和回收演练"
+      ]
+    },
+    {
+      "id": "E1",
+      "name": "P8全候选与强基线",
+      "depends_on": [
+        "E0"
+      ],
+      "claims": [
+        "C2",
+        "C3"
+      ],
+      "requires_gpu": true,
+      "status": "planned",
+      "deliverables": [
+        "全部13候选数值结果",
+        "同身份原始计时",
+        "库算法与二进制身份"
+      ]
+    },
+    {
+      "id": "E2",
+      "name": "路径、服务和依赖诊断",
+      "depends_on": [
+        "E0"
+      ],
+      "claims": [
+        "C2",
+        "C3"
+      ],
+      "requires_gpu": true,
+      "status": "planned",
+      "deliverables": [
+        "流水化配对",
+        "grouped四格",
+        "旧短K配对",
+        "联合服务和依赖证据"
+      ]
+    },
+    {
+      "id": "E3",
+      "name": "开发模型比较与封存",
+      "depends_on": [
+        "E1",
+        "E2"
+      ],
+      "claims": [
+        "C3"
+      ],
+      "requires_gpu": false,
+      "status": "planned",
+      "deliverables": [
+        "完整形状分组",
+        "结构消融",
+        "缺失覆盖审查",
+        "最终模型和训练数据哈希"
+      ]
+    },
+    {
+      "id": "E4",
+      "name": "六形状独立评价",
+      "depends_on": [
+        "E3"
+      ],
+      "claims": [
+        "C4"
+      ],
+      "requires_gpu": true,
+      "status": "planned",
+      "deliverables": [
+        "冻结模型与执行身份",
+        "选择/验证块隔离",
+        "全部有效候选覆盖",
+        "强流水基线附表"
+      ]
+    },
+    {
+      "id": "E5",
+      "name": "预算与摊销评价",
+      "depends_on": [
+        "E3",
+        "E4"
+      ],
+      "claims": [
+        "C5"
+      ],
+      "requires_gpu": true,
+      "status": "planned",
+      "deliverables": [
+        "k=1/2/3",
+        "两host和同预算搜索",
+        "全部准备与决策成本",
+        "复用回本曲线"
+      ]
+    },
+    {
+      "id": "E6_DEV",
+      "name": "真实路由与BF16层开发",
+      "depends_on": [
+        "E0"
+      ],
+      "claims": [
+        "C6"
+      ],
+      "requires_gpu": true,
+      "status": "planned",
+      "deliverables": [
+        "原生引擎实际EP8",
+        "父请求隔离",
+        "真实路由守恒",
+        "完整层正确性",
+        "应用策略封存"
+      ]
+    },
+    {
+      "id": "E6_EVAL",
+      "name": "真实BF16层独立评价",
+      "depends_on": [
+        "E6_DEV"
+      ],
+      "claims": [
+        "C6",
+        "C7"
+      ],
+      "requires_gpu": true,
+      "status": "planned",
+      "deliverables": [
+        "真实评价trace",
+        "原生/固定/模型三版本",
+        "独立权重/两投影/激活/combine",
+        "54层测量块"
+      ]
+    },
+    {
+      "id": "E7",
+      "name": "完整引擎评价",
+      "depends_on": [
+        "E6_EVAL"
+      ],
+      "claims": [
+        "C7"
+      ],
+      "requires_gpu": true,
+      "status": "planned",
+      "deliverables": [
+        "固定应用策略",
+        "方法真实调用",
+        "四负载36块",
+        "质量指标",
+        "独立请求集"
+      ]
+    },
+    {
+      "id": "E8",
+      "name": "复现与成稿",
+      "depends_on": [
+        "E4",
+        "E5",
+        "E6_EVAL",
+        "E7"
+      ],
+      "claims": [
+        "C8"
+      ],
+      "requires_gpu": false,
+      "status": "planned",
+      "deliverables": [
+        "raw到figure导出",
+        "反例留档",
+        "声明与证据逐项审查",
+        "FGCS提交材料复核"
+      ]
+    }
+  ],
+  "uniform_protocol": {
+    "existing_path": "experiments/2026-10-28-shape-evaluation/frozen/protocol.json",
+    "mutate_existing_protocol": false,
+    "frozen_shapes_count": 6,
+    "candidate_count": 13,
+    "development_shape_order": "P,M,K,N",
+    "development_shapes": [
+      [
+        8,
+        64,
+        4096,
+        2048
+      ],
+      [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      [
+        8,
+        256,
+        8192,
+        512
+      ],
+      [
+        8,
+        512,
+        8192,
+        512
+      ]
+    ],
+    "mean_regret_max": 0.01,
+    "worst_regret_max": 0.03,
+    "bidirectional_margin_min": 0.02,
+    "required_direction_count": 2,
+    "fixed_order_and_strong_host_nonregression": true,
+    "candidate_order_invariance": true,
+    "primary_shortlist_k": 2,
+    "reported_k": [
+      1,
+      2,
+      3
+    ],
+    "unknown_candidate_may_be_excluded_as_invalid": false,
+    "numerical_failure_latency": null,
+    "pipeline_is_separate_challenger": true
+  },
+  "block_budget": {
+    "unit": "candidate_measurement_block_not_process_or_gpu_hour",
+    "original": {
+      "development": 156,
+      "boundary_verification": 234,
+      "model_shortlist_selection": 18,
+      "two_host_selection": 12,
+      "equal_budget_search": 18,
+      "paired_pipeline": 12
+    },
+    "original_total": 450,
+    "pipeline_supplement": 24,
+    "additional_mechanism_max": 66,
+    "core_max": 540,
+    "reserve_development_max": 156,
+    "core_plus_reserve_max": 696,
+    "excluded": [
+      "smoke",
+      "correctness",
+      "profiler",
+      "near-tie_repeats",
+      "BF16_layer",
+      "full_engine",
+      "native_route_capture"
+    ],
+    "reserve_trigger": "predeclared development coverage/rank/bidirectional gap; no frozen-label access"
+  },
+  "layer_evaluation": {
+    "phases": 2,
+    "traces_per_phase": 3,
+    "policies": 3,
+    "repeats": 3,
+    "blocks": 54
+  },
+  "serving_evaluation": {
+    "protocol_version": "proposed-closeout-20261031",
+    "input_tokens": [
+      512,
+      4096
+    ],
+    "concurrency": [
+      1,
+      128
+    ],
+    "output_token_budget": 128,
+    "requests_per_block": "max(128,4*concurrency)",
+    "policies": [
+      "native_engine",
+      "development_fixed_policy",
+      "frozen_model_policy"
+    ],
+    "repeats": 3,
+    "blocks": 36,
+    "request_executions": 11520,
+    "maximum_budgeted_output_tokens": 1474560,
+    "request_executions_are_independent_unique_requests": false,
+    "open_loop_max_throughput_claim_requires_extra_protocol": true,
+    "initial_proposed_quality_gates": {
+      "relative_L2_max": 0.01,
+      "normalized_max_abs_max": 0.02,
+      "relative_ppl_change_max": 0.01,
+      "must_lock_before_evaluation": true
+    }
+  },
+  "gates": {
+    "gpu_execution_ready": false,
+    "model_binary_environment_frozen": false,
+    "application_policy_frozen": false,
+    "routed_bf16_gpu_validated": false,
+    "full_engine_integration_validated": false,
+    "six_shapes_evaluated_this_task": false
+  },
+  "seal_required_fields": [
+    "GPU UUIDs/topology/driver",
+    "binary and runtime hashes",
+    "pipeline implementation and serial-control identity",
+    "final policy and training data hashes",
+    "request corpus/revision/tokenizer and split salt",
+    "native backend and actual EP mapping",
+    "quality tolerances and denominator definitions",
+    "warmup/measurement/pairing rules",
+    "near-tie repeat trigger and cap",
+    "per-block and total timeouts",
+    "actual hourly cost and total authorized spend",
+    "retrieval location and platform stop deadline"
+  ],
+  "spend": {
+    "new_resources_authorized_by_this_document": false,
+    "planned_primary_windows": 3,
+    "target_max_minutes_per_window": 60,
+    "guaranteed_total_hours": null,
+    "additional_window": "only an explicit bounded blocker/remaining fixed matrix; recheck authorization",
+    "active_compute_started": false
+  },
+  "stop_rules": [
+    "numerical failure blocks performance eligibility",
+    "invalid context terminates process",
+    "do not delete slow results",
+    "do not train on frozen labels",
+    "do not continue just to obtain positive speedup",
+    "platform compute stop must be verified"
+  ],
+  "amendments": [
+    {
+      "item": "full13 replaces rushed9 subset",
+      "reason": "independent completeness",
+      "changes_existing_frozen_file": false
+    },
+    {
+      "item": "pipeline24 blocks outside original450",
+      "reason": "strong challenger on all development/boundary shapes",
+      "changes_existing_frozen_file": false
+    },
+    {
+      "item": "engine36 rather than previous24",
+      "reason": "add fixed policy to isolate selector value",
+      "changes_existing_frozen_file": false
+    },
+    {
+      "item": "prepared GLM asset as primary",
+      "reason": "current assets and compatibility; new application identity",
+      "changes_existing_frozen_file": false
+    }
+  ],
+  "outcome_rule": "A claim closes as supported/refuted/inconclusive with honest scope; full positive system claim additionally requires successful complete eight-GPU application comparison."
+}

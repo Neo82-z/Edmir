@@ -1,0 +1,459 @@
+{
+  "candidates": [
+    {
+      "shape_tag": "grouped",
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "candidate_id": "splitk8_fp32reduce",
+      "precision": {
+        "input": "fp16",
+        "weight": "fp16",
+        "output": "fp16",
+        "accumulator": "fp32",
+        "accumulator_evidence": "source",
+        "reduction": "serial_fp32_then_fp16",
+        "partial": "fp32"
+      },
+      "implementation_id": "direct_peer_cutlass_sm80_q8_g1_fp32reduce_v1_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "correctness": "unknown",
+      "latency_us": null,
+      "compiler_admission": false,
+      "manifest": "fp32-manifests/grouped-splitk8_fp32reduce.hpp",
+      "expected_additional_costs": [
+        "FP32 partial matrix storage/traffic",
+        "one final conversion launch per fused GEMM"
+      ]
+    },
+    {
+      "shape_tag": "grouped",
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "candidate_id": "splitk8_groupedn2_fp32reduce",
+      "precision": {
+        "input": "fp16",
+        "weight": "fp16",
+        "output": "fp16",
+        "accumulator": "fp32",
+        "accumulator_evidence": "source",
+        "reduction": "serial_fp32_then_fp16",
+        "partial": "fp32"
+      },
+      "implementation_id": "direct_peer_cutlass_sm80_q8_g2_fp32reduce_v1_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "correctness": "unknown",
+      "latency_us": null,
+      "compiler_admission": false,
+      "manifest": "fp32-manifests/grouped-splitk8_groupedn2_fp32reduce.hpp",
+      "expected_additional_costs": [
+        "FP32 partial matrix storage/traffic",
+        "one final conversion launch per fused GEMM"
+      ]
+    },
+    {
+      "shape_tag": "grouped",
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "candidate_id": "splitk16_fp32reduce",
+      "precision": {
+        "input": "fp16",
+        "weight": "fp16",
+        "output": "fp16",
+        "accumulator": "fp32",
+        "accumulator_evidence": "source",
+        "reduction": "serial_fp32_then_fp16",
+        "partial": "fp32"
+      },
+      "implementation_id": "direct_peer_cutlass_sm80_q16_g1_fp32reduce_v1_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "correctness": "unknown",
+      "latency_us": null,
+      "compiler_admission": false,
+      "manifest": "fp32-manifests/grouped-splitk16_fp32reduce.hpp",
+      "expected_additional_costs": [
+        "FP32 partial matrix storage/traffic",
+        "one final conversion launch per fused GEMM"
+      ]
+    },
+    {
+      "shape_tag": "grouped",
+      "shape": [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      "candidate_id": "splitk16_groupedn2_fp32reduce",
+      "precision": {
+        "input": "fp16",
+        "weight": "fp16",
+        "output": "fp16",
+        "accumulator": "fp32",
+        "accumulator_evidence": "source",
+        "reduction": "serial_fp32_then_fp16",
+        "partial": "fp32"
+      },
+      "implementation_id": "direct_peer_cutlass_sm80_q16_g2_fp32reduce_v1_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "correctness": "unknown",
+      "latency_us": null,
+      "compiler_admission": false,
+      "manifest": "fp32-manifests/grouped-splitk16_groupedn2_fp32reduce.hpp",
+      "expected_additional_costs": [
+        "FP32 partial matrix storage/traffic",
+        "one final conversion launch per fused GEMM"
+      ]
+    },
+    {
+      "shape_tag": "m512",
+      "shape": [
+        8,
+        512,
+        8192,
+        512
+      ],
+      "candidate_id": "splitk8_fp32reduce",
+      "precision": {
+        "input": "fp16",
+        "weight": "fp16",
+        "output": "fp16",
+        "accumulator": "fp32",
+        "accumulator_evidence": "source",
+        "reduction": "serial_fp32_then_fp16",
+        "partial": "fp32"
+      },
+      "implementation_id": "direct_peer_cutlass_sm80_q8_g1_fp32reduce_v1_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "correctness": "unknown",
+      "latency_us": null,
+      "compiler_admission": false,
+      "manifest": "fp32-manifests/m512-splitk8_fp32reduce.hpp",
+      "expected_additional_costs": [
+        "FP32 partial matrix storage/traffic",
+        "one final conversion launch per fused GEMM"
+      ]
+    },
+    {
+      "shape_tag": "m512",
+      "shape": [
+        8,
+        512,
+        8192,
+        512
+      ],
+      "candidate_id": "splitk8_groupedn2_fp32reduce",
+      "precision": {
+        "input": "fp16",
+        "weight": "fp16",
+        "output": "fp16",
+        "accumulator": "fp32",
+        "accumulator_evidence": "source",
+        "reduction": "serial_fp32_then_fp16",
+        "partial": "fp32"
+      },
+      "implementation_id": "direct_peer_cutlass_sm80_q8_g2_fp32reduce_v1_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "correctness": "unknown",
+      "latency_us": null,
+      "compiler_admission": false,
+      "manifest": "fp32-manifests/m512-splitk8_groupedn2_fp32reduce.hpp",
+      "expected_additional_costs": [
+        "FP32 partial matrix storage/traffic",
+        "one final conversion launch per fused GEMM"
+      ]
+    },
+    {
+      "shape_tag": "m512",
+      "shape": [
+        8,
+        512,
+        8192,
+        512
+      ],
+      "candidate_id": "splitk16_fp32reduce",
+      "precision": {
+        "input": "fp16",
+        "weight": "fp16",
+        "output": "fp16",
+        "accumulator": "fp32",
+        "accumulator_evidence": "source",
+        "reduction": "serial_fp32_then_fp16",
+        "partial": "fp32"
+      },
+      "implementation_id": "direct_peer_cutlass_sm80_q16_g1_fp32reduce_v1_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "correctness": "unknown",
+      "latency_us": null,
+      "compiler_admission": false,
+      "manifest": "fp32-manifests/m512-splitk16_fp32reduce.hpp",
+      "expected_additional_costs": [
+        "FP32 partial matrix storage/traffic",
+        "one final conversion launch per fused GEMM"
+      ]
+    },
+    {
+      "shape_tag": "m512",
+      "shape": [
+        8,
+        512,
+        8192,
+        512
+      ],
+      "candidate_id": "splitk16_groupedn2_fp32reduce",
+      "precision": {
+        "input": "fp16",
+        "weight": "fp16",
+        "output": "fp16",
+        "accumulator": "fp32",
+        "accumulator_evidence": "source",
+        "reduction": "serial_fp32_then_fp16",
+        "partial": "fp32"
+      },
+      "implementation_id": "direct_peer_cutlass_sm80_q16_g2_fp32reduce_v1_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "correctness": "unknown",
+      "latency_us": null,
+      "compiler_admission": false,
+      "manifest": "fp32-manifests/m512-splitk16_groupedn2_fp32reduce.hpp",
+      "expected_additional_costs": [
+        "FP32 partial matrix storage/traffic",
+        "one final conversion launch per fused GEMM"
+      ]
+    },
+    {
+      "shape_tag": "large_n",
+      "shape": [
+        8,
+        64,
+        4096,
+        2048
+      ],
+      "candidate_id": "splitk8_fp32reduce",
+      "precision": {
+        "input": "fp16",
+        "weight": "fp16",
+        "output": "fp16",
+        "accumulator": "fp32",
+        "accumulator_evidence": "source",
+        "reduction": "serial_fp32_then_fp16",
+        "partial": "fp32"
+      },
+      "implementation_id": "direct_peer_cutlass_sm80_q8_g1_fp32reduce_v1_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "correctness": "unknown",
+      "latency_us": null,
+      "compiler_admission": false,
+      "manifest": "fp32-manifests/large_n-splitk8_fp32reduce.hpp",
+      "expected_additional_costs": [
+        "FP32 partial matrix storage/traffic",
+        "one final conversion launch per fused GEMM"
+      ]
+    },
+    {
+      "shape_tag": "large_n",
+      "shape": [
+        8,
+        64,
+        4096,
+        2048
+      ],
+      "candidate_id": "splitk8_groupedn2_fp32reduce",
+      "precision": {
+        "input": "fp16",
+        "weight": "fp16",
+        "output": "fp16",
+        "accumulator": "fp32",
+        "accumulator_evidence": "source",
+        "reduction": "serial_fp32_then_fp16",
+        "partial": "fp32"
+      },
+      "implementation_id": "direct_peer_cutlass_sm80_q8_g2_fp32reduce_v1_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "correctness": "unknown",
+      "latency_us": null,
+      "compiler_admission": false,
+      "manifest": "fp32-manifests/large_n-splitk8_groupedn2_fp32reduce.hpp",
+      "expected_additional_costs": [
+        "FP32 partial matrix storage/traffic",
+        "one final conversion launch per fused GEMM"
+      ]
+    },
+    {
+      "shape_tag": "large_n",
+      "shape": [
+        8,
+        64,
+        4096,
+        2048
+      ],
+      "candidate_id": "splitk16_fp32reduce",
+      "precision": {
+        "input": "fp16",
+        "weight": "fp16",
+        "output": "fp16",
+        "accumulator": "fp32",
+        "accumulator_evidence": "source",
+        "reduction": "serial_fp32_then_fp16",
+        "partial": "fp32"
+      },
+      "implementation_id": "direct_peer_cutlass_sm80_q16_g1_fp32reduce_v1_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "correctness": "unknown",
+      "latency_us": null,
+      "compiler_admission": false,
+      "manifest": "fp32-manifests/large_n-splitk16_fp32reduce.hpp",
+      "expected_additional_costs": [
+        "FP32 partial matrix storage/traffic",
+        "one final conversion launch per fused GEMM"
+      ]
+    },
+    {
+      "shape_tag": "large_n",
+      "shape": [
+        8,
+        64,
+        4096,
+        2048
+      ],
+      "candidate_id": "splitk16_groupedn2_fp32reduce",
+      "precision": {
+        "input": "fp16",
+        "weight": "fp16",
+        "output": "fp16",
+        "accumulator": "fp32",
+        "accumulator_evidence": "source",
+        "reduction": "serial_fp32_then_fp16",
+        "partial": "fp32"
+      },
+      "implementation_id": "direct_peer_cutlass_sm80_q16_g2_fp32reduce_v1_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "correctness": "unknown",
+      "latency_us": null,
+      "compiler_admission": false,
+      "manifest": "fp32-manifests/large_n-splitk16_groupedn2_fp32reduce.hpp",
+      "expected_additional_costs": [
+        "FP32 partial matrix storage/traffic",
+        "one final conversion launch per fused GEMM"
+      ]
+    },
+    {
+      "shape_tag": "m256",
+      "shape": [
+        8,
+        256,
+        8192,
+        512
+      ],
+      "candidate_id": "splitk8_fp32reduce",
+      "precision": {
+        "input": "fp16",
+        "weight": "fp16",
+        "output": "fp16",
+        "accumulator": "fp32",
+        "accumulator_evidence": "source",
+        "reduction": "serial_fp32_then_fp16",
+        "partial": "fp32"
+      },
+      "implementation_id": "direct_peer_cutlass_sm80_q8_g1_fp32reduce_v1_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "correctness": "unknown",
+      "latency_us": null,
+      "compiler_admission": false,
+      "manifest": "fp32-manifests/m256-splitk8_fp32reduce.hpp",
+      "expected_additional_costs": [
+        "FP32 partial matrix storage/traffic",
+        "one final conversion launch per fused GEMM"
+      ]
+    },
+    {
+      "shape_tag": "m256",
+      "shape": [
+        8,
+        256,
+        8192,
+        512
+      ],
+      "candidate_id": "splitk8_groupedn2_fp32reduce",
+      "precision": {
+        "input": "fp16",
+        "weight": "fp16",
+        "output": "fp16",
+        "accumulator": "fp32",
+        "accumulator_evidence": "source",
+        "reduction": "serial_fp32_then_fp16",
+        "partial": "fp32"
+      },
+      "implementation_id": "direct_peer_cutlass_sm80_q8_g2_fp32reduce_v1_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "correctness": "unknown",
+      "latency_us": null,
+      "compiler_admission": false,
+      "manifest": "fp32-manifests/m256-splitk8_groupedn2_fp32reduce.hpp",
+      "expected_additional_costs": [
+        "FP32 partial matrix storage/traffic",
+        "one final conversion launch per fused GEMM"
+      ]
+    },
+    {
+      "shape_tag": "m256",
+      "shape": [
+        8,
+        256,
+        8192,
+        512
+      ],
+      "candidate_id": "splitk16_fp32reduce",
+      "precision": {
+        "input": "fp16",
+        "weight": "fp16",
+        "output": "fp16",
+        "accumulator": "fp32",
+        "accumulator_evidence": "source",
+        "reduction": "serial_fp32_then_fp16",
+        "partial": "fp32"
+      },
+      "implementation_id": "direct_peer_cutlass_sm80_q16_g1_fp32reduce_v1_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "correctness": "unknown",
+      "latency_us": null,
+      "compiler_admission": false,
+      "manifest": "fp32-manifests/m256-splitk16_fp32reduce.hpp",
+      "expected_additional_costs": [
+        "FP32 partial matrix storage/traffic",
+        "one final conversion launch per fused GEMM"
+      ]
+    },
+    {
+      "shape_tag": "m256",
+      "shape": [
+        8,
+        256,
+        8192,
+        512
+      ],
+      "candidate_id": "splitk16_groupedn2_fp32reduce",
+      "precision": {
+        "input": "fp16",
+        "weight": "fp16",
+        "output": "fp16",
+        "accumulator": "fp32",
+        "accumulator_evidence": "source",
+        "reduction": "serial_fp32_then_fp16",
+        "partial": "fp32"
+      },
+      "implementation_id": "direct_peer_cutlass_sm80_q16_g2_fp32reduce_v1_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "correctness": "unknown",
+      "latency_us": null,
+      "compiler_admission": false,
+      "manifest": "fp32-manifests/m256-splitk16_groupedn2_fp32reduce.hpp",
+      "expected_additional_costs": [
+        "FP32 partial matrix storage/traffic",
+        "one final conversion launch per fused GEMM"
+      ]
+    }
+  ],
+  "requirements": [
+    "Compile new CUDA translation unit against pinned CUTLASS and NCCL before allocation of GPU time when possible",
+    "Same P=8 A100 SXM topology and W1 host execute+synchronize timing, full 3-seed output checks",
+    "Only correctness-passing candidates receive timing; include original valid controls; three process repetitions",
+    "Separate profiler runs: CTA/warp activity, semaphore stalls, peer access, CPU submission and conversion cost",
+    "No frozen shapes in debugging; no BF16 result from FP16 evidence"
+  ]
+}

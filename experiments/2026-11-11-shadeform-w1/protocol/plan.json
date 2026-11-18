@@ -1,0 +1,619 @@
+{
+  "schema": "edmir.w1.fp16.v1",
+  "shapes": {
+    "grouped": [
+      8,
+      64,
+      8192,
+      1024
+    ],
+    "m512": [
+      8,
+      512,
+      8192,
+      512
+    ],
+    "large_n": [
+      8,
+      64,
+      4096,
+      2048
+    ],
+    "m256": [
+      8,
+      256,
+      8192,
+      512
+    ]
+  },
+  "jobs": [
+    {
+      "shape": "grouped",
+      "phase": "check",
+      "seed": 20261020,
+      "repetition": 0,
+      "order": [
+        "host",
+        "host_merged_cutlass",
+        "host_merged_cublaslt",
+        "direct",
+        "splitk2",
+        "splitk4",
+        "splitk8",
+        "splitk16",
+        "direct_groupedn2",
+        "splitk2_groupedn2",
+        "splitk4_groupedn2",
+        "splitk8_groupedn2",
+        "splitk16_groupedn2"
+      ]
+    },
+    {
+      "shape": "grouped",
+      "phase": "check",
+      "seed": 20261101,
+      "repetition": 0,
+      "order": [
+        "host",
+        "host_merged_cutlass",
+        "host_merged_cublaslt",
+        "direct",
+        "splitk2",
+        "splitk4",
+        "splitk8",
+        "splitk16",
+        "direct_groupedn2",
+        "splitk2_groupedn2",
+        "splitk4_groupedn2",
+        "splitk8_groupedn2",
+        "splitk16_groupedn2"
+      ]
+    },
+    {
+      "shape": "grouped",
+      "phase": "check",
+      "seed": 20261102,
+      "repetition": 0,
+      "order": [
+        "host",
+        "host_merged_cutlass",
+        "host_merged_cublaslt",
+        "direct",
+        "splitk2",
+        "splitk4",
+        "splitk8",
+        "splitk16",
+        "direct_groupedn2",
+        "splitk2_groupedn2",
+        "splitk4_groupedn2",
+        "splitk8_groupedn2",
+        "splitk16_groupedn2"
+      ]
+    },
+    {
+      "shape": "grouped",
+      "phase": "measure",
+      "seed": 20261020,
+      "repetition": 0,
+      "order": [
+        "direct",
+        "splitk2_groupedn2",
+        "splitk2",
+        "host_merged_cublaslt",
+        "splitk4_groupedn2",
+        "splitk4",
+        "splitk16",
+        "direct_groupedn2",
+        "host",
+        "splitk8",
+        "splitk16_groupedn2",
+        "host_merged_cutlass",
+        "splitk8_groupedn2"
+      ]
+    },
+    {
+      "shape": "grouped",
+      "phase": "measure",
+      "seed": 20261020,
+      "repetition": 1,
+      "order": [
+        "splitk4_groupedn2",
+        "splitk4",
+        "splitk16",
+        "direct_groupedn2",
+        "host",
+        "splitk8",
+        "splitk16_groupedn2",
+        "host_merged_cutlass",
+        "splitk8_groupedn2",
+        "direct",
+        "splitk2_groupedn2",
+        "splitk2",
+        "host_merged_cublaslt"
+      ]
+    },
+    {
+      "shape": "grouped",
+      "phase": "measure",
+      "seed": 20261020,
+      "repetition": 2,
+      "order": [
+        "host",
+        "splitk8",
+        "splitk16_groupedn2",
+        "host_merged_cutlass",
+        "splitk8_groupedn2",
+        "direct",
+        "splitk2_groupedn2",
+        "splitk2",
+        "host_merged_cublaslt",
+        "splitk4_groupedn2",
+        "splitk4",
+        "splitk16",
+        "direct_groupedn2"
+      ]
+    },
+    {
+      "shape": "m512",
+      "phase": "check",
+      "seed": 20261020,
+      "repetition": 0,
+      "order": [
+        "host",
+        "host_merged_cutlass",
+        "host_merged_cublaslt",
+        "direct",
+        "splitk2",
+        "splitk4",
+        "splitk8",
+        "splitk16",
+        "direct_groupedn2",
+        "splitk2_groupedn2",
+        "splitk4_groupedn2",
+        "splitk8_groupedn2",
+        "splitk16_groupedn2",
+        "pipeline",
+        "pipeline_serial"
+      ]
+    },
+    {
+      "shape": "m512",
+      "phase": "check",
+      "seed": 20261101,
+      "repetition": 0,
+      "order": [
+        "host",
+        "host_merged_cutlass",
+        "host_merged_cublaslt",
+        "direct",
+        "splitk2",
+        "splitk4",
+        "splitk8",
+        "splitk16",
+        "direct_groupedn2",
+        "splitk2_groupedn2",
+        "splitk4_groupedn2",
+        "splitk8_groupedn2",
+        "splitk16_groupedn2",
+        "pipeline",
+        "pipeline_serial"
+      ]
+    },
+    {
+      "shape": "m512",
+      "phase": "check",
+      "seed": 20261102,
+      "repetition": 0,
+      "order": [
+        "host",
+        "host_merged_cutlass",
+        "host_merged_cublaslt",
+        "direct",
+        "splitk2",
+        "splitk4",
+        "splitk8",
+        "splitk16",
+        "direct_groupedn2",
+        "splitk2_groupedn2",
+        "splitk4_groupedn2",
+        "splitk8_groupedn2",
+        "splitk16_groupedn2",
+        "pipeline",
+        "pipeline_serial"
+      ]
+    },
+    {
+      "shape": "m512",
+      "phase": "measure",
+      "seed": 20261020,
+      "repetition": 0,
+      "order": [
+        "direct",
+        "splitk8",
+        "splitk4_groupedn2",
+        "splitk4",
+        "splitk2_groupedn2",
+        "host",
+        "splitk2",
+        "splitk16_groupedn2",
+        "host_merged_cutlass",
+        "splitk8_groupedn2",
+        "direct_groupedn2",
+        "splitk16",
+        "host_merged_cublaslt"
+      ]
+    },
+    {
+      "shape": "m512",
+      "phase": "measure",
+      "seed": 20261020,
+      "repetition": 1,
+      "order": [
+        "splitk2_groupedn2",
+        "host",
+        "splitk2",
+        "splitk16_groupedn2",
+        "host_merged_cutlass",
+        "splitk8_groupedn2",
+        "direct_groupedn2",
+        "splitk16",
+        "host_merged_cublaslt",
+        "direct",
+        "splitk8",
+        "splitk4_groupedn2",
+        "splitk4"
+      ]
+    },
+    {
+      "shape": "m512",
+      "phase": "measure",
+      "seed": 20261020,
+      "repetition": 2,
+      "order": [
+        "host_merged_cutlass",
+        "splitk8_groupedn2",
+        "direct_groupedn2",
+        "splitk16",
+        "host_merged_cublaslt",
+        "direct",
+        "splitk8",
+        "splitk4_groupedn2",
+        "splitk4",
+        "splitk2_groupedn2",
+        "host",
+        "splitk2",
+        "splitk16_groupedn2"
+      ]
+    },
+    {
+      "shape": "large_n",
+      "phase": "check",
+      "seed": 20261020,
+      "repetition": 0,
+      "order": [
+        "host",
+        "host_merged_cutlass",
+        "host_merged_cublaslt",
+        "direct",
+        "splitk2",
+        "splitk4",
+        "splitk8",
+        "splitk16",
+        "direct_groupedn2",
+        "splitk2_groupedn2",
+        "splitk4_groupedn2",
+        "splitk8_groupedn2",
+        "splitk16_groupedn2",
+        "pipeline",
+        "pipeline_serial"
+      ]
+    },
+    {
+      "shape": "large_n",
+      "phase": "check",
+      "seed": 20261101,
+      "repetition": 0,
+      "order": [
+        "host",
+        "host_merged_cutlass",
+        "host_merged_cublaslt",
+        "direct",
+        "splitk2",
+        "splitk4",
+        "splitk8",
+        "splitk16",
+        "direct_groupedn2",
+        "splitk2_groupedn2",
+        "splitk4_groupedn2",
+        "splitk8_groupedn2",
+        "splitk16_groupedn2",
+        "pipeline",
+        "pipeline_serial"
+      ]
+    },
+    {
+      "shape": "large_n",
+      "phase": "check",
+      "seed": 20261102,
+      "repetition": 0,
+      "order": [
+        "host",
+        "host_merged_cutlass",
+        "host_merged_cublaslt",
+        "direct",
+        "splitk2",
+        "splitk4",
+        "splitk8",
+        "splitk16",
+        "direct_groupedn2",
+        "splitk2_groupedn2",
+        "splitk4_groupedn2",
+        "splitk8_groupedn2",
+        "splitk16_groupedn2",
+        "pipeline",
+        "pipeline_serial"
+      ]
+    },
+    {
+      "shape": "large_n",
+      "phase": "measure",
+      "seed": 20261020,
+      "repetition": 0,
+      "order": [
+        "direct",
+        "splitk4_groupedn2",
+        "splitk2",
+        "splitk2_groupedn2",
+        "splitk8_groupedn2",
+        "direct_groupedn2",
+        "splitk8",
+        "splitk4",
+        "splitk16_groupedn2",
+        "host_merged_cublaslt",
+        "host",
+        "splitk16",
+        "host_merged_cutlass"
+      ]
+    },
+    {
+      "shape": "large_n",
+      "phase": "measure",
+      "seed": 20261020,
+      "repetition": 1,
+      "order": [
+        "splitk8_groupedn2",
+        "direct_groupedn2",
+        "splitk8",
+        "splitk4",
+        "splitk16_groupedn2",
+        "host_merged_cublaslt",
+        "host",
+        "splitk16",
+        "host_merged_cutlass",
+        "direct",
+        "splitk4_groupedn2",
+        "splitk2",
+        "splitk2_groupedn2"
+      ]
+    },
+    {
+      "shape": "large_n",
+      "phase": "measure",
+      "seed": 20261020,
+      "repetition": 2,
+      "order": [
+        "splitk16_groupedn2",
+        "host_merged_cublaslt",
+        "host",
+        "splitk16",
+        "host_merged_cutlass",
+        "direct",
+        "splitk4_groupedn2",
+        "splitk2",
+        "splitk2_groupedn2",
+        "splitk8_groupedn2",
+        "direct_groupedn2",
+        "splitk8",
+        "splitk4"
+      ]
+    },
+    {
+      "shape": "m256",
+      "phase": "check",
+      "seed": 20261020,
+      "repetition": 0,
+      "order": [
+        "host",
+        "host_merged_cutlass",
+        "host_merged_cublaslt",
+        "direct",
+        "splitk2",
+        "splitk4",
+        "splitk8",
+        "splitk16",
+        "direct_groupedn2",
+        "splitk2_groupedn2",
+        "splitk4_groupedn2",
+        "splitk8_groupedn2",
+        "splitk16_groupedn2"
+      ]
+    },
+    {
+      "shape": "m256",
+      "phase": "check",
+      "seed": 20261101,
+      "repetition": 0,
+      "order": [
+        "host",
+        "host_merged_cutlass",
+        "host_merged_cublaslt",
+        "direct",
+        "splitk2",
+        "splitk4",
+        "splitk8",
+        "splitk16",
+        "direct_groupedn2",
+        "splitk2_groupedn2",
+        "splitk4_groupedn2",
+        "splitk8_groupedn2",
+        "splitk16_groupedn2"
+      ]
+    },
+    {
+      "shape": "m256",
+      "phase": "check",
+      "seed": 20261102,
+      "repetition": 0,
+      "order": [
+        "host",
+        "host_merged_cutlass",
+        "host_merged_cublaslt",
+        "direct",
+        "splitk2",
+        "splitk4",
+        "splitk8",
+        "splitk16",
+        "direct_groupedn2",
+        "splitk2_groupedn2",
+        "splitk4_groupedn2",
+        "splitk8_groupedn2",
+        "splitk16_groupedn2"
+      ]
+    },
+    {
+      "shape": "m256",
+      "phase": "measure",
+      "seed": 20261020,
+      "repetition": 0,
+      "order": [
+        "host_merged_cutlass",
+        "direct_groupedn2",
+        "splitk16_groupedn2",
+        "host",
+        "splitk2_groupedn2",
+        "splitk4_groupedn2",
+        "splitk16",
+        "splitk8_groupedn2",
+        "splitk4",
+        "splitk2",
+        "splitk8",
+        "direct",
+        "host_merged_cublaslt"
+      ]
+    },
+    {
+      "shape": "m256",
+      "phase": "measure",
+      "seed": 20261020,
+      "repetition": 1,
+      "order": [
+        "splitk2_groupedn2",
+        "splitk4_groupedn2",
+        "splitk16",
+        "splitk8_groupedn2",
+        "splitk4",
+        "splitk2",
+        "splitk8",
+        "direct",
+        "host_merged_cublaslt",
+        "host_merged_cutlass",
+        "direct_groupedn2",
+        "splitk16_groupedn2",
+        "host"
+      ]
+    },
+    {
+      "shape": "m256",
+      "phase": "measure",
+      "seed": 20261020,
+      "repetition": 2,
+      "order": [
+        "splitk4",
+        "splitk2",
+        "splitk8",
+        "direct",
+        "host_merged_cublaslt",
+        "host_merged_cutlass",
+        "direct_groupedn2",
+        "splitk16_groupedn2",
+        "host",
+        "splitk2_groupedn2",
+        "splitk4_groupedn2",
+        "splitk16",
+        "splitk8_groupedn2"
+      ]
+    },
+    {
+      "shape": "m512",
+      "phase": "pair",
+      "seed": 20261020,
+      "repetition": 0,
+      "order": [
+        "pipeline",
+        "pipeline_serial"
+      ]
+    },
+    {
+      "shape": "m512",
+      "phase": "pair",
+      "seed": 20261020,
+      "repetition": 1,
+      "order": [
+        "pipeline_serial",
+        "pipeline"
+      ]
+    },
+    {
+      "shape": "m512",
+      "phase": "pair",
+      "seed": 20261020,
+      "repetition": 2,
+      "order": [
+        "pipeline",
+        "pipeline_serial"
+      ]
+    },
+    {
+      "shape": "large_n",
+      "phase": "pair",
+      "seed": 20261020,
+      "repetition": 0,
+      "order": [
+        "pipeline",
+        "pipeline_serial"
+      ]
+    },
+    {
+      "shape": "large_n",
+      "phase": "pair",
+      "seed": 20261020,
+      "repetition": 1,
+      "order": [
+        "pipeline_serial",
+        "pipeline"
+      ]
+    },
+    {
+      "shape": "large_n",
+      "phase": "pair",
+      "seed": 20261020,
+      "repetition": 2,
+      "order": [
+        "pipeline",
+        "pipeline_serial"
+      ]
+    }
+  ],
+  "seeds": [
+    20261020,
+    20261101,
+    20261102
+  ],
+  "cutlass": "dcf215af68a2d08d305076c152a06f201728cd53",
+  "nccl": "dbc86fd06e8b0c4517b95d8958a09ccacf9520c9",
+  "primary_blocks": 156,
+  "paired_blocks": 12,
+  "hardware": "8x A100-SXM4-80GB full NV12 P2P",
+  "warmup": 20,
+  "iterations": 100
+}

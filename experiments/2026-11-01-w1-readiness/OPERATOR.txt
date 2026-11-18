@@ -1,0 +1,38 @@
+EDM-IR W1 / 8×A100 SXM4 80GB / CUDA 12.8 / FP16
+
+查卡入口（用户询问时手动查）。先在已登录的 Google Chrome 打开 https://console.runpod.io/pods?id=ktgaqsajla51i0 ，查看 US-MO-1 的旧 Pod edmir-p8-20261028。以 Start Pod 窗口的 GPU Count 和确认按钮报价为准，同时记录主机告警。只查看并 Cancel，再按需核对新建市场及模型卷所在区域。2026-11-03 13:15 北京时间，详情显示原配置 8×A100 SXM，恢复窗口最多列出 6 卡，报价 $10.74/h。宿主机有 critical error 告警。取消后 Compute 为 Not running。此记录仅为当时快照。
+
+2026-11-03 执行约定：先批量采集，回收后在本地分析
+
+租机前在本地排定候选、请求、顺序、轮次、时间上限及回收目录。GPU 上只根据拓扑/版本、数值正确性、输出完整性、剩余时长和费用决定继续或退出。旧模型缺预测值也可以采开发数据。禁止根据现场延迟排名、误选、加速比或 trace 解释增删候选、切换模型或追加形状。进程间增量回收，到回收时限就保留完整块、未执行清单和中断日志，停止实例；所有排名和模型迭代在本地进行。
+
+两类开发数据独立排队：
+1. 算子沿用 bundle/plan.json 的四个开发形状，覆盖三种 host 与十种 fused。按既定顺序做 168 项数值检查、最多 156 个主计时块和 12 个串行/流水配对块。成功计时保留全部 100 个样本及实现、种子、进程、设备和运行环境身份。少量指定 trace 单独运行；同一组 GPU 上引擎和算子计时错开。现场只校验诊断文件是否生成且可读。
+2. 原生推理开发采集独立于预测器。采用已缓存的 GLM-4.7-Flash、vLLM 0.20.1、BF16、真实 EP8；使用单独的软件环境。租机前固定父请求及 token IDs、四种负载（输入 512/4096，客户端并发 1/128，最多生成 128 token），为已备妥的原生开发采集事先留时。逐请求保留请求与输出 token 数、时间戳、首 token、结束原因及错误。另用相同固定负载运行路由诊断，每负载取前三个完整 prefill 和 decode step，各阶段三个；保留所有 MoE 层与来源 rank 的逐专家 token 数、两个投影的维度及后端实际报告的 padded M。零计数与缺记录分开，同请求的诊断不混入性能计时。回收模型/引擎 revision、EP 映射、采样/缓存配置、请求清单与负载身份。没有可执行的引擎采集入口、固定请求或卷时，在开机前标为待准备；本 W1 算子包本身不含这项入口。时间不足留缺项，不在机器上等待开发或调参。
+
+本地用开发数据重放 host/fused 方向及家族内损失，并比较同预算的固定 host + 固定 fused。保留原始样本、错误及缺测，不合并 FP16 算子和 BF16 应用标签。六个冻结形状继续隔离；待模型和选择规则在本地封存，独立窗口按固定脚本采选择块和独立验证块。原生推理数据用于理解真实工作负载。论文若声明端到端加速，再把原生、固定策略和冻结模型装进同一引擎，按同一批独立请求在 GPU 上实际运行；现场仍只采集。
+
+代码包包含 bundle、固定 CUTLASS/NCCL 源码和已核对的历史 SM80 NCCL 动态库。输入和 FP32 参考在本地同名 inputs 目录。可先传输该目录，或在有 NumPy 的 CPU 环境执行 python3 rebuild_inputs.py --out inputs 后挂载。所有 12 组输入和参考必须匹配 bundle/inputs.json。需要 Linux x86_64、CUDA 12.8 development、C++20、CMake 3.30.5 或已验证等价版本。提前确认 nsys、磁盘、依赖与自动停机手段。以下在展开后的目录执行。
+
+R=bundle/source/EDM-IR/tools/run_w1_gpu.py
+python3 "$R" verify --bundle bundle --inputs inputs
+
+计费起点、Pod ID、含必要磁盘的实际每小时总价、当轮预算由当前平台绑定。先从独立控制端准备好主动停机和最终状态核验。服务器内第二道保护用平台 CLI 发起 Stop。参数值来自平台订单，BILLED_FROM 是平台计费开始的 Unix 秒。守护日志须在新目录内。
+
+nohup python3 bundle/source/EDM-IR/tools/w1_stop_guard.py --pod-id "$RUNPOD_POD_ID" --billed-from "$BILLED_FROM" --hourly-total "$HOURLY_TOTAL" --budget-usd "$BUDGET_USD" --log "$PWD/w1-guard.jsonl" > w1-guard.stdout 2>&1 &
+确认 w1-guard.jsonl 有 armed 记录且进程存活，取其中 collection_cutoff 为 CUTOFF。Stop 请求以平台确认 compute 停止作为完成。保护提前预留十分钟回收。
+
+python3 "$R" build --bundle bundle --inputs inputs --dependencies dependencies --build-dir build --jobs 8 --cutoff-epoch "$CUTOFF" --guard-log "$PWD/w1-guard.jsonl"
+python3 "$R" pilot --bundle bundle --inputs inputs --build-dir build --out results --cutoff-epoch "$CUTOFF" --guard-log "$PWD/w1-guard.jsonl"
+
+读取 results/pilot-000.json、拓扑/库身份和错误。确认两候选都正确、GPU 空闲，结合已消耗时间和退款/停止时限重估。主要采集方案是 12 个三种子检查进程，12 个主比较进程，6 个流水化配对进程。每个候选保留独立缓冲、事件与验证。pilot 单独计数。每个完整进程结束后从控制端增量回收 results。启动时间和通信初始化的实际节省要从新记录计算。正式计时对比的上限为 156 + 12 块，已证实数值失败的候选会显式排除。
+
+python3 "$R" collect --bundle bundle --inputs inputs --build-dir build --out results --cutoff-epoch "$CUTOFF" --guard-log "$PWD/w1-guard.jsonl"
+
+同机同环境恢复使用同一命令。已完成区组须通过原始文件校验；中断区组整组重做且保留上次 stdout/stderr。硬件/库/二进制变化使用新的输出路径。每个成功计时候选均有 100 个样本。numerical fail、未运行、系统异常分开记录。
+
+如还有诊断时间，在主计时后对有效候选独立执行 trace；各 case 仅一次，报告与计时分目录。
+python3 "$R" trace --trace-case grouped-g1 --bundle bundle --inputs inputs --build-dir build --out results --cutoff-epoch "$CUTOFF" --guard-log "$PWD/w1-guard.jsonl"
+其余可选 case 为 grouped-g2、m512-serial、m512-pipeline。回收后在本地核对 capture 窗口的真实 kernel 和事件。case 未跑或计数器不可用如实记录。
+
+回收 results、build/receipt.json、build/build.log、guard 日志及设备环境信息，逐文件校验。回收完成即从控制端停止实例，并读取平台状态。所有 W1 行仅作四形状开发数据。预测表中的历史分数只覆盖旧执行身份下原来可评分的子集。

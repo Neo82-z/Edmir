@@ -1,0 +1,699 @@
+{
+  "schema": "edmir.w1-extension.v1",
+  "purpose": "Complete separately profiled diagnostics and collect a fresh-session repeat of the sealed four-shape development protocol; no model fitting or evaluation-shape access.",
+  "created_utc": "2026-11-11T08:28:14.757592+00:00",
+  "source_files_sha256": "e125196dd9d00880b4bcd8ed0645221a2482fc6190cd031a8a5be723331dafda",
+  "source_plan_sha256": "e0894c4d4640c5d7b728f5173e7ba454036fcb11a3790b06678c66cf652dac5a",
+  "shapes": {
+    "grouped": [
+      8,
+      64,
+      8192,
+      1024
+    ],
+    "m512": [
+      8,
+      512,
+      8192,
+      512
+    ],
+    "large_n": [
+      8,
+      64,
+      4096,
+      2048
+    ],
+    "m256": [
+      8,
+      256,
+      8192,
+      512
+    ]
+  },
+  "seeds": [
+    20261020,
+    20261101,
+    20261102
+  ],
+  "stages": [
+    {
+      "name": "grouped",
+      "original_job_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "jobs": [
+        {
+          "shape": "grouped",
+          "phase": "check",
+          "seed": 20261020,
+          "repetition": 0,
+          "order": [
+            "host",
+            "host_merged_cutlass",
+            "host_merged_cublaslt",
+            "direct",
+            "splitk2",
+            "splitk4",
+            "splitk8",
+            "splitk16",
+            "direct_groupedn2",
+            "splitk2_groupedn2",
+            "splitk4_groupedn2",
+            "splitk8_groupedn2",
+            "splitk16_groupedn2"
+          ]
+        },
+        {
+          "shape": "grouped",
+          "phase": "check",
+          "seed": 20261101,
+          "repetition": 0,
+          "order": [
+            "host",
+            "host_merged_cutlass",
+            "host_merged_cublaslt",
+            "direct",
+            "splitk2",
+            "splitk4",
+            "splitk8",
+            "splitk16",
+            "direct_groupedn2",
+            "splitk2_groupedn2",
+            "splitk4_groupedn2",
+            "splitk8_groupedn2",
+            "splitk16_groupedn2"
+          ]
+        },
+        {
+          "shape": "grouped",
+          "phase": "check",
+          "seed": 20261102,
+          "repetition": 0,
+          "order": [
+            "host",
+            "host_merged_cutlass",
+            "host_merged_cublaslt",
+            "direct",
+            "splitk2",
+            "splitk4",
+            "splitk8",
+            "splitk16",
+            "direct_groupedn2",
+            "splitk2_groupedn2",
+            "splitk4_groupedn2",
+            "splitk8_groupedn2",
+            "splitk16_groupedn2"
+          ]
+        },
+        {
+          "shape": "grouped",
+          "phase": "measure",
+          "seed": 20261020,
+          "repetition": 0,
+          "order": [
+            "direct",
+            "splitk2_groupedn2",
+            "splitk2",
+            "host_merged_cublaslt",
+            "splitk4_groupedn2",
+            "splitk4",
+            "splitk16",
+            "direct_groupedn2",
+            "host",
+            "splitk8",
+            "splitk16_groupedn2",
+            "host_merged_cutlass",
+            "splitk8_groupedn2"
+          ]
+        },
+        {
+          "shape": "grouped",
+          "phase": "measure",
+          "seed": 20261020,
+          "repetition": 1,
+          "order": [
+            "splitk4_groupedn2",
+            "splitk4",
+            "splitk16",
+            "direct_groupedn2",
+            "host",
+            "splitk8",
+            "splitk16_groupedn2",
+            "host_merged_cutlass",
+            "splitk8_groupedn2",
+            "direct",
+            "splitk2_groupedn2",
+            "splitk2",
+            "host_merged_cublaslt"
+          ]
+        },
+        {
+          "shape": "grouped",
+          "phase": "measure",
+          "seed": 20261020,
+          "repetition": 2,
+          "order": [
+            "host",
+            "splitk8",
+            "splitk16_groupedn2",
+            "host_merged_cutlass",
+            "splitk8_groupedn2",
+            "direct",
+            "splitk2_groupedn2",
+            "splitk2",
+            "host_merged_cublaslt",
+            "splitk4_groupedn2",
+            "splitk4",
+            "splitk16",
+            "direct_groupedn2"
+          ]
+        }
+      ],
+      "traces": [
+        "grouped-g1",
+        "grouped-g2"
+      ]
+    },
+    {
+      "name": "m512",
+      "original_job_indices": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        24,
+        25,
+        26
+      ],
+      "jobs": [
+        {
+          "shape": "m512",
+          "phase": "check",
+          "seed": 20261020,
+          "repetition": 0,
+          "order": [
+            "host",
+            "host_merged_cutlass",
+            "host_merged_cublaslt",
+            "direct",
+            "splitk2",
+            "splitk4",
+            "splitk8",
+            "splitk16",
+            "direct_groupedn2",
+            "splitk2_groupedn2",
+            "splitk4_groupedn2",
+            "splitk8_groupedn2",
+            "splitk16_groupedn2",
+            "pipeline",
+            "pipeline_serial"
+          ]
+        },
+        {
+          "shape": "m512",
+          "phase": "check",
+          "seed": 20261101,
+          "repetition": 0,
+          "order": [
+            "host",
+            "host_merged_cutlass",
+            "host_merged_cublaslt",
+            "direct",
+            "splitk2",
+            "splitk4",
+            "splitk8",
+            "splitk16",
+            "direct_groupedn2",
+            "splitk2_groupedn2",
+            "splitk4_groupedn2",
+            "splitk8_groupedn2",
+            "splitk16_groupedn2",
+            "pipeline",
+            "pipeline_serial"
+          ]
+        },
+        {
+          "shape": "m512",
+          "phase": "check",
+          "seed": 20261102,
+          "repetition": 0,
+          "order": [
+            "host",
+            "host_merged_cutlass",
+            "host_merged_cublaslt",
+            "direct",
+            "splitk2",
+            "splitk4",
+            "splitk8",
+            "splitk16",
+            "direct_groupedn2",
+            "splitk2_groupedn2",
+            "splitk4_groupedn2",
+            "splitk8_groupedn2",
+            "splitk16_groupedn2",
+            "pipeline",
+            "pipeline_serial"
+          ]
+        },
+        {
+          "shape": "m512",
+          "phase": "measure",
+          "seed": 20261020,
+          "repetition": 0,
+          "order": [
+            "direct",
+            "splitk8",
+            "splitk4_groupedn2",
+            "splitk4",
+            "splitk2_groupedn2",
+            "host",
+            "splitk2",
+            "splitk16_groupedn2",
+            "host_merged_cutlass",
+            "splitk8_groupedn2",
+            "direct_groupedn2",
+            "splitk16",
+            "host_merged_cublaslt"
+          ]
+        },
+        {
+          "shape": "m512",
+          "phase": "measure",
+          "seed": 20261020,
+          "repetition": 1,
+          "order": [
+            "splitk2_groupedn2",
+            "host",
+            "splitk2",
+            "splitk16_groupedn2",
+            "host_merged_cutlass",
+            "splitk8_groupedn2",
+            "direct_groupedn2",
+            "splitk16",
+            "host_merged_cublaslt",
+            "direct",
+            "splitk8",
+            "splitk4_groupedn2",
+            "splitk4"
+          ]
+        },
+        {
+          "shape": "m512",
+          "phase": "measure",
+          "seed": 20261020,
+          "repetition": 2,
+          "order": [
+            "host_merged_cutlass",
+            "splitk8_groupedn2",
+            "direct_groupedn2",
+            "splitk16",
+            "host_merged_cublaslt",
+            "direct",
+            "splitk8",
+            "splitk4_groupedn2",
+            "splitk4",
+            "splitk2_groupedn2",
+            "host",
+            "splitk2",
+            "splitk16_groupedn2"
+          ]
+        },
+        {
+          "shape": "m512",
+          "phase": "pair",
+          "seed": 20261020,
+          "repetition": 0,
+          "order": [
+            "pipeline",
+            "pipeline_serial"
+          ]
+        },
+        {
+          "shape": "m512",
+          "phase": "pair",
+          "seed": 20261020,
+          "repetition": 1,
+          "order": [
+            "pipeline_serial",
+            "pipeline"
+          ]
+        },
+        {
+          "shape": "m512",
+          "phase": "pair",
+          "seed": 20261020,
+          "repetition": 2,
+          "order": [
+            "pipeline",
+            "pipeline_serial"
+          ]
+        }
+      ],
+      "traces": [
+        "m512-serial",
+        "m512-pipeline"
+      ]
+    },
+    {
+      "name": "large_n",
+      "original_job_indices": [
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        27,
+        28,
+        29
+      ],
+      "jobs": [
+        {
+          "shape": "large_n",
+          "phase": "check",
+          "seed": 20261020,
+          "repetition": 0,
+          "order": [
+            "host",
+            "host_merged_cutlass",
+            "host_merged_cublaslt",
+            "direct",
+            "splitk2",
+            "splitk4",
+            "splitk8",
+            "splitk16",
+            "direct_groupedn2",
+            "splitk2_groupedn2",
+            "splitk4_groupedn2",
+            "splitk8_groupedn2",
+            "splitk16_groupedn2",
+            "pipeline",
+            "pipeline_serial"
+          ]
+        },
+        {
+          "shape": "large_n",
+          "phase": "check",
+          "seed": 20261101,
+          "repetition": 0,
+          "order": [
+            "host",
+            "host_merged_cutlass",
+            "host_merged_cublaslt",
+            "direct",
+            "splitk2",
+            "splitk4",
+            "splitk8",
+            "splitk16",
+            "direct_groupedn2",
+            "splitk2_groupedn2",
+            "splitk4_groupedn2",
+            "splitk8_groupedn2",
+            "splitk16_groupedn2",
+            "pipeline",
+            "pipeline_serial"
+          ]
+        },
+        {
+          "shape": "large_n",
+          "phase": "check",
+          "seed": 20261102,
+          "repetition": 0,
+          "order": [
+            "host",
+            "host_merged_cutlass",
+            "host_merged_cublaslt",
+            "direct",
+            "splitk2",
+            "splitk4",
+            "splitk8",
+            "splitk16",
+            "direct_groupedn2",
+            "splitk2_groupedn2",
+            "splitk4_groupedn2",
+            "splitk8_groupedn2",
+            "splitk16_groupedn2",
+            "pipeline",
+            "pipeline_serial"
+          ]
+        },
+        {
+          "shape": "large_n",
+          "phase": "measure",
+          "seed": 20261020,
+          "repetition": 0,
+          "order": [
+            "direct",
+            "splitk4_groupedn2",
+            "splitk2",
+            "splitk2_groupedn2",
+            "splitk8_groupedn2",
+            "direct_groupedn2",
+            "splitk8",
+            "splitk4",
+            "splitk16_groupedn2",
+            "host_merged_cublaslt",
+            "host",
+            "splitk16",
+            "host_merged_cutlass"
+          ]
+        },
+        {
+          "shape": "large_n",
+          "phase": "measure",
+          "seed": 20261020,
+          "repetition": 1,
+          "order": [
+            "splitk8_groupedn2",
+            "direct_groupedn2",
+            "splitk8",
+            "splitk4",
+            "splitk16_groupedn2",
+            "host_merged_cublaslt",
+            "host",
+            "splitk16",
+            "host_merged_cutlass",
+            "direct",
+            "splitk4_groupedn2",
+            "splitk2",
+            "splitk2_groupedn2"
+          ]
+        },
+        {
+          "shape": "large_n",
+          "phase": "measure",
+          "seed": 20261020,
+          "repetition": 2,
+          "order": [
+            "splitk16_groupedn2",
+            "host_merged_cublaslt",
+            "host",
+            "splitk16",
+            "host_merged_cutlass",
+            "direct",
+            "splitk4_groupedn2",
+            "splitk2",
+            "splitk2_groupedn2",
+            "splitk8_groupedn2",
+            "direct_groupedn2",
+            "splitk8",
+            "splitk4"
+          ]
+        },
+        {
+          "shape": "large_n",
+          "phase": "pair",
+          "seed": 20261020,
+          "repetition": 0,
+          "order": [
+            "pipeline",
+            "pipeline_serial"
+          ]
+        },
+        {
+          "shape": "large_n",
+          "phase": "pair",
+          "seed": 20261020,
+          "repetition": 1,
+          "order": [
+            "pipeline_serial",
+            "pipeline"
+          ]
+        },
+        {
+          "shape": "large_n",
+          "phase": "pair",
+          "seed": 20261020,
+          "repetition": 2,
+          "order": [
+            "pipeline",
+            "pipeline_serial"
+          ]
+        }
+      ],
+      "traces": []
+    },
+    {
+      "name": "m256",
+      "original_job_indices": [
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "jobs": [
+        {
+          "shape": "m256",
+          "phase": "check",
+          "seed": 20261020,
+          "repetition": 0,
+          "order": [
+            "host",
+            "host_merged_cutlass",
+            "host_merged_cublaslt",
+            "direct",
+            "splitk2",
+            "splitk4",
+            "splitk8",
+            "splitk16",
+            "direct_groupedn2",
+            "splitk2_groupedn2",
+            "splitk4_groupedn2",
+            "splitk8_groupedn2",
+            "splitk16_groupedn2"
+          ]
+        },
+        {
+          "shape": "m256",
+          "phase": "check",
+          "seed": 20261101,
+          "repetition": 0,
+          "order": [
+            "host",
+            "host_merged_cutlass",
+            "host_merged_cublaslt",
+            "direct",
+            "splitk2",
+            "splitk4",
+            "splitk8",
+            "splitk16",
+            "direct_groupedn2",
+            "splitk2_groupedn2",
+            "splitk4_groupedn2",
+            "splitk8_groupedn2",
+            "splitk16_groupedn2"
+          ]
+        },
+        {
+          "shape": "m256",
+          "phase": "check",
+          "seed": 20261102,
+          "repetition": 0,
+          "order": [
+            "host",
+            "host_merged_cutlass",
+            "host_merged_cublaslt",
+            "direct",
+            "splitk2",
+            "splitk4",
+            "splitk8",
+            "splitk16",
+            "direct_groupedn2",
+            "splitk2_groupedn2",
+            "splitk4_groupedn2",
+            "splitk8_groupedn2",
+            "splitk16_groupedn2"
+          ]
+        },
+        {
+          "shape": "m256",
+          "phase": "measure",
+          "seed": 20261020,
+          "repetition": 0,
+          "order": [
+            "host_merged_cutlass",
+            "direct_groupedn2",
+            "splitk16_groupedn2",
+            "host",
+            "splitk2_groupedn2",
+            "splitk4_groupedn2",
+            "splitk16",
+            "splitk8_groupedn2",
+            "splitk4",
+            "splitk2",
+            "splitk8",
+            "direct",
+            "host_merged_cublaslt"
+          ]
+        },
+        {
+          "shape": "m256",
+          "phase": "measure",
+          "seed": 20261020,
+          "repetition": 1,
+          "order": [
+            "splitk2_groupedn2",
+            "splitk4_groupedn2",
+            "splitk16",
+            "splitk8_groupedn2",
+            "splitk4",
+            "splitk2",
+            "splitk8",
+            "direct",
+            "host_merged_cublaslt",
+            "host_merged_cutlass",
+            "direct_groupedn2",
+            "splitk16_groupedn2",
+            "host"
+          ]
+        },
+        {
+          "shape": "m256",
+          "phase": "measure",
+          "seed": 20261020,
+          "repetition": 2,
+          "order": [
+            "splitk4",
+            "splitk2",
+            "splitk8",
+            "direct",
+            "host_merged_cublaslt",
+            "host_merged_cutlass",
+            "direct_groupedn2",
+            "splitk16_groupedn2",
+            "host",
+            "splitk2_groupedn2",
+            "splitk4_groupedn2",
+            "splitk16",
+            "splitk8_groupedn2"
+          ]
+        }
+      ],
+      "traces": []
+    }
+  ],
+  "max_additional_compute_seconds": 3600,
+  "max_additional_compute_usd": 10.8,
+  "collection_seconds_after_active": 3000,
+  "platform_delete_seconds_after_active": 3300,
+  "recovery_reserve_seconds": 300,
+  "allowed_hourly_usd_max": 10.8,
+  "model_fitting": false,
+  "frozen_shapes_access": false,
+  "new_shape_search": false,
+  "trace_timing_labels": false,
+  "independent_generalization": false,
+  "cross_session_pooling": "Never pool by shape alone. Preserve GPU UUID, topology, libraries, binary and measurement identity. Analyze session effect locally.",
+  "stage_order_reason": "Acquire grouped and M512 unprofiled checks/timing first, then their prespecified diagnostic traces, before repeating other development shapes. No ordering by observed performance.",
+  "optional_work": [],
+  "real_moe_serving": "NOT_READY: model weights removed during authorized storage cleanup; no sealed runnable engine collector/fixed request package. This extension does not claim serving coverage."
+}

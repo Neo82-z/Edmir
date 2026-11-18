@@ -1,0 +1,45 @@
+{
+  "kind": "planning_estimate_not_measurement",
+  "source": "2026-11-11-shadeform-w1/recovered/results",
+  "new_candidates_per_shape": 4,
+  "historical_main_minutes": 35.33869819243749,
+  "all_four_new_candidates_admitted_row_linear_minutes": 46.95334980512462,
+  "per_shape": {
+    "grouped": {
+      "historical_seconds": 540.0167684555054,
+      "row_linear_seconds": 719.7987050876751,
+      "groups": 6
+    },
+    "m512": {
+      "historical_seconds": 499.6780970096588,
+      "row_linear_seconds": 668.553236691157,
+      "groups": 6
+    },
+    "large_n": {
+      "historical_seconds": 534.7474451065063,
+      "row_linear_seconds": 700.9957016280204,
+      "groups": 6
+    },
+    "m256": {
+      "historical_seconds": 545.8795809745789,
+      "row_linear_seconds": 727.8533449006247,
+      "groups": 6
+    }
+  },
+  "excluded_costs": [
+    "new-node startup",
+    "environment verification",
+    "input reconstruction",
+    "four pilots",
+    "seven diagnostic captures",
+    "recovery"
+  ],
+  "assumption": "Linearly scale per-process wall time by candidate count; actual startup and candidate costs differ. Not a completion guarantee.",
+  "priority": [
+    "m512",
+    "large_n",
+    "m256",
+    "grouped"
+  ],
+  "policy": "Keep fixed queue and budget; preserve incomplete jobs if deadline reached, no candidate deletion to improve score."
+}

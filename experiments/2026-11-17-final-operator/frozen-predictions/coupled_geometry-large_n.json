@@ -1,0 +1,614 @@
+{
+  "model": {
+    "schema": "edmir.w1-shared-score.v1",
+    "variant": "coupled_geometry",
+    "features": [
+      "host",
+      "merged_host",
+      "geometry_unknown",
+      "uniform_dependencies",
+      "prepared",
+      "log_P",
+      "log_M",
+      "log_K",
+      "log_N",
+      "log_SM",
+      "log_q",
+      "log_group_N",
+      "log_gemms_per_destination",
+      "log_logical_flops",
+      "log_A_bytes",
+      "log_B_bytes",
+      "log_remote_input_bytes",
+      "log_m_tiles",
+      "log_n_tiles",
+      "log_output_tiles",
+      "log_ctas",
+      "log_K_iterations",
+      "valid_tile_fraction",
+      "last_M_fraction",
+      "last_N_fraction",
+      "reference_waves",
+      "last_wave_fraction",
+      "log_epilogue_edges",
+      "log_padded_work",
+      "group_x_K_depth",
+      "q_x_output_tiles",
+      "log_warps_per_cta",
+      "log_grid_warps_per_sm",
+      "log_staging_lower_bound_bytes",
+      "log_serial_feedback_bytes",
+      "log_k_depth_times_reference_rounds",
+      "log_k_depth_over_reference_fill",
+      "log_q_times_warps_per_cta",
+      "log_logical_A_replay_bytes",
+      "log_logical_B_replay_bytes",
+      "log_host_nccl_groups",
+      "log_program_gemm_launches",
+      "log_fp32_partial_buffer_bytes",
+      "log_final_conversion_launches"
+    ],
+    "means": [
+      0.5,
+      0.3333333333333333,
+      0.16666666666666666,
+      0.5000000000000001,
+      1.0000000000000004,
+      2.19722457733622,
+      5.321246399987206,
+      9.011035410141815,
+      6.470999860638014,
+      4.691347882229142,
+      1.1025957858657356,
+      0.6789889274936622,
+      1.6958654450774613,
+      22.18070977830306,
+      15.711336402304998,
+      16.173434312406457,
+      19.04354061067266,
+      1.548186560556633,
+      1.3703525079094971,
+      2.547802956502202,
+      3.2468292238099936,
+      3.902875485239897,
+      0.8333333333333335,
+      0.8333333333333335,
+      0.8333333333333335,
+      1.2500000000000002,
+      0.25277777777777777,
+      1.627790715306173,
+      18.252875755118723,
+      1.0265917284707455,
+      2.650541058491503,
+      1.4881449265872797,
+      1.0703898248866264,
+      8.890218585346547,
+      6.15307119798115,
+      4.1384787437787915,
+      4.8233434165779485,
+      2.16608930822942,
+      14.03623047153147,
+      14.787139875849448,
+      2.021525633917275,
+      3.5153330390424973,
+      2.34899916003345,
+      0.7421132924258909
+    ],
+    "scales": [
+      0.5000000000000001,
+      0.4714045207910316,
+      0.37267799624996495,
+      0.5,
+      0.1,
+      0.1,
+      0.8586437660081709,
+      0.1,
+      0.3262930318389598,
+      0.1,
+      0.8576368444238378,
+      0.34781537439150484,
+      0.709028884459942,
+      1.131904605718718,
+      1.3070105535643135,
+      0.3267526863916193,
+      0.8645064163066878,
+      1.1286461353989372,
+      0.6965794505150232,
+      1.5066713860897898,
+      1.7751442028082915,
+      1.9739453026514608,
+      0.37267799624996495,
+      0.37267799624996495,
+      0.37267799624996495,
+      0.9624909811987272,
+      0.20502726574340482,
+      2.0721786262852633,
+      8.214435867644365,
+      1.8380742855724315,
+      3.75262055787037,
+      0.7094902170621696,
+      0.8338374152073039,
+      3.981565063170293,
+      7.4148758111371755,
+      2.049067289051306,
+      2.5956678861779223,
+      1.3922066750493762,
+      6.361983197191534,
+      6.676478343279688,
+      2.0215256339172747,
+      0.932043431611878,
+      5.057489448570439,
+      1.5959749816108588
+    ],
+    "theta": [
+      0.11535317496280588,
+      -0.0981482720692433,
+      0.0006903017945819534,
+      -0.11535317496283978,
+      -4.13148927646497e-28,
+      -4.13148927646497e-28,
+      0.19019715711560956,
+      0.0,
+      0.01327324411413754,
+      2.4587815047479535e-27,
+      0.12435607028266212,
+      -0.09387690077035626,
+      0.09814827206923542,
+      0.06347687652041217,
+      0.05165453108143979,
+      0.013273244114279251,
+      0.18938360613625987,
+      -0.1439758921173963,
+      0.17512972163097834,
+      -0.010904263316949927,
+      0.0026344313705480285,
+      -0.02910369045053489,
+      -0.0006903017946117192,
+      -0.0006903017946116345,
+      -0.0006903017946116529,
+      0.18350049158114876,
+      -0.00037426124014351805,
+      -0.01679052199170956,
+      -0.022466259401358823,
+      0.06157314506722273,
+      -0.20202335519570527,
+      -0.06693482355268804,
+      -0.07359047484323404,
+      -0.010954489307323637,
+      -0.1660846778744379,
+      0.06045000982735436,
+      0.06615447236508258,
+      -0.003187992980238511,
+      -0.020085789511919794,
+      -0.027481212046185203,
+      0.1153531749629304,
+      0.09814827206918345,
+      -0.02577450613117045,
+      0.11100821726167022,
+      7.373235591957511
+    ],
+    "ridge": 0.01,
+    "execution_context": "675d569e2750430083f3229e6649c4132e487f44ceb13eaf9a44f3c2c93978a3",
+    "source_id": "80b9f6721a6b8f4280cea2738ddf772234a12a210c89aecafeed117acf5b03aa",
+    "support": [
+      "17271ced1561cf65bba098e7eab8902ee757a262f6da7677abac2431dd8f5dc6",
+      "18786a46867dd4b7c26005c9e8af5149746a6a0a3006d4a179adeec232b724b8",
+      "1d9abb1b69e5fbbcb66908ee1a4da366d477d298c39b1cafd1dddd342cbfab46",
+      "4424eaf798c926cfa93820dec7b0f85fb64a41d0ccc760aec723396664892130",
+      "5580e072a45c9077ebeadaaeab7b7018fdb7a59f6ef3220b3562891eb94cce84",
+      "5c9d976818962f3271adb0799dfc704da92f2c56de90bf12a3fb82e53420f91c",
+      "6975b0995aac257972f3b7a32bba944c7466cf71fcf025a93a59d452b2b943f5",
+      "716f34c05ce45aa791a8d92b4335fccbe6ee33b3e154e05be5bfe21addbc69b1",
+      "7bea7abaa7d60babed8b2b7661f12ac3dc17414d6f8522651f33d086f5f1afee",
+      "962c5b9abd06ac86a4e245ad46982024d3593ad8ed1557dd1dd6dc1acc79aaca",
+      "cd268c09a5c551e335820fd0ee968de0f9756af5d9bda2c4890958f7d4acd6a8",
+      "d2db1a71beb6961b407cece27124abc5853f5aa813f72004dc680aa40352a68c",
+      "d970296abdad59746fdb3d2300918e0b6682b82909474c555ed7e687c723f558",
+      "dfde5a1551c0750fce9aeccb7b6b0b28cfd2186a9aecc3053d5eca8ae8941564",
+      "ec8bec83b39d3ac1ed97797a8f2a9db1447fbfdac2c859ffa1edc6516958fad8"
+    ],
+    "training_shapes": [
+      [
+        8,
+        64,
+        8192,
+        1024
+      ],
+      [
+        8,
+        256,
+        8192,
+        512
+      ],
+      [
+        8,
+        512,
+        8192,
+        512
+      ]
+    ],
+    "shape_axis_ranges": {
+      "P": [
+        8,
+        8
+      ],
+      "M": [
+        64,
+        512
+      ],
+      "K": [
+        8192,
+        8192
+      ],
+      "N": [
+        512,
+        1024
+      ]
+    },
+    "design_rank": 28,
+    "coefficient_count": 45,
+    "constant_training_features": [
+      "prepared",
+      "log_P",
+      "log_K",
+      "log_SM"
+    ],
+    "compiler_admission": false,
+    "elapsed_seconds": 0.00241966696921736
+  },
+  "evaluation": {
+    "shape_tag": "large_n",
+    "scores_us": {
+      "direct": 1237.2924627658792,
+      "direct_groupedn2": 1074.4610026965365,
+      "host": 2472.042036030667,
+      "host_merged_cublaslt": 934.6101877550846,
+      "host_merged_cutlass": 1373.5542359153426,
+      "splitk16_fp32reduce": 829.7713584496072,
+      "splitk16_groupedn2_fp32reduce": 614.2245439750454,
+      "splitk2": 761.3486595474583,
+      "splitk2_groupedn2": 672.065895572715,
+      "splitk4": 625.9237619582708,
+      "splitk4_groupedn2": 559.1041815964379,
+      "splitk8": 653.6982849193762,
+      "splitk8_fp32reduce": 804.6061313541464,
+      "splitk8_groupedn2": 470.07048413983955,
+      "splitk8_groupedn2_fp32reduce": 578.587404056254
+    },
+    "excluded": {
+      "splitk16": "failed",
+      "splitk16_groupedn2": "failed"
+    },
+    "chosen": "splitk8_groupedn2",
+    "extrapolated_shape_axes": {
+      "K": {
+        "value": 4096,
+        "training_range": [
+          8192,
+          8192
+        ]
+      },
+      "N": {
+        "value": 2048,
+        "training_range": [
+          512,
+          1024
+        ]
+      }
+    },
+    "recommendation_status": "diagnostic_extrapolation",
+    "compiler_admission": false,
+    "complete_eligible_coverage": true,
+    "measured_best": "splitk4_groupedn2",
+    "regret_pct": 3.050315273885662,
+    "worst_block_regret_pct": 8.521901439696444,
+    "pair_errors": [
+      {
+        "a": "direct",
+        "b": "direct_groupedn2",
+        "measured_delta_us": -122.98950000000013,
+        "predicted_delta_us": 162.8314600693427,
+        "deltas_us": [
+          -122.25099999999986,
+          -125.24849999999981,
+          -122.98950000000013
+        ],
+        "consistent": true
+      },
+      {
+        "a": "direct",
+        "b": "host_merged_cublaslt",
+        "measured_delta_us": -303.82450000000017,
+        "predicted_delta_us": 302.6822750107947,
+        "deltas_us": [
+          -278.66499999999985,
+          -330.1379999999999,
+          -303.82450000000017
+        ],
+        "consistent": true
+      },
+      {
+        "a": "direct",
+        "b": "splitk16_fp32reduce",
+        "measured_delta_us": -176.43450000000007,
+        "predicted_delta_us": 407.52110431627204,
+        "deltas_us": [
+          -177.6439999999999,
+          -172.08799999999985,
+          -176.43450000000007
+        ],
+        "consistent": true
+      },
+      {
+        "a": "direct",
+        "b": "splitk16_groupedn2_fp32reduce",
+        "measured_delta_us": -98.42499999999995,
+        "predicted_delta_us": 623.0679187908338,
+        "deltas_us": [
+          -98.20999999999992,
+          -98.95399999999995,
+          -98.42499999999995
+        ],
+        "consistent": true
+      },
+      {
+        "a": "direct_groupedn2",
+        "b": "host_merged_cublaslt",
+        "measured_delta_us": -180.83500000000004,
+        "predicted_delta_us": 139.85081494145197,
+        "deltas_us": [
+          -156.414,
+          -204.8895000000001,
+          -180.83500000000004
+        ],
+        "consistent": true
+      },
+      {
+        "a": "direct_groupedn2",
+        "b": "splitk16_fp32reduce",
+        "measured_delta_us": -53.444999999999936,
+        "predicted_delta_us": 244.68964424692933,
+        "deltas_us": [
+          -55.39300000000003,
+          -46.839500000000044,
+          -53.444999999999936
+        ],
+        "consistent": true
+      },
+      {
+        "a": "splitk16_groupedn2_fp32reduce",
+        "b": "splitk2",
+        "measured_delta_us": 284.0989999999998,
+        "predicted_delta_us": -147.12411557241285,
+        "deltas_us": [
+          284.34399999999994,
+          280.3539999999999,
+          306.52949999999987
+        ],
+        "consistent": true
+      },
+      {
+        "a": "splitk16_groupedn2_fp32reduce",
+        "b": "splitk2_groupedn2",
+        "measured_delta_us": 282.9694999999998,
+        "predicted_delta_us": -57.841351597669586,
+        "deltas_us": [
+          265.389,
+          282.95449999999994,
+          288.81499999999994
+        ],
+        "consistent": true
+      },
+      {
+        "a": "splitk16_groupedn2_fp32reduce",
+        "b": "splitk4",
+        "measured_delta_us": 278.0189999999999,
+        "predicted_delta_us": -11.699217983225367,
+        "deltas_us": [
+          270.4195000000001,
+          301.394,
+          278.0189999999999
+        ],
+        "consistent": true
+      },
+      {
+        "a": "splitk16_groupedn2_fp32reduce",
+        "b": "splitk8",
+        "measured_delta_us": 229.72949999999992,
+        "predicted_delta_us": -39.47374094433076,
+        "deltas_us": [
+          231.10450000000014,
+          229.71450000000004,
+          228.5854999999999
+        ],
+        "consistent": true
+      },
+      {
+        "a": "splitk16_groupedn2_fp32reduce",
+        "b": "splitk8_fp32reduce",
+        "measured_delta_us": 105.30549999999994,
+        "predicted_delta_us": -190.381587379101,
+        "deltas_us": [
+          105.55050000000006,
+          118.93499999999995,
+          95.52949999999976
+        ],
+        "consistent": true
+      },
+      {
+        "a": "splitk2",
+        "b": "splitk2_groupedn2",
+        "measured_delta_us": -1.1295000000000073,
+        "predicted_delta_us": 89.28276397474326,
+        "deltas_us": [
+          -18.954999999999927,
+          2.600500000000011,
+          -17.71449999999993
+        ],
+        "consistent": false
+      },
+      {
+        "a": "splitk2",
+        "b": "splitk4",
+        "measured_delta_us": -6.079999999999927,
+        "predicted_delta_us": 135.42489758918748,
+        "deltas_us": [
+          -13.924499999999853,
+          21.040000000000077,
+          -28.51049999999998
+        ],
+        "consistent": false
+      },
+      {
+        "a": "splitk2",
+        "b": "splitk8",
+        "measured_delta_us": -54.3694999999999,
+        "predicted_delta_us": 107.65037462808209,
+        "deltas_us": [
+          -53.23949999999979,
+          -50.639499999999884,
+          -77.94399999999996
+        ],
+        "consistent": true
+      },
+      {
+        "a": "splitk2",
+        "b": "splitk8_groupedn2",
+        "measured_delta_us": -10.599000000000046,
+        "predicted_delta_us": 291.27817540761873,
+        "deltas_us": [
+          2.7000000000000455,
+          -6.869000000000028,
+          -50.129999999999995
+        ],
+        "consistent": false
+      },
+      {
+        "a": "splitk2",
+        "b": "splitk8_groupedn2_fp32reduce",
+        "measured_delta_us": -184.4894999999999,
+        "predicted_delta_us": 182.76125549120434,
+        "deltas_us": [
+          -185.04399999999998,
+          -180.7594999999999,
+          -174.6099999999999
+        ],
+        "consistent": true
+      },
+      {
+        "a": "splitk2_groupedn2",
+        "b": "splitk4",
+        "measured_delta_us": -4.95049999999992,
+        "predicted_delta_us": 46.14213361444422,
+        "deltas_us": [
+          5.030500000000075,
+          18.439500000000066,
+          -10.79600000000005
+        ],
+        "consistent": false
+      },
+      {
+        "a": "splitk2_groupedn2",
+        "b": "splitk8",
+        "measured_delta_us": -53.239999999999895,
+        "predicted_delta_us": 18.36761065333883,
+        "deltas_us": [
+          -34.284499999999866,
+          -53.239999999999895,
+          -60.22950000000003
+        ],
+        "consistent": true
+      },
+      {
+        "a": "splitk2_groupedn2",
+        "b": "splitk8_groupedn2",
+        "measured_delta_us": -9.469500000000039,
+        "predicted_delta_us": 201.99541143287547,
+        "deltas_us": [
+          21.654999999999973,
+          -9.469500000000039,
+          -32.415500000000065
+        ],
+        "consistent": false
+      },
+      {
+        "a": "splitk2_groupedn2",
+        "b": "splitk8_groupedn2_fp32reduce",
+        "measured_delta_us": -183.3599999999999,
+        "predicted_delta_us": 93.47849151646108,
+        "deltas_us": [
+          -166.08900000000006,
+          -183.3599999999999,
+          -156.89549999999997
+        ],
+        "consistent": true
+      },
+      {
+        "a": "splitk4",
+        "b": "splitk8_groupedn2",
+        "measured_delta_us": -4.519000000000119,
+        "predicted_delta_us": 155.85327781843125,
+        "deltas_us": [
+          16.624499999999898,
+          -27.909000000000106,
+          -21.619500000000016
+        ],
+        "consistent": false
+      },
+      {
+        "a": "splitk4",
+        "b": "splitk8_groupedn2_fp32reduce",
+        "measured_delta_us": -178.40949999999998,
+        "predicted_delta_us": 47.33635790201686,
+        "deltas_us": [
+          -171.11950000000013,
+          -201.79949999999997,
+          -146.09949999999992
+        ],
+        "consistent": true
+      },
+      {
+        "a": "splitk4_groupedn2",
+        "b": "splitk8_groupedn2",
+        "measured_delta_us": -18.390000000000214,
+        "predicted_delta_us": 89.03369745659836,
+        "deltas_us": [
+          6.489000000000033,
+          -18.390000000000214,
+          -43.976
+        ],
+        "consistent": false
+      },
+      {
+        "a": "splitk8",
+        "b": "splitk8_groupedn2_fp32reduce",
+        "measured_delta_us": -130.12,
+        "predicted_delta_us": 75.11088086312225,
+        "deltas_us": [
+          -131.8045000000002,
+          -130.12,
+          -96.66599999999994
+        ],
+        "consistent": true
+      },
+      {
+        "a": "splitk8_fp32reduce",
+        "b": "splitk8_groupedn2_fp32reduce",
+        "measured_delta_us": -5.696000000000026,
+        "predicted_delta_us": 226.0187272978925,
+        "deltas_us": [
+          -6.250500000000102,
+          -19.340499999999906,
+          36.390000000000214
+        ],
+        "consistent": false
+      }
+    ],
+    "stable_pairs": 93,
+    "unstable_pairs": 12,
+    "stable_pair_errors": 17,
+    "mape_pct": 18.33500453764037,
+    "design_rank": 28,
+    "coefficient_count": 45
+  }
+}

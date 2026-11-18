@@ -1,0 +1,34 @@
+EDM-IR 追加一小时：执行清单（尚未上机）
+2026-11-11
+
+当前状态
+原实例 b99d4771-aaff-4962-a9c7-be19069a6153 已被平台回收；16:22 的回收规则未能在用户追加指令后及时改成新时间。页面已显示 Instance deleted。129 个文件在此前全部回传并按 SHA256 校验，原数据未丢失。用户随后要求“先不要操作浏览器”，因此没有新建实例，也没有发生追加租机。
+
+费用与硬件
+只采用单机 8×A100 SXM4 80GB、全 NV12/P2P，仍为 Shadeform / Excess Supply 的同价方案。追加计费单价不得超过 $10.80/小时，追加总额不得超过 $10.80，最多一小时。不创建持久卷。平台应在 Active 后 55 分钟自动删除，采集最晚到第 50 分钟，保留 5 分钟回收。若同价库存/拓扑不满足，不改租更贵或少卡实例。
+
+执行内容
+1. 新实例从零记录 UUID、拓扑、驱动、实际 CUDA/NCCL 库、镜像、计时环境和平台计费起点。原实例结果不能复制成新实例的 context 或 pilot。
+2. 沿用原封存包的四个开发形状、三颗种子、全部候选和正确性阈值。原始计划共 30 个进程组，不增删任何一个；只是将 M512 的串行/流水配对提前。
+3. 先 grouped 的 6 组及两个 trace，再 M512 的 9 组及两个 trace，再 large_n 的 9 组、M256 的 6 组。每阶段独立 pilot 不纳入主样本数。
+4. 四个 trace 预先指定 grouped-g1、grouped-g2、m512-serial、m512-pipeline。先验证对应未加 profiler 的候选，再采诊断；profiler 数据不作为耗时训练标签。
+5. 原 30 组实测进程总用时约 2186 秒，仅作预算估计，不保证新实例同速。不加现场性能驱动的候选或形状搜索。时间不够保留完整组、部分 stdout 和未执行项。
+6. 不训练或调预测器，不打开六个冻结形状。新实例重复属于开发数据与环境稳定性检查，不算独立泛化。不因多了 100 个迭代样本而扩大独立样本数。
+7. 真实 MoE/serving 尚缺封存的引擎采集入口、固定请求及权重；此前缓存卷已按用户要求删除。这一小时不能宣称完成应用验证，也不在计费过程中临时开发接入。
+
+传输与启动
+本目录 extension 包与 ../edmir-w1-2026-11-01/edmir-w1-code-deps.tar.gz 配套；交付整包同时含二者。无私钥、API key 或用户模型数据。
+镜像必须固定为 nvidia/cuda@sha256:4b9ed5fa8361736996499f64ecebf25d4ec37ff56e4d11323ccde10aa36e0c43（CUDA12.8.1 devel / Ubuntu24.04）。不要再使用 Ubuntu22.04，其 glibc 不能加载已封存 NCCL。
+宿主机新建独立工作目录，容器将其挂载为 /workspace，使用 --gpus all --ipc=host --network=host --ulimit memlock=-1 --ulimit stack=67108864。不要复用已回收 IP。
+核对并填写 extension/platform-guard.json（模板默认未验证），包括实际 instance_id、Active epoch、单价和已保存的自动删除/费用上限。原实例的旧时间不能填入新实例。
+在平台回收规则核验后执行 bash /workspace/extension/bootstrap.sh。bootstrap 复原哈希验证的 W1 二进制，不重新改编译参数；输入由同一脚本重建并逐一校验。若加载失败，记录并退出，不能临时更换库后继续当同一执行身份。
+
+回收与验收
+每阶段结束增量回收 results/、session/；最后回收 extension/、build/receipt.json、build/build.log 和 build/w1_*_batch。
+容器运行 python3 /workspace/extension/make-remote-manifest.py，回传 recovery-manifest.json 并对全部列出的文件逐个核对 SHA256；此后不得再修改原始文件。
+本地运行 python3 audit_extension.py --bundle 原封存bundle路径 --recovery 新回收根目录。检查 30 组原始记录、正确性排除、原始样本、构建身份与四份 trace 的哈希。
+trace 文件存在不等于解释成立；需导出/检查实际 capture 窗口、kernel 和依赖。失败必须保留，不能填入“已完成”表。
+确认回收后在平台删除实例并核实已删除/无计算资源；关闭容器或停止进程不能替代停费。尚未运行的项目不为了填满一小时而补造。
+
+本地验证
+执行计划覆盖核验、预算/过期/未配置保护拒绝测试、trace 失败留痕及不覆写测试；原 W1 的数值失败排除、超时恢复和原始文件篡改检测测试复用。通过本地测试不代表 CUDA profiler 已实机通过。

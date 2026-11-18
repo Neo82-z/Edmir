@@ -1,0 +1,149 @@
+八卡 A100 真实 MoE 实验方案（待审阅）
+日期：2026-11-17
+
+一、本轮回答什么
+
+主问题：真实 MoE 中，专家负载、执行形状和通信依赖是什么；现有算子实验与应用之间能建立多强的联系。
+本轮交付：一个真实模型的原生 vLLM 推理基线、真实专家形状分布、八卡计算/通信时间线、明确的适用范围表。
+预测器、参数、候选实现及此前六个冻结形状保持封存。不训练、不重新标定、不因为新结果重新挑选模型或负载。真实 BF16 数据单独归档，不混入 FP16 算子数据集。
+本文件只约定方案：没有启动云资源、下载权重/镜像或执行 GPU 实验。旧 smoke 脚本不是本方案的完整执行包。
+
+二、模型和引擎的选择
+
+主模型：zai-org/GLM-4.7-Flash，非量化 BF16。
+固定 revision：7dd20894a642a0aa287e9827cb1a1f7f91386b67。
+依据既有清单及本次在线核对：约 31.22B 总参数，官方称 30B-A3B；48 个权重文件共 62,444,175,504 字节，约 62.44 GB（十进制）。47 个主干层，首层 dense，其余 46 层 MoE；64 个路由专家、top-4，以及 1 个共享专家。hidden_size=2048，moe_intermediate_size=1536。
+逻辑 gate/up 合并投影：K=2048，N=3072；逻辑 down 投影：K=1536，N=2048。实际后端可能打包或拆分，必须记录实际张量布局，不能只根据 config 冒充 kernel 几何。
+选择理由：已有固定版本和资产清单；包含实际路由、共享专家、dispatch/combine 和完整生成链路；下载量可控。八卡用来研究 EP 通信，不以“单卡放不下模型”作为选型理由。它的投影维度不等于原四点，因此本轮是应用边界验证，不是原四点的天然代表性证明。
+
+备选仅列 Qwen/Qwen3-30B-A3B-Instruct-2507：48 层、128 专家、top-8，hidden_size=2048、专家中间维度 768，GQA 注意力；与主模型的共享专家/MLA 路径不同。仅在付费 GPU 启动前确认 GLM 的固定环境无法准备时另行修订方案。当前不下载、不同时测两个模型；不在看到 GLM 结果后换模型追求收益。
+不把 Llama dense 模型用作 MoE 主验证，不把大体量 DeepSeek 全量权重或混合注意力的更大模型塞进本轮。后续若扩展模型，属于独立实验，不是本轮验收的隐藏条件。
+
+引擎：vLLM 0.20.1，Linux x86_64，固定 amd64 镜像：
+vllm/vllm-openai@sha256:bf0486e51765766a069f6eb26a63a06748859a568b24200acd3aa4edb58f3d35
+镜像引用来自既有官方 registry 清单；尚未完成实际镜像离线验收。0.20.1 的官方源代码已注册 Glm4MoeLiteForCausalLM；模型卡早期的 nightly 安装例子不是要求本轮改追 nightly。源代码支持不等于已经在我们的八卡上跑通。
+保留镜像内匹配的 PyTorch、CUDA、NCCL、Transformers、tokenizers；记录实际版本和库路径，不和原 CUDA 12.8 算子环境混装。镜像已有元数据指向 CUDA 13.0.2，启动前核对目标宿主驱动及 SM80 二进制支持；不现场升级依赖救火。
+
+三、八卡执行条件
+
+硬件：单机 8×A100 SXM4 80GB，NVLink/NVSwitch；不能用多节点拼八卡或 PCIe 八卡替代后混报。保存 GPU UUID、nvidia-smi topo -m、P2P 可达性、驱动、时钟/功耗状态、MIG 状态和 CPU/NUMA 绑定。
+主布局：TP=1、DP=8、EP=8、PP=1。注意力及非路由部分在 DP 副本间复制，64 个路由专家分布到 8 个 EP rank（无冗余时每 rank 8 个）。所有进程参与同一个八卡 EP 组；不是八个独立单卡模型。
+相对于旧 smoke 的 TP=4/DP=2，这是有意收敛：移除注意力 TP 通信，也减少路由统计中的 TP 重复计数。八卡 EP 及动态专家负载仍然保留。两种布局的结果不能混为一条基线。本轮不做 TP/DP 搜索。
+低并发时部分 DP 副本没有真实请求是合法现象；仍需保留其 EP 工作、空输入和 dummy forward 标记。不能将空 rank 遗漏或填成真实请求。
+
+预定引擎配置（方案值，需后续固定镜像解析验证）：
+  dtype=bfloat16；量化关闭；MoE backend=triton；
+  all2all_backend=allgather_reducescatter；
+  attention_backend=TRITON_MLA，prefill 走已核实的 SM80/FA2 路径；
+  max_model_len=4608（覆盖 4096 输入 + 128 输出）；
+  max_num_seqs=32 / DP engine；max_num_batched_tokens=4096 / DP engine；
+  enable_chunked_prefill=True；KV cache 预算=16 GiB / GPU；
+  prefix caching=False；speculative decoding/MTP=False；EPLB=False；DBO=False；
+  固定 seed=20261117；temperature=0。
+KV 预算是预配置，不是实测占用；须由实际 KV 布局、block 数和最大在途 token 数验收。不得继承旧 smoke 的 2 GiB 限额，然后把排队或容量不足归因于 MoE。
+
+正式性能基线保留 vLLM 的编译/CUDA Graph 能力，记录实际生效状态；eager 只用于启动检查和不能兼容图捕获的诊断。若目标配置无法运行，仅保留明确标注的 eager 诊断，正式性能基线记为未完成，不能悄悄以它替代。
+
+通信口径：EP=8 不等于在执行我们已有的 NCCL All-to-All。上述后端用 AllGather/ReduceScatter 实现专家交换，必须保存实际 collective 名称、参与组、元素数、dtype、调用顺序。逻辑路由字节、collective 参数字节、NVLink 实测链路流量分别列出，缺失项留空。
+本轮不依赖 DeepEP/DeepGEMM。当前 DeepEP 主线要求 Hopper 或更新硬件；不能为使用这些库临时改成 H100，也不能将其未运行的结果当基线。
+
+四、固定负载，不再扩大矩阵
+
+输入长度均指最终实际 prompt token 数（包含模板），输出均为 128 token。
+正式计时使用非重复自然文本构成的冻结请求集，覆盖中文说明、英文说明、代码理解三类，三类近似等额；此文本集只代表这些受控任务，不代表生产流量。具体文本、来源/许可、模板、token IDs、截断规则和哈希在开机前固定。不能用随机 token 测出的路由分布宣称真实任务代表性。
+固定长度性能请求用 ignore_eos=True、temperature=0；这是长度控制，不能将生成质量当本轮研究结论。另有 8 条自然停止的短请求做功能验证，不计入性能表。
+
+ID   输入token   最大客户端并发   每重复请求数   重复数   作用
+S1       512            1              32          3     低负载/启动与小 M
+S32      512           32             128          3     短输入持续批处理
+L1      4096            1              32          3     长输入 prefill
+L32     4096           32             128          3     长输入与持续批处理交互
+
+合计 12 个正式测量块、960 请求、122,880 个输出 token；输入共 2,211,840 token。不包含预热及诊断。并发由客户端闭环补发维持，这是固定并发实验，不是固定到达率或 SLO 容量测试。客户端并发不能直接标为实际 batch size/M。
+每块前完成 2 个该并发规模的预热批次并排空；计时含正式队列的启动与排空。同步给出服务器稳定片段统计，不能把整个短块称为严格稳态吞吐。
+三个重复的顺序固定为 [S1,S32,L1,L32]、[L32,L1,S32,S1]、[S32,L32,S1,L1]，保留全部顺序和开始时间。重复是同一部署下的测量块，不是三个独立机器样本。
+预定不追加 C128、不加第二模型、不重跑全部算子网格。边界负载若 OOM/失败，保留失败并停止该项，不降低条件后沿用原标签。
+
+五、分开采集三类证据
+
+A. 原生性能窗口（不开 profiler、不导出 router 张量）
+每请求：request_id、提交/首 token/结束时间、输入/输出实际 token 数、原始流式事件时间戳与每事件新增 token 数、退出状态、错误和 DP 路由信息（可获得时）。
+报告：成功率、请求吞吐、有效输出 tokens/s、TTFT、每请求 TPOT、端到端延迟；p50/p95 及样本数。C1 的每点仅 96 个请求，p95 标作描述性结果，不能据此承诺生产 SLO。
+TPOT=(最后 token 时间−首 token 时间)/(输出 token 数−1)。多 token 的 HTTP chunk 只提供 chunk 间隔；没有每 token 时间戳时 ITL 写“不可用”，禁止把 chunk 时间均匀分摊伪造 ITL。
+并行保存 scheduler 实际 token 数/运行请求数、KV 使用量、抢占/重算计数，以及低频 GPU 功耗、时钟、利用率、显存。服务内部指标与客户端指标分开，不能把两者的时间口径混合。
+
+B. 真实专家形状窗口（同请求集重放，诊断独立计时）
+必须获得 scheduler/global forward ordinal、DP/TP/EP rank、层号、请求与 token 身份或可核对的映射、prefill/decode/dummy 标记、post-top-k 专家 ID 和路由权重。GLM 主干仅统计层 1..46；第 0 层 dense、共享专家和 MTP 分别识别。
+主采样规则：每负载首次出现的 3 个纯 prefill 全局步骤、3 个纯 decode 步骤、3 个 mixed 步骤，各取全部 46 个 MoE 层和全部 8 个来源 rank；不存在的类别明确记为未观察到。另保存这些类别在整个诊断重放中的步骤总数及 token 总数，暴露首段采样偏差。
+每负载最多 9×46×8=3312 条 rank/layer/step 路由计数记录；空 rank 显式记录。mixed 步骤不能强行标为 prefill 或 decode；分别保留两类 token 的直方图及实际混合 GEMM 几何。
+三个不同的 M：
+  M_source[r,e]：来源 rank r 路由给专家 e 的有效 token 行数；
+  M_expert[e]=sum_r M_source[r,e]：专家实际逻辑输入行数；
+  M_kernel：后端执行的 padding、分块、布局下的实际几何。
+路由守恒：每个完整 step/layer 中 sum_e M_expert[e] = 4×真实 token 数。padding、dummy、共享专家、复制的 token 均不进入右边；派发和归并的映射另行守恒检查。
+后端还需记录：有效/补齐行数、expert→rank 映射、两个投影的实际 K/N、权重布局/stride、dtype/累加与归并 dtype、kernel 名称/配置、dispatch/combine 输入输出布局。不能用“向上取整 M”猜测实际 kernel。
+示例：若一个纯 decode 步骤有 32 个真实 token，则平均专家 M=32×4/64=2；这不表示每个专家都是 2，更不等于原算子中的 per-source bucket M。
+输出按 prefill/decode/mixed、层、专家统计 M 的分布、空专家比例、最大/平均负载、padding 浪费、形状频率及路由行数/FLOP 加权覆盖率。采样统计只声称覆盖采样窗口。
+现有 request/token/layer routed_experts 输出缺少 step/source-rank，不能单独完成这些统计。现有 moe_shape_profile.py 能检查部分守恒，但不支持 mixed phase；这两处采集/分析适配属于后续本地准备，不修改预测器。
+
+C. 时间线窗口（短时 Nsight Systems，同一已固定引擎）
+四组负载各截取一个预定短窗口，覆盖 prefill、decode 及存在时的混合步骤；保存原始 .nsys-rep、SQLite 导出、采集命令与退出码。必须覆盖 8 个 worker，不只主进程/rank 0。
+保留调度/路由、dispatch、expert GEMM、共享专家、combine、注意力、采样的关联标识，以及 CUDA stream/event 和实际 collective 事件。正式 Graph 配置与诊断 eager 配置分别标注，eager 时间线不能替代 Graph 性能的机制证据。
+每 rank 在同一时间轴上计算通信区间并集、计算区间并集与交集。重叠时间/通信时间仅是可见并发比例，不是隐藏了多少成本的因果估计，也不是端到端加速比。依赖等待需结合 event/stream 关系解释；不能直接把各流时长相加。
+Nsight Compute 不列为本轮必做；确需 SM/HBM 争用证据再单独指定少量 kernel。时间线本身不能证明资源争用是根因。profiled 延迟单独报告，不混入 A 的性能统计。
+
+六、如何和已有方法比较
+
+本轮可用基线：同版本、同模型、同 BF16、同八卡 EP、同请求集的原生 vLLM。原 FP16 host 与 q4/g2 仍作为论文的算子级基线，不能改名为 vLLM 基线。
+封存预测器的适用键含 dtype、执行条件与具体实现身份；对新的 BF16 路由执行路径记为“不支持/未接入”。不能改 dtype 标记、重绑定上下文或把拒绝评分称为“正确选择了 host”。本轮不计算虚假的 serving 选择准确率。
+应用覆盖分三层：
+  1. 逻辑形状覆盖：M/K/N 是否一致，报告调用数、路由行数、理论 FLOP 分母；
+  2. 执行身份覆盖：dtype、布局、归并、通信和实现是否一致；
+  3. 实测耗时覆盖：有同一窗口可归属的实际 kernel 时间才报告，否则留空。
+均匀 All-to-All–GEMM 与真实 MoE 的 top-k 展开、专家权重、非均匀负载、padding、共享专家、两次投影和 combine 不等价。即使尺寸接近也不能宣称已验证迁移；覆盖率为零也是应报告的有效结果。
+
+若论文要进一步声称“EDM-IR 加速真实 vLLM”，还缺一个独立的工程准入：真实路由/BF16 的完整子图接入及正确性。这不是本轮原生运行会自动获得的结果，也不要求重新训练预测器。应先在本地确定支持路径/不支持时回原生路径、覆盖计数和数值误差协议；GPU 比较须包括原生、同接入层的固定 q4/g2（仅限合法实现）、封存策略（仅限原契约允许的调用）。所有未支持调用保留原生并明确标注。
+只有真实执行到替换路径、有逐层数值验收、同条件端到端对照，才能写应用加速。若接入没有完成，本轮论文可写“真实 MoE 负载与机制分析”，不写“已改善 vLLM 推理性能”。不将这项未完成工程藏在本轮采集清单里。
+
+七、验收门槛和失败处理
+
+G0 开 GPU 之前：权重/索引/tokenizer/template 全量校验；镜像 amd64/digest/SM80 及驱动要求确认；固定依赖与完整命令能在远端 CPU 镜像中解析；tokenizer 旧 regex 警告查明且行为回归通过；冻结请求数/长度/哈希；采集器混合步骤、空 rank、token 去重和守恒的 CPU 夹具通过；所有下载完成且数据可复用到目标 GPU 实例。
+G1 原生运行：8 个 rank 和 EP 映射一致；8 条自然请求全部成功；正式请求 960/960 成功、各输出 128 token；无 OOM/NaN/Inf/通信失败。出现失败时不以成功子集冒充满额验收，保留部分结果和分母。
+G2 数据可用：12 个无 profiler 的性能块齐全；每块保留每请求原始记录、预热/计时边界和配置；同负载三块吞吐及 TTFT 中位数极差/中位数超过 10% 时标记不稳定，仅允许一次预定的完整负载重测，原数据全部保留，不现场调参。
+G3 形状证据：所有计入统计的 step/layer 均覆盖 8 个 rank；post-top-k 范围和唯一性、4×token 守恒、有效行与补齐行分离、实际两投影几何齐全；缺一 rank 的组不可计作全局 M。mixed 步骤按自己的协议验收。采样不足须列出而不是补造。
+G4 机制证据：四负载的时间线含八卡 worker、可关联的计算与通信；明确 Graph/eager；没有可分离事件时相应机制结论未验收，不能仅凭 API 名称补写。
+G5 回收：数据、日志、执行清单、配置、失败及退出码、原始 trace 全部传回，逐文件 SHA256 核验，回执写明通过/失败/未采集。数据完整性不以性能正收益为条件。
+主结论以 G1–G5 各项实际状态单独报告；“跑通了模型”只通过 G1 的功能部分。真实 vLLM 加速目前属于未接入，不设“必须赢过原生”作为删改数据理由。
+
+八、准备位置、时间和费用
+
+遵守已明确的“不在本机下载模型/镜像”。未来在远端无 GPU 的 Linux x86_64 环境准备，必须先确认 CPU 与 GPU 能复用相同区域/供应商的卷，或提前推送到 GPU 可直接使用的镜像/存储。独立 CPU 有货不代表它的磁盘能挂给 Omaha；没有确认的挂载路径不能列为已就绪。
+单主模型建议远端可用空间至少 200 GB：权重约 62.44 GB，既有镜像压缩层约 8.23 GB，另留解包、临时文件、trace 和校验空间。没有本轮多模型需求，不因为旧方案提到 500 GB 就自动创建/保留该收费卷。
+CPU 可完成文件校验、tokenization、依赖解析、采集逻辑测试和可预编译部分；GPU 相关 JIT、Graph capture、P2P/NCCL 和数值运行仍需真机。必须预留并单列这些启动成本，不能承诺无 GPU 就把所有编译完全消除。
+预算排程参考（不是已测用时保证）：环境/首跑约 10–15 分钟，预热与 12 块性能测量约 20–30 分钟，形状与时间线约 10–15 分钟，回收约 5–10 分钟，总约 45–70 分钟。正式开机前结合报价与预算裁定；不默认上轮资源或额度仍可用。超时按预先预算止损、保留部分结果，不无限 debug。
+仅在准备全部通过后再另行执行租机。平台停费/删除兜底和增量回传应在开机前准备；结束以平台确认计算资源已删除/停费为准，不能把容器内退出当停费。保留卷也会收费，实验完后的保留/删除范围需明确。
+
+九、本地下一步（本轮仅列清单）
+
+1. 将现有 smoke 与 profile 工具整理为本方案专用的原生计时/形状/时间线三种入口；不动封存模型和候选实现。
+2. 完成固定自然文本请求集、精确 token 长度和全局 step/rank 采集协议；mixed 步骤与空 rank 的守恒测试先在 CPU 做完。
+3. 在已确认的远端 CPU/存储组合准备并验证单个主模型与镜像，保存就绪回执；当前没有通过这一步，不开 GPU。
+4. 只按已验收执行包进入八卡采集。最终产物是性能表、真实 M/shape 覆盖图、通信与计算时间线和一页结论边界，不再开始预测器优化循环。
+
+来源（2026-11-17 核对；只读取文档/小型元数据，没有下载模型或镜像）
+
+[1] GLM 模型卡：https://huggingface.co/zai-org/GLM-4.7-Flash
+[2] 固定 GLM 配置：https://huggingface.co/zai-org/GLM-4.7-Flash/resolve/7dd20894a642a0aa287e9827cb1a1f7f91386b67/config.json
+    本次读到的 config SHA256=dc9b97c7c9bed726a2e6939da4234d5c43abb3edec8812068c9a1af1dbc13acb，与既有清单一致。
+[3] vLLM 0.20.1 registry：https://github.com/vllm-project/vllm/blob/v0.20.1/vllm/model_executor/models/registry.py
+    原始源文件直接读取确认第 121 行注册 Glm4MoeLiteForCausalLM；网页搜索缓存没有搜到该项，不以缓存缺项判定不支持。
+[4] GLM 实现：https://github.com/vllm-project/vllm/blob/v0.20.1/vllm/model_executor/models/glm4_moe_lite.py
+[5] EP 及通信后端：https://docs.vllm.ai/en/v0.20.1/serving/expert_parallel_deployment/
+[6] GPU 支持：https://docs.vllm.ai/en/v0.20.1/getting_started/installation/gpu/
+[7] 官方路由输出示例：https://docs.vllm.ai/en/v0.20.1/examples/offline_inference/routed_experts_e2e/
+[8] 官方基准工具口径：https://docs.vllm.ai/en/v0.20.1/cli/bench/serve/
+[9] Qwen 备选配置：https://huggingface.co/Qwen/Qwen3-30B-A3B-Instruct-2507/blob/main/config.json
+[10] DeepEP 当前要求：https://github.com/deepseek-ai/DeepEP#requirements
+[11] Nsight Systems：https://docs.nvidia.com/nsight-systems/UserGuide/index.html
+
+本地依据：../2026-11-16-next-window/（旧 smoke 方案和资产清单）、../2026-11-16-offline-assets/STATUS.txt（资产已按要求清理）、../2026-11-17-evidence-synthesis/（最终算子证据及封存哈希）、EDM-IR/tools/run_native_moe_smoke.py、EDM-IR/edmir/benchmark/moe_shape_profile.py。

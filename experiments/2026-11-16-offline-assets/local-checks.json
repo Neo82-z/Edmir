@@ -1,0 +1,75 @@
+{
+  "utc": "2026-11-16T14:01:34.621454+00:00",
+  "GPU_used": false,
+  "frozen_shapes_read": false,
+  "runs": [
+    {
+      "command": [
+        "/tmp/edmir-precision-analysis-20261116/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "EDM-IR/tests",
+        "-p",
+        "precision_window_analysis_test.py",
+        "-v"
+      ],
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/tmp/edmir-precision-analysis-20261116/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "EDM-IR/tests",
+        "-p",
+        "offline_model_assets_test.py",
+        "-v"
+      ],
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/tmp/edmir-precision-analysis-20261116/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "EDM-IR/tests",
+        "-p",
+        "w1_candidate_selection_test.py",
+        "-v"
+      ],
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/tmp/edmir-precision-analysis-20261116/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "EDM-IR/tests",
+        "-p",
+        "w1_collection_test.py",
+        "-v"
+      ],
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/Users/neo/edmir-assets/tools-env/bin/python",
+        "EDM-IR/tools/run_precision_followup.py",
+        "--plan",
+        "experiments/2026-11-16-next-window/operator-plan.json",
+        "--bundle",
+        "experiments/2026-11-13-w1-local-convergence/gpu-bundle-v2",
+        "--dry-run"
+      ],
+      "returncode": 0
+    }
+  ]
+}

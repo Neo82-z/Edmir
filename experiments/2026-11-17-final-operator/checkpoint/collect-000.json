@@ -1,0 +1,174 @@
+{
+  "job": {
+    "shape": "large_n",
+    "phase": "check",
+    "seed": 20261020,
+    "repetition": 0,
+    "order": [
+      "splitk2",
+      "splitk4",
+      "splitk4_groupedn2",
+      "splitk8_groupedn2",
+      "host_merged_cutlass",
+      "host_merged_cublaslt"
+    ]
+  },
+  "context": "b3ac83b67d9ede17dd98f915fe8e59e2c713b892577c4fcbdddd65c559a7b60c",
+  "input": {
+    "shape": [
+      8,
+      64,
+      4096,
+      2048
+    ],
+    "input_seed": 20261020,
+    "input_sha256": "5ce4ac9c0800f2ed44f02bdef2db5c8c4aac610f2196eeb0e29a0bb8efdd1811",
+    "reference_sha256": "d2daf2bfe1ff0068c618f8f04b98c86d18604f3b5f4d0c8527095888765fadca",
+    "input_bytes": 167772160,
+    "reference_bytes": 33554432,
+    "generator": "uint32 avalanche v1; (low5bits-16)/32 exactly represented in FP16",
+    "reference": "CPU_FP32_on_identical_FP16_inputs",
+    "numpy_version": "2.3.5"
+  },
+  "rows": [
+    {
+      "family": "splitk2",
+      "correctness_passed": true,
+      "check_only": true,
+      "input_seed": 20261020,
+      "implementation_id": "direct_peer_cutlass_sm80_q2_g1_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "precision": {
+        "input": "fp16",
+        "weight": "fp16",
+        "output": "fp16",
+        "accumulator": "fp32",
+        "accumulator_evidence": "source",
+        "partial": "fp16",
+        "reduction": "serial_fp16_feedback"
+      },
+      "error_contract": "max_abs_over_max_1_abs_ref_le_0.02_v1",
+      "nonfinite_outputs": 0,
+      "max_abs_error": 0.0146484375,
+      "max_rel_error": 0.00390625,
+      "checked_elements": 8388608
+    },
+    {
+      "family": "splitk4",
+      "correctness_passed": true,
+      "check_only": true,
+      "input_seed": 20261020,
+      "implementation_id": "direct_peer_cutlass_sm80_q4_g1_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "precision": {
+        "input": "fp16",
+        "weight": "fp16",
+        "output": "fp16",
+        "accumulator": "fp32",
+        "accumulator_evidence": "source",
+        "partial": "fp16",
+        "reduction": "serial_fp16_feedback"
+      },
+      "error_contract": "max_abs_over_max_1_abs_ref_le_0.02_v1",
+      "nonfinite_outputs": 0,
+      "max_abs_error": 0.0234375,
+      "max_rel_error": 0.0078125,
+      "checked_elements": 8388608
+    },
+    {
+      "family": "splitk4_groupedn2",
+      "correctness_passed": true,
+      "check_only": true,
+      "input_seed": 20261020,
+      "implementation_id": "direct_peer_cutlass_sm80_q4_g2_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "precision": {
+        "input": "fp16",
+        "weight": "fp16",
+        "output": "fp16",
+        "accumulator": "fp32",
+        "accumulator_evidence": "source",
+        "partial": "fp16",
+        "reduction": "serial_fp16_feedback"
+      },
+      "error_contract": "max_abs_over_max_1_abs_ref_le_0.02_v1",
+      "nonfinite_outputs": 0,
+      "max_abs_error": 0.0234375,
+      "max_rel_error": 0.0078125,
+      "checked_elements": 8388608
+    },
+    {
+      "family": "splitk8_groupedn2",
+      "correctness_passed": true,
+      "check_only": true,
+      "input_seed": 20261020,
+      "implementation_id": "direct_peer_cutlass_sm80_q8_g2_prepared_metadata_v2_uniform_immutable_peer_v1",
+      "precision": {
+        "input": "fp16",
+        "weight": "fp16",
+        "output": "fp16",
+        "accumulator": "fp32",
+        "accumulator_evidence": "source",
+        "partial": "fp16",
+        "reduction": "serial_fp16_feedback"
+      },
+      "error_contract": "max_abs_over_max_1_abs_ref_le_0.02_v1",
+      "nonfinite_outputs": 0,
+      "max_abs_error": 0.03125,
+      "max_rel_error": 0.0146484375,
+      "checked_elements": 8388608
+    },
+    {
+      "family": "host_merged_cutlass",
+      "correctness_passed": true,
+      "check_only": true,
+      "input_seed": 20261020,
+      "implementation_id": "host_nccl_cutlass_sm80_merged_v1",
+      "precision": {
+        "input": "fp16",
+        "weight": "fp16",
+        "output": "fp16",
+        "accumulator": "fp32",
+        "accumulator_evidence": "source",
+        "partial": "none",
+        "reduction": "single_output_cast"
+      },
+      "error_contract": "max_abs_over_max_1_abs_ref_le_0.02_v1",
+      "nonfinite_outputs": 0,
+      "max_abs_error": 0.0078125,
+      "max_rel_error": 0.0004880429477794046,
+      "checked_elements": 8388608
+    },
+    {
+      "family": "host_merged_cublaslt",
+      "correctness_passed": true,
+      "check_only": true,
+      "input_seed": 20261020,
+      "implementation_id": "host_nccl_cublaslt_merged_v1",
+      "precision": {
+        "input": "fp16",
+        "weight": "fp16",
+        "output": "fp16",
+        "accumulator": "fp32",
+        "accumulator_evidence": "api_requested",
+        "partial": "unknown",
+        "reduction": "library_unknown"
+      },
+      "error_contract": "max_abs_over_max_1_abs_ref_le_0.02_v1",
+      "nonfinite_outputs": 0,
+      "max_abs_error": 0.0234375,
+      "max_rel_error": 0.0078125,
+      "checked_elements": 8388608
+    }
+  ],
+  "order": [
+    "splitk2",
+    "splitk4",
+    "splitk4_groupedn2",
+    "splitk8_groupedn2",
+    "host_merged_cutlass",
+    "host_merged_cublaslt"
+  ],
+  "excluded_by_numerical_check": [],
+  "stdout": "collect-000-1794882683684880696.stdout",
+  "stdout_sha256": "69ccf1f05098aadde736086439479145bf91001ddb9a9778f75381e381bc40e1",
+  "stderr": "collect-000-1794882683684880696.stderr",
+  "process_seconds": 59.32112431526184
+}

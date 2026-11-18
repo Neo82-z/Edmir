@@ -1,0 +1,71 @@
+{
+  "checks": [
+    {
+      "name": "analysis-and-preparation-tests",
+      "command": [
+        "/tmp/edmir-precision-analysis-20261116/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "EDM-IR/tests",
+        "-p",
+        "precision_window_analysis_test.py",
+        "-v"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "candidate-tests",
+      "command": [
+        "/tmp/edmir-precision-analysis-20261116/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "EDM-IR/tests",
+        "-p",
+        "w1_candidate_selection_test.py",
+        "-v"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "operator-dry-run",
+      "command": [
+        "/tmp/edmir-precision-analysis-20261116/bin/python",
+        "/Users/neo/code/llm-serving/experiments/2026-11-16-next-window/run_precision_followup.py",
+        "--plan",
+        "/Users/neo/code/llm-serving/experiments/2026-11-16-next-window/operator-plan.json",
+        "--bundle",
+        "/Users/neo/code/llm-serving/experiments/2026-11-13-w1-local-convergence/gpu-bundle-v2",
+        "--dry-run"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "unit_tests_passed": 25,
+  "operator_dry_run": "passed",
+  "native_asset_gate": "GPU_RUN_READY=false for missing weights, as expected",
+  "native_engine_executed": false,
+  "operator_binary_changed": false,
+  "production_model_changed": false,
+  "frozen_shapes_read": false,
+  "analysis": {
+    "status": "analysis_complete",
+    "elapsed_seconds": 3.3424583750311285,
+    "source_sha256": "c73442643179edb73e9e129924cf79ef97ff8a742538e08f0580e7506099765c",
+    "model_source_sha256": "767b5e6068d1cfba7981533d76fc768ce20b2bb5ecaf5725b5ee21706f13ed18",
+    "manifest_sha256": "f3e4641d818f427075c6d35fe0336c5a45815dd890451d9619762f348bbf0ba3",
+    "rows": 68,
+    "eligible": 58,
+    "failed": 10,
+    "frozen_shapes_read": false,
+    "GPU_used": false,
+    "optimizer_search": false,
+    "production_model_changed": false
+  },
+  "python": "3.14.6 (main, Jun 10 2026, 10:03:53) [Clang 17.0.0 (clang-1700.6.4.2)]",
+  "analysis_python": "/tmp/edmir-precision-analysis-20261116/bin/python",
+  "numpy": "2.3.5"
+}

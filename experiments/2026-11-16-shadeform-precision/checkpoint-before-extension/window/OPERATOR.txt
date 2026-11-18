@@ -1,0 +1,77 @@
+下一轮八卡采集：精度修复与执行证据
+2026-11-14，Asia/Singapore
+
+本轮目的
+验证新的 FP32 跨片归并实现是否在设备上正确、代价是否值得；获得 large-N 排序反转和 M256 q/g 交互的执行证据。采用原四个开发形状，不打开六个冻结形状，不在服务器拟合或按结果改候选。结果可以支持、否定或缩小当前解释，零误选和正加速都不是采集完成条件。
+
+当前可复用资产
+代码包：experiments/2026-11-13-w1-local-convergence/gpu-bundle-v2。
+固定依赖和旧输入重建器：/Users/neo/Documents/工作/交付/edmir-w1-2026-11-01/edmir-w1-code-deps.tar.gz。
+此基础归档 SHA256：9e1e32f5205027990914dd5690dc9a3c7a17d8e7faf245a76b289f02a245fdcd。
+基础归档中的 bundle 是旧版，保留原目录名仅供 rebuild_inputs.py 的相对导入使用；当前测量必须指定 precision-bundle。不要改名后直接运行旧重建脚本，也不得复用旧 CUDA 程序二进制冒充新 FP32 构建。
+本地完整 inputs 位于同一交付目录下。既有十二组输入/参考、当前 v2 文件清单及 NCCL 构建产物已重新核对。
+RunPod 的模型缓存卷已于 11 月 11 日删除。此前的模型下载记录仅用于固定 revision，不能当成当前可挂载资产。
+
+硬件与环境
+同机 8×A100 SXM4 80GB，全 NV12/P2P 互访，SM80。P4 或其他设备结果另立身份，不能填入本轮八卡表。
+Linux x86_64，CUDA 12.8 development，Ubuntu 24.04。复用封存 NCCL 2.28.9 的实际库和头文件哈希、固定 CUTLASS commit。
+历史可用镜像：nvidia/cuda@sha256:4b9ed5fa8361736996499f64ecebf25d4ec37ff56e4d11323ccde10aa36e0c43。
+本地已在独立 Colima CPU 虚拟机中使用 Rosetta 执行固定 linux/amd64 CUDA 12.8 镜像。新 CUDA 翻译单元编译、链接及 7 项 C++ 检查通过；四个二进制已检查为 x86_64，均含 sm_80 cubin，ldd 未见缺失库。正式待部署产物是 cpu-prebuild/attempt2-native/build-precision，不能沿用旧 GPU 二进制。
+两次从空目录构建均通过，仍记录了本地虚拟机时钟偏差警告；第二次在 Linux 内部文件系统构建，所有对象与四个程序均重新生成。日志、回执、二进制哈希完整保留，这不是设备数值通过或性能证据。
+固定基础镜像上的断网环境恢复通过：38 个系统包/Python wheels 合计约 61.5 MB，先校验 SHA256SUMS，再按离线安装脚本执行。首次 apt --no-download 阻止本地包获取、随后 dpkg 遇到 Python 预依赖顺序问题的失败均已保存；最终 APT 本地文件安装在 network=none 下成功。
+Nsight Systems 2025.1.3.140-251335620677v0 安装包 400,328,208 字节，与旧 W1 的 SHA256 相同；CLI --version 通过，实际 CUDA capture 尚未进行。完整 deb 随包保存，上机可直接解包，不临时换版本。
+十二组输入在同一 Linux CPU 环境重新生成，全部匹配当前封存包的输入/参考哈希，重建加复核约 87.3 秒；新服务器的实际速度可能不同。此步骤不需要 GPU，执行前可利用平台提供的准备阶段，但不将该时间假定为免费。
+优先使用已编译产物。前十分钟不能完成环境核验或通过 pilot 则回收日志并停机，不在付费节点持续修改内核。
+Nsight Systems 独立采样；禁止把 profiler 下的耗时放进模型训练标签。Nsight Compute 不在本执行器中，不将 nsys 时间线称为 SM 占用率或实测 HBM/NVLink 流量。若后续必须采计数器，应先准备独立的安全采样入口，再登记追加任务。
+
+固定队列
+1. M512：原 13 候选加 4 个新 FP32 候选，完成三个种子的全输出检查，合法候选三进程计时。随后采 FP32 q8/g2 时间线；不合格则记录拒绝原因。
+2. large-N：同样完整检查和计时，随后采 q2/g1 与 q8/g2 时间线，保留当前模型的排序反转作为待检验事实。
+3. M256：同样完整检查和计时，随后采 q4/q8 × g1/g2 四格时间线。g 同时改变 tile、warp 和 CTA 数，q 同时改变分片深度、并行工作及归并，不把它们写成单因素。
+4. grouped：补齐完整检查和计时，不再增加诊断扫描。
+合计 24 个原定进程组、最多 204 个计时块、204 个种子级正确性检查、7 个预指定 trace。每阶段单独两候选 pilot，独立记账，不进入主结果。保留原计划所有候选和顺序，只更改形状阶段顺序并插入诊断。
+时长依据见 walltime-estimate.json：旧四形状主采集 35.34 分钟，假设新增四候选均合法并按候选数线性扩展，粗估 46.95 分钟，尚不含环境、输入重建、pilot、trace 和回收。这不是完成保证；在一小时总上限与十分钟回收保留时间下，前三形状优先，grouped 可能只完成部分或未开始。不得缩减正确性种子或重复次数后冒充完整区组。
+计时仍为 20 次预热、100 次完整执行、三个独立进程。失败候选无计时标签；新 FP32 候选不继承旧通过状态、分数或耗时。输入精度仍为 FP16，本轮不声明 BF16 已验证。
+
+付费和停止条件
+本轮已获用户授权：继续 Shadeform，最多 $15、计费不超过一小时，先完成本地编译和环境准备，回收后立即停止计费。用户稍后登录，当前不操作平台，没有启动任何实例。
+平台总价含必需磁盘及任何附加费，最晚停止时刻取计费起点加一小时与预算所允许时限的较早者。历史报价不当作当前库存或报价。authorization.json 保存本轮授权；platform-guard.pending.json 已填预算，但实际实例、费率和平台停止规则为空，仍然拒绝执行。
+platform-guard.example.json 默认拒绝执行。只能用本轮真实实例、实际计费起点、已获授权额度和已保存的平台自动回收时刻填写。
+平台停止时刻不得超过计费起点 60 分钟，且不得突破金额上限。采集最晚在平台停止前十分钟结束。回收完成立即在平台停止/删除计算实例，并核实计费终止。运行器只管采集截止，不会替代平台停止操作。
+不创建持久卷。机器状态、数值正确性、文件完整性及时间/费用决定继续或停止；不能根据跑分好坏现场换形状或加候选。没有按原顺序完成全部阶段时，保留缺项，不宣布四形状新一轮全部完成。
+
+执行入口
+将预编译交付包解到独立 /workspace 工作目录，再将其中 edmir-w1-code-deps.tar.gz 解到 /workspace。保留其旧 bundle 仅用于输入重建；本轮 precision-bundle、window、build-precision 已分别放置。
+在固定 CUDA 镜像内运行 bash /workspace/preparation/install-offline.sh，然后 export PATH=/opt/edmir-python/bin:/usr/local/cuda/bin:$PATH。依赖目录必须保持 /workspace/dependencies，以匹配构建回执和 RPATH。
+运行 dpkg-deb -x /workspace/tools/nvidia/nsight-systems-2025.1.3_2025.1.3.140-1_amd64.deb /opt/edmir-nsys，然后把 /opt/edmir-nsys/opt/nvidia/nsight-systems/2025.1.3/target-linux-x64 加到 PATH；检查 nsys --version。这里解包完整安装树，保留其所需相对路径。
+输入可直接上传 /workspace/inputs；也可先在 CPU 环境运行 python3 /workspace/rebuild_inputs.py --out /workspace/inputs。所有输入必须通过 sealed verify。运行器 verify/preflight 会核对实际二进制、库、GPU 与拓扑，预编译通过不跳过这些检查。
+
+R=/workspace/precision-bundle/source/EDM-IR/tools/run_w1_gpu.py
+python3 "$R" verify --bundle /workspace/precision-bundle --inputs /workspace/inputs
+python3 /workspace/window/run_window.py --bundle /workspace/precision-bundle --dry-run
+
+在真实平台时间/费用保护核验后，使用其 stop_epoch 减十分钟作为 CUTOFF。
+已带 build-precision 时跳过 build，避免重复编译。只有产物不可用且剩余时间允许时，在新目录显式重建并保留原因；不能覆盖已有构建回执。
+如果是 RunPod，还必须按原 run_w1_gpu.py 要求传 --guard-log，核对 stop guard 存活。
+
+python3 /workspace/window/run_window.py --bundle /workspace/precision-bundle --inputs /workspace/inputs --build-dir /workspace/build-precision --out /workspace/results-precision --guard /workspace/window/platform-guard.json
+
+每个阶段结束后增量回收 results-precision、构建日志/回执/二进制、实际库/设备/拓扑、计费保护和工具版本；结束时生成逐文件 SHA256 清单并核对本地副本。退出码非零、部分 stdout、失败 trace 及未执行原因一并回收。只在相同包、实例、环境、二进制和保护规则下恢复；新实例使用新输出目录。
+
+本轮验收
+数值：旧 FP16 失败仍保留，新 FP32 在全部三个种子和完整输出上独立判定。正确但变慢也是有效结果。
+计时：合法候选同构建同机可比，旧候选作为当轮对照，新增转换及归并成本进入完整边界。
+诊断：指定时间线存在且可读后，还要在本地检查 capture 范围、实际 kernel、事件依赖和 CPU 空隙；文件生成不等于机制解释通过。
+完整性：各阶段结果、候选状态、样本、原始输出和身份可追溯，部分完成如实记录。
+回本地后才做同条件评分、误选对和机制分析，不把开发四点当独立泛化测试。
+
+真实 MoE 的下一步
+与本轮算子采集分开准备固定模型 revision、引擎、请求、BF16 数值合同、逐专家 token 记录入口和模型资产传输。旧模型权重已不可用，需要提前下载或绑定可复用本地/对象存储方案。
+先收集原生引擎的路由和端到端基线，再做完整层替换与同引擎原生/固定策略/冻结模型对照。原生模型跑通不等于本方法取得 serving 加速。原生推理不必等待评分器零误选，也不必等待本方法的 BF16 层替换完成；目标是下一次 GPU 窗口，当前缺口与启动条件见 VLLM_NEXT.txt。
+六个冻结形状只有在最终评分器、候选集和执行身份封存以后才开启。本轮不通过精度或仍缺机制证据时，记录具体原因，避免提前消耗独立评价集。
+
+本地复核记录
+当前 sealed bundle 文件、四形状十二组输入/参考已通过原 verify；CUTLASS/NCCL commit、libnccl.so/nccl.h/nccl_device.h 哈希匹配。
+既有准入/评分/恢复测试 18 项通过，新队列/费用截止/trace 失败保存测试更新为 6 项通过。
+首次使用系统 python3 时 4 项评分测试因缺 NumPy 未运行成功，改用既有带 NumPy 的 Python 环境后通过；这是环境依赖，不记成模型错误修复。
+nvcc 编译、7 项 C++ 检查、38 包断网环境恢复、12 组 Linux 输入重建、二进制检查、nsys 版本核验均已通过。GPU 正确性、新时延和 profiler 实采均为 NOT_RUN。没有重新训练评分器，没有读取或修改六个冻结形状。

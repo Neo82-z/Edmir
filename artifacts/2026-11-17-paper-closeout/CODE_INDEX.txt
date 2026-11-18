@@ -1,0 +1,37 @@
+当前论文的最短代码阅读路径
+
+算子执行与数值准入
+EDM-IR/runtime/tools/benchmark_selector.cpp：执行、计时、数值检查与候选身份。
+EDM-IR/runtime/src/merged_host_backend.cpp：合并CUTLASS/cuBLASLt强host。
+EDM-IR/runtime/src/nccl_device_fused_cutlass.cu：NCCL LSA直接消费、split-K、grouped-N与归并。
+EDM-IR/runtime/src/prepared_execution.cpp：准备后的完整程序执行与依赖。
+EDM-IR/runtime/include/edmir/runtime/split_k_workspace.hpp：FP32 partial空间与生命周期。
+
+封存评分（只读）
+EDM-IR/edmir/compiler/w1_candidate_selection.py：当前共享评分、特征、固定规则与选择接口。
+experiments/2026-11-16-precision-analysis/attempt-01/*geometry-*.json：四形状开发留一的既存系数。
+experiments/2026-11-17-final-operator/frozen-predictions/：最后large-N复测前的封存文件。
+本轮没有运行评分或训练，禁止把早期神经网络试验当成当前论文评分实现。
+
+真实MoE采集
+EDM-IR/edmir/benchmark/real_moe.py：请求、计时、路由汇总和校验。
+EDM-IR/edmir/benchmark/vllm0201_capture.py：vLLM 0.20.1路由、物理kernel和collective记录。
+EDM-IR/edmir/benchmark/real_moe_config.py：固定执行配置。
+EDM-IR/tools/prepare_real_moe.py、run_real_moe.py、analyze_real_moe.py：执行包、采集入口、验收。
+采集器服务于原生vLLM观测；不是EDM-IR替换vLLM kernel的集成。
+
+本地分析（优先阅读，不会连接GPU）
+experiments/2026-11-17-real-moe-analysis/analyze.py：标准库流式读取，完整性、性能、路由与padding。
+experiments/2026-11-17-real-moe-analysis/analyze_timeline.py：SQLite只读清点与告警，仅供内部采集诊断。
+experiments/2026-11-17-real-moe-analysis/build_report.py：完整内部报告与论点矩阵。
+experiments/2026-11-17-evidence-synthesis/REPORT.txt、results.json：既有算子与模型审计汇总。
+experiments/2026-11-17-final-operator/analysis.json：平衡顺序、三输入种子的最后算子复测。
+
+论文仓库 ../llm-serving-mlsys-latex/latex
+scripts/generate_real_moe_results.py：从本仓库已校验摘要的同内容副本生成应用表图。
+scripts/generate_final_operator_revision.py：算子结果图表与固定q4/g2对照。
+main.tex、sections/：唯一论文正文来源。
+review/：内部修改、验收、历史计划；不作为论文实验结果自动编入。
+
+整理方式
+保留原文件位置及执行身份，增加索引、哈希清单与独立审阅导出；不移动原始数据，不改变已采集程序。历史阶段的代码和实验保留原日期标记。
