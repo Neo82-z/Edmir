@@ -237,6 +237,9 @@ def queue_rows(blocks):
 
     add("hw_gate", note="scripts/hw_gate.py; FAIL stops formal runs")
     add("build_identity", note="record hashes of all binaries, sources, inputs, weights")
+    for width_id, *_ in MODELS:
+        add("tune_native_moe", unit_id=width_id,
+            note="vLLM benchmark_moe.py --tune --tp-size 8 --enable-expert-parallel; configs go into VLLM_TUNED_CONFIG_FOLDER")
     add("admission_smoke", note="every arm on GLM_M0001 and GLM_M1024 (balanced); one targeted fix per failing arm")
     add("freeze", note="scripts/manifest.py create over sources and binaries; no code changes after this")
     add("admission_full", note="every balanced arm x cell x seed numerics; writes admission.jsonl")

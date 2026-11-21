@@ -53,6 +53,10 @@ class Design(unittest.TestCase):
         first_timing = next(i for i, j in enumerate(queue) if j["job_type"] == "timing_block")
         seal = next(i for i, j in enumerate(queue) if j["job_type"] == "calibrate_predict_seal")
         self.assertLess(seal, first_timing, "predictions must be sealed before any timing block")
+        freeze = next(i for i, j in enumerate(queue) if j["job_type"] == "freeze")
+        tunes = [i for i, j in enumerate(queue) if j["job_type"] == "tune_native_moe"]
+        self.assertEqual(len(tunes), 3, "one native MoE tuning job per model")
+        self.assertTrue(all(i < freeze for i in tunes), "tuned native configs must be frozen with the build")
         snap_seal = next(i for i, j in enumerate(queue) if j["job_type"] == "route_stats_predict_seal")
         first_snap = next(i for i, j in enumerate(queue) if j["job_type"] == "timing_block" and j["process_id"].startswith("S"))
         self.assertLess(snap_seal, first_snap)

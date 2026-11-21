@@ -41,7 +41,7 @@
 | BOLD_Q1_G1 | pipeline：逐对 NCCL → staging → CUTLASS 64×128×32 | 跑过 GPU；与 direct 同 tile 配置但不是同一个 kernel，传输弱 |
 | J8_Q1_G2 | 源并行 grouped GEMM | 仅 CPU 编译 |
 | FLUX_V2 | FLUX `GemmGroupedV2AGScatterOp`，固定 commit 19831ca2；映射见 `experiments/2026-11-19-g1-preparation/contract.py` | 尝试构建 |
-| NATIVE | vLLM 0.20.1：all-gather + Triton fused_moe 的 gate/up | 跑过 GPU |
+| NATIVE | vLLM 0.20.1：all-gather + Triton fused_moe 的 gate/up，使用本机调优的 MoE 配置（第 4 节第 3 步）；环境里需要装 ray，并备好 v0.20.1 源码中的 `benchmark_moe.py` | 跑过 GPU（以前用的是默认配置） |
 | *_R | 真实快照的 ragged 版本：BF16、每卡多个专家、各专家权重不同、零行、不等长 | 新 |
 
 ### 3.1 执行入口的接口契约
@@ -117,27 +117,44 @@
    - `UNCHECKED`：先解决，再继续。
    - 脚本只读，绝不修改功率上限或时钟。瞬时功耗低不算失败，有效功率上限被调低才算。
 2. **`build_identity`**：登记全部源码、二进制、输入和权重的哈希。
-3. **`admission_smoke`**：每个均衡 arm 在 `GLM_M0001` 和 `GLM_M1024` 上过数值契约。
+3. **`tune_native_moe`**：在本机给原生 vLLM 的 Triton MoE kernel 调优配置，三个模型各跑一次。
+   - 原因：vLLM 0.20.1 自带 35 个 A100 配置，但没有这三个形状：`E=8,N=1536`（GLM）、`E=32,N=512`（Qwen3.5）、`E=8,N=1408`（DSV2-Lite）。找不到配置时 vLLM 会用默认配置。2026-11-17 的 GLM 原生基线就是在默认配置下跑的，日志里有 "Using default MoE config" 的警告。不调优，NATIVE 就是一个弱基线。
+   - 这一步与 SLT 在本机调 cuBLASLt heuristic 是对等的处理。
+   - 命令：`benchmark_moe.py` 来自 vLLM v0.20.1 源码的 `benchmarks/kernels/`，不在 wheel 里；它要用 ray。
+
+     ```
+     VLLM_TUNED_CONFIG_FOLDER=results/moe_configs python benchmark_moe.py --model <本地模型路径> \
+         --tp-size 8 --enable-expert-parallel --dtype auto --tune --trust-remote-code --save-dir results/moe_configs \
+         --batch-size 1 2 4 8 16 24 32 48 64 96 128 256 512 1024 1536 2048 3072 4096 8192 16384
+     ```
+
+     `--batch-size` 比默认列表多了 8192 和 16384，用来覆盖 S32 prefill 时每卡 all-gather 之后的 token 数。
+   - 产出的 `E=…,N=…,device_name=NVIDIA_A100-SXM4-80GB.json` 并入 freeze 清单。
+   - 此后所有用到 vLLM MoE kernel 的作业都设 `VLLM_TUNED_CONFIG_FOLDER=results/moe_configs`，包括捕获、NATIVE、原生归因和整模 decode。每次都要在启动日志里确认出现 `Using configuration from …results/moe_configs…`。
+   - NATIVE 的每行 metrics 加一个字段 `native_moe_config`，值为 `tuned:<文件 SHA256>` 或 `default`。
+   - 某个形状调优失败时，该模型的 NATIVE 用默认配置并标为 `default`，论文里如实写明。
+   - 只调这一次。看到正式结果之后不重调。
+4. **`admission_smoke`**：每个均衡 arm 在 `GLM_M0001` 和 `GLM_M1024` 上过数值契约。
    - 失败的 arm 只允许一次针对性修复。
    - 再失败就记为未准入，后续块里写 `unsupported`。
    - BNEW 未准入时，B-a 改用 `Ba_bridge_g1`；SLT 未准入时，"永远 staged" 按 `policies.json` 的优先级顺延。这两条都按准入状态决定，不按快慢决定。
-4. **`freeze`**：运行 `python3 -I scripts/manifest.py create`，对源码与二进制建清单。此后不再修改实现。确有必要的修改要另起实验 ID，其数据不与本轮混用。
-5. **`admission_full`**：全部均衡 arm × 33 格 × 3 个种子，写入 `admission.jsonl`。
-6. **`microbench` → `calibrate_predict_seal`**：
+5. **`freeze`**：运行 `python3 -I scripts/manifest.py create`，对源码与二进制建清单。此后不再修改实现。确有必要的修改要另起实验 ID，其数据不与本轮混用。
+6. **`admission_full`**：全部均衡 arm × 33 格 × 3 个种子，写入 `admission.jsonl`。
+7. **`microbench` → `calibrate_predict_seal`**：
    - 跑 `scripts/calibrate.py` 和 `scripts/predict.py --design design`，输出到 `results/pred_cells/`；
    - 生成的 `PREDICTION_SEAL.json` 连同目录一起复制到机外并验证；
    - 复制完成之前，不启动任何计时块。
-7. **均衡 core 块，第 1–3 轮**：每个进程用 `lease_guard.py` 包裹运行。每完成一对正反序就同步到机外，并用 `manifest.py verify` 核对。
-8. **`capture`**：三个模型各一次。
-9. **`route_stats_predict_seal`**：
+8. **均衡 core 块，第 1–3 轮**：每个进程用 `lease_guard.py` 包裹运行。每完成一对正反序就同步到机外，并用 `manifest.py verify` 核对。
+9. **`capture`**：三个模型各一次。
+10. **`route_stats_predict_seal`**：
    - 对每个模型运行 `route_stats.py`，参数为 `--snapshot <ID>:<category>:<ordinal>:<layer>`，取值见 `design/snapshots.csv`；
    - 用 `--merge` 合并三个模型的结果；
    - 运行 `predict.py --routes`，输出到 `results/pred_snapshots/`，封存后复制到机外。
-10. **`admission_snapshot`**，然后跑**真实快照 core 块第 1–3 轮**。真实激活、权重与 ragged 路径三者齐全才算真实回放；只有路由时，交付负载分布，性能格留空。
-11. **`native_attribution`**：三个模型各一次。
-12. **FLUX 块、J8 块**：只在对应 arm 通过准入时运行。
-13. **`udec_smoke`**：只在开机前已写好整模 decode 接入时运行。必须同时满足：真实输入、跨进程数据可见、全部 routed 层替换、无回退、输出核对。通过后才运行 `udec_ab`。租期内不从零开发。
-14. **`final_analysis`**：
+11. **`admission_snapshot`**，然后跑**真实快照 core 块第 1–3 轮**。真实激活、权重与 ragged 路径三者齐全才算真实回放；只有路由时，交付负载分布，性能格留空。
+12. **`native_attribution`**：三个模型各一次。
+13. **FLUX 块、J8 块**：只在对应 arm 通过准入时运行。
+14. **`udec_smoke`**：只在开机前已写好整模 decode 接入时运行。必须同时满足：真实输入、跨进程数据可见、全部 routed 层替换、无回退、输出核对。通过后才运行 `udec_ab`。租期内不从零开发。
+15. **`final_analysis`**：
 
 ```
 python3 -I scripts/analyze.py --design design --metrics results/metrics.jsonl --admission results/admission.jsonl \
