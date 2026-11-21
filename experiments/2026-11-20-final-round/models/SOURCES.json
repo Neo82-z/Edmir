@@ -1,0 +1,34 @@
+{
+ "schema": "model-configs.v1",
+ "fetched": "2026-11-22",
+ "vllm_registry_source": "https://raw.githubusercontent.com/vllm-project/vllm/v0.20.1/vllm/model_executor/models/registry.py",
+ "models": {
+  "DSV2L": {
+   "repo": "deepseek-ai/DeepSeek-V2-Lite-Chat",
+   "revision": "85864749cd611b4353ce1decdb286193298f64c7",
+   "url": "https://huggingface.co/deepseek-ai/DeepSeek-V2-Lite-Chat/resolve/85864749cd611b4353ce1decdb286193298f64c7/config.json",
+   "sha256": "f346286b0f1c8b044252fd54cb4fa78b9fab6472a6e8bebb9edfe03d414ea03d",
+   "matches_2026_10_29_audit": true,
+   "vllm_0_20_1_registry": "\"DeepseekV2ForCausalLM\": (\"deepseek_v2\", \"DeepseekV2ForCausalLM\")",
+   "weights_manifest": "experiments/2026-10-29-cpu-preparation/receipts/manifests/ (verified 2026-10-29)"
+  },
+  "GLM": {
+   "repo": "zai-org/GLM-4.7-Flash",
+   "revision": "7dd20894a642a0aa287e9827cb1a1f7f91386b67",
+   "url": "https://huggingface.co/zai-org/GLM-4.7-Flash/resolve/7dd20894a642a0aa287e9827cb1a1f7f91386b67/config.json",
+   "sha256": "dc9b97c7c9bed726a2e6939da4234d5c43abb3edec8812068c9a1af1dbc13acb",
+   "matches_2026_10_29_audit": true,
+   "vllm_0_20_1_registry": "\"Glm4MoeLiteForCausalLM\": (\"glm4_moe_lite\", \"Glm4MoeLiteForCausalLM\")",
+   "weights_manifest": "experiments/2026-10-29-cpu-preparation/receipts/manifests/ (verified 2026-10-29)"
+  },
+  "QWEN35": {
+   "repo": "Qwen/Qwen3.5-35B-A3B",
+   "revision": "2508b2437e382c605eb0fc52b83f5545960f6b4a",
+   "url": "https://huggingface.co/Qwen/Qwen3.5-35B-A3B/resolve/2508b2437e382c605eb0fc52b83f5545960f6b4a/config.json",
+   "sha256": "5e4d7f74fec2f360eb9cfbfcd6ec0c4c76e684d3a11caaed259d9fd9bfbc7944",
+   "matches_2026_10_29_audit": false,
+   "note": "agreed model; byte-identical to the config.json the user supplied. Not part of the 2026-10-29 download; weights must be fetched and checked against QWEN35.weights.json",
+   "vllm_0_20_1_registry": "\"Qwen3_5MoeForConditionalGeneration\": (\"qwen3_5\", ...), multimodal section; MoE via Qwen3NextSparseMoeBlock -> FusedMoE with EP"
+  }
+ }
+}

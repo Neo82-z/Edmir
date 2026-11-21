@@ -23,8 +23,8 @@
 ## 2. 证据口径
 
 - **33 格是均衡代理**：3 个模型投影宽度 × M = 1…1024，每源到每目的的行数相同，FP16，合成输入。它们不是模型实测。
-- **6 个真实快照是三模型证据**：GLM-4.7-Flash、Qwen3.6-35B-A3B、DeepSeek-V2-Lite-Chat 各取 prefill 和 decode，用真实激活、权重和路由，BF16。
-- **历史格**：`QWEN36_M0032` 和 `QWEN36_M0064` 的几何以前测过，M64 当过校准点。`cells.csv` 的 `cohort` 列标了出来，R2 另报一份扣除这两格的结果。
+- **6 个真实快照是三模型证据**：GLM-4.7-Flash、Qwen3.5-35B-A3B、DeepSeek-V2-Lite-Chat 各取 prefill 和 decode，用真实激活、权重和路由，BF16。
+- **历史格**：`QWEN35_M0032` 和 `QWEN35_M0064` 的几何以前测过，M64 当过校准点。`cells.csv` 的 `cohort` 列标了出来，R2 另报一份扣除这两格的结果。
 - **J8 的范围**：J8 只有 q1，测不了 J1/J8 × q1/q4 的交互，只报 q1/g2 下 J1 与 J8 的差。
 - **FLUX 的命名**：FLUX 写作"COMET 第一投影（FLUX V2 AGScatter）"，不称完整 COMET。
 
@@ -90,7 +90,16 @@
 - 该层全部专家的权重；
 - 以上全部文件的哈希。
 
-捕获设置与 2026-11-17 相同：TP1/DP8/EP8，关闭 prefix cache、DBO、EPLB 与 speculative。请求集为 S32：32 条 512 token 的 prompt，各模型用自己的 tokenizer 精确截到 512，输出 128 token，ignore_eos，temperature 0。
+捕获设置与 2026-11-17 相同：TP1/DP8/EP8，关闭 prefix cache、DBO、EPLB 与 speculative。请求集为 S32：32 条 512 token 的 prompt，各模型用自己的 tokenizer 精确截到 512，输出 128 token，ignore_eos，temperature 0。Qwen3.5 带视觉塔，只跑文本：把图像和视频输入的上限设为 0。
+
+**捕获兜底（事前登记，2026-11-22）**：某个模型在本机用 TP1/DP8/EP8 起不来，或者能起来但捕获失败时，按下面的规则处理：
+
+1. **换并行配置**：按 TP2/DP4/EP8 → TP4/DP2/EP8 → TP8/EP8 的顺序尝试，用第一个能完整跑完 S32 的配置。不按速度挑选。
+2. **依据**：每个 token 选哪些专家，只取决于模型、输入和该层的 hidden state，与并行方式无关。换并行方式只改变 BF16 的累加顺序，可能让极少数 token 的 top-k 不同。
+3. **重建源归属**：32 条请求按请求序号轮转分给 8 个源，请求 i 归源 i mod 8，每个源 4 条。路由文件仍按 `<block>-rank<r>.jsonl.gz` 写出，r 就是重建的源，`kind=step` 的 `category` 按整批的阶段写。
+4. **标注**：在捕获目录写 `CAPTURE_MODE.json`，记录 `capture_parallel`（实际用的配置）、`source_assignment="reconstructed_round_robin"`，以及每个尝试过的配置及其失败原因。这样得到的快照在结果和论文里都要标出，不与原生 DP8 捕获的快照合并统计。
+5. **原生归因同样处理**：该模型的 `native_attribution` 改在同一兜底配置下跑并标注。得到的 f 不与其他模型 DP8 下的 f 直接比较。
+6. **全部失败**：所有配置都跑不完时，该模型的真实快照记为未裁决，只保留均衡代理的 11 格。不用合成路由替代。
 
 **原生归因**：写 `native_attr.jsonl`，字段见 `scripts/amdahl.py` 开头。
 
@@ -181,6 +190,7 @@ python3 -I scripts/manifest.py create --root results --out results/MANIFEST.json
 | 路径 | 用途 |
 |---|---|
 | `design/` | 由 `scripts/make_design.py` 生成，不手改；重新生成的结果须与包内文件逐字节相同（测试会检查） |
+| `models/` | 三个模型在固定 revision 下的原始 config.json。GLM、DSV2-Lite 的 SHA256 与 2026-10-29 审计一致；Qwen3.5 的 config 与用户提供的文件一致，`QWEN35.weights.json` 列出 14 个分片的大小与 LFS SHA256，下载后须逐个核对。`SOURCES.json` 记录来源及 vLLM 0.20.1 注册项 |
 | `params/scenario.json` | 开机前用的情景参数，不是测量值。开机前用它出一版预测并封存 |
 | `scripts/predict.py`、`calibrate.py` | 两通道 max 模型及其标定 |
 | `scripts/route_stats.py` | 真实路由的目的卡负载、倾斜和去重；已用 2026-11-17 GLM 数据复现 1.453 与 2.957 |

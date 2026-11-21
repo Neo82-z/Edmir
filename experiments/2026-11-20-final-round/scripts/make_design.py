@@ -27,17 +27,17 @@ REPS = ("rep1", "rep2", "rep3")
 # Projection widths of the three models (gate/up fused, N = 2 * moe_intermediate_size).
 WIDTHS = (
     ("GLM", "zai-org/GLM-4.7-Flash", "7dd20894a642a0aa287e9827cb1a1f7f91386b67", 3072),
-    ("QWEN36", "Qwen/Qwen3.6-35B-A3B", "995ad96eacd98c81ed38be0c5b274b04031597b0", 1024),
+    ("QWEN35", "Qwen/Qwen3.5-35B-A3B", "2508b2437e382c605eb0fc52b83f5545960f6b4a", 1024),
     ("DSV2L", "deepseek-ai/DeepSeek-V2-Lite-Chat", "85864749cd611b4353ce1decdb286193298f64c7", 2816),
 )
 # Cells of K2048/N1024 already measured in earlier rounds; M64 was a calibration point.
-HISTORICAL = {("QWEN36", 32): "historical_overlap", ("QWEN36", 64): "historical_calibration"}
+HISTORICAL = {("QWEN35", 32): "historical_overlap", ("QWEN35", 64): "historical_calibration"}
 
 # Real snapshots: same request set (S32 = 32 prompts x 512 input tokens) for every model.
 MODELS = (
     # width_id, routed experts, top-k, num_hidden_layers, first MoE layer, capture layer
     ("GLM", 64, 4, 47, 1, 23),
-    ("QWEN36", 256, 8, 40, 0, 20),
+    ("QWEN35", 256, 8, 40, 0, 20),
     ("DSV2L", 64, 6, 27, 1, 13),
 )
 PHASES = (

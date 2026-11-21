@@ -46,7 +46,7 @@ class Design(unittest.TestCase):
     def test_invariants(self):
         cells = rows(DESIGN / "cells.csv")
         self.assertEqual(len(cells), 33)
-        self.assertEqual({c["cohort"] for c in cells if c["width_id"] == "QWEN36" and c["m_per_source_destination"] in ("32", "64")},
+        self.assertEqual({c["cohort"] for c in cells if c["width_id"] == "QWEN35" and c["m_per_source_destination"] in ("32", "64")},
                          {"historical_overlap", "historical_calibration"})
         queue = rows(DESIGN / "queue.csv")
         self.assertEqual(queue[0]["job_type"], "hw_gate")
@@ -58,16 +58,49 @@ class Design(unittest.TestCase):
         self.assertLess(snap_seal, first_snap)
 
 
+class ModelConfigs(unittest.TestCase):
+    """design/ must agree with the pinned config.json files in models/ (hashes match the 2026-10-29 audit)."""
+
+    def config(self, width):
+        c = json.loads((ROOT / "models" / f"{width}.config.json").read_text())
+        return c.get("text_config", c)
+
+    def test_hashes_match_sources(self):
+        sources = json.loads((ROOT / "models" / "SOURCES.json").read_text())["models"]
+        for width, entry in sources.items():
+            self.assertEqual(common.sha256(ROOT / "models" / f"{width}.config.json"), entry["sha256"], width)
+
+    def test_cells_use_model_projection_widths(self):
+        for c in rows(DESIGN / "cells.csv"):
+            t = self.config(c["width_id"])
+            self.assertEqual(int(c["k"]), t["hidden_size"], c["cell_id"])
+            self.assertEqual(int(c["n"]), 2 * t["moe_intermediate_size"], c["cell_id"])
+
+    def test_snapshots_match_model_structure(self):
+        for s in rows(DESIGN / "snapshots.csv"):
+            t = self.config(s["width_id"])
+            experts = t.get("n_routed_experts", t.get("num_experts"))
+            self.assertEqual(int(s["routed_experts"]), experts)
+            self.assertEqual(int(s["top_k"]), t["num_experts_per_tok"])
+            self.assertEqual(experts % 8, 0, "experts must split evenly over 8 ranks")
+            layer = int(s["layer_index"])
+            self.assertLess(layer, t["num_hidden_layers"])
+            self.assertGreaterEqual(layer, t.get("first_k_dense_replace", 0), "capture layer must be an MoE layer")
+            self.assertEqual(layer % t.get("moe_layer_freq", 1), 0)
+            self.assertNotIn(layer, t.get("mlp_only_layers", []))
+            self.assertIn(t.get("dtype", t.get("torch_dtype")), ("bfloat16",))
+
+
 class Predict(unittest.TestCase):
     def test_scenario_runs_and_is_sane(self):
         with tempfile.TemporaryDirectory() as t:
             run("predict.py", "--params", SCENARIO, "--design", DESIGN, "--out", t)
             pred = {(r["unit_id"], r["arm_id"]): float(r["predicted_ms"]) for r in rows(Path(t) / "predictions.csv")}
-            for width in ("GLM", "QWEN36", "DSV2L"):
+            for width in ("GLM", "QWEN35", "DSV2L"):
                 times = [pred[(f"{width}_M{m:04d}", "D_Q1_G2")] for m in (2 ** i for i in range(11))]
                 self.assertEqual(times, sorted(times), f"direct time should not fall as M grows ({width})")
             # Replay 12 (N3072) costs more than replay 4 (N1024) at the same M.
-            self.assertGreater(pred[("GLM_M1024", "D_Q1_G2")], pred[("QWEN36_M1024", "D_Q1_G2")])
+            self.assertGreater(pred[("GLM_M1024", "D_Q1_G2")], pred[("QWEN35_M1024", "D_Q1_G2")])
             seal = json.loads((Path(t) / "PREDICTION_SEAL.json").read_text())
             self.assertIn("scenario", seal["params_source"])
 
@@ -208,13 +241,13 @@ class Analyze(unittest.TestCase):
         glm = [r for r in cross if r["comparison_id"] == "Bb_q1" and r["group"] == "GLM"]
         self.assertEqual([(r["kind"], r["m_low"], r["m_high"]) for r in glm], [("strict", "16", "32")])
         self.assertEqual(glm[0]["direction"], "candidate_wins->baseline_wins")
-        qwen = [r for r in cross if r["comparison_id"] == "Bb_q1" and r["group"] == "QWEN36"]
+        qwen = [r for r in cross if r["comparison_id"] == "Bb_q1" and r["group"] == "QWEN35"]
         self.assertEqual(qwen[0]["kind"], "none")
 
     def test_r1_scores_scenario_prediction(self):
         r1 = {(r["comparison_id"], r["group"]): r["verdict"] for r in rows(self.out / "r1_crossover.csv")}
         self.assertEqual(r1[("Bb_q1", "GLM")], "miss")      # scenario predicts no crossover
-        self.assertEqual(r1[("Bb_q1", "QWEN36")], "hit")    # both none
+        self.assertEqual(r1[("Bb_q1", "QWEN35")], "hit")    # both none
 
     def test_regret(self):
         reg = rows(self.out / "r2_regret.csv")
