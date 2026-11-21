@@ -1,0 +1,43 @@
+{
+  "source": "scenario: placeholder values for the pre-boot prediction, NOT measurements",
+  "notes": {
+    "b_in": "audit M512 logical replayed bytes / kernel time gave 173-194 GB/s; used only as a scenario value",
+    "F_direct_G_launch": "chosen so 8 serialized launches reproduce the 590-770 us small-shape floor seen in P1/P2; unmeasured",
+    "a2a_allgather": "scenario latency and bandwidth for 8-GPU NVSwitch collectives; unmeasured",
+    "F_staged": "unmeasured; set equal to F_direct so the pre-boot scenario does not favour either path (both run in one harness and synchronise 8 GPUs)",
+    "check": "reproduces P1 M512 within +13..23% (q4/g1 1809 vs 1607 us, q4/g2 1172 vs 953 us) and the 590-770 us small-shape floor; not fitted"
+  },
+  "sm_count": 108,
+  "tile_m": 64,
+  "tile_n_base": 128,
+  "occupancy": {
+    "g1": 3,
+    "g2": 1
+  },
+  "b_hbm": 1500000000000.0,
+  "l2_bytes": 40000000,
+  "mma_peak": 200000000000000.0,
+  "b_in": {
+    "per_cta": 3500000000.0,
+    "max_by_peers": {
+      "1": 190000000000.0,
+      "7": 230000000000.0
+    }
+  },
+  "F_direct": 0.00015,
+  "G_launch": 4e-05,
+  "F_staged": 0.00015,
+  "a2a": {
+    "latency": 4e-05,
+    "bw": 200000000000.0
+  },
+  "allgather": {
+    "latency": 3e-05,
+    "bw": 200000000000.0
+  },
+  "lt_launch": 1e-05,
+  "splitk": {
+    "partial_bytes": 4,
+    "sem_per_slice": 2e-06
+  }
+}

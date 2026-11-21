@@ -1,0 +1,19 @@
+arm_id,stage,kind,implementation,sources_per_launch,split_k,n_tile_multiplier,gpu_status,block_type
+D_Q1_G2,balanced,direct,per-source direct CUTLASS SM80 (J1),1,1,2,gpu_run,core
+D_Q4_G2,balanced,direct,"per-source direct CUTLASS SM80 (J1), P2 fixed policy",1,4,2,gpu_run,core
+BNEW_Q1_G2,balanced,staged,ncclAlltoAll to local + same J1 consumer as D_Q1_G2,1,1,2,new,core
+BNEW_Q4_G2,balanced,staged,ncclAlltoAll to local + same J1 consumer as D_Q4_G2,1,4,2,new,core
+SLT,balanced,staged,single ncclAlltoAll + tuned cuBLASLt (<=8 heuristics),,,,new,core
+HM_CUTLASS,balanced,staged,host merged CUTLASS (historical baseline),,,,gpu_run,core
+HM_LT,balanced,staged,host merged cuBLASLt (historical baseline),,,,gpu_run,core
+D_Q1_G1,balanced,direct,per-source direct CUTLASS SM80 q1/g1 (J1),1,1,1,gpu_run,core
+BOLD_Q1_G1,balanced,staged,pipeline: per-pair NCCL -> staging -> CUTLASS 64x128x32,1,1,1,gpu_run,core
+J8_Q1_G2,balanced,direct,source-parallel grouped GEMM (J8),8,1,2,compiled_only,ablation_j8
+FLUX_V2,balanced,staged_fused,"FLUX GemmGroupedV2AGScatterOp (COMET, SM80)",,,,not_built,flux
+NATIVE,snapshot,staged,vLLM 0.20.1 all-gather + Triton fused_moe gate/up,,,,gpu_run,core
+D_Q1_G2_R,snapshot,direct,"ragged multi-expert direct, J1 q1/g2, BF16",1,1,2,new,core
+D_Q4_G2_R,snapshot,direct,"ragged multi-expert direct, J1 q4/g2, BF16",1,4,2,new,core
+BNEW_Q1_G2_R,snapshot,staged,per-assignment AlltoAll + same consumer as D_Q1_G2_R,1,1,2,new,core
+BNEW_Q4_G2_R,snapshot,staged,per-assignment AlltoAll + same consumer as D_Q4_G2_R,1,4,2,new,core
+FLUX_V2_R,snapshot,staged_fused,FLUX GemmGroupedV2AGScatterOp on real routing,,,,not_built,flux
+J8_Q1_G2_R,snapshot,direct,ragged J8 grouped GEMM (only if implemented),8,1,2,not_implemented,ablation_j8
