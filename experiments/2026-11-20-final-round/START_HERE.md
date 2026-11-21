@@ -90,7 +90,7 @@
 - 该层全部专家的权重；
 - 以上全部文件的哈希。
 
-捕获设置与 2026-11-17 相同：TP1/DP8/EP8，关闭 prefix cache、DBO、EPLB 与 speculative。请求集为 S32：32 条 512 token 的 prompt，各模型用自己的 tokenizer 精确截到 512，输出 128 token，ignore_eos，temperature 0。Qwen3.5 带视觉塔，只跑文本：把图像和视频输入的上限设为 0。
+捕获设置与 2026-11-17 相同：TP1/DP8/EP8，关闭 prefix cache、DBO、EPLB 与 speculative。请求集为 S32：32 条 512 token 的 prompt，各模型用自己的 tokenizer 精确截到 512，输出 128 token，ignore_eos，temperature 0。Qwen3.5 带视觉塔，只跑文本：启动时加 `--language-model-only`。这是模型卡给出的官方参数，vLLM 0.20.1 的 `arg_utils.py` 里有这一项，加上后会跳过视觉编码器和多模态的显存探测。
 
 **捕获兜底（事前登记，2026-11-22）**：某个模型在本机用 TP1/DP8/EP8 起不来，或者能起来但捕获失败时，按下面的规则处理：
 
