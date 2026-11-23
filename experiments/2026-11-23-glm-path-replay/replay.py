@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Run the GLM balanced grid and BF16 replay in a shared eight-rank protocol."""
 import argparse
+from collections import defaultdict
 from contextlib import contextmanager
 from datetime import timedelta
 import hashlib
@@ -17,6 +18,7 @@ import sys
 import time
 
 from balanced import BalancedPaths, cells, input_digest, combine_input_digests
+from hw_gate import inventory as gpu_inventory, load_passing_gate
 from make_design import ROOT, SNAPSHOT, BALANCED, BRIDGE, read, sha
 from snapshots import WORLD, load_rank, load_receipts, layout, reference, correctness, tiles
 
@@ -39,15 +41,16 @@ def append_row(path, row):
 
 
 def hardware(path):
-    gate = json.loads(path.read_text())
-    if gate.get("verdict")!="PASS" or not gate.get("load_test") or gate.get("failures") or gate.get("unchecked"):
-        raise ValueError("passing eight-GPU load/topology/power gate required")
+    gate = load_passing_gate(path)
+    uuids,driver = gpu_inventory()
+    if uuids!=gate["gpu_uuids"] or driver!=gate["driver"]:
+        raise ValueError("GPU inventory or driver changed after hardware qualification")
     return gate
 
 
 def inventory():
-    return subprocess.check_output(["nvidia-smi","--query-gpu=uuid","--format=csv,noheader"],
-                                   text=True,timeout=20).splitlines()
+    uuids,_ = gpu_inventory()
+    return uuids
 
 
 def verify_captures(a):
@@ -82,6 +85,20 @@ def source_paths(library):
     return paths
 
 
+def check_slt(tuned, gate, design, library, uuids):
+    if (tuned.get("schema")!="edmir.glm-slt.v1" or tuned.get("hardware_sha256")!=sha(gate)
+            or tuned.get("design_sha256")!=sha(design/"DESIGN.json")
+            or tuned.get("library_sha256")!=sha(library) or tuned.get("gpu_uuids")!=uuids
+            or tuned.get("balanced_sha256")!=sha(ROOT/"balanced.py")
+            or set(tuned["cells"])!=set(cells(design)) or any(len(x)!=WORLD for x in tuned["cells"].values())):
+        raise ValueError("SLT tuning receipt differs from the run")
+
+
+def snapshot_stage(run):
+    """True when this run registered the two captured snapshots."""
+    return any(key.endswith(":real") for key in run["inputs"])
+
+
 def prepare(a):
     import torch
     from analyze import load_prediction
@@ -91,17 +108,26 @@ def prepare(a):
     uuids = inventory()
     if len(uuids)!=WORLD or len(set(uuids))!=WORLD:
         raise ValueError("eight distinct GPU UUIDs required")
-    check_smoke(json.loads(a.smoke_receipt.read_text()),a.gate,uuids,a.library)
-    inputs,captures,coverage = verify_captures(a)
-    tuned = json.loads(a.slt_receipt.read_text())
-    if (tuned.get("schema")!="edmir.glm-slt.v1" or tuned.get("hardware_sha256")!=sha(a.gate)
-            or tuned.get("design_sha256")!=sha(a.design/"DESIGN.json")
-            or tuned.get("library_sha256")!=sha(a.library) or tuned.get("gpu_uuids")!=uuids
-            or tuned.get("balanced_sha256")!=sha(ROOT/"balanced.py")
-            or set(tuned["cells"])!=set(cells(a.design)) or any(len(x)!=WORLD for x in tuned["cells"].values())):
-        raise ValueError("SLT tuning receipt differs from the run")
-    check_microbench(json.loads(a.microbench.read_text()),sha(a.gate),uuids,
-                     [shape[0] for shape in cells(a.design).values()])
+    # Only the hardware gate and the design stop a run. A missing capture, SLT receipt or
+    # microbenchmark removes only what depends on it and is recorded in RUN.json.
+    smoke_failed = check_smoke(json.loads(a.smoke_receipt.read_text()),a.gate,uuids,a.library)
+    missing = {}
+    if a.without_snapshots:
+        if a.native_tune:
+            raise ValueError("--native-tune binds a capture; omit it with --without-snapshots")
+        inputs,captures,coverage = {},[],{}
+        missing["snapshots"] = a.without_snapshots
+    else:
+        inputs,captures,coverage = verify_captures(a)
+    if a.slt_receipt:
+        check_slt(json.loads(a.slt_receipt.read_text()),a.gate,a.design,a.library,uuids)
+    else:
+        missing["slt.json"] = "not provided: SLT is recorded as unsupported"
+    if a.microbench:
+        check_microbench(json.loads(a.microbench.read_text()),sha(a.gate),uuids,
+                         [shape[0] for shape in cells(a.design).values()])
+    else:
+        missing["microbench.json"] = "not provided"
     load_prediction(a.prediction,a.design,"balanced")
     for row in captures:
         provenance = row["native_tune"]
@@ -117,10 +143,10 @@ def prepare(a):
     if runtime["vllm"]!="0.20.1":
         raise ValueError("pinned vLLM 0.20.1 is required")
     files = {name:sha(path) for name,path in source_paths(a.library).items()}
-    artifacts = {"hw_gate.json":a.gate,"slt.json":a.slt_receipt,"smoke.json":a.smoke_receipt,
-                 "microbench.json":a.microbench}
-    if a.native_tune:
-        artifacts["native_tune.json"] = a.native_tune
+    artifacts = {"hw_gate.json":a.gate,"smoke.json":a.smoke_receipt,"slt.json":a.slt_receipt,
+                 "microbench.json":a.microbench,"native_tune.json":a.native_tune,
+                 "native_tune_trials.json":a.native_trials}
+    artifacts = {name:path for name,path in artifacts.items() if path}
     frozen = {name:sha(path) for name,path in artifacts.items()}
     prediction = {p.name:sha(p) for p in a.prediction.iterdir() if p.is_file()}
     harness = canonical_digest(dict(runtime=runtime,files=files,artifacts=frozen,prediction=prediction,
@@ -133,7 +159,8 @@ def prepare(a):
         run_id=a.run.name,design_sha256=sha(a.design/"DESIGN.json"),hardware_sha256=frozen["hw_gate.json"],
         harness=harness,inputs=inputs,builds={arm:canonical_digest([arm,harness]) for arm in SNAPSHOT+BALANCED},
         runtime=runtime,files=files,artifacts=frozen,prediction=prediction,gpu_uuids=uuids,
-        coverage=coverage,capture_run_id=captures[0]["run_id"],scope="fixed input to gate/up output"))
+        coverage=coverage,capture_run_id=captures[0]["run_id"] if captures else None,
+        missing=missing,smoke_failures=smoke_failed,scope="fixed input to gate/up output"))
 
 
 class Paths:
@@ -350,14 +377,29 @@ def smoke_identity(gate, uuids, library):
                 library_sha256=sha(library))
 
 
+def smoke_failures(smoke):
+    failed = [arm for arm in SNAPSHOT if smoke.get("arms",{}).get(arm,{}).get("status")!="ok"]
+    failed += [f"{unit}:{arm}" for unit in SMOKE_CELLS for arm in BALANCED
+               if smoke.get("balanced",{}).get(unit,{}).get(arm,{}).get("status")!="ok"]
+    return failed
+
+
 def check_smoke(smoke, gate, uuids, library):
-    """The five BF16 arms must pass; every FP16 arm must have been exercised on both shapes."""
-    if (any(smoke.get(k)!=v for k,v in smoke_identity(gate,uuids,library).items())
-            or set(smoke.get("arms",{}))!=set(SNAPSHOT)
-            or any(r["status"]!="ok" for r in smoke["arms"].values())
-            or set(smoke.get("balanced",{}))!=set(SMOKE_CELLS)
-            or any(set(arms)!=set(BALANCED) for arms in smoke["balanced"].values())):
+    """The smoke must be current. Arm statuses are diagnostic: formal admission decides each arm,
+    so a failing smoke arm never blocks the arms that work."""
+    if any(smoke.get(k)!=v for k,v in smoke_identity(gate,uuids,library).items()):
         raise ValueError("current synthetic smoke receipt required")
+    return smoke_failures(smoke)
+
+
+def attempt(fn, group):
+    """Run fn on every rank; if any rank raised, every rank gets None and the errors."""
+    try:
+        value,error = fn(),None
+    except Exception as exc:
+        value,error = None,repr(exc)
+    errors = spread(error,group)
+    return (None,errors) if any(errors) else (value,None)
 
 
 def smoke(a):
@@ -372,6 +414,7 @@ def smoke(a):
             if rank==0:
                 write_json(a.out,receipt)
 
+        emit()
         gen = torch.Generator(device="cpu").manual_seed(800+rank)
         sizes = [5]*WORLD
         ids = [[[(src*9+t*3+e*11)%64 for e in range(4)] for t in range(5)] for src in range(WORLD)]
@@ -383,13 +426,18 @@ def smoke(a):
                        expert_weights=(torch.randn((8,3072,2048),generator=gen)*.125).bfloat16())
         alignment = synthetic_align(torch.tensor(list(itertools.chain.from_iterable(ids)),device=device,
                                                  dtype=torch.int32),cfg,rank)
-        paths = Paths(payload,rows,routes,rank,device,cpu_group,alignment)
+        paths,errors = attempt(lambda:Paths(payload,rows,routes,rank,device,cpu_group,alignment),cpu_group)
         for arm in SNAPSHOT:
-            receipt["arms"][arm] = guarded_admission(paths,arm,cpu_group)
+            receipt["arms"][arm] = (guarded_admission(paths,arm,cpu_group) if paths is not None
+                                    else dict(status="runtime_error",rank_errors=errors))
             emit()
         # The FP16 grid arms, the CUTLASS bridge and cuBLASLt run here before any model is loaded.
         for unit,shape in SMOKE_CELLS.items():
-            grid = BalancedPaths(unit,"smoke",shape,rank,device,a.library,None)
+            grid,errors = attempt(lambda:BalancedPaths(unit,"smoke",shape,rank,device,a.library,None),cpu_group)
+            if grid is None:
+                receipt["balanced"][unit] = {arm:dict(status="runtime_error",rank_errors=errors) for arm in BALANCED}
+                emit()
+                continue
             try:
                 try:
                     chosen = grid.tune()["selected"]
@@ -443,22 +491,27 @@ def timed(path, policy, arm, cpu_group):
     import torch.distributed as dist
 
     start,end = (torch.cuda.Event(enable_timing=True) for _ in range(2))
-    samples,events = [],[]
+    samples,events,enqueue = [],[],[]
     for i in range(policy["warmup"]+policy["timed"]):
         dist.barrier()
         torch.cuda.synchronize()
         begin = time.perf_counter_ns()
         start.record()
         path.run(arm)
+        # Host time to issue all work; close to the wall time means the iteration is launch-bound.
+        queued = time.perf_counter_ns()
         end.record()
         end.synchronize()
         if i>=policy["warmup"]:
             samples.append((time.perf_counter_ns()-begin)/1e6)
             events.append(start.elapsed_time(end))
-    return spread(dict(host=samples,event=events,counts=path.counts(arm)),cpu_group)
+            enqueue.append((queued-begin)/1e6)
+    return spread(dict(host=samples,event=events,enqueue=enqueue,counts=path.counts(arm)),cpu_group)
 
 
 def snapshot_receipts(a, run, unit):
+    if unit+":real" not in run["inputs"]:
+        raise ValueError("this run was prepared without snapshots")
     if a.snapshots is None or not (a.snapshots/unit).is_dir():
         raise ValueError("snapshot input directory required")
     rows = load_receipts(a.snapshots,a.design,unit)
@@ -500,9 +553,14 @@ def device_run(a):
     previous = analyze.jsonl(mpath) if mpath.exists() else []
     _,policy,_ = analyze.check_rows(a.design,run,a.run,admission,previous)
     blocks = [b for b in read(a.design/"blocks.csv") if b["process_id"]==getattr(a,"process",None)]
+    attempt_no = 2 if getattr(a,"retry",False) else 1
     if a.action=="time":
-        if not blocks or a.process in {r["process_id"] for r in previous}:
+        mine = [r for r in previous if r["process_id"]==a.process]
+        if not blocks or any(r.get("attempt",1)==attempt_no for r in mine):
             raise ValueError("unknown or already recorded timing process")
+        if attempt_no==2 and (not (a.run/"process-started"/a.process).exists()
+                              or not analyze.first_attempt_failed(mine,len(blocks))):
+            raise ValueError("a retry needs a started first attempt that ended in an infrastructure failure")
         unit,rep = blocks[0]["unit_id"],blocks[0]["rep"]
         if not (a.run/"ADMISSION_LOCK.json").is_file():
             raise ValueError("finish and lock admission before any formal timing")
@@ -517,11 +575,14 @@ def device_run(a):
     # must not consume the single formal attempt of a timing process.
     rows = None if balanced else snapshot_receipts(a,run,unit)
     if a.action=="time" and int(os.environ["RANK"])==0:
-        claim_process(a.run,a.process)
+        claim_process(a.run,a.process if attempt_no==1 else a.process+".retry")
     admitted = {(r["unit_id"],r["input_id"],r["arm_id"]):analyze.numerically_valid(r) for r in admission}
     with gpu_session(run["gpu_uuids"]) as (rank,device,cpu_group):
         if balanced:
-            tuned = json.loads((a.run/"slt.json").read_text())["cells"][unit][rank]["selected"]
+            tuned = (json.loads((a.run/"slt.json").read_text())["cells"][unit][rank]["selected"]
+                     if "slt.json" in run["artifacts"] else None)
+            # Decide SLT on every rank together: one rank without an algorithm would hang the others.
+            slt_ready = all(spread(tuned is not None,cpu_group))
             paths = BalancedPaths(unit,rep,cells(a.design)[unit],rank,device,a.library,tuned)
             actual = combine_input_digests(spread(paths.input_sha256,cpu_group))
             if actual!=run["inputs"][f"{unit}:{rep}"]:
@@ -540,13 +601,19 @@ def device_run(a):
                 for arm in choices:
                     if (unit,rep,arm) in admitted:
                         continue
+                    if balanced and arm=="SLT" and not slt_ready:
+                        if rank==0:
+                            append_row(apath,dict(**record_identity(run,unit,rep,arm),input_id=rep,
+                                status="unsupported",reason="no frozen cuBLASLt algorithm on every rank",
+                                scaled_max_err=None,nonfinite=None,fingerprint_ok=False))
+                        continue
                     result = checked_admission(spread(paths.admit(arm),cpu_group))
                     if rank==0:
                         append_row(apath,dict(**record_identity(run,unit,rep,arm),input_id=rep,**result))
                 return
             for b in blocks:
                 arm = b["arm_id"]
-                rec = dict(**record_identity(run,unit,rep,arm),
+                rec = dict(**record_identity(run,unit,rep,arm),attempt=attempt_no,
                            **{k:b[k] for k in ("process_id","orientation","rep","arm_position")})
                 if (arm in BRIDGE and not lock["bridge_enabled"]) or not admitted.get((unit,rep,arm)):
                     if rank==0:
@@ -555,16 +622,23 @@ def device_run(a):
                 try:
                     ranks = timed(paths,policy,arm,cpu_group)
                     if rank==0:
-                        relative = f"{a.process}-{arm}-samples.json"
-                        event_file = f"{a.process}-{arm}-events.json"
+                        tag = a.process if attempt_no==1 else a.process+"-retry"
+                        relative = f"{tag}-{arm}-samples.json"
+                        event_file = f"{tag}-{arm}-events.json"
+                        enqueue_file = f"{tag}-{arm}-enqueue.json"
                         host = list(zip(*(x["host"] for x in ranks),strict=True))
                         events = list(zip(*(x["event"] for x in ranks),strict=True))
+                        enqueue = list(zip(*(x["enqueue"] for x in ranks),strict=True))
                         write_json(a.run/relative,host)
                         write_json(a.run/event_file,events)
+                        write_json(a.run/enqueue_file,enqueue)
                         append_row(mpath,dict(**rec,status="ok",warmup=policy["warmup"],timed=policy["timed"],
                             median_wall_ms=statistics.median(map(max,host)),median_event_ms=statistics.median(map(max,events)),
+                            median_enqueue_ms=statistics.median(map(max,enqueue)),
                             samples_file=relative,samples_sha256=sha(a.run/relative),
-                            events_file=event_file,events_sha256=sha(a.run/event_file),rank_counts=[x["counts"] for x in ranks]))
+                            events_file=event_file,events_sha256=sha(a.run/event_file),
+                            enqueue_file=enqueue_file,enqueue_sha256=sha(a.run/enqueue_file),
+                            rank_counts=[x["counts"] for x in ranks]))
                 except Exception as exc:
                     if rank==0:
                         append_row(mpath,dict(**rec,status="runtime_error",error=repr(exc)))
@@ -604,11 +678,15 @@ def admit_jobs(a):
     if (a.run/"ADMISSION_LOCK.json").exists():
         raise ValueError("admission is already locked")
     run = json.loads((a.run/"RUN.json").read_text())
+    if snapshot_stage(run) and a.snapshots is None:
+        raise ValueError("--snapshots is required for a run with captured snapshots")
     path = a.run/"admission.jsonl"
     admission = analyze.jsonl(path) if path.exists() else []
     seen = {(r["unit_id"],r["input_id"],r["arm_id"]) for r in admission}
     desired = {(b["unit_id"],b["rep"] if b["stage"]=="balanced" else "real",b["arm_id"])
                for b in read(a.design/"blocks.csv")}
+    if not snapshot_stage(run):
+        desired = {key for key in desired if key[1]!="real"}
     if a.unit:
         desired = {key for key in desired if key[0]==a.unit}
     def execute(unit,rep,arm):
@@ -639,24 +717,46 @@ def admit_jobs(a):
                 execute(unit,rep,arm)
 
 
+def exit_status(code):
+    return "ok" if code==0 else "timeout" if code==124 else "runtime_error"
+
+
 def time_all(a):
+    import analyze
+
     if not (a.run/"ADMISSION_LOCK.json").is_file():
         raise ValueError("complete and lock admission before submitting the formal queue")
-    claims = a.run/"process-started"
-    for row in read(a.design/"queue.csv"):
-        if row["job"]!="timing_block":
-            continue
-        pid = row["process_id"]
+    run = json.loads((a.run/"RUN.json").read_text())
+    if snapshot_stage(run) and a.snapshots is None:
+        raise ValueError("--snapshots is required for a run with captured snapshots")
+    claims,exits,mpath = a.run/"process-started",a.run/"process-exits.jsonl",a.run/"metrics.jsonl"
+    arms = defaultdict(int)
+    for b in read(a.design/"blocks.csv"):
+        arms[b["process_id"]] += 1
+    grid = cells(a.design)
+    order = [r["process_id"] for r in read(a.design/"queue.csv") if r["job"]=="timing_block"
+             and (snapshot_stage(run) or r["unit_id"] in grid)]
+    for pid in order:
         if (claims/pid).exists():
             continue
         code = launch_job(a,["time","--process",pid],a.timeout)
         if not (claims/pid).exists():
             claim_process(a.run,pid)
-        append_row(a.run/"process-exits.jsonl",
-                   dict(process_id=pid,exit_code=code,status="ok" if code==0 else
-                        "timeout" if code==124 else "runtime_error"))
-        if code and not (a.run/"metrics.jsonl").exists():
+        append_row(exits,dict(process_id=pid,attempt=1,exit_code=code,status=exit_status(code)))
+        # Stop once, at the very first formal process, so a systematic failure is reviewed.
+        # Rerunning time-all continues past it; failed processes get their retry at the end.
+        if code and pid==order[0] and not mpath.exists():
             raise RuntimeError(f"first timing process {pid} exited {code}; review the retained logs")
+    # One retry per process after the whole queue, decided only from exit status and row
+    # completeness, never from timing values. The retry replaces that process's first attempt.
+    for pid in order:
+        mine = [r for r in analyze.jsonl(mpath) if r["process_id"]==pid] if mpath.exists() else []
+        if (claims/(pid+".retry")).exists() or not analyze.first_attempt_failed(mine,arms[pid]):
+            continue
+        code = launch_job(a,["time","--process",pid,"--retry"],a.timeout)
+        if not (claims/(pid+".retry")).exists():
+            claim_process(a.run,pid+".retry")
+        append_row(exits,dict(process_id=pid,attempt=2,exit_code=code,status=exit_status(code)))
 
 
 def lock_admission(a):
@@ -667,7 +767,7 @@ def lock_admission(a):
     rows = analyze.jsonl(path)
     blocks,_,_ = analyze.check_rows(a.design,run,a.run,rows,[])
     main = {(b["unit_id"],b["rep"] if b["stage"]=="balanced" else "real",b["arm_id"])
-            for b in blocks if b["arm_id"] not in BRIDGE}
+            for b in blocks if b["arm_id"] not in BRIDGE and (b["stage"]=="balanced" or snapshot_stage(run))}
     seen = {(r["unit_id"],r["input_id"],r["arm_id"]) for r in rows}
     if not main<=seen:
         raise ValueError("all primary admissions must be recorded before timing")
@@ -695,8 +795,12 @@ def cli():
         cmd.add_argument("--gate",type=Path,required=True)
         cmd.add_argument("--out",type=Path,required=True)
     prep = sub.add_parser("prepare")
-    for name in ("gate","slt-receipt","smoke-receipt","microbench","prediction","native-tune"):
-        prep.add_argument("--"+name,type=Path,required=name!="native-tune")
+    for name in ("gate","smoke-receipt","prediction"):
+        prep.add_argument("--"+name,type=Path,required=True)
+    for name in ("slt-receipt","microbench","native-tune","native-trials"):
+        prep.add_argument("--"+name,type=Path)
+    prep.add_argument("--without-snapshots",metavar="REASON",
+                      help="register the FP16 grid only, because the capture could not be obtained")
     admit = sub.add_parser("admit")
     admit.add_argument("--unit")
     admit.add_argument("--timeout",type=int,default=240)
@@ -704,11 +808,16 @@ def cli():
     for field in ("unit","input-id","arm"):
         arm.add_argument("--"+field,required=True)
     sub.add_parser("lock-admission")
-    sub.add_parser("time").add_argument("--process",required=True)
+    timing = sub.add_parser("time")
+    timing.add_argument("--process",required=True)
+    timing.add_argument("--retry",action="store_true",help="the single retry after an infrastructure failure")
     sub.add_parser("time-all").add_argument("--timeout",type=int,default=600)
     a = p.parse_args()
-    if a.action in {"verify","prepare","admit","admit-arm","time","time-all"} and not a.snapshots:
+    # admit, admit-arm, time and time-all check --snapshots against RUN.json before launching anything.
+    if a.action=="verify" and not a.snapshots:
         p.error("--snapshots is required")
+    if a.action=="prepare" and bool(a.snapshots)==bool(a.without_snapshots):
+        p.error("prepare needs exactly one of --snapshots and --without-snapshots")
     if a.action in {"prepare","admit","admit-arm","lock-admission","time","time-all"} and not a.run:
         p.error("--run is required")
     if a.action in {"smoke","tune-slt","prepare","admit","admit-arm","time","time-all"} and not a.library:

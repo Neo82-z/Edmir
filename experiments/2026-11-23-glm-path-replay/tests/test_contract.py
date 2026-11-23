@@ -10,6 +10,7 @@ from snapshots import correctness, layout, load_receipts, reference, validate_te
 
 DESIGN = ROOT/"design"
 DUMMY = "a"*64
+BALANCED_MAIN = [arm for arm in __import__("make_design").BALANCED if arm not in BRIDGE]
 
 
 def setup_run(out):
@@ -180,7 +181,7 @@ class TestAnalysis(unittest.TestCase):
         from unittest.mock import patch
         from replay import admit_jobs, append_row, record_identity
 
-        a = SimpleNamespace(run=self.path,design=DESIGN,unit="GLM_PREFILL",timeout=1)
+        a = SimpleNamespace(run=self.path,design=DESIGN,unit="GLM_PREFILL",timeout=1,snapshots=self.path)
         (a.run/"RUN.json").write_text(json.dumps(self.run))
         active = []
         def child(_,args,timeout):
@@ -198,28 +199,104 @@ class TestAnalysis(unittest.TestCase):
         rows = [json.loads(line) for line in (a.run/"admission.jsonl").read_text().splitlines()]
         self.assertEqual(sum(row["status"]=="runtime_error" for row in rows),1)
 
-    def test_missing_snapshots_fail_before_a_timing_claim(self):
+    def test_missing_snapshots_fail_before_any_launch_or_claim(self):
         import contextlib
         import io
         import sys
         from types import SimpleNamespace
         from unittest.mock import patch
-        from replay import cli, snapshot_receipts
+        from replay import admit_jobs, cli, snapshot_receipts, time_all
 
         for snapshots in (None,self.path/"absent"):
             with self.subTest(snapshots=snapshots):
                 a = SimpleNamespace(snapshots=snapshots,design=DESIGN)
                 with self.assertRaisesRegex(ValueError,"snapshot input directory"):
                     snapshot_receipts(a,self.run,"GLM_PREFILL")
+        grid_only = dict(self.run,inputs={k:v for k,v in self.run["inputs"].items() if not k.endswith(":real")})
+        with self.assertRaisesRegex(ValueError,"without snapshots"):
+            snapshot_receipts(SimpleNamespace(snapshots=self.path,design=DESIGN),grid_only,"GLM_PREFILL")
+        (self.path/"RUN.json").write_text(json.dumps(self.run))
+        a = SimpleNamespace(run=self.path,design=DESIGN,unit=None,timeout=1,snapshots=None)
+        with patch("replay.launch_job",side_effect=AssertionError("launched")):
+            with self.assertRaisesRegex(ValueError,"--snapshots"):
+                admit_jobs(a)
+            (self.path/"ADMISSION_LOCK.json").write_text("{}")
+            with self.assertRaisesRegex(ValueError,"--snapshots"):
+                time_all(a)
         self.assertFalse((self.path/"process-started").exists())
-        for action in (["admit"],["time","--process","S0595"],["time-all"],
-                       ["admit-arm","--unit","GLM_PREFILL","--input-id","real","--arm","NATIVE"]):
-            argv = ["replay.py","--run",str(self.path),"--library",str(self.path/"lib.so"),*action]
-            with self.subTest(action=action[0]), patch.object(sys,"argv",argv), \
+        self.assertFalse((self.path/"admission.jsonl").exists())
+        for argv in (["verify"],["prepare","--gate","g","--smoke-receipt","s","--prediction","p"],
+                     ["--snapshots","x","prepare","--gate","g","--smoke-receipt","s","--prediction","p",
+                      "--without-snapshots","capture failed"]):
+            with self.subTest(argv=argv), patch.object(sys,"argv",["replay.py","--run",str(self.path),
+                    "--library",str(self.path/"lib.so"),*argv]), \
                     contextlib.redirect_stderr(io.StringIO()), self.assertRaises(SystemExit):
                 cli()
 
-    def test_smoke_receipt_requires_passing_replay_and_exercised_grid(self):
+    def test_grid_runs_without_snapshots(self):
+        from types import SimpleNamespace
+        from unittest.mock import patch
+        from replay import admit_jobs, append_row, lock_admission, record_identity, time_all
+
+        run = dict(self.run,inputs={k:v for k,v in self.run["inputs"].items() if not k.endswith(":real")})
+        (self.path/"RUN.json").write_text(json.dumps(run))
+        a = SimpleNamespace(run=self.path,design=DESIGN,unit=None,timeout=1,snapshots=None)
+        units,retries = [],[]
+        def child(_,args,timeout):
+            if args[0]=="admit-arm":
+                unit,rep,arm = args[2],args[4],args[6]
+                units.append(unit)
+                arms = [x for x in BALANCED_MAIN] if arm=="balanced-main" else [arm]
+                for x in arms:
+                    append_row(self.path/"admission.jsonl",dict(**record_identity(run,unit,rep,x),
+                        status="ok",input_id=rep,scaled_max_err=.001,nonfinite=0,fingerprint_ok=True))
+            else:
+                (retries if "--retry" in args else units).append(args[2])
+            return 0
+        with patch("replay.launch_job",side_effect=child):
+            admit_jobs(a)
+            lock_admission(a)
+            units.clear()
+            time_all(a)
+        # Only the 66 grid processes run; the fake child records no rows, so each gets its one retry.
+        self.assertEqual(len(units),66)
+        self.assertTrue(all(pid.startswith("B") for pid in units+retries))
+        self.assertEqual(sorted(retries),sorted(units))
+
+    def test_one_mechanical_retry_replaces_a_failed_process(self):
+        from types import SimpleNamespace
+        from unittest.mock import patch
+        from analyze import first_attempt_failed
+        from replay import time_all
+
+        pid = self.metrics[0]["process_id"]
+        arms = [m for m in self.metrics if m["process_id"]==pid]
+        first = [dict(arms[0],attempt=1),dict(arms[1],attempt=1,status="runtime_error")]
+        retry = [dict(m,attempt=2,median_wall_ms=m["median_wall_ms"]) for m in arms]
+        self.assertTrue(first_attempt_failed(first,len(arms)))
+        self.assertFalse(first_attempt_failed(arms,len(arms)))
+        others = [m for m in self.metrics if m["process_id"]!=pid]
+        self.metrics = first+retry+others
+        effects = self.results()
+        self.assertTrue(all(r["pairs_complete"]==3 for r in effects))
+        # A retry after a complete first attempt is rejected, so retries cannot select results.
+        self.metrics = arms+retry+others
+        with self.assertRaisesRegex(ValueError,"without an infrastructure failure"):
+            self.results()
+        # time-all retries exactly the failed process, once, after the whole queue.
+        (self.path/"RUN.json").write_text(json.dumps(self.run))
+        (self.path/"ADMISSION_LOCK.json").write_text("{}")
+        (self.path/"metrics.jsonl").write_text("".join(json.dumps(m)+"\n" for m in first+others))
+        a = SimpleNamespace(run=self.path,design=DESIGN,timeout=1,snapshots=self.path)
+        calls = []
+        with patch("replay.launch_job",side_effect=lambda _,args,t:calls.append(args) or 0):
+            time_all(a)
+            time_all(a)
+        retries = [c for c in calls if "--retry" in c]
+        self.assertEqual(retries,[["time","--process",pid,"--retry"]])
+        self.assertEqual(calls[-1],retries[0])
+
+    def test_smoke_receipt_must_be_current_and_lists_failures(self):
         from make_design import BALANCED, SNAPSHOT
         from replay import SMOKE_CELLS, check_smoke, smoke_identity
 
@@ -230,16 +307,15 @@ class TestAnalysis(unittest.TestCase):
         ok = dict(status="ok")
         receipt = dict(**smoke_identity(gate,uuids,library),arms={arm:ok for arm in SNAPSHOT},
                        balanced={u:{arm:ok for arm in BALANCED} for u in SMOKE_CELLS})
+        self.assertEqual(check_smoke(receipt,gate,uuids,library),[])
+        receipt["arms"]["NATIVE"] = dict(status="runtime_error")
         receipt["balanced"]["SMOKE_M0064"]["SLT"] = dict(status="not_run")
-        check_smoke(receipt,gate,uuids,library)
-        for broken in (dict(arms=dict(receipt["arms"],NATIVE=dict(status="runtime_error"))),
-                       dict(balanced={"SMOKE_M0001":receipt["balanced"]["SMOKE_M0001"]}),
-                       dict(balanced={u:{k:v for k,v in arms.items() if k!="BOLD_Q1_G1"}
-                                      for u,arms in receipt["balanced"].items()}),
-                       dict(library_sha256="b"*64)):
-            with self.subTest(broken=list(broken)):
-                with self.assertRaisesRegex(ValueError,"smoke receipt"):
-                    check_smoke(dict(receipt,**broken),gate,uuids,library)
+        del receipt["balanced"]["SMOKE_M0001"]["BOLD_Q1_G1"]
+        self.assertEqual(check_smoke(receipt,gate,uuids,library),
+                         ["NATIVE","SMOKE_M0001:BOLD_Q1_G1","SMOKE_M0064:SLT"])
+        for field in ("library_sha256","balanced_sha256","hardware_sha256"):
+            with self.subTest(field=field), self.assertRaisesRegex(ValueError,"smoke receipt"):
+                check_smoke(dict(receipt,**{field:"b"*64}),gate,uuids,library)
 
     def test_microbench_receipt_and_seven_peer_partition(self):
         from microbench import SCHEMA, KINDS, check_receipt, reader_slot
@@ -252,12 +328,33 @@ class TestAnalysis(unittest.TestCase):
         uuids = [f"GPU-{i}" for i in range(8)]
         micro = dict(schema=SCHEMA,hardware_sha256=DUMMY,gpu_uuids=uuids,
                      implementation_sha256=sha(ROOT/"microbench.py"),rank_measurements=[readings]*8)
-        check_receipt(micro,DUMMY,uuids,m_values)
+        self.assertEqual(check_receipt(micro,DUMMY,uuids,m_values),[])
+        failed = [dict(kind="peer_read_7",error="CompilationError()") if r["kind"]=="peer_read_7" else r
+                  for r in readings]
+        self.assertEqual(check_receipt(dict(micro,rank_measurements=[failed]*8),DUMMY,uuids,m_values),
+                         ["peer_read_7"])
         for broken in ([r for r in readings if r["kind"]!="peer_read_7"],
                        [r for r in readings if r.get("m")!=1024],
                        readings[:-1]+[dict(readings[-1],seconds=float("nan"))]):
             with self.assertRaisesRegex(ValueError,"missing a probe"):
                 check_receipt(dict(micro,rank_measurements=[broken]*8),DUMMY,uuids,m_values)
+
+    def test_bridge_signatures_are_declared_when_the_library_loads(self):
+        import ctypes
+        from types import SimpleNamespace
+        from unittest.mock import patch
+        from balanced import load_library
+
+        class Fake:
+            def __getattr__(self, name):
+                fn = SimpleNamespace(argtypes=None,restype=None)
+                setattr(self,name,fn)
+                return fn
+        with patch("balanced.ct.CDLL",return_value=Fake()):
+            library = load_library(self.path/"lib.so")
+        # BOLD can run in a process that never built a cuBLASLt plan.
+        self.assertEqual(library.edmir_bridge_cutlass.argtypes[3:],(ctypes.c_void_p,)*4)
+        self.assertEqual(library.edmir_lt_run.argtypes,(ctypes.c_void_p,)*7)
 
     def test_timing_claim_cannot_be_replaced(self):
         from replay import claim_process
@@ -269,20 +366,27 @@ class TestAnalysis(unittest.TestCase):
 
     def test_device_event_samples_are_validated(self):
         gate = self.path/"hw_gate.json"
-        gate.write_text(json.dumps(dict(verdict="PASS",load_test=True)))
-        self.run.update(origin="device_measurement",hardware_sha256=sha(gate),artifacts={},prediction={})
+        from test_hw_gate import healthy_gate
+        hw = healthy_gate()
+        gate.write_text(json.dumps(hw))
+        self.run.update(origin="device_measurement",hardware_sha256=sha(gate),gpu_uuids=hw["gpu_uuids"],
+                        artifacts={},prediction={})
         r = self.metrics[0]
         self.metrics = [r]
         for a in self.admission:
             a["hardware_sha256"] = sha(gate)
         r.update(hardware_sha256=sha(gate),events_file=r["samples_file"],events_sha256=r["samples_sha256"],
-                 median_event_ms=r["median_wall_ms"],rank_counts=[
+                 median_event_ms=r["median_wall_ms"],enqueue_file=r["samples_file"],
+                 enqueue_sha256=r["samples_sha256"],median_enqueue_ms=r["median_wall_ms"],rank_counts=[
                      dict(input_rows=2,live_assignments=2,projection_rows=2,projection_live_rows=2,padding_rows=0)
                      for _ in range(8)])
         self.results()
-        r["median_event_ms"] = .1
-        with self.assertRaisesRegex(ValueError,"median_event_ms"):
-            self.results()
+        for field in ("median_event_ms","median_enqueue_ms"):
+            with self.subTest(field=field):
+                bad = dict(r,**{field:.1})
+                self.metrics = [bad]
+                with self.assertRaisesRegex(ValueError,field):
+                    self.results()
 
 
 class TestSnapshot(unittest.TestCase):

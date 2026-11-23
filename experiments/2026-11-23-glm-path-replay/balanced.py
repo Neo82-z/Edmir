@@ -44,19 +44,26 @@ def input_digest(torch, unit, rep, shape):
     return combine_input_digests(tensor_digest(inputs(torch,unit,rep,rank,shape)) for rank in range(WORLD))
 
 
+def load_library(path):
+    """Declare every C signature at load time: 64-bit device pointers must never pass as C int."""
+    library = ct.CDLL(str(path.resolve()))
+    p,i,z = ct.c_void_p,ct.c_int,ct.c_size_t
+    for name,args in (
+        ("create",(i,i,i,ct.POINTER(p))),("destroy",(p,)),("count",(p,)),
+        ("algo",(p,i,p,z)),("algo_size",()),("run",(p,p,p,p,p,p,p)),
+    ):
+        fn = getattr(library,"edmir_lt_"+name)
+        fn.argtypes = args
+        fn.restype = None if name=="destroy" else i
+    library.edmir_bridge_cutlass.argtypes = (i,i,i,p,p,p,p)
+    library.edmir_bridge_cutlass.restype = i
+    return library
+
+
 class Lt:
     def __init__(self, library, m, n, k, torch, device):
         self.library = library
-        p,i,z = ct.c_void_p,ct.c_int,ct.c_size_t
-        for name,args in (
-            ("create",(i,i,i,ct.POINTER(p))),("destroy",(p,)),("count",(p,)),
-            ("algo",(p,i,p,z)),("algo_size",()),("run",(p,p,p,p,p,p,p)),
-        ):
-            fn = getattr(library,"edmir_lt_"+name)
-            fn.argtypes = args
-            fn.restype = None if name=="destroy" else i
-        library.edmir_bridge_cutlass.argtypes = (i,i,i,p,p,p,p)
-        library.edmir_bridge_cutlass.restype = i
+        p = ct.c_void_p
         self.plan = p()
         self.check(library.edmir_lt_create(m,n,k,ct.byref(self.plan)))
         self.work = torch.empty(WORKSPACE,dtype=torch.uint8,device=device)
@@ -94,7 +101,8 @@ class BalancedPaths:
         self.torch,self.dist,self.launch = torch,dist,launch
         self.m,self.k,self.n = shape
         self.rank,self.device = rank,device
-        self.library,self.lt,self.choice = ct.CDLL(str(library.resolve())),None,None
+        # Only SLT and the BOLD bridge need the shared library; D and BNEW run without it.
+        self.library_path,self._library,self.lt,self.choice = library,None,None,None
         vec,weight = inputs(torch,unit,rep,rank,shape)
         self.input_sha256 = tensor_digest((vec,weight))
         self.weight = weight.to(device)
@@ -113,6 +121,12 @@ class BalancedPaths:
         self.partial = self.out.new_empty((4,self.m,self.n),dtype=torch.float32)
         self.table = torch.tensor(tiles([self.m]),dtype=torch.int32,device=device)
         self.tuned = tuned
+
+    @property
+    def library(self):
+        if self._library is None:
+            self._library = load_library(self.library_path)
+        return self._library
 
     def close(self):
         if self.lt is not None:

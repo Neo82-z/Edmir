@@ -179,11 +179,13 @@ class CaptureState:
         if ids.shape!=weights.shape:raise ValueError("router ID/weight shape mismatch")
         begin,end=route_slice_bounds(int(ids.shape[0]),rank=self.rank,sizes=sizes,real_count=len(tokens),layout=layout)
         if self.current["snapshot"] and layer.layer_id==23:
-            if layout!="gathered_dp" or "snapshot_routes" in self.current:
-                raise ValueError("replay requires one gathered route at layer 23")
+            if "snapshot_routes" in self.current:
+                raise ValueError("replay expects one route per rank at layer 23")
+            # Both layouts give this rank's padded source rows: offset 0 when routing is local
+            # (observed on 2026-11-17), the rank's offset in the gathered rows for naive dispatch.
             padded_end=begin+sizes[self.rank]
             self.current["snapshot_routes"]=(ids[begin:padded_end].detach().cpu(),
-                                            weights[begin:padded_end].detach().float().cpu())
+                                            weights[begin:padded_end].detach().float().cpu(),layout)
         # Slice before D2H: do not copy all gathered routes on every rank.
         result=slice_routes(ids[begin:end].detach().cpu().tolist(),
             weights[begin:end].detach().float().cpu().tolist(),rank=self.rank,
@@ -255,7 +257,7 @@ class CaptureState:
                                                "use_int4_w4a16","per_channel_quant","block_shape"))
                 or any(bound.get(k) is not None for k in ("A_scale","B_scale"))):
             raise ValueError("unsupported native gate/up argument")
-        ids,weights=self.current.pop("snapshot_routes")
+        ids,weights,routing_layout=self.current.pop("snapshot_routes")
         cfg={k:v for k,v in bound["config"].items() if type(v) in (int,float,str,bool)}
         fm=importlib.import_module("vllm.model_executor.layers.fused_moe.fused_moe")
         filename=fm.get_config_file_name(8,1536,None)
@@ -289,6 +291,7 @@ class CaptureState:
             step=self.current["step"],padded_sizes=sizes,tokens=tokens,snapshot_sha256=file_sha(path),
             source_lock_sha256=self.config["source_lock_sha256"],request_sha256=self.config["request_sha256"],
             native_config=cfg,native_tune=tune,native_strides=dict(A=list(a.stride()),B=list(b.stride()),C=list(c.stride())),
+            routing_layout=routing_layout,
             expert_map=expected_map,gate_up_accumulator="float32"))
 
     def close(self):

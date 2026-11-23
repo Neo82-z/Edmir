@@ -10,6 +10,7 @@ from collections import defaultdict
 from pathlib import Path
 
 from make_design import DESIGN_ID, ROOT, read, sha
+from hw_gate import load_passing_gate
 sys.path.append(str(ROOT.parent / "2026-11-20-final-round" / "scripts"))
 from common import classify, intervals, write_csv  # noqa: E402
 
@@ -27,6 +28,15 @@ def finite(x):
 
 def jsonl(path):
     return [json.loads(line) for line in path.read_text().splitlines() if line.strip()]
+
+
+RETRYABLE = {"runtime_error", "timeout", "infrastructure_failure"}
+
+
+def first_attempt_failed(rows, arms):
+    """The one retry rule: the first attempt left an arm unrecorded or hit an infrastructure error."""
+    first = [r for r in rows if r.get("attempt", 1) == 1]
+    return len(first) < arms or any(r["status"] in RETRYABLE for r in first)
 
 
 def numerically_valid(row):
@@ -50,9 +60,9 @@ def check_rows(design, run, source, admission, metrics):
         gate_path = source / "hw_gate.json"
         if sha(gate_path) != run["hardware_sha256"]:
             raise ValueError("hardware gate digest mismatch")
-        gate = json.loads(gate_path.read_text())
-        if gate.get("verdict") != "PASS" or not gate.get("load_test") or gate.get("failures") or gate.get("unchecked"):
-            raise ValueError("passing hardware gate required")
+        gate = load_passing_gate(gate_path)
+        if run.get("gpu_uuids")!=gate["gpu_uuids"]:
+            raise ValueError("run GPU inventory differs from the hardware gate")
         for name,digest_ in run["artifacts"].items():
             if Path(name).name!=name or sha(source/name)!=digest_:
                 raise ValueError(f"run artifact changed: {name}")
@@ -86,18 +96,21 @@ def check_rows(design, run, source, admission, metrics):
         admitted[key] = numerically_valid(row)
     timings, seen, excluded = {}, set(), set()
     arm_order = defaultdict(int)
+    by_process = defaultdict(list)
     for row in metrics:
         key = row["process_id"], row["arm_id"]
-        if key not in planned or key in seen:
+        attempt = row.get("attempt", 1)
+        if key not in planned or attempt not in (1, 2) or (key, attempt) in seen:
             raise ValueError(f"invalid or duplicate timing {key}")
-        seen.add(key)
+        seen.add((key, attempt))
+        by_process[key[0]].append(row)
         b = planned[key]
         unit, seed, arm = b["unit_id"], b["rep"] if b["stage"] == "balanced" else "real", key[1]
         identity(row, unit, seed, arm)
         if any(str(row.get(f)) != b[f] for f in ("unit_id", "rep", "orientation", "arm_position")):
             raise ValueError(f"timing does not match block {key}")
-        arm_order[key[0]] += 1
-        if str(arm_order[key[0]]) != b["arm_position"]:
+        arm_order[key[0], attempt] += 1
+        if str(arm_order[key[0], attempt]) != b["arm_position"]:
             raise ValueError(f"timing rows violate scheduled arm order {key}")
         if row["status"] in FAILURES:
             if row["status"] in {"numerical_failure", "fallback_detected"}:
@@ -110,6 +123,7 @@ def check_rows(design, run, source, admission, metrics):
         value = verify_samples(source,row,"samples","median_wall_ms",policy,key)
         if run["origin"] == "device_measurement":
             verify_samples(source,row,"events","median_event_ms",policy,key)
+            verify_samples(source,row,"enqueue","median_enqueue_ms",policy,key)
             counts = row.get("rank_counts",[])
             required = {"input_rows","live_assignments","projection_rows","projection_live_rows","padding_rows"}
             if len(counts)!=8 or any(not required<=c.keys() or
@@ -118,11 +132,25 @@ def check_rows(design, run, source, admission, metrics):
                     c["live_assignments"]!=c["projection_live_rows"] for c in counts):
                 raise ValueError(f"invalid per-rank row counts {key}")
         if admitted.get((unit, seed, arm)):
-            timings[key] = value
+            timings[key, attempt] = value
+    arms_in = defaultdict(int)
+    for b in blocks:
+        arms_in[b["process_id"]] += 1
+    retried = retried_processes(metrics)
+    for pid in retried:
+        if not first_attempt_failed(by_process[pid], arms_in[pid]):
+            raise ValueError(f"retry of {pid} without an infrastructure failure of the first attempt")
+    # A retried process contributes only its retry, so arms in one process stay one block.
+    timings = {key: v for (key, attempt), v in timings.items()
+               if attempt == (2 if key[0] in retried else 1)}
     # A unit that failed any correctness seed cannot provide any timing for that arm.
     excluded |= {(u, a) for u, s, a in admission_keys if not admitted.get((u, s, a))}
     return blocks, policy, {key: v for key, v in timings.items()
                            if (planned[key]["unit_id"], key[1]) not in excluded}
+
+
+def retried_processes(metrics):
+    return {r["process_id"] for r in metrics if r.get("attempt", 1) == 2}
 
 
 def verify_samples(source,row,label,median_field,policy,key):
@@ -297,13 +325,16 @@ def main():
         group["prediction_verdict"] = score_crossing(group, support, bins)
     args.out.mkdir(parents=True, exist_ok=True)
     write_csv(args.out / "effects.csv", list(effects[0]), effects)
+    retried = retried_processes(metrics)
     diagnostics = []
     for row in metrics:
-        if (row["process_id"],row["arm_id"]) not in timings or "rank_counts" not in row:
+        used = row.get("attempt",1)==(2 if row["process_id"] in retried else 1)
+        if not used or (row["process_id"],row["arm_id"]) not in timings or "rank_counts" not in row:
             continue
         counts = row["rank_counts"]
         diagnostics.append(dict(**{k:row[k] for k in ("process_id","unit_id","arm_id",
-                "median_wall_ms","median_event_ms")},
+                "median_wall_ms","median_event_ms","median_enqueue_ms")},
+            enqueue_over_wall=row["median_enqueue_ms"]/row["median_wall_ms"],
             total_live_rows=sum(c["projection_live_rows"] for c in counts),
             total_dp_pad_rows=sum(c["padding_rows"] for c in counts),
             total_nonlocal_zero_rows=sum(c.get("zeroed_nonlocal_rows",0) for c in counts),
@@ -320,6 +351,8 @@ def main():
         static_overhead_scope="presealed choices; excludes any online selection",
         p0_equals_always_slt=len(c)==len(bins) and all(arm=="SLT" for arm in c.values()),
         bridge_enabled=lock.get("bridge_enabled",False),
+        retried_processes=sorted(retried),missing=run.get("missing",{}),
+        smoke_failures=run.get("smoke_failures",[]),
         native_config_source={name:r["native_tune"] for name,r in run.get("coverage",{}).items()},
         selection=selection_rows(blocks, policy, timings, {"balanced": c, "snapshot": s},
                                  run.get("selection_overhead_ms", {})))

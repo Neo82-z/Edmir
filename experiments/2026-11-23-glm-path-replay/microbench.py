@@ -23,12 +23,16 @@ def check_receipt(micro, gate_sha256, uuids, m_values):
     ranks = micro.get("rank_measurements",[])
     if len(ranks)!=8:
         raise ValueError("microbenchmark requires eight rank records")
+    # A probe may have failed; it must then say why. Failures explain less, they never block.
     for readings in ranks:
         kinds = {r["kind"] for r in readings}
         a2a = sorted(r["m"] for r in readings if r["kind"]=="all_to_all")
         if (not set(KINDS)<=kinds or a2a!=sorted(m_values)
-                or any(not (math.isfinite(r["seconds"]) and r["seconds"]>0) for r in readings)):
+                or any(not (isinstance(r.get("error"),str) and r["error"]) and
+                       not (isinstance(r.get("seconds"),float) and math.isfinite(r["seconds"]) and r["seconds"]>0)
+                       for r in readings)):
             raise ValueError("microbenchmark receipt is missing a probe")
+    return sorted({r["kind"] for readings in ranks for r in readings if "error" in r})
 
 
 def benchmark(a):
@@ -64,6 +68,14 @@ def benchmark(a):
     def tick(A):
         tl.store(A,1)
 
+    def probe(readings, f, **fields):
+        """Measure f, or record why it failed; ranks fail together on compile or launch errors."""
+        try:
+            times = f()
+            readings.append(dict(**fields,seconds=statistics.median(times),samples=times))
+        except Exception as exc:
+            readings.append(dict(**fields,error=repr(exc)))
+
     def measure(f):
         for _ in range(3):
             f()
@@ -91,12 +103,15 @@ def benchmark(a):
         handle = symmetric.rendezvous(src,dist.group.WORLD)
         peer = handle.get_buffer((rank+1)%8,src.shape,src.dtype,0)
         readings = []
-        for ctas in PEER_CTAS:
+
+        def peer_copy(ctas):
             times = measure(lambda:copy[(ctas,)](peer,dest,count,ctas,1024,num_warps=4))
             if not torch.equal(dest[:128],torch.full_like(dest[:128],(rank+1)%8+1)):
                 raise ValueError("peer microbenchmark did not read the expected source")
-            readings.append(dict(kind="peer_copy",peers=1,ctas=ctas,bytes=2*count,
-                                 seconds=statistics.median(times),samples=times))
+            return times
+
+        for ctas in PEER_CTAS:
+            probe(readings,lambda:peer_copy(ctas),kind="peer_copy",peers=1,ctas=ctas,bytes=2*count)
         # All seven peers at once, as a direct consumer reads them. Every owner serves
         # seven disjoint 8 MiB eighths, 56 MiB in total, so its L2 cannot hold them.
         chunk = count//8
@@ -105,26 +120,26 @@ def benchmark(a):
                  for o in owners]
         table = torch.tensor([v.data_ptr() for v in views],dtype=torch.int64,device=device)
         expected = torch.tensor([o+1 for o in owners],dtype=torch.float16,device=device)[:,None].expand(7,128)
-        for per_peer in SEVEN_PEER_CTAS:
+        def seven(per_peer):
             times = measure(lambda:gather7[(7*per_peer,)](table,dest,chunk,per_peer,1024,num_warps=4))
             if not torch.equal(dest[:7*chunk].view(7,chunk)[:,:128],expected):
                 raise ValueError("seven-peer microbenchmark did not read the expected sources")
-            readings.append(dict(kind="peer_read_7",peers=7,ctas=7*per_peer,bytes=2*7*chunk,
-                                 seconds=statistics.median(times),samples=times))
+            return times
+
+        for per_peer in SEVEN_PEER_CTAS:
+            probe(readings,lambda:seven(per_peer),kind="peer_read_7",peers=7,ctas=7*per_peer,bytes=2*7*chunk)
         for kind,fn,extra in (
             ("hbm_copy",lambda:dest.copy_(src),dict(bytes=4*count)),
             ("launch",lambda:tick[(1,)](dest),{}),
             ("peer_barrier",lambda:handle.barrier(0,60_000),{}),
         ):
-            times = measure(fn)
-            readings.append(dict(kind=kind,seconds=statistics.median(times),samples=times,**extra))
+            probe(readings,lambda:measure(fn),kind=kind,**extra)
         # The same equal-split AllToAll that BNEW and SLT issue for each grid cell.
         for m in m_values:
             send = torch.zeros((8*m,2048),dtype=torch.float16,device=device)
             recv = torch.empty_like(send)
-            times = measure(lambda:dist.all_to_all_single(recv,send))
-            readings.append(dict(kind="all_to_all",m=m,bytes=send.numel()*2,remote_bytes=7*m*2048*2,
-                                 seconds=statistics.median(times),samples=times))
+            probe(readings,lambda:measure(lambda:dist.all_to_all_single(recv,send)),
+                  kind="all_to_all",m=m,bytes=send.numel()*2,remote_bytes=7*m*2048*2)
         ranks = spread(readings,group)
         if rank==0:
             write_json(a.out,dict(schema=SCHEMA,origin="device_microbench",gpu_uuids=uuids,

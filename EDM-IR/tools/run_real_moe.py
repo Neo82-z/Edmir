@@ -198,12 +198,17 @@ def main():
         save(a.out/"local-inspection.json",dict(**check,blocks=schedule(),GPU_executed=False))
         if not a.execute:
             print(json.dumps(check));return
-        if any(getattr(a,k) is None for k in ("tokens","cpu_receipt","manifest","model_dir","source_lock","guard")):
-            raise ValueError("execution requires all offline receipts and a fresh platform guard")
-        guard=json.loads(a.guard.read_text());cutoff=check_guard(guard,time.time(),os.environ.get("EDMIR_INSTANCE_ID"))
-        save(a.out/"guard.json",guard)
-        def alarm(signum,frame):raise TimeoutError("collection cutoff: recover partial files before platform deletion")
-        signal.signal(signal.SIGALRM,alarm);signal.setitimer(signal.ITIMER_REAL,cutoff-time.time())
+        required=("tokens","cpu_receipt","manifest","model_dir","source_lock")+(() if a.snapshot_replay else ("guard",))
+        if any(getattr(a,k) is None for k in required):
+            raise ValueError("execution requires all offline receipts"+("" if a.snapshot_replay else " and a fresh platform guard"))
+        if a.guard is not None:
+            guard=json.loads(a.guard.read_text());cutoff=check_guard(guard,time.time(),os.environ.get("EDMIR_INSTANCE_ID"))
+            save(a.out/"guard.json",guard)
+            def alarm(signum,frame):raise TimeoutError("collection cutoff: recover partial files before platform deletion")
+            signal.signal(signal.SIGALRM,alarm);signal.setitimer(signal.ITIMER_REAL,cutoff-time.time())
+        else:
+            # The 2026-11-23 snapshot capture runs on an operator-managed lease without a platform guard.
+            save(a.out/"guard.json",dict(schema="edmir.real-moe-gpu-guard.none",reason="operator-managed lease"))
         receipt=json.loads(a.cpu_receipt.read_text())
         if receipt.get("schema")!="edmir.real-moe-cpu-receipt.v1" or receipt.get("status")!="passed":
             raise ValueError("successful fixed-image CPU receipt required")
