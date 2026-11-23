@@ -1,0 +1,13 @@
+arm_id,stage,kind,implementation,sources_per_launch,split_k,n_tile_multiplier,gpu_status,block_type
+D_Q1_G2,balanced,direct,per-source Triton SM80 FP16 on symmetric peer memory; FP32 split merge,1,1,2,new,core
+D_Q4_G2,balanced,direct,per-source Triton SM80 FP16 on symmetric peer memory; FP32 split merge,1,4,2,new,core
+BNEW_Q1_G2,balanced,staged,NCCL AllToAll plus identical per-source Triton consumer,1,1,2,new,core
+BNEW_Q4_G2,balanced,staged,NCCL AllToAll plus identical per-source Triton consumer,1,4,2,new,core
+SLT,balanced,staged,single ncclAlltoAll + tuned cuBLASLt (<=8 heuristics),,,,new,core
+D_Q1_G1,balanced,direct,per-source Triton SM80 FP16 on symmetric peer memory; FP32 split merge,1,1,1,new,core
+BOLD_Q1_G1,balanced,staged,cyclic NCCL pairwise stage plus existing CUTLASS 64x128,1,1,1,gpu_run,core
+NATIVE,snapshot,staged,pinned vLLM all-gatherv and captured Triton gate/up config on fixed routes,,,,gpu_run,core
+D_Q1_G2_R,snapshot,direct,ragged per-source expert Triton BF16 on symmetric peer memory; FP32 split merge,1,1,2,new,core
+D_Q4_G2_R,snapshot,direct,ragged per-source expert Triton BF16 on symmetric peer memory; FP32 split merge,1,4,2,new,core
+BNEW_Q1_G2_R,snapshot,staged,NCCL ragged AllToAll plus same Triton BF16 consumer as direct; FP32 split merge,1,1,2,new,core
+BNEW_Q4_G2_R,snapshot,staged,NCCL ragged AllToAll plus same Triton BF16 consumer as direct; FP32 split merge,1,4,2,new,core

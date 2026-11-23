@@ -1,5 +1,9 @@
 # 最后一轮 8×A100：直读与物化的选择边界（执行手册）
 
+> **归档方案。** 2026-11-23 单 GLM 实验已取代本文件的三模型执行口径。
+> 当前开机顺序、准入和正式队列见 [单 GLM START_HERE](../2026-11-23-glm-path-replay/START_HERE.md)。
+
+
 方案依据：`llm-serving-mlsys-latex/latex/review/FINAL_12H_PLAN_ZH_2026-11-20.txt`。两份文件冲突时，以本手册为准。
 
 本包不写时间表。按 `design/queue.csv` 从上到下执行，队列顺序就是优先级。租期不够时从队尾放弃，放弃的作业记为 `not_run`。唯一和时间有关的是 `scripts/lease_guard.py` 的两个余量参数：`--no-start-min` 和 `--no-compute-min`，含义见脚本说明。

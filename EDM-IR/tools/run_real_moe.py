@@ -83,7 +83,13 @@ async def execute(a,packet,receipt):
     if a.mode!="baseline":
         config=dict(mode=a.mode,out=str((a.out/"workers").resolve()),
                     run_id=a.out.name,source_lock=str(a.source_lock.resolve()),
-                    source_lock_sha256=file_sha(a.source_lock),armed_file=str((a.out/"capture.armed").resolve()))
+                    source_lock_sha256=file_sha(a.source_lock),armed_file=str((a.out/"capture.armed").resolve()),
+                    snapshot_replay=a.snapshot_replay,request_sha256=file_sha(a.tokens),
+                    native_tune_sha256=file_sha(a.native_tune) if a.native_tune else None)
+        if a.native_tune:
+            os.environ["VLLM_TUNED_CONFIG_FOLDER"]=str(a.native_tune.resolve().parent)
+        elif a.snapshot_replay:
+            os.environ.pop("VLLM_TUNED_CONFIG_FOLDER",None)
         save(a.out/"capture-config.json",config)
         os.environ["EDMIR_REAL_MOE_CAPTURE_CONFIG"]=str((a.out/"capture-config.json").resolve())
     save(a.out/"runtime-intent.json",dict(args=args,devices=devices,model=MODEL,revision=REVISION,
@@ -128,6 +134,9 @@ async def execute(a,packet,receipt):
                 save(a.out/"functional.json",functional)
                 if not ok:raise ValueError("functional generation failed")
         blocks=schedule() if a.mode=="baseline" else [dict(block_id="diag-"+n,**workload(n)) for n in ("S1","S32","L1","L32")]
+        if a.snapshot_replay:
+            blocks=[dict(block_id="diag-S32",**workload("S32"))]
+            blocks[0]["requests"]=32
         for block in blocks:
             rows=[r for r in packet["requests"] if r["input_tokens"]==block["input_tokens"]]
             rows=sorted(rows,key=lambda r:r["source_id"])
@@ -159,6 +168,16 @@ async def execute(a,packet,receipt):
         if engine is not None:
             if active_profile:await engine.stop_profile()
             engine.shutdown()
+    if a.snapshot_replay:
+        root=a.out/"workers"
+        if list(root.glob("capture-failure-rank*.json")):
+            raise ValueError("snapshot worker reported a capture failure")
+        for snapshot in ("GLM_PREFILL","GLM_DECODE"):
+            for rank in range(8):
+                stem=root/"snapshots"/snapshot/f"rank-{rank}"
+                record=json.loads(stem.with_suffix(".json").read_text())
+                if record["snapshot_sha256"]!=file_sha(stem.with_suffix(".pt")):
+                    raise ValueError("snapshot file changed")
 
 
 def main():
@@ -166,9 +185,14 @@ def main():
     p.add_argument("--corpus",type=Path,required=True);p.add_argument("--out",type=Path,required=True)
     p.add_argument("--mode",choices=("baseline","routes","trace"),default="baseline")
     p.add_argument("--execute",action="store_true")
+    p.add_argument("--native-tune",type=Path,help="frozen GLM vLLM tuning JSON")
+    p.add_argument("--snapshot-replay",action="store_true",help="capture the two fixed S32 layer-23 steps")
     for key in ("tokens","cpu-receipt","manifest","model-dir","source-lock","guard"):
         p.add_argument("--"+key,type=Path)
-    a=p.parse_args();a.out.mkdir(parents=True,exist_ok=False)
+    a=p.parse_args()
+    if a.native_tune and not a.snapshot_replay:p.error("--native-tune requires --snapshot-replay")
+    if a.snapshot_replay and a.mode!="routes":p.error("--snapshot-replay requires --mode routes")
+    a.out.mkdir(parents=True,exist_ok=False)
     try:
         corpus=json.loads(a.corpus.read_text());check=validate_corpus(corpus)
         save(a.out/"local-inspection.json",dict(**check,blocks=schedule(),GPU_executed=False))

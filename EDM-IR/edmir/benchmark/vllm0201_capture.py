@@ -17,7 +17,7 @@ from pathlib import Path
 import re
 import time
 
-from .real_moe import (ENGINE, LAYERS, WORLD, TOP_K, JsonlWriter, StepSampler,
+from .real_moe import (ENGINE, LAYERS, WORLD, TOP_K, REVISION, JsonlWriter, StepSampler,
     classify, file_sha, input_rows, save, slice_routes, route_slice_bounds)
 
 
@@ -147,9 +147,15 @@ class CaptureState:
         for r in gathered:r["block_id"]=block
         sampler=self.samplers.setdefault(block,StepSampler())
         category,selected=sampler.observe(self.ordinal,gathered)
+        snapshot=None
+        if self.config.get("snapshot_replay") and block=="diag-S32":
+            snapshot={("pure_prefill",1):"GLM_PREFILL",("pure_decode",8):"GLM_DECODE"}.get(
+                (category,sampler.steps[category]))
+            selected=snapshot is not None
         old=self.current
         self.current=dict(step=self.ordinal,block_id=block,selected=selected,
-                          sizes=sizes,all_tokens=[r["tokens"] for r in gathered],category=category)
+                          sizes=sizes,all_tokens=[r["tokens"] for r in gathered],category=category,
+                          snapshot=snapshot,phase_ordinal=sampler.steps[category])
         if selected:
             self.write("step",tokens=tokens,category=category,selected=True,
                        padded_sizes=sizes,local_dummy=not tokens)
@@ -160,7 +166,9 @@ class CaptureState:
         finally:
             save(self.out/f"{block}-sampling-rank{self.rank}.json",dict(
                 step_counts=dict(sampler.steps),token_counts=dict(sampler.tokens),
-                capture_failures=self.failures,sampling_rule="first three steps of each global phase"))
+                capture_failures=self.failures,sampling_rule=(
+                    "first prefill and eighth decode" if self.config.get("snapshot_replay")
+                    else "first three steps of each global phase")))
             self.current=old
 
     def route(self,layer,weights,ids):
@@ -170,6 +178,12 @@ class CaptureState:
         sizes=self.current["sizes"];tokens=self.current["all_tokens"][self.rank]
         if ids.shape!=weights.shape:raise ValueError("router ID/weight shape mismatch")
         begin,end=route_slice_bounds(int(ids.shape[0]),rank=self.rank,sizes=sizes,real_count=len(tokens),layout=layout)
+        if self.current["snapshot"] and layer.layer_id==23:
+            if layout!="gathered_dp" or "snapshot_routes" in self.current:
+                raise ValueError("replay requires one gathered route at layer 23")
+            padded_end=begin+sizes[self.rank]
+            self.current["snapshot_routes"]=(ids[begin:padded_end].detach().cpu(),
+                                            weights[begin:padded_end].detach().float().cpu())
         # Slice before D2H: do not copy all gathered routes on every rank.
         result=slice_routes(ids[begin:end].detach().cpu().tolist(),
             weights[begin:end].detach().float().cpu().tolist(),rank=self.rank,
@@ -196,6 +210,8 @@ class CaptureState:
             mask += [True]*len(tt)+[False]*(size-len(tt))
         expected=len(mask)*(TOP_K if projection=="down" else 1)
         if a.shape[0]!=expected:raise ValueError("unsupported chunked/backend token layout")
+        if projection=="gate_up" and self.current["snapshot"] and self.layer.layer_id==23:
+            self.save_replay(a,b,c,bound,tokens=alltokens[self.rank])
         sorted_ids=bound["sorted_token_ids"]
         if sorted_ids is None:raise ValueError("naive assignment layout requires a separate collector")
         post=int(bound["num_tokens_post_padded"].item());cfg=bound["config"]
@@ -217,6 +233,63 @@ class CaptureState:
             num_tokens_post_padded=post,local_assignment_slots=len(local_ids),local_expert_assignment=slots,
             expert_map=emap.detach().cpu().tolist() if emap is not None else None,
             kernel_time_measured=False,physical_layout_verified=True)
+
+    def save_replay(self,a,b,c,bound,tokens):
+        snapshot=self.current["snapshot"]
+        directory=self.out/"snapshots"/snapshot
+        directory.mkdir(parents=True,exist_ok=True)
+        path=directory/f"rank-{self.rank}.pt"
+        if path.exists():raise ValueError("duplicate layer-23 gate/up snapshot")
+        sizes=self.current["sizes"]
+        begin=sum(sizes[:self.rank]);end=begin+sizes[self.rank]
+        emap=self.layer.expert_map
+        expected_map=[e%8 if e//8==self.rank else -1 for e in range(64)]
+        if (emap is None or emap.detach().cpu().tolist()!=expected_map
+                or tuple(b.shape)!=(8,3072,2048) or a.shape[1]!=2048
+                or c.dtype!=self.torch.bfloat16 or bound["mul_routed_weight"] or bound["top_k"]!=4
+                or bound.get("B_bias") is not None):
+            raise ValueError("unexpected GLM gate/up contract")
+        if (bound.get("sorted_token_ids") is None or tuple(c.shape)!=(a.shape[0],4,3072)
+                or bound["compute_type"].name!="bf16"
+                or any(bound.get(k) for k in ("use_fp8_w8a8","use_int8_w8a8","use_int8_w8a16",
+                                               "use_int4_w4a16","per_channel_quant","block_shape"))
+                or any(bound.get(k) is not None for k in ("A_scale","B_scale"))):
+            raise ValueError("unsupported native gate/up argument")
+        ids,weights=self.current.pop("snapshot_routes")
+        cfg={k:v for k,v in bound["config"].items() if type(v) in (int,float,str,bool)}
+        fm=importlib.import_module("vllm.model_executor.layers.fused_moe.fused_moe")
+        filename=fm.get_config_file_name(8,1536,None)
+        folder=os.environ.get("VLLM_TUNED_CONFIG_FOLDER")
+        expected_sha=self.config.get("native_tune_sha256")
+        installed=Path(folder)/filename if folder else None
+        bundled=Path(fm.__file__).parent/"configs"/filename
+        resolved=installed if installed is not None and installed.is_file() else bundled
+        if resolved.is_file():
+            digest=file_sha(resolved)
+            configs={int(k):v for k,v in json.loads(resolved.read_text()).items() if k!="triton_version"}
+            key=min(configs,key=lambda m:abs(m-int(a.shape[0])))
+            if configs[key]!=cfg or (expected_sha is not None and digest!=expected_sha):
+                raise ValueError("observed native launch differs from the frozen tune configuration")
+            tune=dict(kind="tuned",sha256=digest,batch_size=key,source="user" if resolved==installed else "bundled")
+        else:
+            expected=fm.get_default_config(int(a.shape[0]),8,1536,2048,4,None,None)
+            if expected!=cfg or expected_sha is not None:
+                raise ValueError("native config source could not be verified")
+            tune=dict(kind="default")
+        tmp=path.with_suffix(".tmp")
+        self.torch.save(dict(hidden=a[begin:end].detach().cpu().contiguous().clone(),
+                             expert_weights=b.detach().cpu().contiguous(),ids=ids.contiguous(),
+                             router_weights=weights.contiguous(),
+                             **{key:bound[key].detach().cpu().contiguous()
+                                for key in ("sorted_token_ids","expert_ids","num_tokens_post_padded")}),tmp)
+        os.replace(tmp,path)
+        save(path.with_suffix(".json"),dict(schema="edmir.glm-gate-up-snapshot.v2",origin="real_vllm",
+            snapshot=snapshot,run_id=self.config["run_id"],model_revision=REVISION,rank=self.rank,
+            layer=23,phase=self.current["category"],phase_ordinal=self.current["phase_ordinal"],
+            step=self.current["step"],padded_sizes=sizes,tokens=tokens,snapshot_sha256=file_sha(path),
+            source_lock_sha256=self.config["source_lock_sha256"],request_sha256=self.config["request_sha256"],
+            native_config=cfg,native_tune=tune,native_strides=dict(A=list(a.stride()),B=list(b.stride()),C=list(c.stride())),
+            expert_map=expected_map,gate_up_accumulator="float32"))
 
     def close(self):
         for writer in self.writers.values():writer.close()

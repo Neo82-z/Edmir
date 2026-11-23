@@ -1,0 +1,364 @@
+import copy
+import json
+from pathlib import Path
+import tempfile
+import unittest
+
+from analyze import check_rows, crossing_rows, effect_rows, score_crossing, load_prediction
+from make_design import ROOT, BRIDGE, generate, read, sha
+from snapshots import correctness, layout, load_receipts, reference, validate_tensors, validate_alignment, tiles
+
+DESIGN = ROOT/"design"
+DUMMY = "a"*64
+
+
+def setup_run(out):
+    blocks = read(DESIGN/"blocks.csv")
+    run = dict(origin="synthetic_test",run_id="cpu-contract",harness="fixture",
+               design_sha256=sha(DESIGN/"DESIGN.json"),hardware_sha256=DUMMY,inputs={},builds={})
+    admission, metrics = {}, []
+    for b in blocks:
+        p,u,arm = b["process_id"],b["unit_id"],b["arm_id"]
+        seed = b["rep"] if b["stage"]=="balanced" else "real"
+        run["inputs"][f"{u}:{seed}"] = DUMMY
+        run["builds"][arm] = DUMMY
+        common = dict(unit_id=u,arm_id=arm,status="ok",run_id=run["run_id"],harness=run["harness"],
+                      input_sha256=DUMMY,build_sha256=DUMMY,hardware_sha256=DUMMY)
+        admission[u,seed,arm] = dict(**common,input_id=seed,scaled_max_err=.001,nonfinite=0,fingerprint_ok=True)
+        size = int(u.removeprefix("GLM_M")) if b["stage"]=="balanced" else 1
+        ms = (0.8 if size<64 else 1.2) if arm.startswith("D_") else 1.
+        rank_ms = [ms*.95]*7+[ms]
+        filename = f"samples-{ms}.json"
+        path = out/filename
+        if not path.exists():
+            path.write_text(json.dumps([rank_ms]*100))
+        metrics.append(dict(**common,process_id=p,rep=b["rep"],orientation=b["orientation"],
+                            arm_position=b["arm_position"],warmup=20,timed=100,median_wall_ms=ms,
+                            samples_file=filename,samples_sha256=sha(path)))
+    return run,list(admission.values()),metrics
+
+
+class TestDesign(unittest.TestCase):
+    def test_generation_is_stable_and_forward_reverse_exact(self):
+        with tempfile.TemporaryDirectory() as d:
+            out = Path(d)
+            generate(out)
+            self.assertEqual({f.name:sha(f) for f in DESIGN.iterdir()},
+                             {f.name:sha(f) for f in out.iterdir()})
+        planned = read(DESIGN/"blocks.csv")
+        by_pair = {}
+        for row in planned:
+            arms = by_pair.setdefault(row["pair_id"], {}).setdefault(row["orientation"], [])
+            arms.append(row["arm_id"])
+        self.assertEqual(len({r["process_id"] for r in planned}),78)
+        self.assertEqual(sum(r["arm_id"] not in BRIDGE for r in planned),390)
+        self.assertEqual(len(planned),522)
+        jobs = [r["job"] for r in read(DESIGN/"queue.csv")]
+        # The smoke needs the CUTLASS/cuBLASLt library, and both precede model capture.
+        self.assertEqual(jobs[:3],["hw_gate","build_balanced","device_smoke"])
+        self.assertLess(jobs.index("tune_native_glm"),jobs.index("capture_glm"))
+        self.assertLess(jobs.index("microbench"),jobs.index("capture_glm"))
+        status = {r["arm_id"]:r["gpu_status"] for r in read(DESIGN/"arms.csv")}
+        self.assertEqual({a for a,s in status.items() if s=="gpu_run"},{"BOLD_Q1_G1","NATIVE"})
+        self.assertEqual(len(by_pair),39)
+        self.assertEqual(sum(r["stage"]=="snapshot" for r in planned),60)
+        for orientations in by_pair.values():
+            self.assertEqual(orientations["forward"],orientations["reverse"][::-1])
+
+
+class TestAnalysis(unittest.TestCase):
+    def setUp(self):
+        temp = tempfile.TemporaryDirectory()
+        self.addCleanup(temp.cleanup)
+        self.path = Path(temp.name)
+        self.run,self.admission,self.metrics = setup_run(self.path)
+
+    def results(self):
+        blocks,policy,timings = check_rows(DESIGN,self.run,self.path,self.admission,self.metrics)
+        return effect_rows(DESIGN,blocks,policy,timings)
+
+    def test_complete_and_directional(self):
+        effects = self.results()
+        self.assertEqual(len(effects),63)
+        self.assertTrue(all(r["pairs_complete"]==3 for r in effects))
+        cross = crossing_rows(DESIGN,effects)
+        self.assertEqual(len(cross),4)
+        bins = [2**i for i in range(11)]
+        for entry in cross:
+            row, = entry["intervals"]
+            self.assertEqual((row["m_low"],row["m_high"]),(32,64))
+            self.assertEqual(row["direction"],"candidate_wins->baseline_wins")
+            self.assertEqual(score_crossing(entry,[row],bins),"hit")
+            self.assertEqual(score_crossing(entry,[dict(row,direction="baseline_wins->candidate_wins")],bins),"miss")
+            self.assertEqual(score_crossing(entry,[dict(row,m_low=64,m_high=128)],bins),"hit")
+            self.assertEqual(score_crossing(entry,[dict(row,m_low=128,m_high=256)],bins),"miss")
+            self.assertEqual(score_crossing(entry,[dict(row,m_low=8,m_high=64)],bins),"unsupported")
+            wide = dict(row,kind="loose",m_low=16,m_high=128)
+            self.assertEqual(score_crossing(entry,[wide],bins),"hit_loose")
+            self.assertEqual(score_crossing(entry,[dict(wide,direction="baseline_wins->candidate_wins")],bins),"miss")
+            self.assertEqual(score_crossing(entry,[dict(wide,m_high=32)],bins),"miss")
+
+    def test_half_pair_remains_incomplete(self):
+        target = self.metrics[-1]
+        self.metrics = [m for m in self.metrics if m["process_id"]!=target["process_id"]]
+        rows = [r for r in self.results() if r["unit_id"]==target["unit_id"]]
+        self.assertEqual(len(rows),5)
+        self.assertTrue(all(r["pairs_complete"]==2 and r["ratio"] is None for r in rows))
+
+    def test_failed_seed_excludes_arm_other_seeds_still_in_raw(self):
+        index = next(i for i,r in enumerate(self.admission) if r["unit_id"].startswith("GLM_M") and
+                     r["arm_id"]=="D_Q1_G2")
+        good = self.admission[index]
+        for bad in (dict(scaled_max_err=.0201),dict(nonfinite=1),dict(fingerprint_ok=False),dict(status="fallback_detected")):
+            with self.subTest(bad=bad):
+                self.admission[index] = dict(good,**bad)
+                affected = [r for r in self.results() if r["unit_id"]==good["unit_id"] and
+                            r["candidate_arm"]==good["arm_id"]]
+                self.assertTrue(affected)
+                self.assertTrue(all(r["pairs_complete"]==0 and r["outcome"]=="incomplete" for r in affected))
+
+    def test_identity_and_order_and_sample_denominator(self):
+        good = self.metrics[0]
+        for field,value in (("arm_position","4"),("hardware_sha256","b"*64),("build_sha256","b"*64),
+                            ("input_sha256","b"*64),("samples_sha256","b"*64),("median_wall_ms",.76)):
+            with self.subTest(field=field):
+                self.metrics[0] = dict(good,**{field:value})
+                with self.assertRaises(ValueError):
+                    self.results()
+
+    def test_tie_separates_winners(self):
+        effects = self.results()
+        for r in effects:
+            if r["unit_id"]=="GLM_M0032" and r["comparison_id"]=="Ba_q1":
+                r["outcome"] = "tie"
+        found = next(r for r in crossing_rows(DESIGN,effects) if r["comparison_id"]=="Ba_q1")
+        self.assertEqual(found["coverage"],"unresolved")
+        self.assertEqual(found["intervals"][0]["kind"],"loose")
+
+    def test_device_result_requires_gate(self):
+        self.run["origin"] = "device_measurement"
+        gate = self.path/"hw_gate.json"
+        gate.write_text(json.dumps(dict(verdict="FAIL")))
+        self.run["hardware_sha256"] = sha(gate)
+        with self.assertRaisesRegex(ValueError,"passing hardware gate"):
+            self.results()
+
+
+    def test_combined_identity_and_preboot_seal(self):
+        self.assertEqual(len(self.run["inputs"]),35)
+        self.assertEqual(len(self.run["builds"]),12)
+        rows,choices = load_prediction(ROOT/"preboot_prediction",DESIGN,"balanced")
+        self.assertEqual(len(choices),11)
+        self.assertEqual(set(choices.values()),{"SLT"})
+        self.assertEqual([(r["m_low"],r["m_high"]) for r in rows if r["kind"]=="loose"],
+                         [("4","16"),("16","128")])
+
+    def test_optional_bridge_gate_depends_on_bnew_admission(self):
+        from types import SimpleNamespace
+        from replay import lock_admission
+        a = SimpleNamespace(run=self.path,design=DESIGN)
+        (a.run/"RUN.json").write_text(json.dumps(self.run))
+        admission = [r for r in self.admission if r["arm_id"] not in BRIDGE]
+        def emit(rows):
+            (a.run/"admission.jsonl").write_text("".join(json.dumps(r)+"\n" for r in rows))
+        emit(admission)
+        lock_admission(a)
+        receipt = a.run/"ADMISSION_LOCK.json"
+        self.assertFalse(json.loads(receipt.read_text())["bridge_enabled"])
+        receipt.unlink()
+        bnew = next(r for r in admission if r["arm_id"]=="BNEW_Q1_G2")
+        bnew["fingerprint_ok"] = False
+        emit(admission)
+        with self.assertRaisesRegex(ValueError,"finish the g1 bridge"):
+            lock_admission(a)
+        emit(self.admission)
+        lock_admission(a)
+        self.assertTrue(json.loads(receipt.read_text())["bridge_enabled"])
+
+    def test_one_snapshot_admission_failure_does_not_stop_other_arms(self):
+        from types import SimpleNamespace
+        from unittest.mock import patch
+        from replay import admit_jobs, append_row, record_identity
+
+        a = SimpleNamespace(run=self.path,design=DESIGN,unit="GLM_PREFILL",timeout=1)
+        (a.run/"RUN.json").write_text(json.dumps(self.run))
+        active = []
+        def child(_,args,timeout):
+            arm = args[-1]
+            active.append(arm)
+            if arm=="BNEW_Q1_G2_R":
+                return 1
+            append_row(a.run/"admission.jsonl",dict(**record_identity(self.run,a.unit,"real",arm),
+                status="ok",input_id="real",scaled_max_err=.001,nonfinite=0,fingerprint_ok=True))
+            return 0
+        with patch("replay.launch_job",side_effect=child):
+            admit_jobs(a)
+            admit_jobs(a)
+        self.assertEqual(len(active),5)
+        rows = [json.loads(line) for line in (a.run/"admission.jsonl").read_text().splitlines()]
+        self.assertEqual(sum(row["status"]=="runtime_error" for row in rows),1)
+
+    def test_missing_snapshots_fail_before_a_timing_claim(self):
+        import contextlib
+        import io
+        import sys
+        from types import SimpleNamespace
+        from unittest.mock import patch
+        from replay import cli, snapshot_receipts
+
+        for snapshots in (None,self.path/"absent"):
+            with self.subTest(snapshots=snapshots):
+                a = SimpleNamespace(snapshots=snapshots,design=DESIGN)
+                with self.assertRaisesRegex(ValueError,"snapshot input directory"):
+                    snapshot_receipts(a,self.run,"GLM_PREFILL")
+        self.assertFalse((self.path/"process-started").exists())
+        for action in (["admit"],["time","--process","S0595"],["time-all"],
+                       ["admit-arm","--unit","GLM_PREFILL","--input-id","real","--arm","NATIVE"]):
+            argv = ["replay.py","--run",str(self.path),"--library",str(self.path/"lib.so"),*action]
+            with self.subTest(action=action[0]), patch.object(sys,"argv",argv), \
+                    contextlib.redirect_stderr(io.StringIO()), self.assertRaises(SystemExit):
+                cli()
+
+    def test_smoke_receipt_requires_passing_replay_and_exercised_grid(self):
+        from make_design import BALANCED, SNAPSHOT
+        from replay import SMOKE_CELLS, check_smoke, smoke_identity
+
+        gate,library = self.path/"gate.json",self.path/"lib.so"
+        gate.write_text("{}")
+        library.write_bytes(b"so")
+        uuids = [f"GPU-{i}" for i in range(8)]
+        ok = dict(status="ok")
+        receipt = dict(**smoke_identity(gate,uuids,library),arms={arm:ok for arm in SNAPSHOT},
+                       balanced={u:{arm:ok for arm in BALANCED} for u in SMOKE_CELLS})
+        receipt["balanced"]["SMOKE_M0064"]["SLT"] = dict(status="not_run")
+        check_smoke(receipt,gate,uuids,library)
+        for broken in (dict(arms=dict(receipt["arms"],NATIVE=dict(status="runtime_error"))),
+                       dict(balanced={"SMOKE_M0001":receipt["balanced"]["SMOKE_M0001"]}),
+                       dict(balanced={u:{k:v for k,v in arms.items() if k!="BOLD_Q1_G1"}
+                                      for u,arms in receipt["balanced"].items()}),
+                       dict(library_sha256="b"*64)):
+            with self.subTest(broken=list(broken)):
+                with self.assertRaisesRegex(ValueError,"smoke receipt"):
+                    check_smoke(dict(receipt,**broken),gate,uuids,library)
+
+    def test_microbench_receipt_and_seven_peer_partition(self):
+        from microbench import SCHEMA, KINDS, check_receipt, reader_slot
+
+        for owner in range(8):
+            self.assertEqual(sorted(reader_slot(r,owner) for r in range(8) if r!=owner),list(range(7)))
+        m_values = [2**i for i in range(11)]
+        readings = [dict(kind=k,seconds=1e-5) for k in KINDS if k!="all_to_all"]
+        readings += [dict(kind="all_to_all",m=m,seconds=1e-5) for m in m_values]
+        uuids = [f"GPU-{i}" for i in range(8)]
+        micro = dict(schema=SCHEMA,hardware_sha256=DUMMY,gpu_uuids=uuids,
+                     implementation_sha256=sha(ROOT/"microbench.py"),rank_measurements=[readings]*8)
+        check_receipt(micro,DUMMY,uuids,m_values)
+        for broken in ([r for r in readings if r["kind"]!="peer_read_7"],
+                       [r for r in readings if r.get("m")!=1024],
+                       readings[:-1]+[dict(readings[-1],seconds=float("nan"))]):
+            with self.assertRaisesRegex(ValueError,"missing a probe"):
+                check_receipt(dict(micro,rank_measurements=[broken]*8),DUMMY,uuids,m_values)
+
+    def test_timing_claim_cannot_be_replaced(self):
+        from replay import claim_process
+
+        pid = read(DESIGN/"blocks.csv")[0]["process_id"]
+        claim_process(self.path,pid)
+        with self.assertRaises(FileExistsError):
+            claim_process(self.path,pid)
+
+    def test_device_event_samples_are_validated(self):
+        gate = self.path/"hw_gate.json"
+        gate.write_text(json.dumps(dict(verdict="PASS",load_test=True)))
+        self.run.update(origin="device_measurement",hardware_sha256=sha(gate),artifacts={},prediction={})
+        r = self.metrics[0]
+        self.metrics = [r]
+        for a in self.admission:
+            a["hardware_sha256"] = sha(gate)
+        r.update(hardware_sha256=sha(gate),events_file=r["samples_file"],events_sha256=r["samples_sha256"],
+                 median_event_ms=r["median_wall_ms"],rank_counts=[
+                     dict(input_rows=2,live_assignments=2,projection_rows=2,projection_live_rows=2,padding_rows=0)
+                     for _ in range(8)])
+        self.results()
+        r["median_event_ms"] = .1
+        with self.assertRaisesRegex(ValueError,"median_event_ms"):
+            self.results()
+
+
+class TestSnapshot(unittest.TestCase):
+    def test_source_tile_table_handles_expert_tail_and_empty_ranges(self):
+        self.assertEqual(tiles([0,1,65,0,2]),
+                         [(0,1,1),(1,66,2),(65,66,2),(66,68,4)])
+
+    def test_bf16_route_replay_and_numeric_gate(self):
+        import torch
+
+        states = [torch.arange(64,dtype=torch.bfloat16).view(4,16)+rank for rank in range(8)]
+        packed = [torch.tensor([[0,9,17,27],[1,8,29,41],[1,8,51,59],[3,13,19,29]])
+                  for _ in range(8)]
+        weight = (torch.arange(8*16*16).reshape(8,16,16) % 3).to(torch.bfloat16)
+        payload = dict(hidden=states[0], expert_weights=weight, ids=packed[0],
+                       router_weights=torch.full((4,4),.25))
+        validate_tensors(payload,4,3,16,16)
+        layout_ = layout([v.tolist() for v in packed],[3,2,1,0,2,2,1,1])
+        self.assertEqual(layout_[0][0][1],[(1,0),(2,0)])
+        self.assertEqual(sum(len(e) for r in layout_ for d in r for e in d),48)
+        ref = reference(states,weight,layout_,0)
+        self.assertEqual(ref.shape,(12,16))
+        actual = []
+        for src,source in enumerate(layout_):
+            for ex,rows in enumerate(source[0]):
+                if rows:
+                    x = states[src][[row for row,_ in rows]].float()
+                    w = weight[ex].float()
+                    actual.append(sum(xs @ ws.T for xs,ws in zip(x.chunk(4,1),w.chunk(4,1))).bfloat16())
+        bf16 = torch.cat(actual)
+        err,nans = correctness(bf16,ref)
+        self.assertLessEqual(err,.02)
+        self.assertEqual(nans,0)
+        bf16[0,0] = torch.inf
+        self.assertEqual(correctness(bf16,ref),(None,1))
+        broken = copy.deepcopy(payload)
+        broken["ids"][0,0] = broken["ids"][0,1]
+        with self.assertRaisesRegex(ValueError,"invalid expert"):
+            validate_tensors(broken,4,3,16,16)
+
+    def test_captured_alignment_and_balanced_seed(self):
+        import torch
+        from balanced import input_digest
+
+        payload = dict(sorted_token_ids=torch.tensor([0,2,4,4,1,3,4,4],dtype=torch.int32),
+                       expert_ids=torch.tensor([0,-1],dtype=torch.int32),
+                       num_tokens_post_padded=torch.tensor([8],dtype=torch.int32))
+        validate_alignment(payload,{"BLOCK_SIZE_M":4},4)
+        payload["sorted_token_ids"][2] = 5
+        with self.assertRaisesRegex(ValueError,"alignment extent"):
+            validate_alignment(payload,{"BLOCK_SIZE_M":4},4)
+        digests = [input_digest(torch,"GLM_M0001",rep,(1,32,16)) for rep in ("rep1","rep1","rep2")]
+        self.assertEqual(digests[0],digests[1])
+        self.assertNotEqual(digests[0],digests[2])
+
+    def test_receipt_phase_and_rank_consensus(self):
+        with tempfile.TemporaryDirectory() as d:
+            base = Path(d)
+            snap = base/"GLM_DECODE"
+            snap.mkdir()
+            for rank in range(8):
+                record = dict(schema="edmir.glm-gate-up-snapshot.v2",origin="real_vllm",snapshot=snap.name,
+                    model_revision="7dd20894a642a0aa287e9827cb1a1f7f91386b67",rank=rank,layer=23,
+                    phase="pure_decode",phase_ordinal=8,step=9,run_id="fixture",padded_sizes=[1]*8,
+                    expert_map=[i%8 if i//8==rank else -1 for i in range(64)],tokens=[{"phase":"decode"}],
+                    source_lock_sha256=DUMMY,request_sha256=DUMMY,snapshot_sha256=DUMMY,
+                    native_config={"BLOCK_SIZE_M":16},native_tune={"kind":"default"},
+                    native_strides={"A":[2048,1],"B":[3072*2048,2048,1],"C":[4*3072,3072,1]},
+                    gate_up_accumulator="float32")
+                path = snap/f"rank-{rank}.json"
+                path.write_text(json.dumps(record))
+            self.assertEqual(len(load_receipts(base,DESIGN,snap.name)),8)
+            path.write_text(json.dumps(dict(record,phase_ordinal=7)))
+            with self.assertRaisesRegex(ValueError,"differs from design"):
+                load_receipts(base,DESIGN,snap.name)
+
+
+if __name__ == "__main__":
+    unittest.main()
