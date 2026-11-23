@@ -91,8 +91,60 @@ class Lt:
                    self.work.data_ptr(),algorithm,self.torch.cuda.current_stream().cuda_stream))
 
 
+class ConsumerGraphs:
+    """Replay each consumer arm's kernel launches as one CUDA graph; communication stays eager.
+
+    Every rank captures the same consumer arms together. If capture fails on any rank, every
+    rank runs all of them eagerly, so both sides of a comparison share one launch mode.
+    Replay issues the same kernels with the same arguments, so outputs are unchanged."""
+
+    def __init__(self, torch, agree):
+        self.torch,self.agree = torch,agree
+        self.graphs,self.mode,self.errors = {},None,None
+
+    def prepare(self, consumers):
+        todo = {arm:fn for arm,fn in consumers.items() if arm not in self.graphs}
+        if not todo or self.mode=="eager":
+            return
+        torch,captured,error = self.torch,{},None
+        try:
+            if self.agree is None:
+                raise RuntimeError("no rank agreement channel for graph capture")
+            for fn in todo.values():
+                fn()  # compile and load every kernel before capture
+            torch.cuda.synchronize()
+            for arm,fn in todo.items():
+                graph = torch.cuda.CUDAGraph()
+                with torch.cuda.graph(graph,capture_error_mode="thread_local"):
+                    fn()
+                captured[arm] = graph
+            torch.cuda.synchronize()
+        except Exception as exc:
+            error = repr(exc)
+        errors = self.agree(error) if self.agree is not None else [error]
+        if any(errors):
+            self.mode,self.errors,self.graphs = "eager",errors,{}
+        else:
+            self.mode = "graph"
+            self.graphs.update(captured)
+
+    def run(self, arm, fn):
+        graph = self.graphs.get(arm)
+        if graph is None:
+            fn()
+        else:
+            graph.replay()
+
+    def launch_mode(self, arm):
+        return "graph" if arm in self.graphs else "eager"
+
+
+def consumer_arm(arm):
+    return arm.startswith("D_") or arm.startswith("BNEW_")
+
+
 class BalancedPaths:
-    def __init__(self, unit, rep, shape, rank, device, library, tuned):
+    def __init__(self, unit, rep, shape, rank, device, library, tuned, agree=None):
         import torch
         import torch.distributed as dist
         import torch.distributed._symmetric_memory as symmetric
@@ -121,6 +173,7 @@ class BalancedPaths:
         self.partial = self.out.new_empty((4,self.m,self.n),dtype=torch.float32)
         self.table = torch.tensor(tiles([self.m]),dtype=torch.int32,device=device)
         self.tuned = tuned
+        self.graphs = ConsumerGraphs(torch,agree)
 
     @property
     def library(self):
@@ -201,17 +254,30 @@ class BalancedPaths:
                 self.dist.all_to_all_single(self.recv,self.send)
             else:
                 self.handle.barrier(0,60_000)
-            g = 1 if arm.endswith("G1") else 2
-            q = 4 if "_Q4_" in arm else 1
-            for x,y in zip(self.local if staged else self.remote,self.outputs,strict=True):
-                self.launch(x,self.weight,y,self.partial,self.table,q,g)
+            self.graphs.run(arm,self.consumer(arm))
             if not staged:
                 self.handle.barrier(0,60_000)
         return self.out
 
+    def consumer(self, arm):
+        """The per-source launches of a D or BNEW arm; only their input rows differ."""
+        sources = self.local if arm.startswith("BNEW_") else self.remote
+        g = 1 if arm.endswith("G1") else 2
+        q = 4 if "_Q4_" in arm else 1
+
+        def issue():
+            for x,y in zip(sources,self.outputs,strict=True):
+                self.launch(x,self.weight,y,self.partial,self.table,q,g)
+        return issue
+
+    def prepare_graphs(self, arms):
+        self.graphs.prepare({arm:self.consumer(arm) for arm in arms if consumer_arm(arm)})
+
     def admit(self, arm):
         from snapshots import correctness
 
+        # Admission runs the same launch mode that timing will use.
+        self.prepare_graphs([arm])
         self.dist.all_to_all_single(self.recv,self.send)
         reference = self.recv.float() @ self.weight.float().T
         err,nans = correctness(self.run(arm),reference,dtype=self.torch.float16)
@@ -241,4 +307,5 @@ class BalancedPaths:
     def counts(self, arm):
         return dict(input_rows=8*self.m,live_assignments=8*self.m,projection_rows=8*self.m,
                     projection_live_rows=8*self.m,padding_rows=0,
-                    projection_launches=1 if arm=="SLT" else 8,merge_launches=8 if "_Q4_" in arm else 0)
+                    projection_launches=1 if arm=="SLT" else 8,merge_launches=8 if "_Q4_" in arm else 0,
+                    launch_mode=self.graphs.launch_mode(arm))

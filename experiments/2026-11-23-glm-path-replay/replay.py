@@ -17,7 +17,7 @@ import subprocess
 import sys
 import time
 
-from balanced import BalancedPaths, cells, input_digest, combine_input_digests
+from balanced import BalancedPaths, ConsumerGraphs, cells, consumer_arm, input_digest, combine_input_digests
 from hw_gate import inventory as gpu_inventory, load_passing_gate
 from make_design import ROOT, SNAPSHOT, BALANCED, BRIDGE, read, sha
 from snapshots import WORLD, load_rank, load_receipts, layout, reference, correctness, tiles
@@ -208,6 +208,7 @@ class Paths:
         self.cfg = receipts[rank]["native_config"]
         self.tune = receipts[rank]["native_tune"]
         self.aligned = tuple(t.to(device) for t in alignment)
+        self.graphs = ConsumerGraphs(torch,lambda error:spread(error,cpu_group))
 
     def open_native(self):
         from vllm.distributed.device_communicators.pynccl import PyNcclCommunicator
@@ -255,18 +256,31 @@ class Paths:
             self.nccl.all_gatherv(self.gathered,self.hidden,self.sizes)
             self.invoke(self.native,self.gathered,self.weight,self.native_out,self.aligned,self.cfg)
             return self.native_out
-        q = 4 if "_Q4_" in arm else 1
         staged = arm.startswith("BNEW_")
         self.materialize(self.hidden,staged)
-        for direct,local,out,table in self.work:
-            partial = self.partial.flatten()[:4*out.numel()].view(4,*out.shape)
-            self.launch(local if staged else direct,self.weight,out,partial,table,q)
+        self.graphs.run(arm,self.consumer(arm))
         if not staged:
             self.handle.barrier(0,60_000)
         return self.output
 
+    def consumer(self, arm):
+        """The per-source launches of a D or BNEW arm; only their input rows differ."""
+        q = 4 if "_Q4_" in arm else 1
+        staged = arm.startswith("BNEW_")
+
+        def issue():
+            for direct,local,out,table in self.work:
+                partial = self.partial.flatten()[:4*out.numel()].view(4,*out.shape)
+                self.launch(local if staged else direct,self.weight,out,partial,table,q)
+        return issue
+
+    def prepare_graphs(self, arms):
+        self.graphs.prepare({arm:self.consumer(arm) for arm in arms if consumer_arm(arm)})
+
     def admit(self, arm):
         torch = self.torch
+        # Admission runs the same launch mode that timing will use.
+        self.prepare_graphs([arm])
         tags = torch.zeros_like(self.hidden)
         token = torch.arange(len(tags),device=self.device)
         tags[:,0],tags[:,1],tags[:,2] = self.rank,token//128,token%128
@@ -312,7 +326,8 @@ class Paths:
                         projection_launches=1,merge_launches=0)
         return dict(input_rows=sum(self.receive),live_assignments=self.output.shape[0],projection_rows=self.output.shape[0],
                     projection_live_rows=self.output.shape[0],padding_rows=0,
-                    projection_launches=len(self.work),merge_launches=len(self.work) if "_Q4_" in arm else 0)
+                    projection_launches=len(self.work),merge_launches=len(self.work) if "_Q4_" in arm else 0,
+                    launch_mode=self.graphs.launch_mode(arm))
 
 
 @contextmanager
@@ -428,12 +443,14 @@ def smoke(a):
                                                  dtype=torch.int32),cfg,rank)
         paths,errors = attempt(lambda:Paths(payload,rows,routes,rank,device,cpu_group,alignment),cpu_group)
         for arm in SNAPSHOT:
-            receipt["arms"][arm] = (guarded_admission(paths,arm,cpu_group) if paths is not None
-                                    else dict(status="runtime_error",rank_errors=errors))
+            receipt["arms"][arm] = (dict(**guarded_admission(paths,arm,cpu_group),
+                                         launch_mode=paths.graphs.launch_mode(arm),graph_errors=paths.graphs.errors)
+                                    if paths is not None else dict(status="runtime_error",rank_errors=errors))
             emit()
         # The FP16 grid arms, the CUTLASS bridge and cuBLASLt run here before any model is loaded.
         for unit,shape in SMOKE_CELLS.items():
-            grid,errors = attempt(lambda:BalancedPaths(unit,"smoke",shape,rank,device,a.library,None),cpu_group)
+            grid,errors = attempt(lambda:BalancedPaths(unit,"smoke",shape,rank,device,a.library,None,
+                                                       agree=lambda error:spread(error,cpu_group)),cpu_group)
             if grid is None:
                 receipt["balanced"][unit] = {arm:dict(status="runtime_error",rank_errors=errors) for arm in BALANCED}
                 emit()
@@ -450,7 +467,8 @@ def smoke(a):
                     if arm=="SLT" and not everywhere:
                         arms[arm] = dict(status="not_run",reason="no admissible cuBLASLt heuristic on every rank")
                     else:
-                        arms[arm] = guarded_admission(grid,arm,cpu_group)
+                        arms[arm] = dict(**guarded_admission(grid,arm,cpu_group),
+                                         launch_mode=grid.graphs.launch_mode(arm),graph_errors=grid.graphs.errors)
                     emit()
             finally:
                 grid.close()
@@ -583,7 +601,8 @@ def device_run(a):
                      if "slt.json" in run["artifacts"] else None)
             # Decide SLT on every rank together: one rank without an algorithm would hang the others.
             slt_ready = all(spread(tuned is not None,cpu_group))
-            paths = BalancedPaths(unit,rep,cells(a.design)[unit],rank,device,a.library,tuned)
+            paths = BalancedPaths(unit,rep,cells(a.design)[unit],rank,device,a.library,tuned,
+                                  agree=lambda error:spread(error,cpu_group))
             actual = combine_input_digests(spread(paths.input_sha256,cpu_group))
             if actual!=run["inputs"][f"{unit}:{rep}"]:
                 raise ValueError("generated FP16 inputs differ from prepare")
@@ -611,6 +630,10 @@ def device_run(a):
                     if rank==0:
                         append_row(apath,dict(**record_identity(run,unit,rep,arm),input_id=rep,**result))
                 return
+            # Capture every consumer arm this process will time together, before any timing,
+            # so the arms of one process share a launch mode.
+            paths.prepare_graphs([b["arm_id"] for b in blocks if admitted.get((unit,rep,b["arm_id"]))
+                                  and (b["arm_id"] not in BRIDGE or lock["bridge_enabled"])])
             for b in blocks:
                 arm = b["arm_id"]
                 rec = dict(**record_identity(run,unit,rep,arm),attempt=attempt_no,

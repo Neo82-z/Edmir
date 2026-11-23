@@ -14,6 +14,8 @@ BRIDGE = ("D_Q1_G1", "BOLD_Q1_G1")
 BALANCED = ("D_Q1_G2", "D_Q4_G2", "BNEW_Q1_G2", "BNEW_Q4_G2", "SLT")+BRIDGE
 SNAPSHOT = ("D_Q1_G2_R", "D_Q4_G2_R", "BNEW_Q1_G2_R", "BNEW_Q4_G2_R", "NATIVE")
 ARMS = {"balanced": BALANCED, "snapshot": SNAPSHOT}
+# Consumer launches replay as one CUDA graph per arm; pack, AllToAll and barriers run eagerly.
+GRAPH = "; consumer launches replayed as one CUDA graph, communication eager"
 PRIMARY = ("Ba_q1", "Ba_q4", "Bb_q1", "Bb_q4", "R_Ba_q1", "R_Ba_q4", "R_Bb_q1", "R_Bb_q4", "Ba_bridge_g1")
 
 
@@ -43,17 +45,17 @@ def generate(out):
     for arm in arms:
         if arm["stage"] == "snapshot":
             if arm["kind"] == "direct":
-                arm["implementation"] = "ragged per-source expert Triton BF16 on symmetric peer memory; FP32 split merge"
+                arm["implementation"] = "ragged per-source expert Triton BF16 on symmetric peer memory; FP32 split merge"+GRAPH
             elif arm["arm_id"] == "NATIVE":
                 arm["implementation"] = "pinned vLLM all-gatherv and captured Triton gate/up config on fixed routes"
             else:
-                arm["implementation"] = "NCCL ragged AllToAll plus same Triton BF16 consumer as direct; FP32 split merge"
+                arm["implementation"] = "NCCL ragged AllToAll plus same Triton BF16 consumer as direct; FP32 split merge"+GRAPH
         elif arm["arm_id"] in {"D_Q1_G2", "D_Q4_G2", "D_Q1_G1"}:
-            arm["implementation"] = "per-source Triton SM80 FP16 on symmetric peer memory; FP32 split merge"
+            arm["implementation"] = "per-source Triton SM80 FP16 on symmetric peer memory; FP32 split merge"+GRAPH
             # gpu_status refers to the arm's compute kernel; this Triton consumer has not run on an A100.
             arm["gpu_status"] = "new"
         elif arm["arm_id"].startswith("BNEW_"):
-            arm["implementation"] = "NCCL AllToAll plus identical per-source Triton consumer"
+            arm["implementation"] = "NCCL AllToAll plus identical per-source Triton consumer"+GRAPH
         elif arm["arm_id"] == "BOLD_Q1_G1":
             arm["implementation"] = "cyclic NCCL pairwise stage plus existing CUTLASS 64x128"
     comparisons = [r for r in read(OLD / "comparisons.csv") if r["comparison_id"] in PRIMARY]

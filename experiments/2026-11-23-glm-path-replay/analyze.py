@@ -31,6 +31,8 @@ def jsonl(path):
 
 
 RETRYABLE = {"runtime_error", "timeout", "infrastructure_failure"}
+# Pre-registered: a row whose host enqueue time reaches 90% of its wall time is launch-bound.
+LAUNCH_BOUND = 0.9
 
 
 def first_attempt_failed(rows, arms):
@@ -335,11 +337,13 @@ def main():
         diagnostics.append(dict(**{k:row[k] for k in ("process_id","unit_id","arm_id",
                 "median_wall_ms","median_event_ms","median_enqueue_ms")},
             enqueue_over_wall=row["median_enqueue_ms"]/row["median_wall_ms"],
+            launch_bound=row["median_enqueue_ms"]>=LAUNCH_BOUND*row["median_wall_ms"],
             total_live_rows=sum(c["projection_live_rows"] for c in counts),
             total_dp_pad_rows=sum(c["padding_rows"] for c in counts),
             total_nonlocal_zero_rows=sum(c.get("zeroed_nonlocal_rows",0) for c in counts),
             max_projection_launches=max(c.get("projection_launches",0) for c in counts),
             max_merge_launches=max(c.get("merge_launches",0) for c in counts),
+            launch_mode=",".join(sorted({c.get("launch_mode","eager") for c in counts})),
             native_config=counts[0].get("native_tune",{}).get("kind","")))
     if diagnostics:
         write_csv(args.out/"timing_diagnostics.csv",list(diagnostics[0]),diagnostics)
@@ -352,6 +356,10 @@ def main():
         p0_equals_always_slt=len(c)==len(bins) and all(arm=="SLT" for arm in c.values()),
         bridge_enabled=lock.get("bridge_enabled",False),
         retried_processes=sorted(retried),missing=run.get("missing",{}),
+        # D/BNEW consumers replay as CUDA graphs; any that fell back to eager launches are listed.
+        launch_bound_rows=sorted(f"{r['process_id']}:{r['arm_id']}" for r in diagnostics if r["launch_bound"]),
+        eager_consumer_rows=sorted(f"{r['process_id']}:{r['arm_id']}" for r in diagnostics
+                                   if r["arm_id"].startswith(("D_","BNEW_")) and r["launch_mode"]!="graph"),
         smoke_failures=run.get("smoke_failures",[]),
         native_config_source={name:r["native_tune"] for name,r in run.get("coverage",{}).items()},
         selection=selection_rows(blocks, policy, timings, {"balanced": c, "snapshot": s},

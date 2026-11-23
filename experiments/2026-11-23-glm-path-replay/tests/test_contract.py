@@ -389,6 +389,66 @@ class TestAnalysis(unittest.TestCase):
                     self.results()
 
 
+class TestConsumerGraphs(unittest.TestCase):
+    def fake_torch(self):
+        from contextlib import contextmanager
+        from types import SimpleNamespace
+
+        state = SimpleNamespace(capturing=False,modes=[])
+
+        class Graph:
+            def __init__(self):
+                self.replays = 0
+
+            def replay(self):
+                self.replays += 1
+
+        @contextmanager
+        def graph(g, capture_error_mode):
+            state.modes.append(capture_error_mode)
+            state.capturing = True
+            try:
+                yield
+            finally:
+                state.capturing = False
+        cuda = SimpleNamespace(synchronize=lambda:None,CUDAGraph=Graph,graph=graph)
+        return SimpleNamespace(cuda=cuda),state
+
+    def test_all_ranks_capture_then_replay(self):
+        from balanced import ConsumerGraphs
+        torch,state = self.fake_torch()
+        calls = []
+        issue = lambda: calls.append(state.capturing)
+        graphs = ConsumerGraphs(torch,lambda error:[error]*8)
+        graphs.prepare({"D_Q1_G2":issue,"BNEW_Q1_G2":issue})
+        # One warm launch per arm outside capture, then one captured launch per arm.
+        self.assertEqual(calls,[False,False,True,True])
+        self.assertEqual(state.modes,["thread_local"]*2)
+        calls.clear()
+        graphs.run("D_Q1_G2",issue)
+        self.assertEqual(calls,[])
+        self.assertEqual(graphs.graphs["D_Q1_G2"].replays,1)
+        self.assertEqual((graphs.launch_mode("D_Q1_G2"),graphs.launch_mode("SLT")),("graph","eager"))
+
+    def test_one_failing_rank_makes_every_rank_eager(self):
+        from balanced import ConsumerGraphs
+        torch,_ = self.fake_torch()
+        calls = []
+        issue = lambda: calls.append(1)
+        graphs = ConsumerGraphs(torch,lambda error:[None]*7+["RuntimeError('capture')"])
+        graphs.prepare({"D_Q1_G2":issue,"BNEW_Q1_G2":issue})
+        self.assertEqual((graphs.mode,graphs.graphs),("eager",{}))
+        calls.clear()
+        graphs.run("D_Q1_G2",issue)
+        self.assertEqual(calls,[1])
+        # Once eager, later arms in the process stay eager so the arms share one mode.
+        graphs.prepare({"D_Q4_G2":issue})
+        self.assertEqual(graphs.launch_mode("D_Q4_G2"),"eager")
+        no_channel = ConsumerGraphs(torch,None)
+        no_channel.prepare({"D_Q1_G2":issue})
+        self.assertEqual(no_channel.mode,"eager")
+
+
 class TestSnapshot(unittest.TestCase):
     def test_source_tile_table_handles_expert_tail_and_empty_ranges(self):
         self.assertEqual(tiles([0,1,65,0,2]),

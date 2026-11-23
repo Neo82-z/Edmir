@@ -68,6 +68,7 @@ vLLM 0.20.1 环境和固定 CUTLASS 工作树。各设备作业回执写入新�
      pynccl all-gatherv 和 vLLM 投影调用。
    - FP16 网格七臂（D/BNEW 的 q1/q4、SLT、D_Q1_G1、BOLD）在 M=1 和 M=64 上各跑一次准入，
      覆盖 FP16 Triton、cuBLASLt heuristic 和 CUTLASS 桥接。
+   - D/BNEW 的消费者启动在这里第一次以 CUDA graph 捕获并回放，回执里每个 arm 记有 `launch_mode`。
    - 某个 arm 抛异常时记为 runtime_error，其余 arm 照常跑完；有任何失败，命令以非零退出并列出失败项。
    - 失败项是修代码的信号：能修就先修，修完重跑冒烟（回执绑定源码和库哈希）。
    - `prepare` 只要求回执与当前 replay.py、gate_up.py、native.py、balanced.py 和库文件哈希一致。
@@ -168,12 +169,22 @@ vLLM 0.20.1 环境和固定 CUTLASS 工作树。各设备作业回执写入新�
 - `python analyze.py --run <run> --out <results>` 输出有效配对、交叉方向、离线选择
   和论文 JSON。队列共 78 个正式进程、390 个主臂计时。桥接只在触发后多测最多 132 个臂。
 - BF16 direct 和 BNEW 使用同一逐源、跨本地专家的 tile 工作表。q1 每个非空源一次
-  Triton 投影，q4 每源另有一次 FP32 归并，最终输出 BF16。原生直接使用捕获的
+  Triton 投影，q4 每源另有一次 FP32 归并，最终输出 BF16。
+- **消费者启动以 CUDA graph 回放。** D/BNEW 每个 arm 的逐源投影和归并启动在计时前录成一个 CUDA graph，
+  每次迭代回放一次；pack、AllToAll 和对等 barrier 仍即时执行。kernel、参数和启动次数都不变，
+  只去掉 Python 逐个发射的开销（vLLM serving 的 decode 本来就在 graph 里）。
+  一个进程里要计时的消费者 arm 在计时前一起捕获，准入也用同一方式。任何一张卡捕获失败时，
+  所有卡上这些 arm 都改为即时执行，同一进程的 D 与 BNEW 始终同一启动方式；
+  这些行的 `launch_mode` 为 eager，在结果的 `eager_consumer_rows` 中单列。
+  SLT（AllToAll + 一次 cuBLASLt）、NATIVE（all-gatherv + 一次 kernel）和 BOLD 仍即时执行。
+  BOLD 每次迭代 8 段逐对 NCCL 加 8 次 CUTLASS，无法录入 graph，所以桥接比较的是
+  graph 回放的 D_Q1_G1 与即时执行的 BOLD，这又是一处不对称，只作定性参考。原生直接使用捕获的
   aligned IDs、expert IDs 与 padding extent。统一输出重排只在准入执行。
 - Direct 的读取前发布 barrier 与读取后的释放 barrier 都在计时区，保护下一轮复用。
   所有臂同步后记录 max-rank 墙钟和 CUDA event，CUDA event 视作设备时间线经过时间，
-  包括开始和结束记录之间的空档。另记每次迭代 CPU 发出全部工作所用的时间（enqueue）；
-  分析表里的 `enqueue_over_wall` 接近 1 表示该格受 Python 发射开销限制，解读时单独标注。逐卡记录输入、有效投影、DP padding、零写和对齐槽位。
+  包括开始和结束记录之间的空档。另记每次迭代 CPU 发出全部工作所用的时间（enqueue）。
+  开机前定的判据：enqueue 达到墙钟的 90% 即为 launch-bound，记入 `launch_bound_rows`，
+  涉及这些行的格在解读时单独标注，判读规则本身不变。逐卡记录输入、有效投影、DP padding、零写和对齐槽位。
   回放范围到 gate/up 输出为止。静态路由、投影对齐预计算、正确性重排在计时外。
 
 ## 事前预测
