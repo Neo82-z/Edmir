@@ -127,6 +127,17 @@ class TestAnalysis(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     self.results()
 
+    def test_release_sensitivity_changes_only_direct_arms(self):
+        from analyze import release_sensitivity
+        blocks,policy,timings = check_rows(DESIGN,self.run,self.path,self.admission,self.metrics)
+        phase = {key:dict(transport=.05,consumer=.5,release=.25) for key in timings}
+        result = release_sensitivity(DESIGN,blocks,policy,timings,phase)
+        ids = {r["comparison_id"] for r in result["effects"]}
+        self.assertEqual(ids,{"Ba_q1","Ba_q4","R_Ba_q1","R_Ba_q4"})
+        # Direct is 1.2 ms from M64 up and staged 1.0 ms: without the 0.25 ms release it wins everywhere.
+        self.assertTrue(all(r["outcome"]=="candidate_wins" for r in result["effects"]))
+        self.assertTrue(all(not c["intervals"] for c in result["crossings"]))
+
     def test_tie_separates_winners(self):
         effects = self.results()
         for r in effects:
@@ -381,12 +392,137 @@ class TestAnalysis(unittest.TestCase):
                      dict(input_rows=2,live_assignments=2,projection_rows=2,projection_live_rows=2,padding_rows=0)
                      for _ in range(8)])
         self.results()
+        # Device rows always need valid per-rank counts, with or without phase files.
+        self.metrics = [dict(r,rank_counts=r["rank_counts"][:7])]
+        with self.assertRaisesRegex(ValueError,"row counts"):
+            self.results()
+        # Phase durations are validated and feed the release-barrier sensitivity.
+        from analyze import release_sensitivity
+        phases = self.path/"phases.json"
+        phases.write_text(json.dumps([[[.1,.5,.2]]*8]*100))
+        good = dict(r,phase_names=["transport","consumer","release"],phases_file=phases.name,
+                    phases_sha256=sha(phases),phase_ms=dict(transport=.1,consumer=.5,release=.2))
+        self.metrics = [good]
+        self.results()
+        for bad in (dict(phase_ms=dict(transport=.1,consumer=.5,release=.3)),dict(phases_sha256="b"*64),
+                    dict(phase_names=["transport","consumer"])):
+            with self.subTest(bad=list(bad)):
+                self.metrics = [dict(good,**bad)]
+                with self.assertRaisesRegex(ValueError,"phase"):
+                    self.results()
+        self.metrics = [r]
         for field in ("median_event_ms","median_enqueue_ms"):
             with self.subTest(field=field):
                 bad = dict(r,**{field:.1})
                 self.metrics = [bad]
                 with self.assertRaisesRegex(ValueError,field):
                     self.results()
+
+
+def synthetic_microbench(barrier=2e-5,launch=3e-6,rate=1.5e14,a2a_latency=4e-5):
+    """A node microbenchmark with every probe present, in the receipt format of microbench.py."""
+    from microbench import PEER_CTAS, SEVEN_PEER_CTAS, RATE_SHAPE
+    m,k,n = RATE_SHAPE
+    readings = [dict(kind="peer_copy",peers=1,ctas=c,bytes=2**26,seconds=2**26/min(3.5e9*c,1.9e11)) for c in PEER_CTAS]
+    readings += [dict(kind="peer_read_7",peers=7,ctas=7*c,bytes=7*2**23,seconds=7*2**23/min(3.5e9*7*c,2.3e11))
+                 for c in SEVEN_PEER_CTAS]
+    readings += [dict(kind="hbm_copy",bytes=2**27,seconds=2**27/1.6e12),dict(kind="launch",seconds=3e-5),
+                 dict(kind="graph_launch",launches=8,seconds=launch),dict(kind="peer_barrier",seconds=barrier)]
+    readings += [dict(kind="consumer_rate",g=g,ctas=16*(24//g),flops=2*m*k*n,seconds=2*m*k*n/rate) for g in (1,2)]
+    readings += [dict(kind="all_to_all",m=2**i,bytes=8*2**i*4096,remote_bytes=7*2**i*4096,
+                      seconds=a2a_latency+7*2**i*4096/2e11) for i in range(11)]
+    return dict(rank_measurements=[readings]*8)
+
+
+class TestCalibratedPrediction(unittest.TestCase):
+    def setUp(self):
+        temp = tempfile.TemporaryDirectory()
+        self.addCleanup(temp.cleanup)
+        self.path = Path(temp.name)
+
+    def seal(self, micro, name="cal"):
+        import subprocess
+        import sys
+        source = self.path/f"{name}-microbench.json"
+        source.write_text(json.dumps(micro))
+        code = subprocess.run([sys.executable,"-B",str(ROOT/"calibrate_node.py"),"--microbench",str(source),
+                               "--out",str(self.path/name)],capture_output=True,text=True).returncode
+        return code,source,self.path/name
+
+    def test_node_parameters_seal_a_second_prediction(self):
+        from analyze import predicted_classes
+        from replay import check_calibrated
+        code,source,out = self.seal(synthetic_microbench())
+        self.assertEqual(code,0)
+        params = json.loads((out/"params.json").read_text())
+        self.assertEqual(params["source"],"microbench")
+        self.assertAlmostEqual(params["F_direct"],4e-5)
+        self.assertAlmostEqual(params["G_launch"],3e-6)
+        self.assertAlmostEqual(params["F_staged"],1e-6)
+        self.assertAlmostEqual(params["mma_peak"]/1.5e14,1,places=6)
+        self.assertAlmostEqual(params["a2a"]["latency"]/4e-5,1,places=4)
+        self.assertAlmostEqual(params["b_hbm"]/1.6e12,1,places=6)
+        check_calibrated(out,DESIGN,source)
+        rows,choices = load_prediction(out,DESIGN,"balanced")
+        self.assertEqual(len(choices),11)
+        self.assertEqual(len(predicted_classes(out)),44)
+        # The scenario seal is untouched and differs: launches no longer cost 40 us each.
+        scenario = {(r["unit_id"],r["arm_id"]):float(r["predicted_ms"]) for r in read(ROOT/"preboot_prediction"/"predictions.csv")}
+        node = {(r["unit_id"],r["arm_id"]):float(r["predicted_ms"]) for r in read(out/"predictions.csv")}
+        self.assertLess(node["GLM_M0001","D_Q1_G2"],scenario["GLM_M0001","D_Q1_G2"]/3)
+        other = self.path/"other.json"
+        other.write_text(json.dumps(synthetic_microbench(barrier=3e-5)))
+        with self.assertRaisesRegex(ValueError,"does not belong"):
+            check_calibrated(out,DESIGN,other)
+        (out/"params.json").write_text((out/"params.json").read_text().replace("microbench","edited"))
+        with self.assertRaisesRegex(ValueError,"does not belong"):
+            check_calibrated(out,DESIGN,source)
+
+    def test_a_failed_required_probe_leaves_only_the_scenario_prediction(self):
+        micro = synthetic_microbench()
+        micro["rank_measurements"] = [[dict(kind="consumer_rate",g=r["g"],error="CompilationError()")
+                                       if r["kind"]=="consumer_rate" else r for r in micro["rank_measurements"][0]]]*8
+        code,_,out = self.seal(micro,"failed")
+        self.assertEqual(code,3)
+        receipt = json.loads((out/"CALIBRATION.json").read_text())
+        self.assertEqual(receipt["status"],"failed")
+        self.assertIn("mma",receipt["reason"])
+        self.assertFalse((out/"PREDICTION_SEAL.json").exists())
+
+
+class TestSecondaryR1(unittest.TestCase):
+    def effects(self, classes):
+        return [dict(comparison_id=c,unit_id=u,outcome=k) for (c,u),k in classes.items()]
+
+    def test_reality_equal_to_the_prediction_scores(self):
+        from analyze import predicted_classes, secondary_r1
+        classes = predicted_classes(ROOT/"preboot_prediction")
+        rows = {r["comparison_id"]:r for r in secondary_r1(DESIGN,self.effects(classes),classes)}
+        self.assertEqual(set(rows),{"Ba_q1","Ba_q4","Bb_q1","Bb_q4"})
+        for cid,(lo,hi) in (("Ba_q1",(4,16)),("Ba_q4",(16,128))):
+            self.assertEqual((rows[cid]["measured_bracket"]["m_low"],rows[cid]["measured_bracket"]["m_high"]),(lo,hi))
+            self.assertEqual(rows[cid]["bracket_verdict"],"contained")
+            self.assertEqual((rows[cid]["decided"],rows[cid]["class_agree"]),(11,11))
+        self.assertEqual(rows["Bb_q1"]["bracket_verdict"],"agree_none")
+
+    def test_bracket_verdicts(self):
+        from analyze import bracket, score_bracket
+        W,L,T,U = "candidate_wins","baseline_wins","tie","undetermined"
+        predicted = bracket([(1,W),(2,W),(4,W),(8,T),(16,L),(32,L)])
+        cases = (([(1,W),(2,W),(4,W),(8,U),(16,L),(32,L)],"contained"),
+                 ([(1,W),(2,W),(4,W),(8,W),(16,L),(32,L)],"contained"),
+                 ([(1,W),(2,W),(4,T),(8,T),(16,T),(32,L)],"overlap"),
+                 ([(1,W),(2,L),(4,L),(8,L),(16,L),(32,L)],"disjoint"),
+                 ([(1,L),(2,L),(4,L),(8,L),(16,L),(32,L)],"miss_existence"),
+                 ([(1,L),(2,L),(4,L),(8,T),(16,W),(32,W)],"miss_direction"),
+                 ([(1,W),(2,L),(4,W),(8,L),(16,L),(32,L)],"unscorable"),
+                 ([(1,T),(2,U),(4,T),(8,T),(16,"incomplete"),(32,T)],"unscorable"))
+        for seq,verdict in cases:
+            with self.subTest(verdict=verdict,seq=seq):
+                self.assertEqual(score_bracket(bracket(seq),predicted),verdict)
+        none = bracket([(1,L),(2,L)])
+        self.assertEqual(score_bracket(bracket([(1,L),(2,T)]),none),"agree_none")
+        self.assertEqual(score_bracket(bracket([(1,W),(2,W)]),none),"miss_winner")
 
 
 class TestConsumerGraphs(unittest.TestCase):
@@ -437,7 +573,7 @@ class TestConsumerGraphs(unittest.TestCase):
         issue = lambda: calls.append(1)
         graphs = ConsumerGraphs(torch,lambda error:[None]*7+["RuntimeError('capture')"])
         graphs.prepare({"D_Q1_G2":issue,"BNEW_Q1_G2":issue})
-        self.assertEqual((graphs.mode,graphs.graphs),("eager",{}))
+        self.assertEqual((graphs.modes,graphs.graphs),({"consumer":"eager"},{}))
         calls.clear()
         graphs.run("D_Q1_G2",issue)
         self.assertEqual(calls,[1])
@@ -446,7 +582,18 @@ class TestConsumerGraphs(unittest.TestCase):
         self.assertEqual(graphs.launch_mode("D_Q4_G2"),"eager")
         no_channel = ConsumerGraphs(torch,None)
         no_channel.prepare({"D_Q1_G2":issue})
-        self.assertEqual(no_channel.mode,"eager")
+        self.assertEqual(no_channel.modes["consumer"],"eager")
+
+    def test_native_group_fails_alone(self):
+        from balanced import ConsumerGraphs
+        torch,_ = self.fake_torch()
+        outcome = iter([[None]*8,["RuntimeError('native capture')"]+[None]*7])
+        graphs = ConsumerGraphs(torch,lambda error:next(outcome))
+        graphs.prepare({"D_Q1_G2_R":lambda:None,"BNEW_Q1_G2_R":lambda:None})
+        graphs.prepare({"NATIVE":lambda:None},group="native")
+        self.assertEqual(graphs.modes,{"consumer":"graph","native":"eager"})
+        self.assertEqual([graphs.launch_mode(a) for a in ("D_Q1_G2_R","BNEW_Q1_G2_R","NATIVE")],
+                         ["graph","graph","eager"])
 
 
 class TestSnapshot(unittest.TestCase):

@@ -47,7 +47,8 @@ def generate(out):
             if arm["kind"] == "direct":
                 arm["implementation"] = "ragged per-source expert Triton BF16 on symmetric peer memory; FP32 split merge"+GRAPH
             elif arm["arm_id"] == "NATIVE":
-                arm["implementation"] = "pinned vLLM all-gatherv and captured Triton gate/up config on fixed routes"
+                arm["implementation"] = ("pinned vLLM all-gatherv and captured Triton gate/up config on fixed routes"
+                                         "; kernel launch replayed as a CUDA graph, communication eager")
             else:
                 arm["implementation"] = "NCCL ragged AllToAll plus same Triton BF16 consumer as direct; FP32 split merge"+GRAPH
         elif arm["arm_id"] in {"D_Q1_G2", "D_Q4_G2", "D_Q1_G1"}:
@@ -79,7 +80,8 @@ def generate(out):
     add("build_balanced", detail="SM80 CUTLASS/CUDA and tuned cuBLASLt shared library")
     add("device_smoke", detail="synthetic 5 BF16 replay arms and 7 FP16 grid arms at M1/M64 before model capture")
     add("tune_native_glm", detail="one bounded E8 N1536 tuning job; record tuned or default")
-    add("microbench", detail="1- and 7-peer reads by CTA count, HBM copy, launch, barrier, AllToAll per M")
+    add("microbench", detail="1- and 7-peer reads by CTA count, HBM copy, launch, barrier, consumer rate, AllToAll per M")
+    add("seal_calibrated_prediction", detail="CPU: frozen predictor with microbenchmark parameters, sealed before admission")
     add("tune_slt", detail="up to 8 cuBLASLt heuristics per cell, 32 MiB; lock per-rank choices")
     add("capture_glm", detail="layer 23, pure prefill #1 and pure decode #8; save native launch tensors")
     add("prepare_both", detail="one RUN: 33 FP16 seed identities, 2 capture hashes, all builds and fixed baselines")

@@ -82,9 +82,22 @@ vLLM 0.20.1 环境和固定 CUTLASS 工作树。各设备作业回执写入新�
    - 单 peer 读：5 个 CTA 档（27–432），每卡读下一张卡的 64 MiB；
    - 七 peer 同时读：每个 peer 4–64 个 CTA（总 28–448），每张卡的 7 个读者各取其缓冲区的不重叠八分之一，
      共 56 MiB，超过 L2；
-   - HBM 拷贝、单个极小 kernel、对等 barrier；
+   - HBM 拷贝、单个极小 kernel（即时启动）、对等 barrier；
+   - graph 回放下多发一个 kernel 的开销（8 个极小 kernel 录成一个 graph，回放时间除以 8）；
+   - 共用消费者在本地行上的计算速率（M=1024，g=1 和 g=2 各一次，所有 SM 槽位占满，graph 回放）；
    - 11 个 M 档上的等分 `all_to_all_single`（每卡 8M×2048 FP16），与 BNEW/SLT 的搬运相同。
-   这些数用来对照 scenario 里的 `b_in`（1 和 7 peer）、`b_hbm`、`G_launch` 和 `a2a`，只作解释，不重封预测。
+   这些数有两个用途：解释结果；作为第二版封存预测的参数（下一步）。
+5b. 封存第二版预测（CPU 步骤，不用 GPU）：
+
+        $RUN calibrate_node.py --microbench /work/microbench.json --out /work/calibrated
+
+   用冻结的 `calibrate.py` 和 `predict.py`，只把情景参数换成本机微基准的实测值，在任何正式计时之前封存。
+   探针到参数的对应关系在开机前定死，写在 `calibrate_node.py` 开头：
+   - `b_in`：单 peer 和七 peer 读带宽随 CTA 数的表；`b_hbm`：HBM 拷贝；`a2a`：11 个 M 档的线性拟合；
+   - `mma_peak`：消费者的本地计算速率；`G_launch`：graph 回放下的单次启动开销；
+   - `F_direct`：两次对等 barrier；`F_staged`：定义为 1 µs（staged 除 AllToAll 外没有固定步骤）；
+   - 没有探针的参数（SM 数、tile、占用、L2、`lt_launch` 等）沿用情景值，回执里逐项列出。
+   必需的探针失败时命令返回 3，不产生第二版预测，实验照常进行，只对开机前那版预测计分。
 6. `torchrun --standalone --nproc-per-node=8 replay.py --library /abs/path/libedmir_glm.so tune-slt --gate gate.json --out slt.json`。
    每格每卡最多查 8 个 cuBLASLt heuristic，对 ≤32 MiB 的可用候选用独立输入数值检查及 event 计时。
    冻结最快合格候选和完整日志。无合格项的卡将使对应 SLT 不准入。
@@ -143,8 +156,10 @@ vLLM 0.20.1 环境和固定 CUTLASS 工作树。各设备作业回执写入新�
 改动任何一个（包括 analyze.py），之后的作业都会拒绝运行。
 
 - `verify` 在 CPU 上检查两个快照、哈希和保存的原生对齐。
-- `prepare --gate gate.json --smoke-receipt smoke.json --prediction preboot_prediction --slt-receipt slt.json --microbench microbench.json --native-tune <实际捕获配置> --native-trials <调优目录>/trials.json`
+- `prepare --gate gate.json --smoke-receipt smoke.json --prediction preboot_prediction --slt-receipt slt.json --microbench microbench.json --calibrated-prediction /work/calibrated --native-tune <实际捕获配置> --native-trials <调优目录>/trials.json`
   一次登记 33 个均衡 seed、2 个快照以及全部 build。后续不得覆盖 RUN 或其中冻结的回执。
+  - `--calibrated-prediction` 必须出自同一份 `microbench.json`（核对哈希）。它在这里被复制进 RUN 并登记哈希，
+    所以第二版预测一定早于准入和计时。没有它时只对开机前那版预测计分，并记入 `missing`。
   - 只有硬件门槛和设计会挡住 prepare。冒烟回执必须是当前代码和库的，但其中失败的 arm 只记进
     RUN.json 的 `smoke_failures`，由正式准入裁决。
   - `--slt-receipt` 缺失时 SLT 记为 unsupported；`--microbench` 缺失或个别探针失败时只少一份解释数据。
@@ -176,10 +191,17 @@ vLLM 0.20.1 环境和固定 CUTLASS 工作树。各设备作业回执写入新�
   一个进程里要计时的消费者 arm 在计时前一起捕获，准入也用同一方式。任何一张卡捕获失败时，
   所有卡上这些 arm 都改为即时执行，同一进程的 D 与 BNEW 始终同一启动方式；
   这些行的 `launch_mode` 为 eager，在结果的 `eager_consumer_rows` 中单列。
-  SLT（AllToAll + 一次 cuBLASLt）、NATIVE（all-gatherv + 一次 kernel）和 BOLD 仍即时执行。
+  NATIVE 的 gate/up kernel 也录成 graph 回放（vLLM 在非 eager 模式下本来就这样运行它），all-gatherv 即时执行。
+  NATIVE 单独成组：它捕获失败时只有它自己退回即时执行，记入 `mixed_launch_mode_rows`，不影响 D/BNEW。
+  SLT（AllToAll + 一次 cuBLASLt，经 ctypes 调用）和 BOLD 仍即时执行。
   BOLD 每次迭代 8 段逐对 NCCL 加 8 次 CUTLASS，无法录入 graph，所以桥接比较的是
   graph 回放的 D_Q1_G1 与即时执行的 BOLD，这又是一处不对称，只作定性参考。原生直接使用捕获的
   aligned IDs、expert IDs 与 padding extent。统一输出重排只在准入执行。
+- **每次迭代分段计时。** 在设备时间线上用 CUDA event 把一次迭代分成几段，逐卡逐迭代保存：
+  `pack`（仅快照）、`transport`（AllToAll、all-gatherv，或直读的发布 barrier）、`consumer`、
+  `release`（直读的释放 barrier；其余 arm 接近零）。每个 arm 记录相同数量的 event。BOLD 的搬运和计算交错，不分段。
+  分析输出 `phases.csv`，并给出"去掉直读释放 barrier"的敏感性结果（`release_sensitivity`）。
+  释放 barrier 保护缓冲区复用，用双缓冲的部署不需要它；主判读仍用含两次 barrier 的总时间。
 - Direct 的读取前发布 barrier 与读取后的释放 barrier 都在计时区，保护下一轮复用。
   所有臂同步后记录 max-rank 墙钟和 CUDA event，CUDA event 视作设备时间线经过时间，
   包括开始和结束记录之间的空档。另记每次迭代 CPU 发出全部工作所用的时间（enqueue）。
@@ -189,11 +211,26 @@ vLLM 0.20.1 环境和固定 CUTLASS 工作树。各设备作业回执写入新�
 
 ## 事前预测
 
-`preboot_prediction/` 使用原解析器与原 scenario 参数在 CPU 重新封存。主 R1 只检查
-四条网格主对照。宽区间命中要求完整的实测严格交叉落在区间内并且方向相同，单列为
+两版预测都出自同一个冻结的预测器，分别计分：
+- **开机前版**（`preboot_prediction/`）：情景参数，已随提交公开封存。它假设每次启动 40 µs、每次迭代固定 150 µs，
+  对应的是即时启动的实现；消费者改为 graph 回放后，这些固定开销不再成立，所以它主要检验占位参数。
+- **标定版**（`prediction_calibrated/`）：参数来自本机微基准，在 prepare 时封存，早于准入和计时。
+  它检验的是"给定本机实测参数，模型结构能否预测边界"。
+
+主 R1 只检查四条网格主对照。宽区间命中要求完整的实测严格交叉落在区间内并且方向相同，单列为
 `hit_loose`。严格预测使用原来的一档容差。实测覆盖不全或方向未定不可判中。
-微基准用于解释并给出有效带宽尺度，原 scenario 预测不按实测重封。
-P0 在 11 格全部选 SLT，R2 仅报离线选择和测后 regret，同选择规则的相等结果按原值报告。
+
+主 R1 有一个已知的盲区：预测本身在交叉处有持平档，实测与预测逐格相同时，主 R1 给出的是"不判"。
+因此开机前另登记两个次要指标（`r1_secondary`），对两版预测都计算：
+- **逐格一致率**：已判定的格里，预测类别与实测类别相同的格数；另报双方都是明确胜负的格里方向相同的格数。
+- **区间规则**：交叉区间取"一侧最后一个明确胜"到"另一侧第一个明确胜"，持平和未定档可以落在区间内。
+  实测区间落在预测区间内记 `contained`，有重叠记 `overlap`，不相交记 `disjoint`；
+  双方都无交叉且赢家相同记 `agree_none`；一方有交叉一方没有记 `miss_existence`；方向相反记 `miss_direction`；
+  明确胜负交错出现或没有明确格时记 `unscorable`。
+主 R1 与次要指标都如实报告，不用次要指标替换主 R1 的结论。
+
+P0 在 11 格全部选 SLT，R2 仅报离线选择和测后 regret，同选择规则的相等结果按原值报告；
+标定版的选择另列为 `P0_CALIBRATED`。
 
 重封是原封存的子集：用冻结的 `predict.py` 和 `scenario.json` 在本设计上重算，四个输出逐字节复现，
 GLM 的 77 行预测和 44 个比较类别与 11-21 的封存完全相同。

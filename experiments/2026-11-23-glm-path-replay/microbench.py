@@ -1,14 +1,18 @@
-"""Small independent device probes for interpreting the sealed scenario."""
+"""Small independent device probes. They explain the results and, through calibrate_node.py,
+supply the parameters of the second sealed prediction."""
 import math
 import statistics
 
 from make_design import ROOT, sha
 
-SCHEMA = "edmir.glm-microbench.v2"
+SCHEMA = "edmir.glm-microbench.v3"
+GRAPH_LAUNCHES = 8
+# One full-occupancy local GEMM per tile width: 384 CTAs at g=1 and 192 at g=2 on 108 SMs.
+RATE_SHAPE = (1024,2048,3072)
 PEER_CTAS = (27,54,108,216,432)
 # CTAs per peer when all seven peers are read at once: 28-448 CTAs in flight.
 SEVEN_PEER_CTAS = (4,8,16,32,64)
-KINDS = ("peer_copy","peer_read_7","hbm_copy","launch","peer_barrier","all_to_all")
+KINDS = ("peer_copy","peer_read_7","hbm_copy","launch","graph_launch","peer_barrier","consumer_rate","all_to_all")
 
 
 def reader_slot(rank, owner):
@@ -43,7 +47,9 @@ def benchmark(a):
     import torch.distributed._symmetric_memory as symmetric
 
     from balanced import cells
+    from gate_up import launch as consumer_launch
     from replay import gpu_session,hardware,inventory,spread,write_json
+    from snapshots import TILE_M,tiles
 
     @triton.jit
     def copy(A, B, n: tl.constexpr, ctas: tl.constexpr, block: tl.constexpr):
@@ -134,6 +140,30 @@ def benchmark(a):
             ("peer_barrier",lambda:handle.barrier(0,60_000),{}),
         ):
             probe(readings,lambda:measure(fn),kind=kind,**extra)
+        def replayed(issue):
+            """Device time of one CUDA-graph replay of issue(), as the D and BNEW consumers launch."""
+            issue()
+            torch.cuda.synchronize()
+            graph = torch.cuda.CUDAGraph()
+            with torch.cuda.graph(graph,capture_error_mode="thread_local"):
+                issue()
+            return measure(graph.replay)
+
+        def ticks():
+            for _ in range(GRAPH_LAUNCHES):
+                tick[(1,)](dest)
+
+        # Cost of one more kernel launch inside a replayed graph.
+        probe(readings,lambda:[t/GRAPH_LAUNCHES for t in replayed(ticks)],kind="graph_launch",launches=GRAPH_LAUNCHES)
+        # Compute rate of the shared consumer on local rows, with every SM slot filled.
+        m,k,n = RATE_SHAPE
+        x = (torch.randn((m,k),device=device)*.125).half()
+        w = (torch.randn((n,k),device=device)*.125).half()
+        y = torch.empty((m,n),dtype=torch.float16,device=device)
+        table = torch.tensor(tiles([m]),dtype=torch.int32,device=device)
+        for g in (1,2):
+            probe(readings,lambda:replayed(lambda:consumer_launch(x,w,y,None,table,1,g)),kind="consumer_rate",
+                  g=g,ctas=len(tiles([m]))*triton.cdiv(n,128*g),flops=2*m*k*n,tile_m=TILE_M)
         # The same equal-split AllToAll that BNEW and SLT issue for each grid cell.
         for m in m_values:
             send = torch.zeros((8*m,2048),dtype=torch.float16,device=device)

@@ -92,19 +92,20 @@ class Lt:
 
 
 class ConsumerGraphs:
-    """Replay each consumer arm's kernel launches as one CUDA graph; communication stays eager.
+    """Replay an arm's compute-kernel launches as one CUDA graph; communication stays eager.
 
-    Every rank captures the same consumer arms together. If capture fails on any rank, every
-    rank runs all of them eagerly, so both sides of a comparison share one launch mode.
-    Replay issues the same kernels with the same arguments, so outputs are unchanged."""
+    Arms are captured in groups, and every rank decides a group together: if capture fails
+    on any rank, every rank runs that whole group eagerly. D and BNEW form one group, so both
+    sides of a same-consumer comparison always share a launch mode. Replay issues the same
+    kernels with the same arguments, so outputs are unchanged."""
 
     def __init__(self, torch, agree):
         self.torch,self.agree = torch,agree
-        self.graphs,self.mode,self.errors = {},None,None
+        self.graphs,self.group_of,self.modes,self.errors = {},{},{},{}
 
-    def prepare(self, consumers):
-        todo = {arm:fn for arm,fn in consumers.items() if arm not in self.graphs}
-        if not todo or self.mode=="eager":
+    def prepare(self, launches, group="consumer"):
+        todo = {arm:fn for arm,fn in launches.items() if arm not in self.graphs}
+        if not todo or self.modes.get(group)=="eager":
             return
         torch,captured,error = self.torch,{},None
         try:
@@ -123,10 +124,13 @@ class ConsumerGraphs:
             error = repr(exc)
         errors = self.agree(error) if self.agree is not None else [error]
         if any(errors):
-            self.mode,self.errors,self.graphs = "eager",errors,{}
+            self.modes[group],self.errors[group] = "eager",errors
+            for arm in [arm for arm,g in self.group_of.items() if g==group]:
+                self.graphs.pop(arm,None)
         else:
-            self.mode = "graph"
+            self.modes[group] = "graph"
             self.graphs.update(captured)
+            self.group_of.update(dict.fromkeys(captured,group))
 
     def run(self, arm, fn):
         graph = self.graphs.get(arm)
@@ -141,6 +145,10 @@ class ConsumerGraphs:
 
 def consumer_arm(arm):
     return arm.startswith("D_") or arm.startswith("BNEW_")
+
+
+def no_mark(name):
+    """Phase boundaries are recorded only while timing."""
 
 
 class BalancedPaths:
@@ -241,20 +249,26 @@ class BalancedPaths:
                     self.weight_t.data_ptr(),self.outputs[src].data_ptr(),
                     self.torch.cuda.current_stream().cuda_stream))
 
-    def run(self, arm):
+    def run(self, arm, mark=no_mark):
+        """mark(name) closes a phase on the device timeline: transport, then consumer;
+        whatever follows the consumer is the release phase."""
         if arm=="BOLD_Q1_G1":
-            self.pairwise(cutlass=True)
+            self.pairwise(cutlass=True)  # transfers and GEMMs interleave; no phases
         elif arm=="SLT":
             self.ensure_lt()
             self.dist.all_to_all_single(self.recv,self.send)
+            mark("transport")
             self.lt.execute(self.recv,self.weight,self.out,self.choice)
+            mark("consumer")
         else:
             staged = arm.startswith("BNEW_")
             if staged:
                 self.dist.all_to_all_single(self.recv,self.send)
             else:
                 self.handle.barrier(0,60_000)
+            mark("transport")
             self.graphs.run(arm,self.consumer(arm))
+            mark("consumer")
             if not staged:
                 self.handle.barrier(0,60_000)
         return self.out

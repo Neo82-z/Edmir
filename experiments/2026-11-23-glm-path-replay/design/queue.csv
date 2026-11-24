@@ -3,89 +3,90 @@ position,job,unit_id,process_id,detail
 2,build_balanced,,,SM80 CUTLASS/CUDA and tuned cuBLASLt shared library
 3,device_smoke,,,synthetic 5 BF16 replay arms and 7 FP16 grid arms at M1/M64 before model capture
 4,tune_native_glm,,,one bounded E8 N1536 tuning job; record tuned or default
-5,microbench,,,"1- and 7-peer reads by CTA count, HBM copy, launch, barrier, AllToAll per M"
-6,tune_slt,,,"up to 8 cuBLASLt heuristics per cell, 32 MiB; lock per-rank choices"
-7,capture_glm,,,"layer 23, pure prefill #1 and pure decode #8; save native launch tensors"
-8,prepare_both,,,"one RUN: 33 FP16 seed identities, 2 capture hashes, all builds and fixed baselines"
-9,admit_snapshot,,,"per-arm isolated workers, FP32 reference, finite outputs and source fingerprint"
-10,admit_balanced,,,three seeds per cell; g1 bridge only if a balanced BNEW arm fails admission
-11,lock_admission,,,freeze bridge decision and all statuses before formal timing
-12,timing_block,GLM_PREFILL,S0595,snapshot:core:GLM_PREFILL:rep1
-13,timing_block,GLM_PREFILL,S0596,snapshot:core:GLM_PREFILL:rep1
-14,timing_block,GLM_DECODE,S0603,snapshot:core:GLM_DECODE:rep1
-15,timing_block,GLM_DECODE,S0604,snapshot:core:GLM_DECODE:rep1
-16,timing_block,GLM_PREFILL,S0615,snapshot:core:GLM_PREFILL:rep2
-17,timing_block,GLM_PREFILL,S0616,snapshot:core:GLM_PREFILL:rep2
-18,timing_block,GLM_DECODE,S0617,snapshot:core:GLM_DECODE:rep2
-19,timing_block,GLM_DECODE,S0618,snapshot:core:GLM_DECODE:rep2
-20,timing_block,GLM_PREFILL,S0619,snapshot:core:GLM_PREFILL:rep3
-21,timing_block,GLM_PREFILL,S0620,snapshot:core:GLM_PREFILL:rep3
-22,timing_block,GLM_DECODE,S0629,snapshot:core:GLM_DECODE:rep3
-23,timing_block,GLM_DECODE,S0630,snapshot:core:GLM_DECODE:rep3
-24,timing_block,GLM_M1024,B0003,balanced:core:GLM_M1024:20261120
-25,timing_block,GLM_M1024,B0004,balanced:core:GLM_M1024:20261120
-26,timing_block,GLM_M0512,B0009,balanced:core:GLM_M0512:20261120
-27,timing_block,GLM_M0512,B0010,balanced:core:GLM_M0512:20261120
-28,timing_block,GLM_M0064,B0023,balanced:core:GLM_M0064:20261120
-29,timing_block,GLM_M0064,B0024,balanced:core:GLM_M0064:20261120
-30,timing_block,GLM_M0004,B0025,balanced:core:GLM_M0004:20261120
-31,timing_block,GLM_M0004,B0026,balanced:core:GLM_M0004:20261120
-32,timing_block,GLM_M0128,B0035,balanced:core:GLM_M0128:20261120
-33,timing_block,GLM_M0128,B0036,balanced:core:GLM_M0128:20261120
-34,timing_block,GLM_M0016,B0043,balanced:core:GLM_M0016:20261120
-35,timing_block,GLM_M0016,B0044,balanced:core:GLM_M0016:20261120
-36,timing_block,GLM_M0256,B0047,balanced:core:GLM_M0256:20261120
-37,timing_block,GLM_M0256,B0048,balanced:core:GLM_M0256:20261120
-38,timing_block,GLM_M0008,B0055,balanced:core:GLM_M0008:20261120
-39,timing_block,GLM_M0008,B0056,balanced:core:GLM_M0008:20261120
-40,timing_block,GLM_M0032,B0057,balanced:core:GLM_M0032:20261120
-41,timing_block,GLM_M0032,B0058,balanced:core:GLM_M0032:20261120
-42,timing_block,GLM_M0001,B0063,balanced:core:GLM_M0001:20261120
-43,timing_block,GLM_M0001,B0064,balanced:core:GLM_M0001:20261120
-44,timing_block,GLM_M0002,B0065,balanced:core:GLM_M0002:20261120
-45,timing_block,GLM_M0002,B0066,balanced:core:GLM_M0002:20261120
-46,timing_block,GLM_M0001,B0077,balanced:core:GLM_M0001:20261121
-47,timing_block,GLM_M0001,B0078,balanced:core:GLM_M0001:20261121
-48,timing_block,GLM_M0512,B0081,balanced:core:GLM_M0512:20261121
-49,timing_block,GLM_M0512,B0082,balanced:core:GLM_M0512:20261121
-50,timing_block,GLM_M0002,B0083,balanced:core:GLM_M0002:20261121
-51,timing_block,GLM_M0002,B0084,balanced:core:GLM_M0002:20261121
-52,timing_block,GLM_M0016,B0085,balanced:core:GLM_M0016:20261121
-53,timing_block,GLM_M0016,B0086,balanced:core:GLM_M0016:20261121
-54,timing_block,GLM_M0256,B0087,balanced:core:GLM_M0256:20261121
-55,timing_block,GLM_M0256,B0088,balanced:core:GLM_M0256:20261121
-56,timing_block,GLM_M0128,B0099,balanced:core:GLM_M0128:20261121
-57,timing_block,GLM_M0128,B0100,balanced:core:GLM_M0128:20261121
-58,timing_block,GLM_M0008,B0111,balanced:core:GLM_M0008:20261121
-59,timing_block,GLM_M0008,B0112,balanced:core:GLM_M0008:20261121
-60,timing_block,GLM_M0032,B0117,balanced:core:GLM_M0032:20261121
-61,timing_block,GLM_M0032,B0118,balanced:core:GLM_M0032:20261121
-62,timing_block,GLM_M0064,B0121,balanced:core:GLM_M0064:20261121
-63,timing_block,GLM_M0064,B0122,balanced:core:GLM_M0064:20261121
-64,timing_block,GLM_M0004,B0123,balanced:core:GLM_M0004:20261121
-65,timing_block,GLM_M0004,B0124,balanced:core:GLM_M0004:20261121
-66,timing_block,GLM_M1024,B0131,balanced:core:GLM_M1024:20261121
-67,timing_block,GLM_M1024,B0132,balanced:core:GLM_M1024:20261121
-68,timing_block,GLM_M0512,B0135,balanced:core:GLM_M0512:20261122
-69,timing_block,GLM_M0512,B0136,balanced:core:GLM_M0512:20261122
-70,timing_block,GLM_M0001,B0149,balanced:core:GLM_M0001:20261122
-71,timing_block,GLM_M0001,B0150,balanced:core:GLM_M0001:20261122
-72,timing_block,GLM_M0256,B0153,balanced:core:GLM_M0256:20261122
-73,timing_block,GLM_M0256,B0154,balanced:core:GLM_M0256:20261122
-74,timing_block,GLM_M0008,B0161,balanced:core:GLM_M0008:20261122
-75,timing_block,GLM_M0008,B0162,balanced:core:GLM_M0008:20261122
-76,timing_block,GLM_M0016,B0165,balanced:core:GLM_M0016:20261122
-77,timing_block,GLM_M0016,B0166,balanced:core:GLM_M0016:20261122
-78,timing_block,GLM_M0064,B0177,balanced:core:GLM_M0064:20261122
-79,timing_block,GLM_M0064,B0178,balanced:core:GLM_M0064:20261122
-80,timing_block,GLM_M0032,B0181,balanced:core:GLM_M0032:20261122
-81,timing_block,GLM_M0032,B0182,balanced:core:GLM_M0032:20261122
-82,timing_block,GLM_M0004,B0183,balanced:core:GLM_M0004:20261122
-83,timing_block,GLM_M0004,B0184,balanced:core:GLM_M0004:20261122
-84,timing_block,GLM_M0128,B0189,balanced:core:GLM_M0128:20261122
-85,timing_block,GLM_M0128,B0190,balanced:core:GLM_M0128:20261122
-86,timing_block,GLM_M0002,B0193,balanced:core:GLM_M0002:20261122
-87,timing_block,GLM_M0002,B0194,balanced:core:GLM_M0002:20261122
-88,timing_block,GLM_M1024,B0195,balanced:core:GLM_M1024:20261122
-89,timing_block,GLM_M1024,B0196,balanced:core:GLM_M1024:20261122
-90,analyze_and_export,,,Preserve paired coverage and verified figure/table input
+5,microbench,,,"1- and 7-peer reads by CTA count, HBM copy, launch, barrier, consumer rate, AllToAll per M"
+6,seal_calibrated_prediction,,,"CPU: frozen predictor with microbenchmark parameters, sealed before admission"
+7,tune_slt,,,"up to 8 cuBLASLt heuristics per cell, 32 MiB; lock per-rank choices"
+8,capture_glm,,,"layer 23, pure prefill #1 and pure decode #8; save native launch tensors"
+9,prepare_both,,,"one RUN: 33 FP16 seed identities, 2 capture hashes, all builds and fixed baselines"
+10,admit_snapshot,,,"per-arm isolated workers, FP32 reference, finite outputs and source fingerprint"
+11,admit_balanced,,,three seeds per cell; g1 bridge only if a balanced BNEW arm fails admission
+12,lock_admission,,,freeze bridge decision and all statuses before formal timing
+13,timing_block,GLM_PREFILL,S0595,snapshot:core:GLM_PREFILL:rep1
+14,timing_block,GLM_PREFILL,S0596,snapshot:core:GLM_PREFILL:rep1
+15,timing_block,GLM_DECODE,S0603,snapshot:core:GLM_DECODE:rep1
+16,timing_block,GLM_DECODE,S0604,snapshot:core:GLM_DECODE:rep1
+17,timing_block,GLM_PREFILL,S0615,snapshot:core:GLM_PREFILL:rep2
+18,timing_block,GLM_PREFILL,S0616,snapshot:core:GLM_PREFILL:rep2
+19,timing_block,GLM_DECODE,S0617,snapshot:core:GLM_DECODE:rep2
+20,timing_block,GLM_DECODE,S0618,snapshot:core:GLM_DECODE:rep2
+21,timing_block,GLM_PREFILL,S0619,snapshot:core:GLM_PREFILL:rep3
+22,timing_block,GLM_PREFILL,S0620,snapshot:core:GLM_PREFILL:rep3
+23,timing_block,GLM_DECODE,S0629,snapshot:core:GLM_DECODE:rep3
+24,timing_block,GLM_DECODE,S0630,snapshot:core:GLM_DECODE:rep3
+25,timing_block,GLM_M1024,B0003,balanced:core:GLM_M1024:20261120
+26,timing_block,GLM_M1024,B0004,balanced:core:GLM_M1024:20261120
+27,timing_block,GLM_M0512,B0009,balanced:core:GLM_M0512:20261120
+28,timing_block,GLM_M0512,B0010,balanced:core:GLM_M0512:20261120
+29,timing_block,GLM_M0064,B0023,balanced:core:GLM_M0064:20261120
+30,timing_block,GLM_M0064,B0024,balanced:core:GLM_M0064:20261120
+31,timing_block,GLM_M0004,B0025,balanced:core:GLM_M0004:20261120
+32,timing_block,GLM_M0004,B0026,balanced:core:GLM_M0004:20261120
+33,timing_block,GLM_M0128,B0035,balanced:core:GLM_M0128:20261120
+34,timing_block,GLM_M0128,B0036,balanced:core:GLM_M0128:20261120
+35,timing_block,GLM_M0016,B0043,balanced:core:GLM_M0016:20261120
+36,timing_block,GLM_M0016,B0044,balanced:core:GLM_M0016:20261120
+37,timing_block,GLM_M0256,B0047,balanced:core:GLM_M0256:20261120
+38,timing_block,GLM_M0256,B0048,balanced:core:GLM_M0256:20261120
+39,timing_block,GLM_M0008,B0055,balanced:core:GLM_M0008:20261120
+40,timing_block,GLM_M0008,B0056,balanced:core:GLM_M0008:20261120
+41,timing_block,GLM_M0032,B0057,balanced:core:GLM_M0032:20261120
+42,timing_block,GLM_M0032,B0058,balanced:core:GLM_M0032:20261120
+43,timing_block,GLM_M0001,B0063,balanced:core:GLM_M0001:20261120
+44,timing_block,GLM_M0001,B0064,balanced:core:GLM_M0001:20261120
+45,timing_block,GLM_M0002,B0065,balanced:core:GLM_M0002:20261120
+46,timing_block,GLM_M0002,B0066,balanced:core:GLM_M0002:20261120
+47,timing_block,GLM_M0001,B0077,balanced:core:GLM_M0001:20261121
+48,timing_block,GLM_M0001,B0078,balanced:core:GLM_M0001:20261121
+49,timing_block,GLM_M0512,B0081,balanced:core:GLM_M0512:20261121
+50,timing_block,GLM_M0512,B0082,balanced:core:GLM_M0512:20261121
+51,timing_block,GLM_M0002,B0083,balanced:core:GLM_M0002:20261121
+52,timing_block,GLM_M0002,B0084,balanced:core:GLM_M0002:20261121
+53,timing_block,GLM_M0016,B0085,balanced:core:GLM_M0016:20261121
+54,timing_block,GLM_M0016,B0086,balanced:core:GLM_M0016:20261121
+55,timing_block,GLM_M0256,B0087,balanced:core:GLM_M0256:20261121
+56,timing_block,GLM_M0256,B0088,balanced:core:GLM_M0256:20261121
+57,timing_block,GLM_M0128,B0099,balanced:core:GLM_M0128:20261121
+58,timing_block,GLM_M0128,B0100,balanced:core:GLM_M0128:20261121
+59,timing_block,GLM_M0008,B0111,balanced:core:GLM_M0008:20261121
+60,timing_block,GLM_M0008,B0112,balanced:core:GLM_M0008:20261121
+61,timing_block,GLM_M0032,B0117,balanced:core:GLM_M0032:20261121
+62,timing_block,GLM_M0032,B0118,balanced:core:GLM_M0032:20261121
+63,timing_block,GLM_M0064,B0121,balanced:core:GLM_M0064:20261121
+64,timing_block,GLM_M0064,B0122,balanced:core:GLM_M0064:20261121
+65,timing_block,GLM_M0004,B0123,balanced:core:GLM_M0004:20261121
+66,timing_block,GLM_M0004,B0124,balanced:core:GLM_M0004:20261121
+67,timing_block,GLM_M1024,B0131,balanced:core:GLM_M1024:20261121
+68,timing_block,GLM_M1024,B0132,balanced:core:GLM_M1024:20261121
+69,timing_block,GLM_M0512,B0135,balanced:core:GLM_M0512:20261122
+70,timing_block,GLM_M0512,B0136,balanced:core:GLM_M0512:20261122
+71,timing_block,GLM_M0001,B0149,balanced:core:GLM_M0001:20261122
+72,timing_block,GLM_M0001,B0150,balanced:core:GLM_M0001:20261122
+73,timing_block,GLM_M0256,B0153,balanced:core:GLM_M0256:20261122
+74,timing_block,GLM_M0256,B0154,balanced:core:GLM_M0256:20261122
+75,timing_block,GLM_M0008,B0161,balanced:core:GLM_M0008:20261122
+76,timing_block,GLM_M0008,B0162,balanced:core:GLM_M0008:20261122
+77,timing_block,GLM_M0016,B0165,balanced:core:GLM_M0016:20261122
+78,timing_block,GLM_M0016,B0166,balanced:core:GLM_M0016:20261122
+79,timing_block,GLM_M0064,B0177,balanced:core:GLM_M0064:20261122
+80,timing_block,GLM_M0064,B0178,balanced:core:GLM_M0064:20261122
+81,timing_block,GLM_M0032,B0181,balanced:core:GLM_M0032:20261122
+82,timing_block,GLM_M0032,B0182,balanced:core:GLM_M0032:20261122
+83,timing_block,GLM_M0004,B0183,balanced:core:GLM_M0004:20261122
+84,timing_block,GLM_M0004,B0184,balanced:core:GLM_M0004:20261122
+85,timing_block,GLM_M0128,B0189,balanced:core:GLM_M0128:20261122
+86,timing_block,GLM_M0128,B0190,balanced:core:GLM_M0128:20261122
+87,timing_block,GLM_M0002,B0193,balanced:core:GLM_M0002:20261122
+88,timing_block,GLM_M0002,B0194,balanced:core:GLM_M0002:20261122
+89,timing_block,GLM_M1024,B0195,balanced:core:GLM_M1024:20261122
+90,timing_block,GLM_M1024,B0196,balanced:core:GLM_M1024:20261122
+91,analyze_and_export,,,Preserve paired coverage and verified figure/table input

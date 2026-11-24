@@ -17,7 +17,7 @@ import subprocess
 import sys
 import time
 
-from balanced import BalancedPaths, ConsumerGraphs, cells, consumer_arm, input_digest, combine_input_digests
+from balanced import BalancedPaths, ConsumerGraphs, cells, consumer_arm, input_digest, combine_input_digests, no_mark
 from hw_gate import inventory as gpu_inventory, load_passing_gate
 from make_design import ROOT, SNAPSHOT, BALANCED, BRIDGE, read, sha
 from snapshots import WORLD, load_rank, load_receipts, layout, reference, correctness, tiles
@@ -94,6 +94,21 @@ def check_slt(tuned, gate, design, library, uuids):
         raise ValueError("SLT tuning receipt differs from the run")
 
 
+def check_calibrated(path, design, microbench):
+    """The second prediction must come from this run's microbenchmark and the frozen predictor."""
+    from analyze import load_prediction
+
+    receipt = json.loads((path/"CALIBRATION.json").read_text())
+    seal = json.loads((path/"PREDICTION_SEAL.json").read_text())
+    if (receipt.get("status")!="sealed" or microbench is None or receipt.get("microbench_sha256")!=sha(microbench)
+            or receipt.get("mapping_sha256")!=sha(ROOT/"calibrate_node.py")
+            or receipt.get("params_sha256")!=sha(path/"params.json")
+            or seal.get("params_source")!="microbench"
+            or {h for name,h in seal["inputs"].items() if Path(name).name=="params.json"}!={sha(path/"params.json")}):
+        raise ValueError("calibrated prediction does not belong to this microbenchmark")
+    load_prediction(path,design,"balanced")
+
+
 def snapshot_stage(run):
     """True when this run registered the two captured snapshots."""
     return any(key.endswith(":real") for key in run["inputs"])
@@ -129,6 +144,10 @@ def prepare(a):
     else:
         missing["microbench.json"] = "not provided"
     load_prediction(a.prediction,a.design,"balanced")
+    if a.calibrated_prediction:
+        check_calibrated(a.calibrated_prediction,a.design,a.microbench)
+    else:
+        missing["prediction_calibrated"] = "not provided: only the pre-boot scenario prediction is scored"
     for row in captures:
         provenance = row["native_tune"]
         if a.native_tune and (provenance["kind"]!="tuned" or provenance["sha256"]!=sha(a.native_tune)):
@@ -149,16 +168,23 @@ def prepare(a):
     artifacts = {name:path for name,path in artifacts.items() if path}
     frozen = {name:sha(path) for name,path in artifacts.items()}
     prediction = {p.name:sha(p) for p in a.prediction.iterdir() if p.is_file()}
+    calibrated = ({p.name:sha(p) for p in a.calibrated_prediction.iterdir() if p.is_file()}
+                  if a.calibrated_prediction else {})
     harness = canonical_digest(dict(runtime=runtime,files=files,artifacts=frozen,prediction=prediction,
+                                     prediction_calibrated=calibrated,
                                      native_configs={r["snapshot"]:r["native_config"] for r in captures}))
     a.run.mkdir(parents=True,exist_ok=False)
     for name,path in artifacts.items():
         shutil.copyfile(path,a.run/name)
     shutil.copytree(a.prediction,a.run/"prediction")
+    if calibrated:
+        # Sealed here, before admission and timing: parameters come from the microbenchmark only.
+        shutil.copytree(a.calibrated_prediction,a.run/"prediction_calibrated")
     write_json(a.run/"RUN.json",dict(schema="edmir.glm-combined-run.v2",origin="device_measurement",
         run_id=a.run.name,design_sha256=sha(a.design/"DESIGN.json"),hardware_sha256=frozen["hw_gate.json"],
         harness=harness,inputs=inputs,builds={arm:canonical_digest([arm,harness]) for arm in SNAPSHOT+BALANCED},
-        runtime=runtime,files=files,artifacts=frozen,prediction=prediction,gpu_uuids=uuids,
+        runtime=runtime,files=files,artifacts=frozen,prediction=prediction,
+        prediction_calibrated=calibrated,gpu_uuids=uuids,
         coverage=coverage,capture_run_id=captures[0]["run_id"] if captures else None,
         missing=missing,smoke_failures=smoke_failed,scope="fixed input to gate/up output"))
 
@@ -242,26 +268,38 @@ class Paths:
     def close(self):
         pass
 
-    def materialize(self, source, staged):
+    def materialize(self, source, staged, mark=no_mark):
         pack = self.peer_storage[:self.read_rows.numel()]
         self.torch.index_select(source,0,self.read_rows,out=pack)
+        mark("pack")
         if staged:
             self.dist.all_to_all_single(self.staged,pack,self.receive,self.send)
         else:
             self.handle.barrier(0,60_000)
+        mark("transport")
 
-    def run(self, arm):
+    def run(self, arm, mark=no_mark):
+        """mark(name) closes a phase on the device timeline: pack, transport, then consumer;
+        whatever follows the consumer is the release phase."""
         if arm=="NATIVE":
             self.open_native()
             self.nccl.all_gatherv(self.gathered,self.hidden,self.sizes)
-            self.invoke(self.native,self.gathered,self.weight,self.native_out,self.aligned,self.cfg)
+            mark("transport")
+            self.graphs.run(arm,self.native_kernel)
+            mark("consumer")
             return self.native_out
         staged = arm.startswith("BNEW_")
-        self.materialize(self.hidden,staged)
+        self.materialize(self.hidden,staged,mark)
         self.graphs.run(arm,self.consumer(arm))
+        mark("consumer")
         if not staged:
             self.handle.barrier(0,60_000)
         return self.output
+
+    def native_kernel(self):
+        """The captured vLLM gate/up launch. vLLM replays this kernel from CUDA graphs outside eager mode."""
+        self.open_native()
+        self.invoke(self.native,self.gathered,self.weight,self.native_out,self.aligned,self.cfg)
 
     def consumer(self, arm):
         """The per-source launches of a D or BNEW arm; only their input rows differ."""
@@ -276,6 +314,10 @@ class Paths:
 
     def prepare_graphs(self, arms):
         self.graphs.prepare({arm:self.consumer(arm) for arm in arms if consumer_arm(arm)})
+        # NATIVE is its own group: if its capture fails it runs eagerly and is reported as such,
+        # without changing how D and BNEW launch.
+        if "NATIVE" in arms:
+            self.graphs.prepare({"NATIVE":self.native_kernel},group="native")
 
     def admit(self, arm):
         torch = self.torch
@@ -323,7 +365,7 @@ class Paths:
             return dict(input_rows=sum(self.sizes),live_assignments=self.native_live,projection_rows=self.native_rows,
                         projection_live_rows=self.native_live,padding_rows=self.native_rows-self.native_live,
                         zeroed_nonlocal_rows=self.native_zero,aligned_slots=self.native_slots,native_tune=self.tune,
-                        projection_launches=1,merge_launches=0)
+                        projection_launches=1,merge_launches=0,launch_mode=self.graphs.launch_mode(arm))
         return dict(input_rows=sum(self.receive),live_assignments=self.output.shape[0],projection_rows=self.output.shape[0],
                     projection_live_rows=self.output.shape[0],padding_rows=0,
                     projection_launches=len(self.work),merge_launches=len(self.work) if "_Q4_" in arm else 0,
@@ -509,13 +551,23 @@ def timed(path, policy, arm, cpu_group):
     import torch.distributed as dist
 
     start,end = (torch.cuda.Event(enable_timing=True) for _ in range(2))
-    samples,events,enqueue = [],[],[]
+    samples,events,enqueue,phases = [],[],[],[]
+    boundaries,seen,names = {},[],[]
+
+    def mark(name):
+        # One event per phase boundary on this rank's stream; every arm pays the same record cost.
+        if name not in boundaries:
+            boundaries[name] = torch.cuda.Event(enable_timing=True)
+        boundaries[name].record()
+        seen.append(name)
+
     for i in range(policy["warmup"]+policy["timed"]):
         dist.barrier()
         torch.cuda.synchronize()
+        seen.clear()
         begin = time.perf_counter_ns()
         start.record()
-        path.run(arm)
+        path.run(arm,mark)
         # Host time to issue all work; close to the wall time means the iteration is launch-bound.
         queued = time.perf_counter_ns()
         end.record()
@@ -524,7 +576,12 @@ def timed(path, policy, arm, cpu_group):
             samples.append((time.perf_counter_ns()-begin)/1e6)
             events.append(start.elapsed_time(end))
             enqueue.append((queued-begin)/1e6)
-    return spread(dict(host=samples,event=events,enqueue=enqueue,counts=path.counts(arm)),cpu_group)
+            if seen:
+                names = seen+["release"]
+                points = [start]+[boundaries[n] for n in seen]+[end]
+                phases.append([a.elapsed_time(b) for a,b in zip(points,points[1:])])
+    return spread(dict(host=samples,event=events,enqueue=enqueue,phase_names=names,phases=phases,
+                       counts=path.counts(arm)),cpu_group)
 
 
 def snapshot_receipts(a, run, unit):
@@ -556,9 +613,10 @@ def device_run(a):
     for name,h in run["artifacts"].items():
         if sha(a.run/name)!=h:
             raise ValueError(f"frozen artifact changed: {name}")
-    for name,h in run["prediction"].items():
-        if sha(a.run/"prediction"/name)!=h:
-            raise ValueError(f"frozen prediction changed: {name}")
+    for folder in ("prediction","prediction_calibrated"):
+        for name,h in run.get(folder,{}).items():
+            if sha(a.run/folder/name)!=h:
+                raise ValueError(f"frozen prediction changed: {folder}/{name}")
     for package,version in run["runtime"].items():
         if importlib.metadata.version(package)!=version:
             raise ValueError(f"runtime changed: {package}")
@@ -655,13 +713,23 @@ def device_run(a):
                         write_json(a.run/relative,host)
                         write_json(a.run/event_file,events)
                         write_json(a.run/enqueue_file,enqueue)
+                        phase = {}
+                        names = ranks[0]["phase_names"]
+                        if names and all(x["phase_names"]==names and len(x["phases"])==policy["timed"] for x in ranks):
+                            # iteration -> rank -> one duration per phase, in ms on the device timeline
+                            per_iteration = list(zip(*(x["phases"] for x in ranks),strict=True))
+                            phase_file = f"{tag}-{arm}-phases.json"
+                            write_json(a.run/phase_file,per_iteration)
+                            phase = dict(phase_names=names,phases_file=phase_file,phases_sha256=sha(a.run/phase_file),
+                                phase_ms={n:statistics.median(max(r[j] for r in it) for it in per_iteration)
+                                          for j,n in enumerate(names)})
                         append_row(mpath,dict(**rec,status="ok",warmup=policy["warmup"],timed=policy["timed"],
                             median_wall_ms=statistics.median(map(max,host)),median_event_ms=statistics.median(map(max,events)),
                             median_enqueue_ms=statistics.median(map(max,enqueue)),
                             samples_file=relative,samples_sha256=sha(a.run/relative),
                             events_file=event_file,events_sha256=sha(a.run/event_file),
                             enqueue_file=enqueue_file,enqueue_sha256=sha(a.run/enqueue_file),
-                            rank_counts=[x["counts"] for x in ranks]))
+                            rank_counts=[x["counts"] for x in ranks],**phase))
                 except Exception as exc:
                     if rank==0:
                         append_row(mpath,dict(**rec,status="runtime_error",error=repr(exc)))
@@ -820,7 +888,7 @@ def cli():
     prep = sub.add_parser("prepare")
     for name in ("gate","smoke-receipt","prediction"):
         prep.add_argument("--"+name,type=Path,required=True)
-    for name in ("slt-receipt","microbench","native-tune","native-trials"):
+    for name in ("slt-receipt","microbench","native-tune","native-trials","calibrated-prediction"):
         prep.add_argument("--"+name,type=Path)
     prep.add_argument("--without-snapshots",metavar="REASON",
                       help="register the FP16 grid only, because the capture could not be obtained")

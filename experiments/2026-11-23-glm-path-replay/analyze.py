@@ -68,9 +68,10 @@ def check_rows(design, run, source, admission, metrics):
         for name,digest_ in run["artifacts"].items():
             if Path(name).name!=name or sha(source/name)!=digest_:
                 raise ValueError(f"run artifact changed: {name}")
-        for name,digest_ in run["prediction"].items():
-            if Path(name).name!=name or sha(source/"prediction"/name)!=digest_:
-                raise ValueError(f"frozen prediction changed: {name}")
+        for folder in ("prediction","prediction_calibrated"):
+            for name,digest_ in run.get(folder,{}).items():
+                if Path(name).name!=name or sha(source/folder/name)!=digest_:
+                    raise ValueError(f"frozen prediction changed: {folder}/{name}")
     blocks = read(design / "blocks.csv")
     policy = json.loads((design / "policies.json").read_text())
     planned = {(b["process_id"], b["arm_id"]): b for b in blocks}
@@ -133,6 +134,8 @@ def check_rows(design, run, source, admission, metrics):
                     c["projection_live_rows"]+c["padding_rows"]!=c["projection_rows"] or
                     c["live_assignments"]!=c["projection_live_rows"] for c in counts):
                 raise ValueError(f"invalid per-rank row counts {key}")
+        if "phases_file" in row:
+            verify_phases(source,row,policy,key)
         if admitted.get((unit, seed, arm)):
             timings[key, attempt] = value
     arms_in = defaultdict(int)
@@ -170,6 +173,24 @@ def verify_samples(source,row,label,median_field,policy,key):
     if not finite(row.get(median_field)) or not math.isclose(value,row[median_field],rel_tol=1e-7):
         raise ValueError(f"{median_field} does not match max-rank samples {key}")
     return value
+
+
+def verify_phases(source,row,policy,key):
+    """iteration -> rank -> one device-timeline duration per named phase."""
+    rel,names = Path(row["phases_file"]),row.get("phase_names",[])
+    raw = source/rel
+    if (rel.is_absolute() or ".." in rel.parts or not raw.resolve().is_relative_to(source.resolve())
+            or sha(raw)!=row.get("phases_sha256")):
+        raise ValueError(f"raw phases hash mismatch {key}")
+    samples = json.loads(raw.read_text())
+    if (not names or names[-1]!="release" or len(samples)!=policy["timed"] or any(
+            len(it)!=8 or any(len(r)!=len(names) or any(not finite(x) or x<0 for x in r) for r in it)
+            for it in samples)):
+        raise ValueError(f"each iteration requires eight ranks with one duration per phase {key}")
+    for j,name in enumerate(names):
+        value = statistics.median(max(r[j] for r in it) for it in samples)
+        if not math.isclose(value,row["phase_ms"][name],rel_tol=1e-7,abs_tol=1e-12):
+            raise ValueError(f"phase_ms does not match max-rank phases {key}")
 
 
 def collect_pairs(blocks):
@@ -261,6 +282,95 @@ def score_crossing(measured, pred_rows, bins):
     return "hit_loose" if any(kind=="loose" for *_,kind in expected) else "hit"
 
 
+def predicted_classes(path):
+    """Per-cell predicted class of a prediction already validated by load_prediction."""
+    seal = json.loads((path/"PREDICTION_SEAL.json").read_text())
+    if sha(path/"predicted_comparisons.csv")!=seal["outputs"].get("predicted_comparisons.csv"):
+        raise ValueError("prediction output hash mismatch")
+    return {(r["comparison_id"],r["unit_id"]):r["predicted_class"] for r in read(path/"predicted_comparisons.csv")}
+
+
+def bracket(seq):
+    """seq: (m, class). The crossover lies between the last clear win on one side and the
+    first clear win on the other; ties and undecided cells may sit inside it."""
+    wins = [m for m,c in seq if c=="candidate_wins"]
+    losses = [m for m,c in seq if c=="baseline_wins"]
+    if not wins and not losses:
+        return dict(kind="no_clear_cell")
+    if not wins or not losses:
+        return dict(kind="none",winner="candidate" if wins else "baseline")
+    if max(wins)<min(losses):
+        return dict(kind="bracket",m_low=max(wins),m_high=min(losses),direction="candidate_wins->baseline_wins")
+    if max(losses)<min(wins):
+        return dict(kind="bracket",m_low=max(losses),m_high=min(wins),direction="baseline_wins->candidate_wins")
+    return dict(kind="interleaved")
+
+
+def score_bracket(measured, predicted):
+    kinds = {measured["kind"],predicted["kind"]}
+    if kinds & {"no_clear_cell","interleaved"}:
+        return "unscorable"
+    if kinds=={"none"}:
+        return "agree_none" if measured["winner"]==predicted["winner"] else "miss_winner"
+    if "none" in kinds:
+        return "miss_existence"
+    if measured["direction"]!=predicted["direction"]:
+        return "miss_direction"
+    if predicted["m_low"]<=measured["m_low"] and measured["m_high"]<=predicted["m_high"]:
+        return "contained"
+    if measured["m_low"]<predicted["m_high"] and predicted["m_low"]<measured["m_high"]:
+        return "overlap"
+    return "disjoint"
+
+
+def secondary_r1(design, effects, classes):
+    """Pre-registered secondary scores: they stay defined when a tie or an undecided cell
+    sits at the crossover, where the primary strict-crossing verdict is 'unresolved'."""
+    m = {r["cell_id"]:int(r["m_per_source_destination"]) for r in read(design/"cells.csv")}
+    out = []
+    for c in read(design/"comparisons.csv"):
+        if c["crossover"]!="1":
+            continue
+        cid = c["comparison_id"]
+        cells = sorted((m[e["unit_id"]],classes.get((cid,e["unit_id"])),e["outcome"])
+                       for e in effects if e["comparison_id"]==cid)
+        decided = [(pred,got) for _,pred,got in cells if got in ("candidate_wins","baseline_wins","tie")]
+        clear = [(pred,got) for pred,got in decided if "tie" not in (pred,got)]
+        measured = bracket([(x,got) for x,_,got in cells])
+        predicted = bracket([(x,pred) for x,pred,_ in cells])
+        out.append(dict(comparison_id=cid,cells=len(cells),decided=len(decided),
+            class_agree=sum(pred==got for pred,got in decided),
+            both_clear=len(clear),direction_agree=sum(pred==got for pred,got in clear),
+            measured_bracket=measured,predicted_bracket=predicted,
+            bracket_verdict=score_bracket(measured,predicted),
+            by_cell=[dict(m=x,predicted=pred,measured=got) for x,pred,got in cells]))
+    return out
+
+
+def release_sensitivity(design, blocks, policy, timings, phase):
+    """Same-consumer comparisons with the direct arm's release barrier removed. The barrier
+    protects buffer reuse; a deployment with double buffering would not pay it."""
+    adjusted = {key:(v-phase[key]["release"] if key[1].startswith("D_") and key in phase else v)
+                for key,v in timings.items()}
+    pairs = {c["comparison_id"] for c in read(design/"comparisons.csv")
+             if c["candidate_arm"].startswith("D_") and c["baseline_arm"].startswith("BNEW_")}
+    rows = [r for r in effect_rows(design,blocks,policy,adjusted) if r["comparison_id"] in pairs]
+    return dict(effects=rows,crossings=crossing_rows(design,rows))
+
+
+def phase_rows(blocks, timings, phase):
+    """Per unit and arm: each phase's median over the processes that count."""
+    groups = defaultdict(list)
+    unit = {(b["process_id"],b["arm_id"]):b["unit_id"] for b in blocks}
+    for key in timings:
+        if key in phase:
+            groups[unit[key],key[1]].append(phase[key])
+    names = ("pack","transport","consumer","release")
+    return [dict(unit_id=u,arm_id=arm,processes=len(v),
+                 **{n+"_ms":statistics.median(x[n] for x in v) if all(n in x for x in v) else None for n in names})
+            for (u,arm),v in sorted(groups.items())]
+
+
 def load_prediction(path, design, stage):
     if path is None:
         return [], {}
@@ -307,6 +417,7 @@ def main():
     ap.add_argument("--run", type=Path, required=True)
     ap.add_argument("--pred-cells", type=Path)
     ap.add_argument("--pred-snapshots", type=Path)
+    ap.add_argument("--pred-calibrated", type=Path)
     ap.add_argument("--out", type=Path, required=True)
     args = ap.parse_args()
     run = json.loads((args.run / "RUN.json").read_text())
@@ -319,15 +430,38 @@ def main():
         ap.error("device runs use the prediction frozen in RUN.json")
     pred, c = load_prediction(prediction_dir,args.design,"balanced")
     _, s = load_prediction(args.pred_snapshots, args.design, "snapshot")
+    calibrated_dir = (args.run/"prediction_calibrated" if run.get("prediction_calibrated") else None
+                      ) if run["origin"]=="device_measurement" else args.pred_calibrated
+    if run["origin"]=="device_measurement" and args.pred_calibrated:
+        ap.error("device runs use the calibrated prediction frozen in RUN.json")
+    pred_cal, c_cal = load_prediction(calibrated_dir,args.design,"balanced")
     effects = effect_rows(args.design, blocks, policy, timings)
     cross = crossing_rows(args.design, effects)
     bins = [int(r["m_per_source_destination"]) for r in read(args.design / "cells.csv")]
-    for group in cross:
-        support = [r for r in pred if all(r[k] == group[k] for k in ("comparison_id","group"))]
-        group["prediction_verdict"] = score_crossing(group, support, bins)
+    # Two sealed predictions from one frozen predictor: pre-boot scenario parameters, and
+    # parameters measured by the node microbenchmark before any formal timing.
+    r1 = {}
+    for label,rows_,folder in (("scenario",pred,prediction_dir),("calibrated",pred_cal,calibrated_dir)):
+        if folder is None:
+            continue
+        for group in cross:
+            support = [r for r in rows_ if all(r[k] == group[k] for k in ("comparison_id","group"))]
+            verdict = score_crossing(group, support, bins)
+            group["prediction_verdict" if label=="scenario" else "calibrated_verdict"] = verdict
+        r1[label] = secondary_r1(args.design,effects,predicted_classes(folder))
     args.out.mkdir(parents=True, exist_ok=True)
     write_csv(args.out / "effects.csv", list(effects[0]), effects)
     retried = retried_processes(metrics)
+    phase = {(row["process_id"],row["arm_id"]):row["phase_ms"] for row in metrics if "phase_ms" in row
+             and row.get("attempt",1)==(2 if row["process_id"] in retried else 1)}
+    phases = phase_rows(blocks,timings,phase)
+    if phases:
+        write_csv(args.out/"phases.csv",list(phases[0]),phases)
+    selection = selection_rows(blocks, policy, timings, {"balanced": c, "snapshot": s},
+                               run.get("selection_overhead_ms", {}))
+    if calibrated_dir is not None:
+        selection += [dict(row,policy="P0_CALIBRATED") for row in selection_rows(
+            blocks,policy,timings,{"balanced":c_cal},{}) if row["policy"]=="P0" and row["stage"]=="balanced"]
     diagnostics = []
     for row in metrics:
         used = row.get("attempt",1)==(2 if row["process_id"] in retried else 1)
@@ -336,6 +470,7 @@ def main():
         counts = row["rank_counts"]
         diagnostics.append(dict(**{k:row[k] for k in ("process_id","unit_id","arm_id",
                 "median_wall_ms","median_event_ms","median_enqueue_ms")},
+            **{n+"_ms":row.get("phase_ms",{}).get(n) for n in ("pack","transport","consumer","release")},
             enqueue_over_wall=row["median_enqueue_ms"]/row["median_wall_ms"],
             launch_bound=row["median_enqueue_ms"]>=LAUNCH_BOUND*row["median_wall_ms"],
             total_live_rows=sum(c["projection_live_rows"] for c in counts),
@@ -352,6 +487,10 @@ def main():
     payload = dict(schema="edmir.glm-path-paper-results.v2", origin=run["origin"],
         run_id=run["run_id"], design_id=DESIGN_ID, design_sha256=run["design_sha256"],
         hardware_sha256=run["hardware_sha256"], effects=effects, crossings=cross,
+        r1_secondary=r1,phases=phases,
+        release_sensitivity=release_sensitivity(args.design,blocks,policy,timings,phase),
+        mixed_launch_mode_rows=sorted(f"{r['process_id']}:{r['arm_id']}" for r in diagnostics
+                                      if r["arm_id"]=="NATIVE" and r["launch_mode"]!="graph"),
         static_overhead_scope="presealed choices; excludes any online selection",
         p0_equals_always_slt=len(c)==len(bins) and all(arm=="SLT" for arm in c.values()),
         bridge_enabled=lock.get("bridge_enabled",False),
@@ -362,8 +501,7 @@ def main():
                                    if r["arm_id"].startswith(("D_","BNEW_")) and r["launch_mode"]!="graph"),
         smoke_failures=run.get("smoke_failures",[]),
         native_config_source={name:r["native_tune"] for name,r in run.get("coverage",{}).items()},
-        selection=selection_rows(blocks, policy, timings, {"balanced": c, "snapshot": s},
-                                 run.get("selection_overhead_ms", {})))
+        selection=selection)
     (args.out / "paper_results.json").write_text(json.dumps(payload, indent=2, allow_nan=False)+"\n")
     print(f"{sum(r['outcome'] != 'incomplete' for r in effects)}/{len(effects)} complete comparisons; {run['origin']}")
 
