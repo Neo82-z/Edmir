@@ -55,6 +55,36 @@ A100 的 Fabric State/Status 可以是 N/A，仍须有宿主回执。
 核对驱动和八卡 UUID，验证镜像实际运行 PyTorch 2.11.0+cu130、CUDA 13.0、vLLM 0.20.1。
 gate.json PASS 还要求全 NV12、所有卡对双向 P2P、功率和八卡 BF16 负载通过。回放和分析读取此格式。
 
+## 上机清单
+
+带上节点的东西（都在卷上或仓库里）：
+
+| 项目 | 要求 |
+|---|---|
+| 仓库 | 检出封存提交，工作区干净 |
+| 锁定镜像 | `edmir/vllm:0.20.1-locked`，由卷上的归档加载并校验 |
+| GLM 模型目录 | 按 54 文件清单校验通过 |
+| CPU 回执和 token 文件 | 用**当前**采集代码重新生成；2026-11-17 的旧回执会被拒绝 |
+| `libedmir_glm.so` | CUDA 13 工具链编译，链接 `libcublasLt.so.13` |
+| 宿主机 gate 回执 | `host.json` |
+
+两段 gate 通过后，先跑一次只读的自检，再碰 GPU：
+
+    $RUN preflight.py --library /work/libedmir_glm.so \
+      --cpu-receipt /cpu-records/<新回执目录>/cpu-receipt.json --out /work/preflight.json
+
+它检查设计表与封存预测是否完好、归档文件是否齐全、仓库是否有未提交的改动、CPU 回执是否对应当前采集代码、
+镜像里的 torch/vLLM 版本、共享库能否解析到 `libcublasLt.so.13` 并加载、Triton 缓存目录是否可写。
+任何一项 FAIL 都先修好。容器里没有 git 时，提交这一项显示 SKIP，手工记下检出的提交。
+
+整轮的顺序是：gate → 自检 → 冒烟 → 原生调优 → 微基准 → 标定版预测 → SLT 调优 → 采集 → prepare →
+准入 → 锁定 → 计时 → 分析 → 把 run 目录、采集目录和全部回执拷到机外。
+每一步的产物都是后一步的输入；决策点只有四个：
+- gate 不通过：停。
+- 冒烟有失败项：能修就修（修代码要重新提交并重跑冒烟），修不了就继续。
+- 采集修一次仍失败：`prepare --without-snapshots`，只跑网格。
+- 第一个正式进程失败且没有写出计时行：`time-all` 会停下来，查日志后再运行它会继续。
+
 ## 前置顺序
 
 所有设备命令都在目标节点运行。先备好已校验的模型、CPU 回执、源锁、

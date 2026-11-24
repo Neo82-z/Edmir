@@ -525,6 +525,29 @@ class TestSecondaryR1(unittest.TestCase):
         self.assertEqual(score_bracket(bracket([(1,W),(2,W)]),none),"miss_winner")
 
 
+class TestPreflight(unittest.TestCase):
+    def test_static_checks_and_stale_cpu_receipt(self):
+        import sys
+        import preflight
+        self.assertEqual(preflight.design(),"glm-path-replay-2026-11-23.v2")
+        self.assertIn("44 cell classes",preflight.prediction())
+        preflight.files()
+        sys.path.insert(0,str(preflight.REPO/"EDM-IR"))
+        from edmir.benchmark.real_moe_config import collection_files
+        root = preflight.REPO/"EDM-IR"
+        hashes = {str(f.relative_to(root)):sha(f) for f in collection_files(root)}
+        with tempfile.TemporaryDirectory() as d:
+            receipt = Path(d)/"cpu-receipt.json"
+            body = dict(schema="edmir.real-moe-cpu-receipt.v1",status="passed",collection_source_hashes=hashes)
+            receipt.write_text(json.dumps(body))
+            self.assertIn("7 collector files",preflight.collector(receipt))
+            for broken in (dict(status="failed"),
+                           dict(collection_source_hashes=dict(hashes,**{"tools/run_real_moe.py":"0"*64}))):
+                receipt.write_text(json.dumps(dict(body,**broken)))
+                with self.subTest(broken=list(broken)), self.assertRaises(ValueError):
+                    preflight.collector(receipt)
+
+
 class TestConsumerGraphs(unittest.TestCase):
     def fake_torch(self):
         from contextlib import contextmanager
