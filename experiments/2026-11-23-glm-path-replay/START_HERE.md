@@ -212,7 +212,8 @@ vLLM 0.20.1 环境和固定 CUTLASS 工作树。各设备作业回执写入新�
     数值失败（准入不合格）不重试。重试后仍失败的就是缺测。
   - 不另建 run，也不跨 run 拼配对。
 - `python analyze.py --run <run> --out <results>` 输出有效配对、交叉方向、离线选择
-  和论文 JSON。队列共 78 个正式进程、390 个主臂计时。桥接只在触发后多测最多 132 个臂。
+  和论文 JSON。把 `<results>/paper_results.json` 复制到论文仓库的 `latex/data/2026-11-glm-path/`，
+  再运行 `make glm-path-results`，论文第 8 节的表和图就由它生成（步骤见论文仓库 `latex/submission/README.md`）。队列共 78 个正式进程、390 个主臂计时。桥接只在触发后多测最多 132 个臂。
 - BF16 direct 和 BNEW 使用同一逐源、跨本地专家的 tile 工作表。q1 每个非空源一次
   Triton 投影，q4 每源另有一次 FP32 归并，最终输出 BF16。
 - **消费者启动以 CUDA graph 回放。** D/BNEW 每个 arm 的逐源投影和归并启动在计时前录成一个 CUDA graph，
