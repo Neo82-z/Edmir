@@ -3,7 +3,7 @@
 
 Run it in the locked image on the node, after the hardware gate:
 
-  python3 preflight.py --library /work/libedmir_glm.so \\
+  python3 preflight.py --library /work/libedmir_replay.so \\
       --cpu-receipt /cpu-records/<dir>/cpu-receipt.json --out /work/preflight.json
 
 Each check is PASS, FAIL or SKIP with a reason. Any FAIL exits 2: fix it before the smoke.

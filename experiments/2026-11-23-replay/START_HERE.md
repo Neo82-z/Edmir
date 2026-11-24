@@ -14,7 +14,6 @@
 每个模型有两类证据：11 个 FP16 均衡格（该模型 gate/up 几何的代理，M=1…1024），以及两个 BF16 快照
 （S32 负载下采集层的首个纯 prefill 和第八个纯 decode，真实激活、权重和路由）。
 硬件单机 8×A100 SXM4 80 GB，NVSwitch 全 NV12。历史数据和冻结评分器使用原有契约。
-目录名里的 glm 是历史遗留，内容覆盖三个模型。
 
 ## 租前确认与资产复用
 
@@ -49,7 +48,7 @@
 
 宿主上执行：
 
-    python3 experiments/2026-11-23-glm-path-replay/hw_gate.py host --out /path/to/receipts/host.json
+    python3 experiments/2026-11-23-replay/hw_gate.py host --out /path/to/receipts/host.json
 
 若只能看到来宾 VM，用 --provider-receipt 提供供应商工单事实。JSON 字段为
 source=provider_host、reference（工单标识）、gpu_uuids（实例八卡 UUID）、
@@ -62,7 +61,7 @@ A100 的 Fabric State/Status 可以是 N/A，仍须有宿主回执。
     docker run --rm --pull never --network none --gpus all \
       -v "/path/to/llm-serving:/repo:ro" -v "/path/to/receipts:/receipts" \
       --entrypoint python3 edmir/vllm:0.20.1-locked \
-      /repo/experiments/2026-11-23-glm-path-replay/hw_gate.py runtime \
+      /repo/experiments/2026-11-23-replay/hw_gate.py runtime \
       --host-receipt /receipts/host.json --out /receipts/gate.json
 
 核对驱动和八卡 UUID，验证镜像实际运行 PyTorch 2.11.0+cu130、CUDA 13.0、vLLM 0.20.1。
@@ -78,12 +77,12 @@ gate.json PASS 还要求全 NV12、所有卡对双向 P2P、功率和八卡 BF16
 | 锁定镜像 | `edmir/vllm:0.20.1-locked`，由卷上的归档加载并校验 |
 | 三个模型目录 | GLM 按既有 54 文件清单校验；Qwen3.5 和 DSV2-Lite 用 `make_model_manifest.py` 生成清单并校验（见下） |
 | 每个模型的 CPU 回执和 token 文件 | 用**当前**采集代码、按模型各生成一份；2026-11-17 的旧回执会被拒绝 |
-| `libedmir_glm.so` | CUDA 13 工具链编译，链接 `libcublasLt.so.13` |
+| `libedmir_replay.so` | CUDA 13 工具链编译，链接 `libcublasLt.so.13` |
 | 宿主机 gate 回执 | `host.json` |
 
 两段 gate 通过后，先跑一次只读的自检，再碰 GPU：
 
-    $RUN preflight.py --library /work/libedmir_glm.so \
+    $RUN preflight.py --library /work/libedmir_replay.so \
       --cpu-receipt /cpu-records/GLM/cpu-receipt.json --cpu-receipt /cpu-records/QWEN35/cpu-receipt.json \
       --cpu-receipt /cpu-records/DSV2L/cpu-receipt.json --out /work/preflight.json
 
@@ -106,8 +105,8 @@ vLLM 0.20.1 环境和固定 CUTLASS 工作树。各设备作业回执写入新�
 启动后依次执行 `design/queue.csv` 的前置任务：
 
 1. 用上面的双阶段 `hw_gate.py` 取得 `gate.json`。通过后进入编译检查和冒烟。
-2. 装入 CPU 侧编好的 SM80 共享库。构建入口是 `CUTLASS_ROOT=... ./build_lt.sh /abs/path/libedmir_glm.so`。
-3. 合成冒烟 `torchrun --standalone --nproc-per-node=8 replay.py --library /abs/path/libedmir_glm.so smoke --gate gate.json --out smoke.json`。
+2. 装入 CPU 侧编好的 SM80 共享库。构建入口是 `CUTLASS_ROOT=... ./build_lt.sh /abs/path/libedmir_replay.so`。
+3. 合成冒烟 `torchrun --standalone --nproc-per-node=8 replay.py --library /abs/path/libedmir_replay.so smoke --gate gate.json --out smoke.json`。
    - BF16 五臂按三个模型各自的几何（本卡专家数、宽度、top-k）各跑一遍，验证 symmetric rendezvous、
      Triton 对端读、AllToAll、原生 pynccl all-gatherv 和 vLLM 投影调用。
    - FP16 网格七臂（D/BNEW 的 q1/q4、SLT、D_Q1_G1、BOLD）在每个宽度的 M=1 和 M=64 上各跑一次准入，
@@ -146,7 +145,7 @@ vLLM 0.20.1 环境和固定 CUTLASS 工作树。各设备作业回执写入新�
    - `F_direct`：两次对等 barrier；`F_staged`：定义为 1 µs（staged 除 AllToAll 外没有固定步骤）；
    - 没有探针的参数（SM 数、tile、占用、L2、`lt_launch` 等）沿用情景值，回执里逐项列出。
    必需的探针失败时命令返回 3，不产生第二版预测，实验照常进行，只对开机前那版预测计分。
-6. `torchrun --standalone --nproc-per-node=8 replay.py --library /abs/path/libedmir_glm.so tune-slt --gate gate.json --out slt.json`。
+6. `torchrun --standalone --nproc-per-node=8 replay.py --library /abs/path/libedmir_replay.so tune-slt --gate gate.json --out slt.json`。
    每格每卡最多查 8 个 cuBLASLt heuristic，对 ≤32 MiB 的可用候选用独立输入数值检查及 event 计时。
    冻结最快合格候选和完整日志。无合格项的卡将使对应 SLT 不准入。
 7. 采集三个模型的快照，每个模型一次，各写进自己的目录。模型由环境变量 `EDMIR_MOE_MODEL` 选择
@@ -216,8 +215,8 @@ vLLM 0.20.1 环境和固定 CUTLASS 工作树。各设备作业回执写入新�
     RUN="docker run --rm --pull never --network none --gpus all --ipc=host \
       -v /path/to/llm-serving:/repo:ro -v /path/to/work:/work -v /path/to/capture-root:/capture:ro \
       -e TRITON_CACHE_DIR=/work/cache/triton -e PYTHONUNBUFFERED=1 \
-      -w /repo/experiments/2026-11-23-glm-path-replay --entrypoint python3 edmir/vllm:0.20.1-locked"
-    T="-m torch.distributed.run --standalone --nproc-per-node=8 replay.py --library /work/libedmir_glm.so"
+      -w /repo/experiments/2026-11-23-replay --entrypoint python3 edmir/vllm:0.20.1-locked"
+    T="-m torch.distributed.run --standalone --nproc-per-node=8 replay.py --library /work/libedmir_replay.so"
 
     $RUN $T smoke --gate /work/gate.json --out /work/smoke.json
     $RUN native.py --out /work/moe_configs
@@ -229,7 +228,7 @@ vLLM 0.20.1 环境和固定 CUTLASS 工作树。各设备作业回执写入新�
 
 ## 统一准备与运行
 
-统一设置 `--run <new-run> --library <libedmir_glm.so> --snapshots <capture>/workers/snapshots`
+统一设置 `--run <new-run> --library <libedmir_replay.so> --snapshots <capture>/workers/snapshots`
 作为 `replay.py` 的全局参数，放在子命令前。RUN 登记了快照时，`admit`、`time-all` 缺 `--snapshots`
 会在启动任何子进程之前报错；`time` 在占用进程编号之前先核对快照目录和回执哈希，
 参数写错不会消耗正式进程的机会。
@@ -266,8 +265,8 @@ vLLM 0.20.1 环境和固定 CUTLASS 工作树。各设备作业回执写入新�
     数值失败（准入不合格）不重试。重试后仍失败的就是缺测。
   - 不另建 run，也不跨 run 拼配对。
 - `python analyze.py --run <run> --out <results>` 输出有效配对、交叉方向、离线选择
-  和论文 JSON。把 `<results>/paper_results.json` 复制到论文仓库的 `latex/data/2026-11-glm-path/`，
-  再运行 `make glm-path-results`，论文第 8 节的表和图就由它生成（步骤见论文仓库 `latex/submission/README.md`）。队列共 234 个正式进程（快照 36 个、网格 198 个）、1170 个主臂计时；桥接只在触发后多测最多 396 个臂。
+  和论文 JSON。把 `<results>/paper_results.json` 复制到论文仓库的 `latex/data/2026-11-boundary/`，
+  再运行 `make boundary-results`，论文第 8 节的表和图就由它生成（步骤见论文仓库 `latex/submission/README.md`）。队列共 234 个正式进程（快照 36 个、网格 198 个）、1170 个主臂计时；桥接只在触发后多测最多 396 个臂。
   队列按"先快照、后网格"排，各自内部按 GLM、Qwen3.5、DSV2-Lite 的顺序整模型排列：租期不够时从队尾放弃，
   丢的是排在后面的整个模型，不会让每个模型都缺一部分。
 - BF16 direct 和 BNEW 使用同一逐源、跨本地专家的 tile 工作表。q1 每个非空源一次

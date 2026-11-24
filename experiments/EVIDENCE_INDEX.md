@@ -74,7 +74,7 @@
 | `2026-11-19-g1-preparation` | 160K |  | G1 准备与契约测试（下一轮 GPU） |
 | `2026-11-19-source-parallel` | 9.0G |  | source-parallel 原型、静态边界、冻结计划草案（下一轮 GPU） |
 | `2026-11-20-final-round` | 0.6M |  | 三模型方案的设计表、预测器和评分公用代码（归档）；其 predict.py、calibrate.py、common.py、scenario.json、hw_gate.py 和设计表仍被当前执行包只读引用 |
-| `2026-11-23-glm-path-replay` | 0.5M |  | 当前执行包：三个模型（GLM-4.7-Flash、Qwen3.5-35B-A3B、DSV2-Lite）的网格与快照回放、开机前封存预测（未开机）；目录名里的 glm 是历史遗留；方案 FINAL_12H_PLAN_ZH_2026-11-23.txt |
+| `2026-11-23-replay` | 0.5M |  | 当前执行包：三个模型（GLM-4.7-Flash、Qwen3.5-35B-A3B、DSV2-Lite）的网格与快照回放、开机前封存预测（未开机）；方案 FINAL_12H_PLAN_ZH_2026-11-23.txt |
 
 ## P. 预测器/选择器本地迭代（已收束，仅附录与复现）（47 个）
 
