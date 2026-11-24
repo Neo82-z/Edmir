@@ -26,7 +26,7 @@ def setup_run(out):
         common = dict(unit_id=u,arm_id=arm,status="ok",run_id=run["run_id"],harness=run["harness"],
                       input_sha256=DUMMY,build_sha256=DUMMY,hardware_sha256=DUMMY)
         admission[u,seed,arm] = dict(**common,input_id=seed,scaled_max_err=.001,nonfinite=0,fingerprint_ok=True)
-        size = int(u.removeprefix("GLM_M")) if b["stage"]=="balanced" else 1
+        size = int(u.rsplit("_M",1)[1]) if b["stage"]=="balanced" else 1
         ms = (0.8 if size<64 else 1.2) if arm.startswith("D_") else 1.
         rank_ms = [ms*.95]*7+[ms]
         filename = f"samples-{ms}.json"
@@ -51,18 +51,24 @@ class TestDesign(unittest.TestCase):
         for row in planned:
             arms = by_pair.setdefault(row["pair_id"], {}).setdefault(row["orientation"], [])
             arms.append(row["arm_id"])
-        self.assertEqual(len({r["process_id"] for r in planned}),78)
-        self.assertEqual(sum(r["arm_id"] not in BRIDGE for r in planned),390)
-        self.assertEqual(len(planned),522)
+        # Three models: 33 grid cells and 6 snapshots, six processes each.
+        self.assertEqual(len({r["process_id"] for r in planned}),234)
+        self.assertEqual(sum(r["arm_id"] not in BRIDGE for r in planned),1170)
+        self.assertEqual(len(planned),1566)
+        timing = [r["unit_id"].split("_")[0] for r in read(DESIGN/"queue.csv") if r["job"]=="timing_block"]
+        # Snapshots first, then grids; within each, one model at a time so a short lease drops whole models.
+        self.assertEqual([k for i,k in enumerate(timing) if i==0 or timing[i-1]!=k],
+                         ["GLM","QWEN35","DSV2L"]*2)
         jobs = [r["job"] for r in read(DESIGN/"queue.csv")]
         # The smoke needs the CUTLASS/cuBLASLt library, and both precede model capture.
         self.assertEqual(jobs[:3],["hw_gate","build_balanced","device_smoke"])
-        self.assertLess(jobs.index("tune_native_glm"),jobs.index("capture_glm"))
-        self.assertLess(jobs.index("microbench"),jobs.index("capture_glm"))
+        self.assertEqual((jobs.count("tune_native"),jobs.count("capture")),(3,3))
+        self.assertLess(max(i for i,j in enumerate(jobs) if j=="tune_native"),jobs.index("capture"))
+        self.assertLess(jobs.index("microbench"),jobs.index("capture"))
         status = {r["arm_id"]:r["gpu_status"] for r in read(DESIGN/"arms.csv")}
         self.assertEqual({a for a,s in status.items() if s=="gpu_run"},{"BOLD_Q1_G1","NATIVE"})
-        self.assertEqual(len(by_pair),39)
-        self.assertEqual(sum(r["stage"]=="snapshot" for r in planned),60)
+        self.assertEqual(len(by_pair),117)
+        self.assertEqual(sum(r["stage"]=="snapshot" for r in planned),180)
         for orientations in by_pair.values():
             self.assertEqual(orientations["forward"],orientations["reverse"][::-1])
 
@@ -80,10 +86,11 @@ class TestAnalysis(unittest.TestCase):
 
     def test_complete_and_directional(self):
         effects = self.results()
-        self.assertEqual(len(effects),63)
+        self.assertEqual(len(effects),189)
         self.assertTrue(all(r["pairs_complete"]==3 for r in effects))
         cross = crossing_rows(DESIGN,effects)
-        self.assertEqual(len(cross),4)
+        self.assertEqual(len(cross),12)
+        self.assertEqual({c["group"] for c in cross},{"GLM","QWEN35","DSV2L"})
         bins = [2**i for i in range(11)]
         for entry in cross:
             row, = entry["intervals"]
@@ -134,6 +141,7 @@ class TestAnalysis(unittest.TestCase):
         result = release_sensitivity(DESIGN,blocks,policy,timings,phase)
         ids = {r["comparison_id"] for r in result["effects"]}
         self.assertEqual(ids,{"Ba_q1","Ba_q4","R_Ba_q1","R_Ba_q4"})
+        self.assertEqual(len(result["crossings"]),6)
         # Direct is 1.2 ms from M64 up and staged 1.0 ms: without the 0.25 ms release it wins everywhere.
         self.assertTrue(all(r["outcome"]=="candidate_wins" for r in result["effects"]))
         self.assertTrue(all(not c["intervals"] for c in result["crossings"]))
@@ -143,7 +151,7 @@ class TestAnalysis(unittest.TestCase):
         for r in effects:
             if r["unit_id"]=="GLM_M0032" and r["comparison_id"]=="Ba_q1":
                 r["outcome"] = "tie"
-        found = next(r for r in crossing_rows(DESIGN,effects) if r["comparison_id"]=="Ba_q1")
+        found = next(r for r in crossing_rows(DESIGN,effects) if (r["comparison_id"],r["group"])==("Ba_q1","GLM"))
         self.assertEqual(found["coverage"],"unresolved")
         self.assertEqual(found["intervals"][0]["kind"],"loose")
 
@@ -157,13 +165,14 @@ class TestAnalysis(unittest.TestCase):
 
 
     def test_combined_identity_and_preboot_seal(self):
-        self.assertEqual(len(self.run["inputs"]),35)
+        self.assertEqual(len(self.run["inputs"]),105)
         self.assertEqual(len(self.run["builds"]),12)
         rows,choices = load_prediction(ROOT/"preboot_prediction",DESIGN,"balanced")
-        self.assertEqual(len(choices),11)
+        self.assertEqual(len(choices),33)
         self.assertEqual(set(choices.values()),{"SLT"})
-        self.assertEqual([(r["m_low"],r["m_high"]) for r in rows if r["kind"]=="loose"],
-                         [("4","16"),("16","128")])
+        self.assertEqual({(r["comparison_id"],r["group"]):(r["m_low"],r["m_high"]) for r in rows if r["kind"]=="loose"},
+                         {("Ba_q1",w):("4","16") for w in ("GLM","QWEN35","DSV2L")}
+                         |{("Ba_q4","GLM"):("16","128"),("Ba_q4","DSV2L"):("16","128"),("Ba_q4","QWEN35"):("16","512")})
 
     def test_optional_bridge_gate_depends_on_bnew_admission(self):
         from types import SimpleNamespace
@@ -192,7 +201,7 @@ class TestAnalysis(unittest.TestCase):
         from unittest.mock import patch
         from replay import admit_jobs, append_row, record_identity
 
-        a = SimpleNamespace(run=self.path,design=DESIGN,unit="GLM_PREFILL",timeout=1,snapshots=self.path)
+        a = SimpleNamespace(run=self.path,design=DESIGN,unit="GLM_PREFILL",timeout=1,snapshots=[self.path])
         (a.run/"RUN.json").write_text(json.dumps(self.run))
         active = []
         def child(_,args,timeout):
@@ -218,14 +227,14 @@ class TestAnalysis(unittest.TestCase):
         from unittest.mock import patch
         from replay import admit_jobs, cli, snapshot_receipts, time_all
 
-        for snapshots in (None,self.path/"absent"):
+        for snapshots in (None,[self.path/"absent"]):
             with self.subTest(snapshots=snapshots):
                 a = SimpleNamespace(snapshots=snapshots,design=DESIGN)
                 with self.assertRaisesRegex(ValueError,"snapshot input directory"):
-                    snapshot_receipts(a,self.run,"GLM_PREFILL")
+                    snapshot_receipts(a,self.run,"QWEN35_PREFILL")
         grid_only = dict(self.run,inputs={k:v for k,v in self.run["inputs"].items() if not k.endswith(":real")})
-        with self.assertRaisesRegex(ValueError,"without snapshots"):
-            snapshot_receipts(SimpleNamespace(snapshots=self.path,design=DESIGN),grid_only,"GLM_PREFILL")
+        with self.assertRaisesRegex(ValueError,"prepared without GLM_PREFILL"):
+            snapshot_receipts(SimpleNamespace(snapshots=[self.path],design=DESIGN),grid_only,"GLM_PREFILL")
         (self.path/"RUN.json").write_text(json.dumps(self.run))
         a = SimpleNamespace(run=self.path,design=DESIGN,unit=None,timeout=1,snapshots=None)
         with patch("replay.launch_job",side_effect=AssertionError("launched")):
@@ -237,8 +246,8 @@ class TestAnalysis(unittest.TestCase):
         self.assertFalse((self.path/"process-started").exists())
         self.assertFalse((self.path/"admission.jsonl").exists())
         for argv in (["verify"],["prepare","--gate","g","--smoke-receipt","s","--prediction","p"],
-                     ["--snapshots","x","prepare","--gate","g","--smoke-receipt","s","--prediction","p",
-                      "--without-snapshots","capture failed"]):
+                     ["--snapshots","x","--snapshots","y","prepare","--gate","g","--smoke-receipt","s",
+                      "--prediction","p","--without-snapshots","capture failed"]):
             with self.subTest(argv=argv), patch.object(sys,"argv",["replay.py","--run",str(self.path),
                     "--library",str(self.path/"lib.so"),*argv]), \
                     contextlib.redirect_stderr(io.StringIO()), self.assertRaises(SystemExit):
@@ -269,8 +278,8 @@ class TestAnalysis(unittest.TestCase):
             lock_admission(a)
             units.clear()
             time_all(a)
-        # Only the 66 grid processes run; the fake child records no rows, so each gets its one retry.
-        self.assertEqual(len(units),66)
+        # Only the 198 grid processes run; the fake child records no rows, so each gets its one retry.
+        self.assertEqual(len(units),198)
         self.assertTrue(all(pid.startswith("B") for pid in units+retries))
         self.assertEqual(sorted(retries),sorted(units))
 
@@ -298,7 +307,7 @@ class TestAnalysis(unittest.TestCase):
         (self.path/"RUN.json").write_text(json.dumps(self.run))
         (self.path/"ADMISSION_LOCK.json").write_text("{}")
         (self.path/"metrics.jsonl").write_text("".join(json.dumps(m)+"\n" for m in first+others))
-        a = SimpleNamespace(run=self.path,design=DESIGN,timeout=1,snapshots=self.path)
+        a = SimpleNamespace(run=self.path,design=DESIGN,timeout=1,snapshots=[self.path])
         calls = []
         with patch("replay.launch_job",side_effect=lambda _,args,t:calls.append(args) or 0):
             time_all(a)
@@ -309,21 +318,23 @@ class TestAnalysis(unittest.TestCase):
 
     def test_smoke_receipt_must_be_current_and_lists_failures(self):
         from make_design import BALANCED, SNAPSHOT
-        from replay import SMOKE_CELLS, check_smoke, smoke_identity
+        from native import SHAPES
+        from replay import check_smoke, smoke_cells, smoke_identity
 
         gate,library = self.path/"gate.json",self.path/"lib.so"
         gate.write_text("{}")
         library.write_bytes(b"so")
         uuids = [f"GPU-{i}" for i in range(8)]
         ok = dict(status="ok")
-        receipt = dict(**smoke_identity(gate,uuids,library),arms={arm:ok for arm in SNAPSHOT},
-                       balanced={u:{arm:ok for arm in BALANCED} for u in SMOKE_CELLS})
+        self.assertEqual(len(smoke_cells()),6)
+        receipt = dict(**smoke_identity(gate,uuids,library),arms={w:{arm:dict(ok) for arm in SNAPSHOT} for w in SHAPES},
+                       balanced={u:{arm:dict(ok) for arm in BALANCED} for u in smoke_cells()})
         self.assertEqual(check_smoke(receipt,gate,uuids,library),[])
-        receipt["arms"]["NATIVE"] = dict(status="runtime_error")
-        receipt["balanced"]["SMOKE_M0064"]["SLT"] = dict(status="not_run")
-        del receipt["balanced"]["SMOKE_M0001"]["BOLD_Q1_G1"]
+        receipt["arms"]["QWEN35"]["NATIVE"] = dict(status="runtime_error")
+        receipt["balanced"]["GLM_SMOKE_M0064"]["SLT"] = dict(status="not_run")
+        del receipt["balanced"]["DSV2L_SMOKE_M0001"]["BOLD_Q1_G1"]
         self.assertEqual(check_smoke(receipt,gate,uuids,library),
-                         ["NATIVE","SMOKE_M0001:BOLD_Q1_G1","SMOKE_M0064:SLT"])
+                         ["QWEN35:NATIVE","GLM_SMOKE_M0064:SLT","DSV2L_SMOKE_M0001:BOLD_Q1_G1"])
         for field in ("library_sha256","balanced_sha256","hardware_sha256"):
             with self.subTest(field=field), self.assertRaisesRegex(ValueError,"smoke receipt"):
                 check_smoke(dict(receipt,**{field:"b"*64}),gate,uuids,library)
@@ -464,8 +475,8 @@ class TestCalibratedPrediction(unittest.TestCase):
         self.assertAlmostEqual(params["b_hbm"]/1.6e12,1,places=6)
         check_calibrated(out,DESIGN,source)
         rows,choices = load_prediction(out,DESIGN,"balanced")
-        self.assertEqual(len(choices),11)
-        self.assertEqual(len(predicted_classes(out)),44)
+        self.assertEqual(len(choices),33)
+        self.assertEqual(len(predicted_classes(out)),132)
         # The scenario seal is untouched and differs: launches no longer cost 40 us each.
         scenario = {(r["unit_id"],r["arm_id"]):float(r["predicted_ms"]) for r in read(ROOT/"preboot_prediction"/"predictions.csv")}
         node = {(r["unit_id"],r["arm_id"]):float(r["predicted_ms"]) for r in read(out/"predictions.csv")}
@@ -497,13 +508,16 @@ class TestSecondaryR1(unittest.TestCase):
     def test_reality_equal_to_the_prediction_scores(self):
         from analyze import predicted_classes, secondary_r1
         classes = predicted_classes(ROOT/"preboot_prediction")
-        rows = {r["comparison_id"]:r for r in secondary_r1(DESIGN,self.effects(classes),classes)}
-        self.assertEqual(set(rows),{"Ba_q1","Ba_q4","Bb_q1","Bb_q4"})
-        for cid,(lo,hi) in (("Ba_q1",(4,16)),("Ba_q4",(16,128))):
-            self.assertEqual((rows[cid]["measured_bracket"]["m_low"],rows[cid]["measured_bracket"]["m_high"]),(lo,hi))
-            self.assertEqual(rows[cid]["bracket_verdict"],"contained")
-            self.assertEqual((rows[cid]["decided"],rows[cid]["class_agree"]),(11,11))
-        self.assertEqual(rows["Bb_q1"]["bracket_verdict"],"agree_none")
+        rows = {(r["comparison_id"],r["group"]):r for r in secondary_r1(DESIGN,self.effects(classes),classes)}
+        self.assertEqual(len(rows),12)
+        for key,(lo,hi) in ((("Ba_q1","GLM"),(4,16)),(("Ba_q4","GLM"),(16,128)),(("Ba_q4","QWEN35"),(16,512)),
+                            (("Ba_q1","DSV2L"),(4,16))):
+            self.assertEqual((rows[key]["measured_bracket"]["m_low"],rows[key]["measured_bracket"]["m_high"]),(lo,hi))
+            self.assertEqual(rows[key]["bracket_verdict"],"contained")
+            self.assertEqual((rows[key]["decided"],rows[key]["class_agree"]),(11,11))
+        self.assertEqual(rows["Bb_q1","GLM"]["bracket_verdict"],"agree_none")
+        # Two N=1024 cells are not new to the predictor; agreement is also reported without them.
+        self.assertEqual((rows["Ba_q1","QWEN35"]["decided_unseen"],rows["Ba_q1","GLM"]["decided_unseen"]),(9,11))
 
     def test_bracket_verdicts(self):
         from analyze import bracket, score_bracket
@@ -529,8 +543,8 @@ class TestPreflight(unittest.TestCase):
     def test_static_checks_and_stale_cpu_receipt(self):
         import sys
         import preflight
-        self.assertEqual(preflight.design(),"glm-path-replay-2026-11-23.v2")
-        self.assertIn("44 cell classes",preflight.prediction())
+        self.assertEqual(preflight.design(),"path-replay-2026-11-24.v3")
+        self.assertIn("132 cell classes",preflight.prediction())
         preflight.files()
         sys.path.insert(0,str(preflight.REPO/"EDM-IR"))
         from edmir.benchmark.real_moe_config import collection_files
@@ -633,8 +647,12 @@ class TestSnapshot(unittest.TestCase):
         weight = (torch.arange(8*16*16).reshape(8,16,16) % 3).to(torch.bfloat16)
         payload = dict(hidden=states[0], expert_weights=weight, ids=packed[0],
                        router_weights=torch.full((4,4),.25))
-        validate_tensors(payload,4,3,16,16)
+        spec = dict(k=16,n=16,top_k=4,local=8,experts=64)
+        validate_tensors(payload,4,3,spec)
         layout_ = layout([v.tolist() for v in packed],[3,2,1,0,2,2,1,1])
+        # 32 local experts per rank, as for the 256-expert model: expert 41 is rank 1, local 9.
+        wide = layout([[[41,200,7,255]]]*8,[1]*8,32)
+        self.assertEqual((wide[0][1][9],wide[0][6][8],wide[0][0][7],wide[0][7][31]),([(0,0)],[(0,1)],[(0,2)],[(0,3)]))
         self.assertEqual(layout_[0][0][1],[(1,0),(2,0)])
         self.assertEqual(sum(len(e) for r in layout_ for d in r for e in d),48)
         ref = reference(states,weight,layout_,0)
@@ -655,7 +673,7 @@ class TestSnapshot(unittest.TestCase):
         broken = copy.deepcopy(payload)
         broken["ids"][0,0] = broken["ids"][0,1]
         with self.assertRaisesRegex(ValueError,"invalid expert"):
-            validate_tensors(broken,4,3,16,16)
+            validate_tensors(broken,4,3,spec)
 
     def test_captured_alignment_and_balanced_seed(self):
         import torch
@@ -664,34 +682,51 @@ class TestSnapshot(unittest.TestCase):
         payload = dict(sorted_token_ids=torch.tensor([0,2,4,4,1,3,4,4],dtype=torch.int32),
                        expert_ids=torch.tensor([0,-1],dtype=torch.int32),
                        num_tokens_post_padded=torch.tensor([8],dtype=torch.int32))
-        validate_alignment(payload,{"BLOCK_SIZE_M":4},4)
+        validate_alignment(payload,{"BLOCK_SIZE_M":4},4,8)
         payload["sorted_token_ids"][2] = 5
         with self.assertRaisesRegex(ValueError,"alignment extent"):
-            validate_alignment(payload,{"BLOCK_SIZE_M":4},4)
+            validate_alignment(payload,{"BLOCK_SIZE_M":4},4,8)
         digests = [input_digest(torch,"GLM_M0001",rep,(1,32,16)) for rep in ("rep1","rep1","rep2")]
         self.assertEqual(digests[0],digests[1])
         self.assertNotEqual(digests[0],digests[2])
 
     def test_receipt_phase_and_rank_consensus(self):
+        from snapshots import SCHEMA, expert_map, locate, snapshot_spec
         with tempfile.TemporaryDirectory() as d:
             base = Path(d)
-            snap = base/"GLM_DECODE"
-            snap.mkdir()
-            for rank in range(8):
-                record = dict(schema="edmir.glm-gate-up-snapshot.v2",origin="real_vllm",snapshot=snap.name,
-                    model_revision="7dd20894a642a0aa287e9827cb1a1f7f91386b67",rank=rank,layer=23,
-                    phase="pure_decode",phase_ordinal=8,step=9,run_id="fixture",padded_sizes=[1]*8,
-                    expert_map=[i%8 if i//8==rank else -1 for i in range(64)],tokens=[{"phase":"decode"}],
-                    source_lock_sha256=DUMMY,request_sha256=DUMMY,snapshot_sha256=DUMMY,
-                    native_config={"BLOCK_SIZE_M":16},native_tune={"kind":"default"},
-                    native_strides={"A":[2048,1],"B":[3072*2048,2048,1],"C":[4*3072,3072,1]},
-                    gate_up_accumulator="float32")
-                path = snap/f"rank-{rank}.json"
-                path.write_text(json.dumps(record))
-            self.assertEqual(len(load_receipts(base,DESIGN,snap.name)),8)
+            # One capture directory per model; receipts carry that model's geometry.
+            for name in ("GLM_DECODE","QWEN35_DECODE","DSV2L_DECODE"):
+                spec = snapshot_spec(DESIGN,name)
+                k,n,top_k = spec["k"],spec["n"],spec["top_k"]
+                snap = base/spec["width"]/name
+                snap.mkdir(parents=True)
+                for rank in range(8):
+                    record = dict(schema=SCHEMA,origin="real_vllm",snapshot=name,model=spec["model"],
+                        model_revision=spec["revision"],rank=rank,layer=spec["layer"],
+                        phase="pure_decode",phase_ordinal=8,step=9,run_id="fixture",padded_sizes=[1]*8,
+                        expert_map=expert_map(spec,rank),tokens=[{"phase":"decode"}],
+                        source_lock_sha256=DUMMY,request_sha256=DUMMY,snapshot_sha256=DUMMY,
+                        native_config={"BLOCK_SIZE_M":16},native_tune={"kind":"default"},
+                        native_strides={"A":[k,1],"B":[n*k,k,1],"C":[top_k*n,n,1]},
+                        gate_up_accumulator="float32")
+                    path = snap/f"rank-{rank}.json"
+                    path.write_text(json.dumps(record))
+                roots = [base/w for w in ("GLM","QWEN35","DSV2L")]
+                self.assertEqual(locate(roots,name),base/spec["width"])
+                self.assertEqual(len(load_receipts(locate(roots,name),DESIGN,name)),8)
+            self.assertEqual((spec["experts"],spec["local"],spec["top_k"],spec["n"],spec["layer"]),(64,8,6,2816,13))
+            with self.assertRaises(FileNotFoundError):
+                locate(roots,"QWEN35_PREFILL")
             path.write_text(json.dumps(dict(record,phase_ordinal=7)))
             with self.assertRaisesRegex(ValueError,"differs from design"):
-                load_receipts(base,DESIGN,snap.name)
+                load_receipts(base/"DSV2L",DESIGN,"DSV2L_DECODE")
+            # A GLM receipt cannot stand in for another model's snapshot.
+            wrong = base/"swap"/"QWEN35_DECODE"
+            wrong.mkdir(parents=True)
+            for rank in range(8):
+                (wrong/f"rank-{rank}.json").write_text((base/"GLM"/"GLM_DECODE"/f"rank-{rank}.json").read_text())
+            with self.assertRaisesRegex(ValueError,"differs from design"):
+                load_receipts(base/"swap",DESIGN,"QWEN35_DECODE")
 
 
 if __name__ == "__main__":

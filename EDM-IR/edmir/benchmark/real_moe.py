@@ -6,16 +6,40 @@ import gzip
 import hashlib
 import json
 import math
+import os
 from pathlib import Path
 import statistics
 import time
 
 SCHEMA = "edmir.real-moe.v1"
-MODEL = "zai-org/GLM-4.7-Flash"
-REVISION = "7dd20894a642a0aa287e9827cb1a1f7f91386b67"
 ENGINE = "0.20.1"
-LAYERS = tuple(range(1, 47))
-WORLD, EXPERTS, TOP_K = 8, 64, 4
+# One pinned model per process, chosen by EDMIR_MOE_MODEL; the default is the original GLM plan.
+# gate_up and down are the (rows, columns) of one expert's two projections, as vLLM stores them.
+# layers lists the MoE decoder layers when the full route analysis needs them; snapshot-only
+# profiles leave it open and require only that the snapshot layer exists.
+PROFILES = {
+    "GLM": dict(model="zai-org/GLM-4.7-Flash", revision="7dd20894a642a0aa287e9827cb1a1f7f91386b67",
+                architecture="Glm4MoeLiteForCausalLM", layers=tuple(range(1, 47)), experts=64, top_k=4,
+                gate_up=(3072, 2048), down=(2048, 1536), snapshot_layer=23, lengths=(512, 4096),
+                engine=dict(attention_config={"backend": "TRITON_MLA", "flash_attn_version": 2,
+                                              "disable_flashinfer_prefill": True})),
+    "QWEN35": dict(model="Qwen/Qwen3.5-35B-A3B", revision="2508b2437e382c605eb0fc52b83f5545960f6b4a",
+                   architecture="Qwen3_5MoeForConditionalGeneration", layers=None, experts=256, top_k=8,
+                   gate_up=(1024, 2048), down=(2048, 512), snapshot_layer=20, lengths=(512,),
+                   engine=dict(language_model_only=True)),
+    "DSV2L": dict(model="deepseek-ai/DeepSeek-V2-Lite-Chat", revision="85864749cd611b4353ce1decdb286193298f64c7",
+                  architecture="DeepseekV2ForCausalLM", layers=None, experts=64, top_k=6,
+                  gate_up=(2816, 2048), down=(2048, 1408), snapshot_layer=13, lengths=(512,),
+                  engine=dict(attention_config={"backend": "TRITON_MLA", "flash_attn_version": 2,
+                                                "disable_flashinfer_prefill": True})),
+}
+PROFILE_ID = os.environ.get("EDMIR_MOE_MODEL", "GLM")
+if PROFILE_ID not in PROFILES: raise ValueError("unknown EDMIR_MOE_MODEL: " + PROFILE_ID)
+PROFILE = PROFILES[PROFILE_ID]
+MODEL, REVISION = PROFILE["model"], PROFILE["revision"]
+LAYERS = PROFILE["layers"]
+LENGTHS = PROFILE["lengths"]
+WORLD, EXPERTS, TOP_K = 8, PROFILE["experts"], PROFILE["top_k"]
 MAX_TOKENS = 4096
 MAX_LOG_BYTES = 256 * 1024**2
 ORDERS = (("S1", "S32", "L1", "L32"), ("L32", "L1", "S32", "S1"),
@@ -107,8 +131,8 @@ def tokenize_corpus(corpus, tokenizer):
         full = tokenizer.apply_chat_template(messages, tokenize=True, **options)
         if full[:len(prefix_ids)] != prefix_ids or full[-len(suffix_ids):] != suffix_ids:
             raise ValueError("template token boundary changed")
-        if len(full) < 4096: raise ValueError("source too short for long workload")
-        for length in (512, 4096):
+        if len(full) < max(LENGTHS): raise ValueError("source too short for the longest workload")
+        for length in LENGTHS:
             ids = full[:length-len(suffix_ids)] + suffix_ids
             if len(ids) != length: raise ValueError("exact token length failed")
             output.append(dict(id=f"{row['id']}-{length}", source_id=row["id"],
@@ -129,13 +153,13 @@ def validate_token_packet(packet, corpus, vocab_size):
         or packet.get("source_sha256") != corpus["request_content_sha256"]):
         raise ValueError("token packet provenance mismatch")
     rows=packet["requests"]
-    expected={f"case-{i:03d}-{n}" for i in range(128) for n in (512,4096)}
-    if len(rows)!=256 or {r["id"] for r in rows}!=expected: raise ValueError("missing/duplicate tokens")
+    expected={f"case-{i:03d}-{n}" for i in range(128) for n in LENGTHS}
+    if len(rows)!=len(expected) or {r["id"] for r in rows}!=expected: raise ValueError("missing/duplicate tokens")
     suffix=packet["suffix_ids"];prefix=packet["prefix_ids"]
     if not suffix or not prefix: raise ValueError("template boundaries missing")
     for r in rows:
         n=r["input_tokens"];ids=r["prompt_token_ids"]
-        if n not in (512,4096) or r["id"]!=f"{r['source_id']}-{n}" or len(ids)!=n:
+        if n not in LENGTHS or r["id"]!=f"{r['source_id']}-{n}" or len(ids)!=n:
             raise ValueError("token length/identity mismatch")
         if any(type(t) is not int or not 0<=t<vocab_size for t in ids): raise ValueError("token out of range")
         if ids[:len(prefix)]!=prefix or ids[-len(suffix):]!=suffix or digest(ids)!=r["token_ids_sha256"]:

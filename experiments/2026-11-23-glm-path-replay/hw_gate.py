@@ -13,8 +13,8 @@ import tempfile
 
 ROOT = Path(__file__).resolve().parent
 LEGACY = ROOT.parent/"2026-11-20-final-round/scripts/hw_gate.py"
-HOST_SCHEMA = "edmir.glm-host-gate.v1"
-GATE_SCHEMA = "edmir.glm-hardware-gate.v1"
+HOST_SCHEMA = "edmir.moe-path-host-gate.v1"
+GATE_SCHEMA = "edmir.moe-path-hardware-gate.v1"
 WORLD = 8
 MIN_DRIVER = (580, 65, 6)
 LOCKED_RUNTIME = {"torch": "2.11.0+cu130", "cuda": "13.0", "vllm": "0.20.1"}

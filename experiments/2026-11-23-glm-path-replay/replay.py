@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run the GLM balanced grid and BF16 replay in a shared eight-rank protocol."""
+"""Run the balanced grids and the BF16 snapshot replays of all models in a shared eight-rank protocol."""
 import argparse
 from collections import defaultdict
 from contextlib import contextmanager
@@ -20,9 +20,9 @@ import time
 from balanced import BalancedPaths, ConsumerGraphs, cells, consumer_arm, input_digest, combine_input_digests, no_mark
 from hw_gate import inventory as gpu_inventory, load_passing_gate
 from make_design import ROOT, SNAPSHOT, BALANCED, BRIDGE, read, sha
-from snapshots import WORLD, load_rank, load_receipts, layout, reference, correctness, tiles
-
-SMOKE_CELLS = {"SMOKE_M0001":(1,2048,3072),"SMOKE_M0064":(64,2048,3072)}
+from native import SHAPES
+from snapshots import (WORLD, load_rank, load_receipts, layout, locate, reference, correctness,
+                       snapshot_spec, tiles)
 
 
 def canonical_digest(data):
@@ -54,19 +54,32 @@ def inventory():
 
 
 def verify_captures(a):
-    inputs,coverage,captures = {},{},[]
-    for name in ("GLM_PREFILL","GLM_DECODE"):
-        rows = load_receipts(a.snapshots,a.design,name)
+    """Verify every snapshot of the design that was captured, and name the ones that were not.
+    A snapshot that is present but invalid raises: fix it or leave its directory out."""
+    inputs,coverage,captures,absent = {},{},{},{}
+    for name in [row["snapshot_id"] for row in read(a.design/"snapshots.csv")]:
+        spec = snapshot_spec(a.design,name)
+        try:
+            root = locate(a.snapshots,name)
+        except FileNotFoundError as exc:
+            absent[name] = str(exc)
+            continue
+        rows = load_receipts(root,a.design,name)
         for row in rows:
-            load_rank(a.snapshots,name,row)
-        captures.append(rows[0])
+            load_rank(root,name,row,spec)
+        captures[name] = rows[0]
         inputs[name+":real"] = canonical_digest(rows)
-        coverage[name] = dict(step=rows[0]["step"],rows_by_source=[len(r["tokens"]) for r in rows],
-                              padded_rows_by_source=rows[0]["padded_sizes"],native_tune=rows[0]["native_tune"])
-    for f in ("run_id","source_lock_sha256","request_sha256"):
-        if captures[0][f]!=captures[1][f]:
-            raise ValueError(f"prefill and decode disagree on {f}")
-    return inputs,captures,coverage
+        coverage[name] = dict(model=spec["model"],step=rows[0]["step"],rows_by_source=[len(r["tokens"]) for r in rows],
+                              padded_rows_by_source=rows[0]["padded_sizes"],native_tune=rows[0]["native_tune"],
+                              routing_layout=rows[0].get("routing_layout"),capture_run_id=rows[0]["run_id"])
+    by_model = {}
+    for name,row in captures.items():
+        by_model.setdefault(snapshot_spec(a.design,name)["width"],[]).append(row)
+    for width,rows in by_model.items():
+        for f in ("run_id","source_lock_sha256","request_sha256"):
+            if len({r[f] for r in rows})!=1:
+                raise ValueError(f"{width}: prefill and decode disagree on {f}")
+    return inputs,captures,coverage,absent
 
 
 def source_paths(library):
@@ -86,7 +99,7 @@ def source_paths(library):
 
 
 def check_slt(tuned, gate, design, library, uuids):
-    if (tuned.get("schema")!="edmir.glm-slt.v1" or tuned.get("hardware_sha256")!=sha(gate)
+    if (tuned.get("schema")!="edmir.moe-path-slt.v1" or tuned.get("hardware_sha256")!=sha(gate)
             or tuned.get("design_sha256")!=sha(design/"DESIGN.json")
             or tuned.get("library_sha256")!=sha(library) or tuned.get("gpu_uuids")!=uuids
             or tuned.get("balanced_sha256")!=sha(ROOT/"balanced.py")
@@ -109,9 +122,9 @@ def check_calibrated(path, design, microbench):
     load_prediction(path,design,"balanced")
 
 
-def snapshot_stage(run):
-    """True when this run registered the two captured snapshots."""
-    return any(key.endswith(":real") for key in run["inputs"])
+def registered_snapshots(run):
+    """Snapshot units whose captures were verified when this run was prepared."""
+    return {key.removesuffix(":real") for key in run["inputs"] if key.endswith(":real")}
 
 
 def prepare(a):
@@ -130,17 +143,19 @@ def prepare(a):
     if a.without_snapshots:
         if a.native_tune:
             raise ValueError("--native-tune binds a capture; omit it with --without-snapshots")
-        inputs,captures,coverage = {},[],{}
+        inputs,captures,coverage = {},{},{}
         missing["snapshots"] = a.without_snapshots
     else:
-        inputs,captures,coverage = verify_captures(a)
+        inputs,captures,coverage,absent = verify_captures(a)
+        # A model whose capture could not be obtained keeps its grid cells; only its snapshots are missing.
+        missing.update({f"snapshot:{name}":reason for name,reason in absent.items()})
     if a.slt_receipt:
         check_slt(json.loads(a.slt_receipt.read_text()),a.gate,a.design,a.library,uuids)
     else:
         missing["slt.json"] = "not provided: SLT is recorded as unsupported"
     if a.microbench:
         check_microbench(json.loads(a.microbench.read_text()),sha(a.gate),uuids,
-                         [shape[0] for shape in cells(a.design).values()])
+                         sorted({shape[0] for shape in cells(a.design).values()}))
     else:
         missing["microbench.json"] = "not provided"
     load_prediction(a.prediction,a.design,"balanced")
@@ -148,12 +163,11 @@ def prepare(a):
         check_calibrated(a.calibrated_prediction,a.design,a.microbench)
     else:
         missing["prediction_calibrated"] = "not provided: only the pre-boot scenario prediction is scored"
-    for row in captures:
+    tuned_files = {sha(path):path for path in a.native_tune or ()}
+    for name,row in captures.items():
         provenance = row["native_tune"]
-        if a.native_tune and (provenance["kind"]!="tuned" or provenance["sha256"]!=sha(a.native_tune)):
-            raise ValueError("capture did not use the frozen native tuning file")
-        if provenance["kind"]=="tuned" and not a.native_tune:
-            raise ValueError("include the exact tuning file used by capture")
+        if provenance["kind"]=="tuned" and provenance["sha256"] not in tuned_files:
+            raise ValueError(f"{name}: include the exact native tuning file used by its capture")
     registered = {(b["unit_id"],b["rep"]) for b in read(a.design/"blocks.csv") if b["stage"]=="balanced"}
     by_unit = cells(a.design)
     for unit,rep in sorted(registered):
@@ -163,16 +177,20 @@ def prepare(a):
         raise ValueError("pinned vLLM 0.20.1 is required")
     files = {name:sha(path) for name,path in source_paths(a.library).items()}
     artifacts = {"hw_gate.json":a.gate,"smoke.json":a.smoke_receipt,"slt.json":a.slt_receipt,
-                 "microbench.json":a.microbench,"native_tune.json":a.native_tune,
-                 "native_tune_trials.json":a.native_trials}
+                 "microbench.json":a.microbench}
     artifacts = {name:path for name,path in artifacts.items() if path}
+    # One tuned config file and one trial record per model; vLLM's file names already differ by shape.
+    for path in list(tuned_files.values())+list(a.native_trials or ()):
+        if path.name in artifacts:
+            raise ValueError(f"duplicate artifact name: {path.name}")
+        artifacts[path.name] = path
     frozen = {name:sha(path) for name,path in artifacts.items()}
     prediction = {p.name:sha(p) for p in a.prediction.iterdir() if p.is_file()}
     calibrated = ({p.name:sha(p) for p in a.calibrated_prediction.iterdir() if p.is_file()}
                   if a.calibrated_prediction else {})
     harness = canonical_digest(dict(runtime=runtime,files=files,artifacts=frozen,prediction=prediction,
                                      prediction_calibrated=calibrated,
-                                     native_configs={r["snapshot"]:r["native_config"] for r in captures}))
+                                     native_configs={name:r["native_config"] for name,r in captures.items()}))
     a.run.mkdir(parents=True,exist_ok=False)
     for name,path in artifacts.items():
         shutil.copyfile(path,a.run/name)
@@ -180,17 +198,17 @@ def prepare(a):
     if calibrated:
         # Sealed here, before admission and timing: parameters come from the microbenchmark only.
         shutil.copytree(a.calibrated_prediction,a.run/"prediction_calibrated")
-    write_json(a.run/"RUN.json",dict(schema="edmir.glm-combined-run.v2",origin="device_measurement",
+    write_json(a.run/"RUN.json",dict(schema="edmir.moe-path-combined-run.v2",origin="device_measurement",
         run_id=a.run.name,design_sha256=sha(a.design/"DESIGN.json"),hardware_sha256=frozen["hw_gate.json"],
         harness=harness,inputs=inputs,builds={arm:canonical_digest([arm,harness]) for arm in SNAPSHOT+BALANCED},
         runtime=runtime,files=files,artifacts=frozen,prediction=prediction,
         prediction_calibrated=calibrated,gpu_uuids=uuids,
-        coverage=coverage,capture_run_id=captures[0]["run_id"] if captures else None,
+        coverage=coverage,
         missing=missing,smoke_failures=smoke_failed,scope="fixed input to gate/up output"))
 
 
 class Paths:
-    def __init__(self, payload, receipts, routes, rank, device, cpu_group, alignment):
+    def __init__(self, payload, receipts, routes, rank, device, cpu_group, alignment, spec):
         import torch
         import torch.distributed as dist
         import torch.distributed._symmetric_memory as symmetric
@@ -201,6 +219,7 @@ class Paths:
         self.hidden = payload["hidden"].to(device)
         self.weight = payload["expert_weights"].to(device)
         self.rank,self.device,self.routes = rank,device,routes
+        self.top_k = spec["top_k"]
         self.sizes = receipts[rank]["padded_sizes"]
         self.live = [len(r["tokens"]) for r in receipts]
         self.cpu_group = cpu_group
@@ -228,7 +247,7 @@ class Paths:
                 table = torch.tensor(tiles([len(e) for e in source[rank]]),device=device,dtype=torch.int32)
                 self.work.append((self.peers[src].narrow(0,self.offsets[src],count),
                                   self.staged.narrow(0,out_pos,count),self.output.narrow(0,out_pos,count),table))
-                flat.extend((sum(self.sizes[:src])+t)*4+s for ex in source[rank] for t,s in ex)
+                flat.extend((sum(self.sizes[:src])+t)*self.top_k+s for ex in source[rank] for t,s in ex)
                 out_pos += count
         self.flat = torch.tensor(flat,device=device,dtype=torch.long)
         self.cfg = receipts[rank]["native_config"]
@@ -248,19 +267,19 @@ class Paths:
         if self.nccl.disabled:
             raise RuntimeError("native all-gatherv communicator disabled")
         self.gathered = self.hidden.new_empty((sum(self.sizes),self.hidden.shape[1]))
-        self.native_out = self.hidden.new_empty((sum(self.sizes),4,self.weight.shape[1]))
+        self.native_out = self.hidden.new_empty((sum(self.sizes),self.top_k,self.weight.shape[1]))
         post = int(self.aligned[2].item())
         bm = self.cfg["BLOCK_SIZE_M"]
         ids = self.aligned[0][:post].view(-1,bm)
         ex = self.aligned[1][:post//bm]
         kept = ids[ex>=0].flatten()
-        kept = kept[kept<4*sum(self.sizes)].long()
+        kept = kept[kept<self.top_k*sum(self.sizes)].long()
         live_mask = torch.tensor(list(itertools.chain.from_iterable(
             [True]*l+[False]*(s-l) for s,l in zip(self.sizes,self.live,strict=True))),device=device)
-        live = live_mask[kept//4]
+        live = live_mask[kept//self.top_k]
         self.native_live = int(live.sum().item())
         self.native_rows = int(kept.numel())
-        self.native_zero = int((ids[ex<0]<4*sum(self.sizes)).sum().item())
+        self.native_zero = int((ids[ex<0]<self.top_k*sum(self.sizes)).sum().item())
         self.native_slots = post
         if not torch.equal(kept[live].sort().values,self.flat.sort().values):
             raise ValueError("native launch does not cover the captured live assignments")
@@ -299,7 +318,7 @@ class Paths:
     def native_kernel(self):
         """The captured vLLM gate/up launch. vLLM replays this kernel from CUDA graphs outside eager mode."""
         self.open_native()
-        self.invoke(self.native,self.gathered,self.weight,self.native_out,self.aligned,self.cfg)
+        self.invoke(self.native,self.gathered,self.weight,self.native_out,self.aligned,self.cfg,self.top_k)
 
     def consumer(self, arm):
         """The per-source launches of a D or BNEW arm; only their input rows differ."""
@@ -329,7 +348,7 @@ class Paths:
         if arm=="NATIVE":
             self.open_native()
             self.nccl.all_gatherv(self.gathered,tags,self.sizes)
-            observed = self.gathered[:,:3].index_select(0,self.flat//4)
+            observed = self.gathered[:,:3].index_select(0,self.flat//self.top_k)
         else:
             staged = arm.startswith("BNEW_")
             self.materialize(tags,staged)
@@ -337,7 +356,7 @@ class Paths:
             observed = torch.cat(views) if views else self.hidden.new_empty((0,3))
             if not staged:
                 self.handle.barrier(0,60_000)
-        source = self.flat//4
+        source = self.flat//self.top_k
         offset = 0
         expected = torch.empty_like(observed)
         for src,size in enumerate(self.sizes):
@@ -428,15 +447,21 @@ def guarded_admission(paths, arm, group):
 
 
 def smoke_identity(gate, uuids, library):
-    return dict(schema="edmir.glm-smoke.v2",hardware_sha256=sha(gate),gpu_uuids=uuids,
+    return dict(schema="edmir.moe-path-smoke.v2",hardware_sha256=sha(gate),gpu_uuids=uuids,
                 replay_sha256=sha(ROOT/"replay.py"),consumer_sha256=sha(ROOT/"gate_up.py"),
                 native_sha256=sha(ROOT/"native.py"),balanced_sha256=sha(ROOT/"balanced.py"),
                 library_sha256=sha(library))
 
 
+def smoke_cells():
+    """Two grid shapes per model width: a single row and one full M tile."""
+    return {f"{width}_SMOKE_M{m:04d}":(m,k,n) for width,(_,n,k,_,_) in SHAPES.items() for m in (1,64)}
+
+
 def smoke_failures(smoke):
-    failed = [arm for arm in SNAPSHOT if smoke.get("arms",{}).get(arm,{}).get("status")!="ok"]
-    failed += [f"{unit}:{arm}" for unit in SMOKE_CELLS for arm in BALANCED
+    failed = [f"{width}:{arm}" for width in SHAPES for arm in SNAPSHOT
+              if smoke.get("arms",{}).get(width,{}).get(arm,{}).get("status")!="ok"]
+    failed += [f"{unit}:{arm}" for unit in smoke_cells() for arm in BALANCED
                if smoke.get("balanced",{}).get(unit,{}).get(arm,{}).get("status")!="ok"]
     return failed
 
@@ -473,24 +498,32 @@ def smoke(a):
 
         emit()
         gen = torch.Generator(device="cpu").manual_seed(800+rank)
-        sizes = [5]*WORLD
-        ids = [[[(src*9+t*3+e*11)%64 for e in range(4)] for t in range(5)] for src in range(WORLD)]
-        routes = layout(ids,[4]*WORLD)
-        cfg = module().get_default_config(sum(sizes),8,1536,2048,4,None,None)
-        rows = [dict(padded_sizes=sizes,tokens=[{}]*4,native_config=cfg,native_tune={"kind":"default"})
-                for _ in range(WORLD)]
-        payload = dict(hidden=(torch.randn((5,2048),generator=gen)*.125).bfloat16(),
-                       expert_weights=(torch.randn((8,3072,2048),generator=gen)*.125).bfloat16())
-        alignment = synthetic_align(torch.tensor(list(itertools.chain.from_iterable(ids)),device=device,
-                                                 dtype=torch.int32),cfg,rank)
-        paths,errors = attempt(lambda:Paths(payload,rows,routes,rank,device,cpu_group,alignment),cpu_group)
-        for arm in SNAPSHOT:
-            receipt["arms"][arm] = (dict(**guarded_admission(paths,arm,cpu_group),
-                                         launch_mode=paths.graphs.launch_mode(arm),graph_errors=paths.graphs.errors)
-                                    if paths is not None else dict(status="runtime_error",rank_errors=errors))
-            emit()
+        # The five BF16 replay arms on each model's geometry: local experts, width and top-k.
+        for width,(local,n,k,top_k,experts) in SHAPES.items():
+            spec = dict(width=width,local=local,n=n,k=k,top_k=top_k,experts=experts)
+            sizes = [5]*WORLD
+            ids = [[[(src*9+t*3+e*11)%experts for e in range(top_k)] for t in range(5)] for src in range(WORLD)]
+            routes = layout(ids,[4]*WORLD,local)
+
+            def build():
+                cfg = module().get_default_config(sum(sizes),local,n//2,k,top_k,None,None)
+                rows = [dict(padded_sizes=sizes,tokens=[{}]*4,native_config=cfg,native_tune={"kind":"default"})
+                        for _ in range(WORLD)]
+                payload = dict(hidden=(torch.randn((5,k),generator=gen)*.125).bfloat16(),
+                               expert_weights=(torch.randn((local,n,k),generator=gen)*.125).bfloat16())
+                alignment = synthetic_align(torch.tensor(list(itertools.chain.from_iterable(ids)),device=device,
+                                                         dtype=torch.int32),cfg,rank,experts)
+                return Paths(payload,rows,routes,rank,device,cpu_group,alignment,spec)
+
+            paths,errors = attempt(build,cpu_group)
+            arms = receipt["arms"][width] = {}
+            for arm in SNAPSHOT:
+                arms[arm] = (dict(**guarded_admission(paths,arm,cpu_group),
+                                  launch_mode=paths.graphs.launch_mode(arm),graph_errors=paths.graphs.errors)
+                             if paths is not None else dict(status="runtime_error",rank_errors=errors))
+                emit()
         # The FP16 grid arms, the CUTLASS bridge and cuBLASLt run here before any model is loaded.
-        for unit,shape in SMOKE_CELLS.items():
+        for unit,shape in smoke_cells().items():
             grid,errors = attempt(lambda:BalancedPaths(unit,"smoke",shape,rank,device,a.library,None,
                                                        agree=lambda error:spread(error,cpu_group)),cpu_group)
             if grid is None:
@@ -514,9 +547,7 @@ def smoke(a):
                     emit()
             finally:
                 grid.close()
-        failed = [arm for arm,r in receipt["arms"].items() if r["status"]!="ok"]
-        failed += [f"{unit}:{arm}" for unit,arms in receipt["balanced"].items()
-                   for arm,r in arms.items() if r["status"]!="ok"]
+        failed = smoke_failures(receipt)
         if failed:
             raise ValueError("synthetic smoke failures: "+", ".join(failed))
 
@@ -536,7 +567,7 @@ def tune_slt(a):
                 paths.close()
             results[unit] = spread(local,cpu_group)
         if rank==0:
-            write_json(a.out,dict(schema="edmir.glm-slt.v1",gpu_uuids=uuids,hardware_sha256=sha(a.gate),
+            write_json(a.out,dict(schema="edmir.moe-path-slt.v1",gpu_uuids=uuids,hardware_sha256=sha(a.gate),
                 design_sha256=sha(a.design/"DESIGN.json"),balanced_sha256=sha(ROOT/"balanced.py"),
                 library_sha256=sha(a.library),cells=results))
 
@@ -585,14 +616,16 @@ def timed(path, policy, arm, cpu_group):
 
 
 def snapshot_receipts(a, run, unit):
-    if unit+":real" not in run["inputs"]:
-        raise ValueError("this run was prepared without snapshots")
-    if a.snapshots is None or not (a.snapshots/unit).is_dir():
-        raise ValueError("snapshot input directory required")
-    rows = load_receipts(a.snapshots,a.design,unit)
+    if unit not in registered_snapshots(run):
+        raise ValueError(f"this run was prepared without {unit}")
+    try:
+        root = locate(a.snapshots,unit)
+    except FileNotFoundError as exc:
+        raise ValueError(f"snapshot input directory required: {exc}") from None
+    rows = load_receipts(root,a.design,unit)
     if canonical_digest(rows)!=run["inputs"][unit+":real"]:
         raise ValueError("snapshot changed after prepare")
-    return rows
+    return root,rows
 
 
 def claim_process(run_dir, process):
@@ -607,7 +640,7 @@ def device_run(a):
 
     run = json.loads((a.run/"RUN.json").read_text())
     hardware(a.run/"hw_gate.json")
-    if (run["schema"]!="edmir.glm-combined-run.v2" or run["design_sha256"]!=sha(a.design/"DESIGN.json")
+    if (run["schema"]!="edmir.moe-path-combined-run.v2" or run["design_sha256"]!=sha(a.design/"DESIGN.json")
             or run["gpu_uuids"]!=inventory()):
         raise ValueError("run design or GPU changed")
     for name,h in run["artifacts"].items():
@@ -649,7 +682,7 @@ def device_run(a):
     rep = rep if balanced else "real"
     # Resolve snapshot receipts before claiming: a missing or wrong --snapshots
     # must not consume the single formal attempt of a timing process.
-    rows = None if balanced else snapshot_receipts(a,run,unit)
+    root,rows = (None,None) if balanced else snapshot_receipts(a,run,unit)
     if a.action=="time" and int(os.environ["RANK"])==0:
         claim_process(a.run,a.process if attempt_no==1 else a.process+".retry")
     admitted = {(r["unit_id"],r["input_id"],r["arm_id"]):analyze.numerically_valid(r) for r in admission}
@@ -665,11 +698,12 @@ def device_run(a):
             if actual!=run["inputs"][f"{unit}:{rep}"]:
                 raise ValueError("generated FP16 inputs differ from prepare")
         else:
-            payload = load_rank(a.snapshots,unit,rows[rank])
+            spec = snapshot_spec(a.design,unit)
+            payload = load_rank(root,unit,rows[rank],spec)
             ids = spread(payload["ids"].tolist(),cpu_group)
-            routes = layout(ids,[len(r["tokens"]) for r in rows])
+            routes = layout(ids,[len(r["tokens"]) for r in rows],spec["local"])
             aligned = tuple(payload[k] for k in ("sorted_token_ids","expert_ids","num_tokens_post_padded"))
-            paths = Paths(payload,rows,routes,rank,device,cpu_group,aligned)
+            paths = Paths(payload,rows,routes,rank,device,cpu_group,aligned,spec)
         try:
             if a.action=="admit-arm":
                 choices = [arm for arm in BALANCED if arm not in BRIDGE] if a.arm=="balanced-main" else [a.arm]
@@ -742,8 +776,8 @@ def launch_job(a, arguments, timeout):
     command = [sys.executable,"-m","torch.distributed.run","--standalone","--nproc_per_node=8",
                "--max_restarts=0",str(ROOT/"replay.py"),"--design",str(a.design),
                "--run",str(a.run),"--library",str(a.library)]
-    if a.snapshots:
-        command.extend(["--snapshots",str(a.snapshots)])
+    for root in a.snapshots or ():
+        command.extend(["--snapshots",str(root)])
     folder = a.run/"job-logs"
     folder.mkdir(exist_ok=True)
     label = "-".join(word for word in arguments if not word.startswith("--"))
@@ -769,15 +803,15 @@ def admit_jobs(a):
     if (a.run/"ADMISSION_LOCK.json").exists():
         raise ValueError("admission is already locked")
     run = json.loads((a.run/"RUN.json").read_text())
-    if snapshot_stage(run) and a.snapshots is None:
+    captured = registered_snapshots(run)
+    if captured and not a.snapshots:
         raise ValueError("--snapshots is required for a run with captured snapshots")
     path = a.run/"admission.jsonl"
     admission = analyze.jsonl(path) if path.exists() else []
     seen = {(r["unit_id"],r["input_id"],r["arm_id"]) for r in admission}
     desired = {(b["unit_id"],b["rep"] if b["stage"]=="balanced" else "real",b["arm_id"])
                for b in read(a.design/"blocks.csv")}
-    if not snapshot_stage(run):
-        desired = {key for key in desired if key[1]!="real"}
+    desired = {key for key in desired if key[1]!="real" or key[0] in captured}
     if a.unit:
         desired = {key for key in desired if key[0]==a.unit}
     def execute(unit,rep,arm):
@@ -818,7 +852,8 @@ def time_all(a):
     if not (a.run/"ADMISSION_LOCK.json").is_file():
         raise ValueError("complete and lock admission before submitting the formal queue")
     run = json.loads((a.run/"RUN.json").read_text())
-    if snapshot_stage(run) and a.snapshots is None:
+    captured = registered_snapshots(run)
+    if captured and not a.snapshots:
         raise ValueError("--snapshots is required for a run with captured snapshots")
     claims,exits,mpath = a.run/"process-started",a.run/"process-exits.jsonl",a.run/"metrics.jsonl"
     arms = defaultdict(int)
@@ -826,7 +861,7 @@ def time_all(a):
         arms[b["process_id"]] += 1
     grid = cells(a.design)
     order = [r["process_id"] for r in read(a.design/"queue.csv") if r["job"]=="timing_block"
-             and (snapshot_stage(run) or r["unit_id"] in grid)]
+             and (r["unit_id"] in grid or r["unit_id"] in captured)]
     for pid in order:
         if (claims/pid).exists():
             continue
@@ -858,7 +893,8 @@ def lock_admission(a):
     rows = analyze.jsonl(path)
     blocks,_,_ = analyze.check_rows(a.design,run,a.run,rows,[])
     main = {(b["unit_id"],b["rep"] if b["stage"]=="balanced" else "real",b["arm_id"])
-            for b in blocks if b["arm_id"] not in BRIDGE and (b["stage"]=="balanced" or snapshot_stage(run))}
+            for b in blocks if b["arm_id"] not in BRIDGE
+            and (b["stage"]=="balanced" or b["unit_id"] in registered_snapshots(run))}
     seen = {(r["unit_id"],r["input_id"],r["arm_id"]) for r in rows}
     if not main<=seen:
         raise ValueError("all primary admissions must be recorded before timing")
@@ -876,7 +912,8 @@ def lock_admission(a):
 def cli():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--design",type=Path,default=ROOT/"design")
-    p.add_argument("--snapshots",type=Path)
+    p.add_argument("--snapshots",type=Path,action="append",
+                   help="a capture's workers/snapshots directory; repeat once per captured model")
     p.add_argument("--run",type=Path)
     p.add_argument("--library",type=Path)
     sub = p.add_subparsers(dest="action",required=True)
@@ -888,8 +925,10 @@ def cli():
     prep = sub.add_parser("prepare")
     for name in ("gate","smoke-receipt","prediction"):
         prep.add_argument("--"+name,type=Path,required=True)
-    for name in ("slt-receipt","microbench","native-tune","native-trials","calibrated-prediction"):
+    for name in ("slt-receipt","microbench","calibrated-prediction"):
         prep.add_argument("--"+name,type=Path)
+    for name in ("native-tune","native-trials"):
+        prep.add_argument("--"+name,type=Path,action="append",help="repeat once per model")
     prep.add_argument("--without-snapshots",metavar="REASON",
                       help="register the FP16 grid only, because the capture could not be obtained")
     admit = sub.add_parser("admit")
@@ -914,8 +953,8 @@ def cli():
     if a.action in {"smoke","tune-slt","prepare","admit","admit-arm","time","time-all"} and not a.library:
         p.error("--library is required")
     if a.action=="verify":
-        inputs,_,coverage = verify_captures(a)
-        print(json.dumps(dict(inputs=inputs,coverage=coverage),indent=2))
+        inputs,_,coverage,absent = verify_captures(a)
+        print(json.dumps(dict(inputs=inputs,coverage=coverage,absent=absent),indent=2))
     elif a.action=="microbench":
         from microbench import benchmark
         benchmark(a)

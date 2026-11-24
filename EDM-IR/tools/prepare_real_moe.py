@@ -12,7 +12,7 @@ import subprocess
 import sys
 import traceback
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
-from edmir.benchmark.real_moe import (ENGINE, REVISION, file_sha, save, tokenize_corpus,
+from edmir.benchmark.real_moe import (ENGINE, MODEL, PROFILE, PROFILE_ID, REVISION, file_sha, save, tokenize_corpus,
     validate_corpus, validate_token_packet)
 from edmir.benchmark.real_moe_config import engine_arguments, collection_files
 from edmir.benchmark.vllm0201_capture import verify_sources
@@ -24,7 +24,7 @@ def main():
         p.add_argument("--"+key,type=Path,required=True)
     a=p.parse_args();a.out.mkdir(parents=True,exist_ok=False)
     report=dict(schema="edmir.real-moe-cpu-receipt.v1",status="failed",GPU_used=False,
-                model_revision=REVISION,assets_ready=False)
+                model=MODEL,model_revision=REVISION,assets_ready=False)
     try:
         if platform.system()!="Linux" or platform.machine() not in ("x86_64","AMD64"):
             raise ValueError("run only in the pinned Linux x86_64 CPU environment")
@@ -33,7 +33,7 @@ def main():
         if list(Path('/dev').glob('nvidia[0-9]*')):raise ValueError("GPU exposure forbidden for CPU preparation")
         from run_native_moe_smoke import inspect_assets
         manifest=json.loads(a.manifest.read_text())
-        status=inspect_assets(manifest,a.model_dir,verify_hashes=True)
+        status=inspect_assets(manifest,a.model_dir,verify_hashes=True,model_id=MODEL,revision=REVISION)
         if not status['ASSETS_VERIFIED']:raise ValueError("missing/hash-invalid assets; no download fallback")
         import torch
         import vllm
@@ -86,9 +86,9 @@ def main():
         from vllm.engine.arg_utils import AsyncEngineArgs
         from vllm.model_executor.models import ModelRegistry
         from vllm.v1.engine.async_llm import AsyncLLM
-        if "Glm4MoeLiteForCausalLM" not in ModelRegistry.get_supported_archs():raise ValueError("architecture not registered")
+        if PROFILE["architecture"] not in ModelRegistry.get_supported_archs():raise ValueError("architecture not registered")
         fields={f.name for f in dataclasses.fields(AsyncEngineArgs)}
-        for mode in ("baseline","routes","trace"):
+        for mode in (("baseline","routes","trace") if PROFILE_ID=="GLM" else ("routes",)):
             args=engine_arguments(a.model_dir,mode)
             if not args.keys()<=fields:raise ValueError("unsupported engine fields: "+str(args.keys()-fields))
             AsyncEngineArgs(**args)

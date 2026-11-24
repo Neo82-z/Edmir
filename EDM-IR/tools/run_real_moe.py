@@ -12,7 +12,7 @@ import sys
 import time
 import traceback
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
-from edmir.benchmark.real_moe import (ENGINE, MODEL, REVISION, collect_block, file_sha,
+from edmir.benchmark.real_moe import (ENGINE, MODEL, PROFILE_ID, REVISION, collect_block, file_sha,
     save, schedule, validate_corpus, validate_token_packet, workload)
 from edmir.benchmark.real_moe_config import engine_arguments, collection_files, validate_topology
 
@@ -172,7 +172,7 @@ async def execute(a,packet,receipt):
         root=a.out/"workers"
         if list(root.glob("capture-failure-rank*.json")):
             raise ValueError("snapshot worker reported a capture failure")
-        for snapshot in ("GLM_PREFILL","GLM_DECODE"):
+        for snapshot in (PROFILE_ID+"_PREFILL",PROFILE_ID+"_DECODE"):
             for rank in range(8):
                 stem=root/"snapshots"/snapshot/f"rank-{rank}"
                 record=json.loads(stem.with_suffix(".json").read_text())
@@ -192,6 +192,7 @@ def main():
     a=p.parse_args()
     if a.native_tune and not a.snapshot_replay:p.error("--native-tune requires --snapshot-replay")
     if a.snapshot_replay and a.mode!="routes":p.error("--snapshot-replay requires --mode routes")
+    if PROFILE_ID!="GLM" and not a.snapshot_replay:p.error("only GLM has the full baseline and route plan; other models capture snapshots")
     a.out.mkdir(parents=True,exist_ok=False)
     try:
         corpus=json.loads(a.corpus.read_text());check=validate_corpus(corpus)
@@ -212,6 +213,7 @@ def main():
         receipt=json.loads(a.cpu_receipt.read_text())
         if receipt.get("schema")!="edmir.real-moe-cpu-receipt.v1" or receipt.get("status")!="passed":
             raise ValueError("successful fixed-image CPU receipt required")
+        if receipt.get("model",MODEL)!=MODEL:raise ValueError("CPU receipt belongs to another model")
         for f,key in ((a.tokens,"tokenized_file_sha256"),(a.corpus,"corpus_file_sha256"),
                       (a.manifest,"manifest_sha256"),(a.source_lock,"source_lock_sha256")):
             if file_sha(f)!=receipt[key]:raise ValueError("offline artifact changed: "+key)
@@ -220,7 +222,7 @@ def main():
         if actual!=receipt["collection_source_hashes"]:raise ValueError("collector changed after CPU verification")
         from run_native_moe_smoke import inspect_assets
         manifest=json.loads(a.manifest.read_text())
-        if not inspect_assets(manifest,a.model_dir,verify_hashes=True)["ASSETS_VERIFIED"]:raise ValueError("assets incomplete")
+        if not inspect_assets(manifest,a.model_dir,verify_hashes=True,model_id=MODEL,revision=REVISION)["ASSETS_VERIFIED"]:raise ValueError("assets incomplete")
         packet=json.loads(a.tokens.read_text())
         validate_token_packet(packet,corpus,json.loads((a.model_dir/"config.json").read_text())["vocab_size"])
         os.environ["HF_HUB_OFFLINE"]="1";os.environ["TRANSFORMERS_OFFLINE"]="1"

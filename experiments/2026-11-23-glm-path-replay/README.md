@@ -1,4 +1,4 @@
-# GLM 直读与 staged 回放
+# 三个模型的直读与 staged 回放
 
 当前执行入口见 [START_HERE.md](START_HERE.md)，方案见论文仓库 `latex/review/FINAL_12H_PLAN_ZH_2026-11-23.txt`。设计表和预测在本地生成，历史三模型
 的预测器、六个冻结形状和数据保持封存。

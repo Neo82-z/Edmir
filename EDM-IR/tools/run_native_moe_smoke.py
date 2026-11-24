@@ -48,8 +48,8 @@ def engine_arguments(model_dir, *, diagnostic=False):
         enable_chunked_prefill=True,gpu_memory_utilization=.8,seed=20261116)
 
 
-def inspect_assets(manifest,model_dir,*,verify_hashes=False):
-    if manifest['id']!=MODEL_ID or manifest['revision']!=REVISION:
+def inspect_assets(manifest,model_dir,*,verify_hashes=False,model_id=MODEL_ID,revision=REVISION):
+    if manifest['id']!=model_id or manifest['revision']!=revision:
         raise ValueError('different model/revision needs its own plan')
     missing=[];verified=[]
     for row in manifest['weight_files']:

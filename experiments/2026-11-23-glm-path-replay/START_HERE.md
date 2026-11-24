@@ -1,9 +1,20 @@
-# 当前执行口径：八卡 A100 上的单 GLM 投影
+# 当前执行口径：八卡 A100 上三个模型的第一投影
 
 以此目录的 `design/queue.csv` 和论文仓库 `latex/review/FINAL_12H_PLAN_ZH_2026-11-23.txt`
-（11-23 修订方案）为准；`2026-11-20-final-round/` 只作为只读的旧包和评分器来源。真实模型只有
-GLM-4.7-Flash。FP16 网格是其 gate/up 几何的均衡代理；BF16 回放来自两个固定路由快照。
+为准；`2026-11-20-final-round/` 只作为只读的旧包和评分器来源。
+
+三个模型都测，协议相同：
+
+| 模型 | 宽度代号 | 路由专家 / top-k | gate/up 的 K×N | 采集层 |
+|---|---|---|---|---|
+| GLM-4.7-Flash | GLM | 64 / 4 | 2048×3072 | 23 |
+| Qwen3.5-35B-A3B（只跑文本） | QWEN35 | 256 / 8 | 2048×1024 | 20 |
+| DeepSeek-V2-Lite-Chat | DSV2L | 64 / 6 | 2048×2816 | 13 |
+
+每个模型有两类证据：11 个 FP16 均衡格（该模型 gate/up 几何的代理，M=1…1024），以及两个 BF16 快照
+（S32 负载下采集层的首个纯 prefill 和第八个纯 decode，真实激活、权重和路由）。
 硬件单机 8×A100 SXM4 80 GB，NVSwitch 全 NV12。历史数据和冻结评分器使用原有契约。
+目录名里的 glm 是历史遗留，内容覆盖三个模型。
 
 ## 租前确认与资产复用
 
@@ -16,7 +27,9 @@ GLM-4.7-Flash。FP16 网格是其 gate/up 几何的均衡代理；BF16 回放来
   绑定该实例八张 GPU UUID 的宿主证据。
 - 同区 CPU 准备时按卷 ID 和 ext4 UUID 34464844-e985-4623-a0e2-3e7cdf43624c 找卷，再从
   卷里的 edmir-assets/ 复用资产。GLM 模型和 tokenizer 按固定 revision 与 54 文件清单校验，
-  48 个权重分片合计 62,444,175,504 字节。Nsight Systems 使用卷上的 2025.1.3.140 与原清单。
+  48 个权重分片合计 62,444,175,504 字节。Qwen3.5-35B-A3B（revision 2508b24，14 个分片共
+  71,903,878,016 字节）和 DeepSeek-V2-Lite-Chat（revision 8586474）也要放到卷上，
+  清单的生成与校验见"开机前在 CPU 上为每个模型准备的东西"。Nsight Systems 使用卷上的 2025.1.3.140 与原清单。
 - 镜像从 vllm-0.20.1-amd64.docker.tar 加载。归档 SHA256 为
   3e52284234d31e1e94c3a8f42ccf913b13f3beb1287d0e1be782fda9688f0725。
   OCI manifest digest 为
@@ -63,26 +76,27 @@ gate.json PASS 还要求全 NV12、所有卡对双向 P2P、功率和八卡 BF16
 |---|---|
 | 仓库 | 检出封存提交，工作区干净 |
 | 锁定镜像 | `edmir/vllm:0.20.1-locked`，由卷上的归档加载并校验 |
-| GLM 模型目录 | 按 54 文件清单校验通过 |
-| CPU 回执和 token 文件 | 用**当前**采集代码重新生成；2026-11-17 的旧回执会被拒绝 |
+| 三个模型目录 | GLM 按既有 54 文件清单校验；Qwen3.5 和 DSV2-Lite 用 `make_model_manifest.py` 生成清单并校验（见下） |
+| 每个模型的 CPU 回执和 token 文件 | 用**当前**采集代码、按模型各生成一份；2026-11-17 的旧回执会被拒绝 |
 | `libedmir_glm.so` | CUDA 13 工具链编译，链接 `libcublasLt.so.13` |
 | 宿主机 gate 回执 | `host.json` |
 
 两段 gate 通过后，先跑一次只读的自检，再碰 GPU：
 
     $RUN preflight.py --library /work/libedmir_glm.so \
-      --cpu-receipt /cpu-records/<新回执目录>/cpu-receipt.json --out /work/preflight.json
+      --cpu-receipt /cpu-records/GLM/cpu-receipt.json --cpu-receipt /cpu-records/QWEN35/cpu-receipt.json \
+      --cpu-receipt /cpu-records/DSV2L/cpu-receipt.json --out /work/preflight.json
 
 它检查设计表与封存预测是否完好、归档文件是否齐全、仓库是否有未提交的改动、CPU 回执是否对应当前采集代码、
 镜像里的 torch/vLLM 版本、共享库能否解析到 `libcublasLt.so.13` 并加载、Triton 缓存目录是否可写。
 任何一项 FAIL 都先修好。容器里没有 git 时，提交这一项显示 SKIP，手工记下检出的提交。
 
-整轮的顺序是：gate → 自检 → 冒烟 → 原生调优 → 微基准 → 标定版预测 → SLT 调优 → 采集 → prepare →
+整轮的顺序是：gate → 自检 → 冒烟 → 三个模型的原生调优 → 微基准 → 标定版预测 → SLT 调优 → 三个模型的采集 → prepare →
 准入 → 锁定 → 计时 → 分析 → 把 run 目录、采集目录和全部回执拷到机外。
 每一步的产物都是后一步的输入；决策点只有四个：
 - gate 不通过：停。
 - 冒烟有失败项：能修就修（修代码要重新提交并重跑冒烟），修不了就继续。
-- 采集修一次仍失败：`prepare --without-snapshots`，只跑网格。
+- 某个模型的采集修一次仍失败：prepare 时不传它的快照目录，该模型只保留 11 格网格，另外两个模型不受影响。
 - 第一个正式进程失败且没有写出计时行：`time-all` 会停下来，查日志后再运行它会继续。
 
 ## 前置顺序
@@ -94,9 +108,9 @@ vLLM 0.20.1 环境和固定 CUTLASS 工作树。各设备作业回执写入新�
 1. 用上面的双阶段 `hw_gate.py` 取得 `gate.json`。通过后进入编译检查和冒烟。
 2. 装入 CPU 侧编好的 SM80 共享库。构建入口是 `CUTLASS_ROOT=... ./build_lt.sh /abs/path/libedmir_glm.so`。
 3. 合成冒烟 `torchrun --standalone --nproc-per-node=8 replay.py --library /abs/path/libedmir_glm.so smoke --gate gate.json --out smoke.json`。
-   - BF16 五臂使用真实 K/N，验证 symmetric rendezvous、Triton 对端读、AllToAll、原生
-     pynccl all-gatherv 和 vLLM 投影调用。
-   - FP16 网格七臂（D/BNEW 的 q1/q4、SLT、D_Q1_G1、BOLD）在 M=1 和 M=64 上各跑一次准入，
+   - BF16 五臂按三个模型各自的几何（本卡专家数、宽度、top-k）各跑一遍，验证 symmetric rendezvous、
+     Triton 对端读、AllToAll、原生 pynccl all-gatherv 和 vLLM 投影调用。
+   - FP16 网格七臂（D/BNEW 的 q1/q4、SLT、D_Q1_G1、BOLD）在每个宽度的 M=1 和 M=64 上各跑一次准入，
      覆盖 FP16 Triton、cuBLASLt heuristic 和 CUTLASS 桥接。
    - D/BNEW 的消费者启动在这里第一次以 CUDA graph 捕获并回放，回执里每个 arm 记有 `launch_mode`。
    - 某个 arm 抛异常时记为 runtime_error，其余 arm 照常跑完；有任何失败，命令以非零退出并列出失败项。
@@ -104,9 +118,13 @@ vLLM 0.20.1 环境和固定 CUTLASS 工作树。各设备作业回执写入新�
    - `prepare` 只要求回执与当前 replay.py、gate_up.py、native.py、balanced.py 和库文件哈希一致。
      失败的 arm 记入 RUN.json，由正式准入裁决（BNEW 失败会开启桥接），不会挡住能跑的 arm。
    - 先看完冒烟结果，再加载模型。
-4. `timeout 900 python native.py --out /abs/path/moe_configs` 做单模型原生调优：
-   E=8、N=1536（配置文件命名维度，gate/up 实际输出 3072），7 个 M，每格至多 4 个配置。
-   保留候选的数值、event 计时与失败状态。采用返回的 vLLM 配置文件。
+4. 三个模型各做一次原生调优，写进同一个配置目录：
+
+       for w in GLM QWEN35 DSV2L; do timeout 900 $RUN native.py --out /work/moe_configs --width $w; done
+
+   每个模型调自己的形状（本卡专家数 E、中间维 N/2）：GLM 是 E=8、N=1536，Qwen3.5 是 E=32、N=512，
+   DSV2-Lite 是 E=8、N=1408；7 个 M，每格至多 4 个配置。保留候选的数值、event 计时与失败状态
+   （`trials-<模型>.json`）。某个模型调优失败时，它的采集不带 `--native-tune`，按默认配置记录。
 5. `torchrun --standalone --nproc-per-node=8 replay.py microbench --gate gate.json --out microbench.json`
    八卡同时测，留下全部八卡样本：
    - 单 peer 读：5 个 CTA 档（27–432），每卡读下一张卡的 64 MiB；
@@ -131,31 +149,65 @@ vLLM 0.20.1 环境和固定 CUTLASS 工作树。各设备作业回执写入新�
 6. `torchrun --standalone --nproc-per-node=8 replay.py --library /abs/path/libedmir_glm.so tune-slt --gate gate.json --out slt.json`。
    每格每卡最多查 8 个 cuBLASLt heuristic，对 ≤32 MiB 的可用候选用独立输入数值检查及 event 计时。
    冻结最快合格候选和完整日志。无合格项的卡将使对应 SLT 不准入。
-7. 采集 GLM 两个快照。采集器会核对 CPU 回执里 7 个采集文件的哈希，所以 CPU 回执必须用封存提交
-   之后的这一版代码重新生成，节点上的仓库也必须正好是封存提交。不使用 guard，租期由操作者管理。
+7. 采集三个模型的快照，每个模型一次，各写进自己的目录。模型由环境变量 `EDMIR_MOE_MODEL` 选择
+   （GLM、QWEN35、DSV2L），采集代码是同一套。采集器会核对 CPU 回执里 7 个采集文件的哈希，
+   所以每个模型的 CPU 回执都必须用当前这版代码生成，节点上的仓库也必须正好是封存提交。
+   不使用 guard，租期由操作者管理。
 
-       docker run --rm --pull never --network none --gpus all --ipc=host \
-         -v /path/to/llm-serving:/code:ro -v /path/to/model:/model:ro \
-         -v /path/to/cpu-records:/cpu-records:ro -v /path/to/moe_configs:/moe_configs:ro \
-         -v /path/to/capture-root:/work \
-         -e HF_HUB_OFFLINE=1 -e TRANSFORMERS_OFFLINE=1 -e VLLM_NO_USAGE_STATS=1 -e DO_NOT_TRACK=1 \
-         -e HF_HOME=/work/cache/hf -e XDG_CACHE_HOME=/work/cache -e VLLM_CACHE_ROOT=/work/cache/vllm \
-         -e TRITON_CACHE_DIR=/work/cache/triton -e TOKENIZERS_PARALLELISM=false \
-         -e PYTHONPATH=/code/EDM-IR -e PYTHONUNBUFFERED=1 -e VLLM_HOST_IP=127.0.0.1 \
-         --entrypoint python3 edmir/vllm:0.20.1-locked /code/EDM-IR/tools/run_real_moe.py --execute \
-         --mode routes --snapshot-replay --native-tune "/moe_configs/E=8,N=1536,device_name=NVIDIA_A100-SXM4-80GB.json" \
-         --corpus /code/experiments/2026-11-17-real-moe-local/corpus/requests-source.json \
-         --tokens /cpu-records/<新回执目录>/requests-tokenized.json \
-         --cpu-receipt /cpu-records/<新回执目录>/cpu-receipt.json \
-         --manifest /code/experiments/2026-11-16-next-window/model-manifest.json --model-dir /model \
-         --source-lock /code/experiments/2026-11-17-real-moe-local/vllm-source-lock.json --out /work/capture
+       capture() {  # capture <模型> <模型目录> <清单> <调优配置文件名>
+         docker run --rm --pull never --network none --gpus all --ipc=host \
+           -v /path/to/llm-serving:/code:ro -v "$2":/model:ro \
+           -v /path/to/cpu-records:/cpu-records:ro -v /path/to/moe_configs:/moe_configs:ro \
+           -v /path/to/capture-root:/work \
+           -e EDMIR_MOE_MODEL=$1 \
+           -e HF_HUB_OFFLINE=1 -e TRANSFORMERS_OFFLINE=1 -e VLLM_NO_USAGE_STATS=1 -e DO_NOT_TRACK=1 \
+           -e HF_HOME=/work/cache/hf -e XDG_CACHE_HOME=/work/cache -e VLLM_CACHE_ROOT=/work/cache/vllm \
+           -e TRITON_CACHE_DIR=/work/cache/triton -e TOKENIZERS_PARALLELISM=false \
+           -e PYTHONPATH=/code/EDM-IR -e PYTHONUNBUFFERED=1 -e VLLM_HOST_IP=127.0.0.1 \
+           --entrypoint python3 edmir/vllm:0.20.1-locked /code/EDM-IR/tools/run_real_moe.py --execute \
+           --mode routes --snapshot-replay --native-tune "/moe_configs/$4" \
+           --corpus /code/experiments/2026-11-17-real-moe-local/corpus/requests-source.json \
+           --tokens /cpu-records/$1/requests-tokenized.json --cpu-receipt /cpu-records/$1/cpu-receipt.json \
+           --manifest "$3" --model-dir /model \
+           --source-lock /code/experiments/2026-11-17-real-moe-local/vllm-source-lock.json --out /work/$1
+       }
+       capture GLM    /path/to/glm    /code/experiments/2026-11-16-next-window/model-manifest.json "E=8,N=1536,device_name=NVIDIA_A100-SXM4-80GB.json"
+       capture QWEN35 /path/to/qwen35 /cpu-records/QWEN35/model-manifest.json "E=32,N=512,device_name=NVIDIA_A100-SXM4-80GB.json"
+       capture DSV2L  /path/to/dsv2l  /cpu-records/DSV2L/model-manifest.json  "E=8,N=1408,device_name=NVIDIA_A100-SXM4-80GB.json"
 
    - 只跑 S32（32 个请求，每卡 4 个）：首个纯 prefill 是第 1 步，每卡 2048 个 token；纯 decode 第 8 步每卡 4 个。
-   - 每卡保存第 23 层的 BF16 输入、本卡专家权重、top-k、原生 launch 的对齐张量和实际命中的配置。
-     路由布局按实际记录：2026-11-17 在同一 vLLM 上观察到的是本卡路由（`local`），汇集后路由也接受。
-   - 调优失败时去掉 `--native-tune`，采集回执记为 default，作为诊断单列。
-   - 快照写在 `<capture-root>/capture/workers/snapshots`，即后面的 `--snapshots`。
-   - 采集修一次仍失败，就用 `prepare --without-snapshots "<原因>"` 只登记网格（见下节），不要卡住网格。
+   - 每卡保存采集层的 BF16 输入、本卡专家权重、top-k、原生 launch 的对齐张量和实际命中的配置。
+     路由布局按实际记录：2026-11-17 在 GLM 上观察到的是本卡路由（`local`），汇集后路由也接受。
+   - 调优失败的模型去掉 `--native-tune`，采集回执记为 default，作为诊断单列。
+   - 快照写在 `<capture-root>/<模型>/workers/snapshots`，后面每个模型给一次 `--snapshots`。
+   - Qwen3.5 带视觉塔，档案里已设 `language_model_only`，只跑文本。
+   - **只有 GLM 的采集钩子在这台机型上跑过（11-17）。** Qwen3.5 和 DSV2-Lite 在 vLLM 0.20.1 里用的是同一个
+     FusedMoE 层、同一个 Triton kernel、同样的线性专家放置，钩子按源码核对过、在 CPU 上用桩测试过，
+     但没有在 GPU 上跑过。它们的采集如果失败：先看 `workers/capture-failure-rank*.json` 里的原因，修一次；
+     仍失败就不传它的快照目录，该模型只保留网格。
+   - 11-20 方案里登记的"TP2/DP4 等并行配置兜底、重建源归属"没有实现：采集器只接受 TP1/DP8/EP8。
+     某个模型在这个配置下起不来时，按上一条处理，不用合成路由替代。
+
+### 开机前在 CPU 上为每个模型准备的东西
+
+在锁定镜像里、不暴露 GPU：
+
+    # 清单：GLM 用仓库里现成的；另外两个模型由本地文件生成，并与仓库里钉住的 config 哈希
+    #（Qwen3.5 另加上游的 14 个分片 LFS 摘要）核对。
+    EDMIR_MOE_MODEL=QWEN35 python3 EDM-IR/tools/make_model_manifest.py --model-dir /path/to/qwen35 \
+      --sources experiments/2026-11-20-final-round/models/SOURCES.json \
+      --weights experiments/2026-11-20-final-round/models/QWEN35.weights.json --out /cpu-records/QWEN35/model-manifest.json
+    EDMIR_MOE_MODEL=DSV2L python3 EDM-IR/tools/make_model_manifest.py --model-dir /path/to/dsv2l \
+      --sources experiments/2026-11-20-final-round/models/SOURCES.json --out /cpu-records/DSV2L/model-manifest.json
+
+    # 每个模型一份 CPU 回执和 token 文件（输出目录不能已存在）
+    EDMIR_MOE_MODEL=<模型> python3 EDM-IR/tools/prepare_real_moe.py --model-dir <模型目录> --manifest <清单> \
+      --source-lock experiments/2026-11-17-real-moe-local/vllm-source-lock.json \
+      --corpus experiments/2026-11-17-real-moe-local/corpus/requests-source.json --out /cpu-records/<模型>
+
+`prepare_real_moe.py` 会核对：架构已在 vLLM 里注册、引擎参数被接受、原始/HF/vLLM 三种 tokenizer 对固定
+请求的切分一致、每条请求能精确截到 512 token。GLM 还要 4096 token 的长输入，另外两个模型只做 512。
+这一步如果在某个模型上报错（最可能是 tokenizer 一致性或聊天模板），要在开机前解决，它不占 GPU 机时。
 
 ## 容器内运行
 
@@ -185,21 +237,23 @@ vLLM 0.20.1 环境和固定 CUTLASS 工作树。各设备作业回执写入新�
 **prepare 之后不得再改包里的任何文件。** 运行时核对全部 `*.py`、库和冻结回执的哈希，
 改动任何一个（包括 analyze.py），之后的作业都会拒绝运行。
 
-- `verify` 在 CPU 上检查两个快照、哈希和保存的原生对齐。
-- `prepare --gate gate.json --smoke-receipt smoke.json --prediction preboot_prediction --slt-receipt slt.json --microbench microbench.json --calibrated-prediction /work/calibrated --native-tune <实际捕获配置> --native-trials <调优目录>/trials.json`
-  一次登记 33 个均衡 seed、2 个快照以及全部 build。后续不得覆盖 RUN 或其中冻结的回执。
+- `verify` 在 CPU 上检查给出的各个快照、哈希和保存的原生对齐，并列出设计里还缺哪些快照。
+- `prepare --gate gate.json --smoke-receipt smoke.json --prediction preboot_prediction --slt-receipt slt.json --microbench microbench.json --calibrated-prediction /work/calibrated --native-tune <某模型的调优配置> --native-trials <调优目录>/trials-<模型>.json`
+  一次登记 99 个均衡 seed、通过校验的快照（最多 6 个）以及全部 build。后续不得覆盖 RUN 或其中冻结的回执。
+  - `--snapshots`、`--native-tune`、`--native-trials` 每个模型各给一次（重复这个参数）。
+    没有给出快照目录的模型记入 `missing`，它的快照进程不跑，网格照常。给出了但校验不过的快照会报错：
+    修好它，或者不传那个目录。
   - `--calibrated-prediction` 必须出自同一份 `microbench.json`（核对哈希）。它在这里被复制进 RUN 并登记哈希，
     所以第二版预测一定早于准入和计时。没有它时只对开机前那版预测计分，并记入 `missing`。
   - 只有硬件门槛和设计会挡住 prepare。冒烟回执必须是当前代码和库的，但其中失败的 arm 只记进
     RUN.json 的 `smoke_failures`，由正式准入裁决。
   - `--slt-receipt` 缺失时 SLT 记为 unsupported；`--microbench` 缺失或个别探针失败时只少一份解释数据。
-    缺什么都写进 RUN.json 的 `missing`。default 捕获省略 `--native-tune`，`--native-trials` 照样给。
-  - 采集拿不到时，用 `--without-snapshots "<原因>"` 代替 `--snapshots`：只登记 11 格网格，
-    快照进程不跑，快照比较在结果里显示为不完整。
-- 顺序执行父进程 `admit --unit GLM_PREFILL`、`admit --unit GLM_DECODE`、`admit`，
+    缺什么都写进 RUN.json 的 `missing`。default 捕获的模型不给 `--native-tune`，`--native-trials` 照样给。
+  - 三个模型的采集都拿不到时，用 `--without-snapshots "<原因>"` 代替 `--snapshots`：只登记 33 格网格。
+- 运行父进程 `admit`（也可以用 `--unit <快照或格>` 分批），
   然后 `lock-admission`。快照的每臂独立 torchrun，一个 arm 失败不会阻塞其他 arm。
   均衡默认每个 seed 一个进程，异常后由独立子进程完成剩余 arm。完整主准入记录后才锁定。
-- 若任意均衡 BNEW seed 不合格，开启同一 11 格的 g1 桥接。直接臂使用 64×128 tile，
+- 若任意均衡 BNEW seed 不合格，开启全部 33 格的 g1 桥接。直接臂使用 64×128 tile，
   BOLD 使用逐对 NCCL 搬运接既有 CUTLASS 64×128 kernel。两臂算法和传输共同变化，
   只作为弱传输桥接单列。匹配 B-a 的缺测格仍为空。桥接门在正式计时前锁定。
 - `time-all` 按队列运行，或按进程 ID 用
@@ -213,7 +267,9 @@ vLLM 0.20.1 环境和固定 CUTLASS 工作树。各设备作业回执写入新�
   - 不另建 run，也不跨 run 拼配对。
 - `python analyze.py --run <run> --out <results>` 输出有效配对、交叉方向、离线选择
   和论文 JSON。把 `<results>/paper_results.json` 复制到论文仓库的 `latex/data/2026-11-glm-path/`，
-  再运行 `make glm-path-results`，论文第 8 节的表和图就由它生成（步骤见论文仓库 `latex/submission/README.md`）。队列共 78 个正式进程、390 个主臂计时。桥接只在触发后多测最多 132 个臂。
+  再运行 `make glm-path-results`，论文第 8 节的表和图就由它生成（步骤见论文仓库 `latex/submission/README.md`）。队列共 234 个正式进程（快照 36 个、网格 198 个）、1170 个主臂计时；桥接只在触发后多测最多 396 个臂。
+  队列按"先快照、后网格"排，各自内部按 GLM、Qwen3.5、DSV2-Lite 的顺序整模型排列：租期不够时从队尾放弃，
+  丢的是排在后面的整个模型，不会让每个模型都缺一部分。
 - BF16 direct 和 BNEW 使用同一逐源、跨本地专家的 tile 工作表。q1 每个非空源一次
   Triton 投影，q4 每源另有一次 FP32 归并，最终输出 BF16。
 - **消费者启动以 CUDA graph 回放。** D/BNEW 每个 arm 的逐源投影和归并启动在计时前录成一个 CUDA graph，
@@ -260,11 +316,12 @@ vLLM 0.20.1 环境和固定 CUTLASS 工作树。各设备作业回执写入新�
   明确胜负交错出现或没有明确格时记 `unscorable`。
 主 R1 与次要指标都如实报告，不用次要指标替换主 R1 的结论。
 
-P0 在 11 格全部选 SLT，R2 仅报离线选择和测后 regret，同选择规则的相等结果按原值报告；
+P0 在 33 格全部选 SLT，R2 仅报离线选择和测后 regret，同选择规则的相等结果按原值报告；
 标定版的选择另列为 `P0_CALIBRATED`。
 
-重封是原封存的子集：用冻结的 `predict.py` 和 `scenario.json` 在本设计上重算，四个输出逐字节复现，
-GLM 的 77 行预测和 44 个比较类别与 11-21 的封存完全相同。
+本设计的封存用冻结的 `predict.py` 和 `scenario.json` 重算，覆盖三个宽度：231 行预测和 132 个比较类别
+与 2026-11-21 的原封存完全相同。每个宽度各有四条预测；Qwen3.5 宽度的 q4 宽区间是 16–512，其余与 GLM 相同。
+N=1024 的 M32、M64 两格以前用别的 kernel 测过（其中 M64 当过校准点），逐格一致率另报一份不含这两格的数。
 
 scenario 参数是对着历史 CUTLASS J1 的 P1 M512 实测拟合的，本轮网格的 D/BNEW 改用 Triton 逐源消费者。
 两者 tile 几何相同（64×128·g，split-K 1 或 4），重读次数 ρ 和字节账本不变，但 kernel 效率不同。

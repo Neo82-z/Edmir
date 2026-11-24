@@ -1,6 +1,8 @@
 """Single engine configuration shared by offline preflight and GPU runner."""
 from pathlib import Path
 
+from .real_moe import PROFILE
+
 
 def engine_arguments(model_dir, mode):
     if mode not in ("baseline","routes","trace"):raise ValueError("unknown collection mode")
@@ -12,10 +14,10 @@ def engine_arguments(model_dir, mode):
         enforce_eager=mode=="routes",max_model_len=4608,max_num_seqs=32,
         max_num_batched_tokens=4096,kv_cache_memory_bytes=16*1024**3,
         moe_backend="triton",all2all_backend="allgather_reducescatter",
-        attention_config={"backend":"TRITON_MLA","flash_attn_version":2,
-                          "disable_flashinfer_prefill":True},
         enable_chunked_prefill=True,gpu_memory_utilization=.85,seed=20261117,
         disable_log_stats=False)
+    # Per-model settings: the MLA attention backend for GLM and DeepSeek-V2-Lite, text-only for Qwen3.5.
+    args.update(PROFILE["engine"])
     if mode=="routes":args["async_scheduling"]=False
     if mode in ("routes","trace"):
         args["worker_cls"]="edmir.benchmark.vllm0201_capture.CaptureWorker"

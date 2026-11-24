@@ -5,7 +5,7 @@ import statistics
 
 from make_design import ROOT, sha
 
-SCHEMA = "edmir.glm-microbench.v3"
+SCHEMA = "edmir.moe-path-microbench.v3"
 GRAPH_LAUNCHES = 8
 # One full-occupancy local GEMM per tile width: 384 CTAs at g=1 and 192 at g=2 on 108 SMs.
 RATE_SHAPE = (1024,2048,3072)

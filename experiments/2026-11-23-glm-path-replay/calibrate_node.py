@@ -27,7 +27,7 @@ from pathlib import Path
 from make_design import ROOT, sha
 
 ARCHIVE = ROOT.parent/"2026-11-20-final-round"
-SCHEMA = "edmir.glm-calibration.v1"
+SCHEMA = "edmir.moe-path-calibration.v1"
 F_STAGED_SECONDS = 1e-6
 DEFINED = {"F_direct":"2 x peer_barrier","F_staged":"defined as 1e-6 s","G_launch":"graph_launch per launch"}
 

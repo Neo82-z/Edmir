@@ -63,7 +63,7 @@ def collector(receipt_path):
     stale = sorted(k for k in actual if receipt["collection_source_hashes"].get(k)!=actual[k])
     if stale or set(actual)!=set(receipt["collection_source_hashes"]):
         raise ValueError("CPU receipt was made from different collector sources: "+", ".join(stale or ["file set"]))
-    return f"{len(actual)} collector files match the CPU receipt"
+    return f"{receipt.get('model','GLM (no model field)')}: {len(actual)} collector files match the CPU receipt"
 
 
 def runtime():
@@ -113,12 +113,13 @@ def commit():
 def main():
     ap = argparse.ArgumentParser(description=__doc__,formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--library",type=Path)
-    ap.add_argument("--cpu-receipt",type=Path)
+    ap.add_argument("--cpu-receipt",type=Path,action="append",help="one per model")
     ap.add_argument("--local",action="store_true")
     ap.add_argument("--out",type=Path)
     a = ap.parse_args()
     checks = [("design",design),("preboot_prediction",prediction),("files",files),("commit",commit)]
-    checks.append(("cpu_receipt",(lambda:collector(a.cpu_receipt)) if a.cpu_receipt else None))
+    for receipt in a.cpu_receipt or [None]:
+        checks.append((f"cpu_receipt[{receipt}]",(lambda r=receipt:collector(r)) if receipt else None))
     checks.append(("runtime",None if a.local else runtime))
     checks.append(("library",(lambda:library(a.library)) if a.library and not a.local else None))
     checks.append(("triton_cache",None if a.local else cache))

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Derive the smaller GLM design without rewriting the archived tables."""
+"""Derive the three-model design of this package without rewriting the archived tables."""
 import argparse
 import csv
 import hashlib
@@ -9,7 +9,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 OLD = ROOT.parent / "2026-11-20-final-round" / "design"
-DESIGN_ID = "glm-path-replay-2026-11-23.v2"
+DESIGN_ID = "path-replay-2026-11-24.v3"
+# Queue priority: a short lease drops whole models from the tail, never a part of each.
+WIDTHS = ("GLM", "QWEN35", "DSV2L")
 BRIDGE = ("D_Q1_G1", "BOLD_Q1_G1")
 BALANCED = ("D_Q1_G2", "D_Q4_G2", "BNEW_Q1_G2", "BNEW_Q4_G2", "SLT")+BRIDGE
 SNAPSHOT = ("D_Q1_G2_R", "D_Q4_G2_R", "BNEW_Q1_G2_R", "BNEW_Q4_G2_R", "NATIVE")
@@ -38,9 +40,10 @@ def sha(path):
 
 def generate(out):
     out.mkdir(parents=True, exist_ok=True)
-    cells = [r for r in read(OLD / "cells.csv") if r["width_id"] == "GLM"]
-    snapshots = [r for r in read(OLD / "snapshots.csv") if r["width_id"] == "GLM"]
-    units = {r["cell_id"] for r in cells} | {r["snapshot_id"] for r in snapshots}
+    cells = sorted(read(OLD / "cells.csv"), key=lambda r: WIDTHS.index(r["width_id"]))
+    snapshots = sorted(read(OLD / "snapshots.csv"), key=lambda r: WIDTHS.index(r["width_id"]))
+    width = {r["cell_id"]: r["width_id"] for r in cells} | {r["snapshot_id"]: r["width_id"] for r in snapshots}
+    units = set(width)
     arms = [r for r in read(OLD / "arms.csv") if r["arm_id"] in ARMS[r["stage"]]]
     for arm in arms:
         if arm["stage"] == "snapshot":
@@ -70,7 +73,8 @@ def generate(out):
     for rows in blocks.values():
         for i, row in enumerate(rows, 1):
             row["arm_position"] = i
-    ordered = sorted(blocks, key=lambda p: (blocks[p][0]["stage"] != "snapshot", p))
+    ordered = sorted(blocks, key=lambda p: (blocks[p][0]["stage"] != "snapshot",
+                                            WIDTHS.index(width[blocks[p][0]["unit_id"]]), p))
     queue = []
 
     def add(job, unit="", process="", detail=""):
@@ -78,13 +82,16 @@ def generate(out):
 
     add("hw_gate", detail="8x A100 SXM4 80GB, NV12, peer R/W, enforced power, load")
     add("build_balanced", detail="SM80 CUTLASS/CUDA and tuned cuBLASLt shared library")
-    add("device_smoke", detail="synthetic 5 BF16 replay arms and 7 FP16 grid arms at M1/M64 before model capture")
-    add("tune_native_glm", detail="one bounded E8 N1536 tuning job; record tuned or default")
+    add("device_smoke", detail="per model: synthetic 5 BF16 replay arms and 7 FP16 grid arms at M1/M64, before any capture")
+    for w in WIDTHS:
+        add("tune_native", unit=w, detail="one bounded gate/up tuning job for this model's local experts and width; record tuned or default")
     add("microbench", detail="1- and 7-peer reads by CTA count, HBM copy, launch, barrier, consumer rate, AllToAll per M")
     add("seal_calibrated_prediction", detail="CPU: frozen predictor with microbenchmark parameters, sealed before admission")
     add("tune_slt", detail="up to 8 cuBLASLt heuristics per cell, 32 MiB; lock per-rank choices")
-    add("capture_glm", detail="layer 23, pure prefill #1 and pure decode #8; save native launch tensors")
-    add("prepare_both", detail="one RUN: 33 FP16 seed identities, 2 capture hashes, all builds and fixed baselines")
+    for w in WIDTHS:
+        layer = next(r["layer_index"] for r in snapshots if r["width_id"] == w)
+        add("capture", unit=w, detail=f"layer {layer}, pure prefill #1 and pure decode #8; save native launch tensors")
+    add("prepare_both", detail="one RUN: 99 FP16 seed identities, the capture hashes that verify, all builds and fixed baselines")
     add("admit_snapshot", detail="per-arm isolated workers, FP32 reference, finite outputs and source fingerprint")
     add("admit_balanced", detail="three seeds per cell; g1 bridge only if a balanced BNEW arm fails admission")
     add("lock_admission", detail="freeze bridge decision and all statuses before formal timing")
@@ -95,7 +102,7 @@ def generate(out):
 
     tables = dict(cells=cells, snapshots=snapshots, arms=arms, comparisons=comparisons,
                   blocks=[r for p in ordered for r in blocks[p]], queue=queue)
-    assert len(cells) == 11 and len(snapshots) == 2 and len(blocks) == 78
+    assert len(cells) == 33 and len(snapshots) == 6 and len(blocks) == 234
     assert len(comparisons) == len(PRIMARY)
     assert all(len(b)==len(ARMS[b[0]["stage"]]) for b in blocks.values())
     for name, rows in tables.items():

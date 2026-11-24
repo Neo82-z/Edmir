@@ -17,7 +17,7 @@ from pathlib import Path
 import re
 import time
 
-from .real_moe import (ENGINE, LAYERS, WORLD, TOP_K, REVISION, JsonlWriter, StepSampler,
+from .real_moe import (ENGINE, EXPERTS, LAYERS, MODEL, PROFILE, PROFILE_ID, WORLD, TOP_K, REVISION, JsonlWriter, StepSampler,
     classify, file_sha, input_rows, save, slice_routes, route_slice_bounds)
 
 
@@ -149,7 +149,7 @@ class CaptureState:
         category,selected=sampler.observe(self.ordinal,gathered)
         snapshot=None
         if self.config.get("snapshot_replay") and block=="diag-S32":
-            snapshot={("pure_prefill",1):"GLM_PREFILL",("pure_decode",8):"GLM_DECODE"}.get(
+            snapshot={("pure_prefill",1):PROFILE_ID+"_PREFILL",("pure_decode",8):PROFILE_ID+"_DECODE"}.get(
                 (category,sampler.steps[category]))
             selected=snapshot is not None
         old=self.current
@@ -178,9 +178,9 @@ class CaptureState:
         sizes=self.current["sizes"];tokens=self.current["all_tokens"][self.rank]
         if ids.shape!=weights.shape:raise ValueError("router ID/weight shape mismatch")
         begin,end=route_slice_bounds(int(ids.shape[0]),rank=self.rank,sizes=sizes,real_count=len(tokens),layout=layout)
-        if self.current["snapshot"] and layer.layer_id==23:
+        if self.current["snapshot"] and layer.layer_id==PROFILE["snapshot_layer"]:
             if "snapshot_routes" in self.current:
-                raise ValueError("replay expects one route per rank at layer 23")
+                raise ValueError("replay expects one route per rank at the snapshot layer")
             # Both layouts give this rank's padded source rows: offset 0 when routing is local
             # (observed on 2026-11-17), the rank's offset in the gathered rows for naive dispatch.
             padded_end=begin+sizes[self.rank]
@@ -202,7 +202,7 @@ class CaptureState:
                    input_dtype=str(a.dtype),weight_dtype=str(b.dtype),
                    input_stride=list(a.stride()),weight_stride=list(b.stride()))
         dims=tuple(b.shape[-2:])
-        projection={(3072,2048):"gate_up",(2048,1536):"down"}.get(dims)
+        projection={PROFILE["gate_up"]:"gate_up",PROFILE["down"]:"down"}.get(dims)
         if projection is None:raise ValueError("unexpected physical projection geometry")
         if str(a.dtype)!="torch.bfloat16" or str(b.dtype)!="torch.bfloat16":raise ValueError("non-BF16 kernel")
         sizes=self.current["sizes"];alltokens=self.current["all_tokens"]
@@ -212,7 +212,7 @@ class CaptureState:
             mask += [True]*len(tt)+[False]*(size-len(tt))
         expected=len(mask)*(TOP_K if projection=="down" else 1)
         if a.shape[0]!=expected:raise ValueError("unsupported chunked/backend token layout")
-        if projection=="gate_up" and self.current["snapshot"] and self.layer.layer_id==23:
+        if projection=="gate_up" and self.current["snapshot"] and self.layer.layer_id==PROFILE["snapshot_layer"]:
             self.save_replay(a,b,c,bound,tokens=alltokens[self.rank])
         sorted_ids=bound["sorted_token_ids"]
         if sorted_ids is None:raise ValueError("naive assignment layout requires a separate collector")
@@ -241,17 +241,18 @@ class CaptureState:
         directory=self.out/"snapshots"/snapshot
         directory.mkdir(parents=True,exist_ok=True)
         path=directory/f"rank-{self.rank}.pt"
-        if path.exists():raise ValueError("duplicate layer-23 gate/up snapshot")
+        if path.exists():raise ValueError("duplicate gate/up snapshot")
         sizes=self.current["sizes"]
         begin=sum(sizes[:self.rank]);end=begin+sizes[self.rank]
         emap=self.layer.expert_map
-        expected_map=[e%8 if e//8==self.rank else -1 for e in range(64)]
+        local=EXPERTS//WORLD;n,k=PROFILE["gate_up"]
+        expected_map=[e%local if e//local==self.rank else -1 for e in range(EXPERTS)]
         if (emap is None or emap.detach().cpu().tolist()!=expected_map
-                or tuple(b.shape)!=(8,3072,2048) or a.shape[1]!=2048
-                or c.dtype!=self.torch.bfloat16 or bound["mul_routed_weight"] or bound["top_k"]!=4
+                or tuple(b.shape)!=(local,n,k) or a.shape[1]!=k
+                or c.dtype!=self.torch.bfloat16 or bound["mul_routed_weight"] or bound["top_k"]!=TOP_K
                 or bound.get("B_bias") is not None):
-            raise ValueError("unexpected GLM gate/up contract")
-        if (bound.get("sorted_token_ids") is None or tuple(c.shape)!=(a.shape[0],4,3072)
+            raise ValueError("unexpected gate/up contract for "+PROFILE_ID)
+        if (bound.get("sorted_token_ids") is None or tuple(c.shape)!=(a.shape[0],TOP_K,n)
                 or bound["compute_type"].name!="bf16"
                 or any(bound.get(k) for k in ("use_fp8_w8a8","use_int8_w8a8","use_int8_w8a16",
                                                "use_int4_w4a16","per_channel_quant","block_shape"))
@@ -260,7 +261,7 @@ class CaptureState:
         ids,weights,routing_layout=self.current.pop("snapshot_routes")
         cfg={k:v for k,v in bound["config"].items() if type(v) in (int,float,str,bool)}
         fm=importlib.import_module("vllm.model_executor.layers.fused_moe.fused_moe")
-        filename=fm.get_config_file_name(8,1536,None)
+        filename=fm.get_config_file_name(local,n//2,None)
         folder=os.environ.get("VLLM_TUNED_CONFIG_FOLDER")
         expected_sha=self.config.get("native_tune_sha256")
         installed=Path(folder)/filename if folder else None
@@ -274,7 +275,7 @@ class CaptureState:
                 raise ValueError("observed native launch differs from the frozen tune configuration")
             tune=dict(kind="tuned",sha256=digest,batch_size=key,source="user" if resolved==installed else "bundled")
         else:
-            expected=fm.get_default_config(int(a.shape[0]),8,1536,2048,4,None,None)
+            expected=fm.get_default_config(int(a.shape[0]),local,n//2,k,TOP_K,None,None)
             if expected!=cfg or expected_sha is not None:
                 raise ValueError("native config source could not be verified")
             tune=dict(kind="default")
@@ -285,9 +286,9 @@ class CaptureState:
                              **{key:bound[key].detach().cpu().contiguous()
                                 for key in ("sorted_token_ids","expert_ids","num_tokens_post_padded")}),tmp)
         os.replace(tmp,path)
-        save(path.with_suffix(".json"),dict(schema="edmir.glm-gate-up-snapshot.v2",origin="real_vllm",
-            snapshot=snapshot,run_id=self.config["run_id"],model_revision=REVISION,rank=self.rank,
-            layer=23,phase=self.current["category"],phase_ordinal=self.current["phase_ordinal"],
+        save(path.with_suffix(".json"),dict(schema="edmir.gate-up-snapshot.v3",origin="real_vllm",
+            snapshot=snapshot,run_id=self.config["run_id"],model=MODEL,model_revision=REVISION,rank=self.rank,
+            layer=PROFILE["snapshot_layer"],phase=self.current["category"],phase_ordinal=self.current["phase_ordinal"],
             step=self.current["step"],padded_sizes=sizes,tokens=tokens,snapshot_sha256=file_sha(path),
             source_lock_sha256=self.config["source_lock_sha256"],request_sha256=self.config["request_sha256"],
             native_config=cfg,native_tune=tune,native_strides=dict(A=list(a.stride()),B=list(b.stride()),C=list(c.stride())),
@@ -357,7 +358,9 @@ def install(runner,config):
                 finally:state.layer=previous
             return forward
         layer.runner._forward_impl=make_forward(original,layer)
-    if sorted(found)!=list(LAYERS):raise ValueError("actual MoE layer set differs from GLM plan")
+    if LAYERS is not None and sorted(found)!=list(LAYERS):raise ValueError("actual MoE layer set differs from the plan")
+    if PROFILE["snapshot_layer"] not in found:raise ValueError("snapshot layer is not a MoE layer of this model")
+    save(state.out/f"moe-layers-rank{state.rank}.json",dict(model=MODEL,moe_layers=sorted(found)))
     original_kernel=fm.invoke_fused_moe_triton_kernel;signature=inspect.signature(original_kernel)
     @functools.wraps(original_kernel)
     def kernel(*args,**kwargs):

@@ -235,14 +235,16 @@ def effect_rows(design, blocks, policy, timings):
 
 
 def crossing_rows(design, effects):
-    m = {r["cell_id"]: int(r["m_per_source_destination"]) for r in read(design/"cells.csv")}
+    """One M series per comparison and model width."""
+    cells = {r["cell_id"]: r for r in read(design/"cells.csv")}
     ids = {r["comparison_id"] for r in read(design/"comparisons.csv") if r["crossover"] == "1"}
     groups = defaultdict(list)
     for u in effects:
         if u["comparison_id"] in ids:
-            groups[u["comparison_id"]].append((m[u["unit_id"]], u["outcome"]))
+            cell = cells[u["unit_id"]]
+            groups[u["comparison_id"], cell["width_id"]].append((int(cell["m_per_source_destination"]), u["outcome"]))
     out = []
-    for cid, seq in sorted(groups.items()):
+    for (cid, width), seq in sorted(groups.items()):
         seq.sort()
         all_bins = set(c for _, c in seq)
         found = intervals(seq)
@@ -252,7 +254,7 @@ def crossing_rows(design, effects):
             coverage = "unresolved"
         else:
             coverage = "complete"
-        out.append(dict(comparison_id=cid, group="GLM", coverage=coverage,
+        out.append(dict(comparison_id=cid, group=width, coverage=coverage,
                         intervals=[dict(kind=k, m_low=a, m_high=b, direction=d) for k,a,b,d in found]))
     return out
 
@@ -326,24 +328,32 @@ def score_bracket(measured, predicted):
 def secondary_r1(design, effects, classes):
     """Pre-registered secondary scores: they stay defined when a tie or an undecided cell
     sits at the crossover, where the primary strict-crossing verdict is 'unresolved'."""
-    m = {r["cell_id"]:int(r["m_per_source_destination"]) for r in read(design/"cells.csv")}
+    design_cells = {r["cell_id"]:r for r in read(design/"cells.csv")}
+    widths = list(dict.fromkeys(r["width_id"] for r in design_cells.values()))
     out = []
     for c in read(design/"comparisons.csv"):
         if c["crossover"]!="1":
             continue
         cid = c["comparison_id"]
-        cells = sorted((m[e["unit_id"]],classes.get((cid,e["unit_id"])),e["outcome"])
-                       for e in effects if e["comparison_id"]==cid)
-        decided = [(pred,got) for _,pred,got in cells if got in ("candidate_wins","baseline_wins","tie")]
-        clear = [(pred,got) for pred,got in decided if "tie" not in (pred,got)]
-        measured = bracket([(x,got) for x,_,got in cells])
-        predicted = bracket([(x,pred) for x,pred,_ in cells])
-        out.append(dict(comparison_id=cid,cells=len(cells),decided=len(decided),
-            class_agree=sum(pred==got for pred,got in decided),
-            both_clear=len(clear),direction_agree=sum(pred==got for pred,got in clear),
-            measured_bracket=measured,predicted_bracket=predicted,
-            bracket_verdict=score_bracket(measured,predicted),
-            by_cell=[dict(m=x,predicted=pred,measured=got) for x,pred,got in cells]))
+        for width in widths:
+            cells = sorted((int(design_cells[e["unit_id"]]["m_per_source_destination"]),
+                            classes.get((cid,e["unit_id"])),e["outcome"],design_cells[e["unit_id"]]["cohort"])
+                           for e in effects if e["comparison_id"]==cid and design_cells[e["unit_id"]]["width_id"]==width)
+            if not cells:
+                continue
+            decided = [(pred,got,cohort) for _,pred,got,cohort in cells if got in ("candidate_wins","baseline_wins","tie")]
+            clear = [(pred,got) for pred,got,_ in decided if "tie" not in (pred,got)]
+            # Two N=1024 cells were measured before with another kernel; agreement is also given without them.
+            unseen = [(pred,got) for pred,got,cohort in decided if cohort=="unseen"]
+            measured = bracket([(x,got) for x,_,got,_ in cells])
+            predicted = bracket([(x,pred) for x,pred,_,_ in cells])
+            out.append(dict(comparison_id=cid,group=width,cells=len(cells),decided=len(decided),
+                class_agree=sum(pred==got for pred,got,_ in decided),
+                decided_unseen=len(unseen),class_agree_unseen=sum(pred==got for pred,got in unseen),
+                both_clear=len(clear),direction_agree=sum(pred==got for pred,got in clear),
+                measured_bracket=measured,predicted_bracket=predicted,
+                bracket_verdict=score_bracket(measured,predicted),
+                by_cell=[dict(m=x,predicted=pred,measured=got,cohort=cohort) for x,pred,got,cohort in cells]))
     return out
 
 
@@ -437,7 +447,8 @@ def main():
     pred_cal, c_cal = load_prediction(calibrated_dir,args.design,"balanced")
     effects = effect_rows(args.design, blocks, policy, timings)
     cross = crossing_rows(args.design, effects)
-    bins = [int(r["m_per_source_destination"]) for r in read(args.design / "cells.csv")]
+    grid_cells = read(args.design / "cells.csv")
+    bins = sorted({int(r["m_per_source_destination"]) for r in grid_cells})
     # Two sealed predictions from one frozen predictor: pre-boot scenario parameters, and
     # parameters measured by the node microbenchmark before any formal timing.
     r1 = {}
@@ -484,7 +495,7 @@ def main():
         write_csv(args.out/"timing_diagnostics.csv",list(diagnostics[0]),diagnostics)
     lock_path = args.run/"ADMISSION_LOCK.json"
     lock = json.loads(lock_path.read_text()) if lock_path.exists() else {}
-    payload = dict(schema="edmir.glm-path-paper-results.v2", origin=run["origin"],
+    payload = dict(schema="edmir.moe-path-paper-results.v3", origin=run["origin"],
         run_id=run["run_id"], design_id=DESIGN_ID, design_sha256=run["design_sha256"],
         hardware_sha256=run["hardware_sha256"], effects=effects, crossings=cross,
         r1_secondary=r1,phases=phases,
@@ -492,7 +503,7 @@ def main():
         mixed_launch_mode_rows=sorted(f"{r['process_id']}:{r['arm_id']}" for r in diagnostics
                                       if r["arm_id"]=="NATIVE" and r["launch_mode"]!="graph"),
         static_overhead_scope="presealed choices; excludes any online selection",
-        p0_equals_always_slt=len(c)==len(bins) and all(arm=="SLT" for arm in c.values()),
+        p0_equals_always_slt=len(c)==len(grid_cells) and all(arm=="SLT" for arm in c.values()),
         bridge_enabled=lock.get("bridge_enabled",False),
         retried_processes=sorted(retried),missing=run.get("missing",{}),
         # D/BNEW consumers replay as CUDA graphs; any that fell back to eager launches are listed.
