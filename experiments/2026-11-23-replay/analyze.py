@@ -158,6 +158,52 @@ def retried_processes(metrics):
     return {r["process_id"] for r in metrics if r.get("attempt", 1) == 2}
 
 
+def counted_rows(metrics, timings):
+    """The metrics row behind each admitted timing: the retry of a retried process, else the first attempt."""
+    retried = retried_processes(metrics)
+    return {(r["process_id"], r["arm_id"]): r for r in metrics
+            if (r["process_id"], r["arm_id"]) in timings
+            and r.get("attempt", 1) == (2 if r["process_id"] in retried else 1)}
+
+
+def graph_arm(arm):
+    """Arms whose compute kernels are planned to replay as CUDA graphs."""
+    return arm.startswith(("D_", "BNEW_")) or arm == "NATIVE"
+
+
+def launch_mode(row):
+    """graph, eager, or mixed over the eight ranks. Synthetic rows carry no counts and follow the plan."""
+    counts = row.get("rank_counts")
+    if not counts:
+        return "graph"
+    modes = {c.get("launch_mode", "eager") for c in counts}
+    return modes.pop() if len(modes) == 1 else "mixed"
+
+
+def split_by_launch(timings, rows):
+    """Pre-registered: the main analysis uses the planned launch mode, graph replay. A row of a
+    graph arm that fell back to eager launches leaves it and is analysed on its own. Eager launches
+    add host time to both sides of a same-consumer pair, so a series that mixed the two modes
+    would move its crossover. Arms without graph replay belong to both analyses."""
+    main, fallback = {}, {}
+    for key, value in timings.items():
+        if not graph_arm(key[1]):
+            main[key] = fallback[key] = value
+        elif launch_mode(rows[key]) == "graph":
+            main[key] = value
+        else:
+            fallback[key] = value
+    return main, fallback
+
+
+def eager_fallback(design, blocks, policy, fallback):
+    """Comparisons among rows that launched eagerly. Listed apart; never scored or merged."""
+    eager = sorted(key for key in fallback if graph_arm(key[1]))
+    rows = [r for r in effect_rows(design, blocks, policy, fallback) if r["pairs_complete"]
+            and (graph_arm(r["baseline_arm"]) or graph_arm(r["candidate_arm"]))] if eager else []
+    return dict(rows=[f"{p}:{a}" for p, a in eager], effects=rows)
+
+
 def verify_samples(source,row,label,median_field,policy,key):
     rel = Path(row[label+"_file"])
     if rel.is_absolute() or ".." in rel.parts:
@@ -297,6 +343,11 @@ def bracket(seq):
     first clear win on the other; ties and undecided cells may sit inside it."""
     wins = [m for m,c in seq if c=="candidate_wins"]
     losses = [m for m,c in seq if c=="baseline_wins"]
+    missing = [m for m,c in seq if c=="incomplete"]
+    if missing and (not wins or not losses):
+        # Pre-registered: one side winning every measured cell is "no crossover" only when every
+        # cell was measured. An unmeasured cell could hold the crossover.
+        return dict(kind="incomplete",missing=missing)
     if not wins and not losses:
         return dict(kind="no_clear_cell")
     if not wins or not losses:
@@ -310,6 +361,8 @@ def bracket(seq):
 
 def score_bracket(measured, predicted):
     kinds = {measured["kind"],predicted["kind"]}
+    if "incomplete" in kinds:
+        return "incomplete"
     if kinds & {"no_clear_cell","interleaved"}:
         return "unscorable"
     if kinds=={"none"}:
@@ -357,27 +410,55 @@ def secondary_r1(design, effects, classes):
     return out
 
 
-def release_sensitivity(design, blocks, policy, timings, phase):
+def release_free_wall(source, row):
+    """Wall time of a direct arm without its release barrier: the median over iterations of the
+    slowest rank, after each rank's own release phase is taken off its own wall time.
+
+    The barrier ends on every rank together, so a rank whose consumer finishes early spends the
+    difference waiting in release. Subtracting a release time aggregated over ranks from a wall
+    time aggregated over ranks would remove that wait from the slowest rank, which never had it.
+    The raw files were hash-checked by check_rows."""
+    host = json.loads((source/row["samples_file"]).read_text())
+    phases = json.loads((source/row["phases_file"]).read_text())
+    return statistics.median(max(wall-rank[-1] for wall,rank in zip(walls,ranks,strict=True))
+                             for walls,ranks in zip(host,phases,strict=True))
+
+
+def release_sensitivity(design, blocks, policy, timings, rows, source):
     """Same-consumer comparisons with the direct arm's release barrier removed. The barrier
-    protects buffer reuse; a deployment with double buffering would not pay it."""
-    adjusted = {key:(v-phase[key]["release"] if key[1].startswith("D_") and key in phase else v)
-                for key,v in timings.items()}
+    protects buffer reuse; a deployment with double buffering would not pay it. A direct row
+    without phase data, or whose adjusted time is not positive, leaves this analysis."""
+    adjusted = {}
+    for key,v in timings.items():
+        if not key[1].startswith("D_"):
+            adjusted[key] = v
+        elif "phases_file" in rows[key]:
+            value = release_free_wall(source,rows[key])
+            if value>0:
+                adjusted[key] = value
     pairs = {c["comparison_id"] for c in read(design/"comparisons.csv")
              if c["candidate_arm"].startswith("D_") and c["baseline_arm"].startswith("BNEW_")}
     rows = [r for r in effect_rows(design,blocks,policy,adjusted) if r["comparison_id"] in pairs]
     return dict(effects=rows,crossings=crossing_rows(design,rows))
 
 
-def phase_rows(blocks, timings, phase):
-    """Per unit and arm: each phase's median over the processes that count."""
-    groups = defaultdict(list)
+def phase_rows(blocks, timings, phase, rows, source):
+    """Per unit and arm: each phase's median over the processes that count.
+
+    release_ms is the longest release phase over the ranks, which is the wait of the rank that
+    finished first. release_added_ms is what the barrier adds to the wall time of a direct arm:
+    the wall time minus the release-free wall time of release_free_wall."""
+    groups,added = defaultdict(list),defaultdict(list)
     unit = {(b["process_id"],b["arm_id"]):b["unit_id"] for b in blocks}
     for key in timings:
         if key in phase:
             groups[unit[key],key[1]].append(phase[key])
+            if key[1].startswith("D_") and "phases_file" in rows[key]:
+                added[unit[key],key[1]].append(timings[key]-release_free_wall(source,rows[key]))
     names = ("pack","transport","consumer","release")
     return [dict(unit_id=u,arm_id=arm,processes=len(v),
-                 **{n+"_ms":statistics.median(x[n] for x in v) if all(n in x for x in v) else None for n in names})
+                 **{n+"_ms":statistics.median(x[n] for x in v) if all(n in x for x in v) else None for n in names},
+                 release_added_ms=statistics.median(added[u,arm]) if len(added[u,arm])==len(v) else None)
             for (u,arm),v in sorted(groups.items())]
 
 
@@ -433,8 +514,10 @@ def main():
     run = json.loads((args.run / "RUN.json").read_text())
     metrics_path = args.run/"metrics.jsonl"
     metrics = jsonl(metrics_path) if metrics_path.exists() else []
-    blocks, policy, timings = check_rows(args.design, run, args.run,
+    blocks, policy, admitted = check_rows(args.design, run, args.run,
         jsonl(args.run / "admission.jsonl"),metrics)
+    rows = counted_rows(metrics, admitted)
+    timings, fallback = split_by_launch(admitted, rows)
     prediction_dir = args.run/"prediction" if run["origin"]=="device_measurement" else args.pred_cells
     if run["origin"]=="device_measurement" and (args.pred_cells or args.pred_snapshots):
         ap.error("device runs use the prediction frozen in RUN.json")
@@ -465,7 +548,7 @@ def main():
     retried = retried_processes(metrics)
     phase = {(row["process_id"],row["arm_id"]):row["phase_ms"] for row in metrics if "phase_ms" in row
              and row.get("attempt",1)==(2 if row["process_id"] in retried else 1)}
-    phases = phase_rows(blocks,timings,phase)
+    phases = phase_rows(blocks,timings,phase,rows,args.run)
     if phases:
         write_csv(args.out/"phases.csv",list(phases[0]),phases)
     selection = selection_rows(blocks, policy, timings, {"balanced": c, "snapshot": s},
@@ -476,7 +559,7 @@ def main():
     diagnostics = []
     for row in metrics:
         used = row.get("attempt",1)==(2 if row["process_id"] in retried else 1)
-        if not used or (row["process_id"],row["arm_id"]) not in timings or "rank_counts" not in row:
+        if not used or (row["process_id"],row["arm_id"]) not in admitted or "rank_counts" not in row:
             continue
         counts = row["rank_counts"]
         diagnostics.append(dict(**{k:row[k] for k in ("process_id","unit_id","arm_id",
@@ -489,24 +572,27 @@ def main():
             total_nonlocal_zero_rows=sum(c.get("zeroed_nonlocal_rows",0) for c in counts),
             max_projection_launches=max(c.get("projection_launches",0) for c in counts),
             max_merge_launches=max(c.get("merge_launches",0) for c in counts),
-            launch_mode=",".join(sorted({c.get("launch_mode","eager") for c in counts})),
+            launch_mode=launch_mode(row),
             native_config=counts[0].get("native_tune",{}).get("kind","")))
     if diagnostics:
         write_csv(args.out/"timing_diagnostics.csv",list(diagnostics[0]),diagnostics)
     lock_path = args.run/"ADMISSION_LOCK.json"
     lock = json.loads(lock_path.read_text()) if lock_path.exists() else {}
-    payload = dict(schema="edmir.moe-path-paper-results.v3", origin=run["origin"],
+    payload = dict(schema="edmir.moe-path-paper-results.v4", origin=run["origin"],
         run_id=run["run_id"], design_id=DESIGN_ID, design_sha256=run["design_sha256"],
         hardware_sha256=run["hardware_sha256"], effects=effects, crossings=cross,
         r1_secondary=r1,phases=phases,
-        release_sensitivity=release_sensitivity(args.design,blocks,policy,timings,phase),
+        release_sensitivity=release_sensitivity(args.design,blocks,policy,timings,rows,args.run),
+        # Graph arms that launched eagerly are outside every result above and are compared here.
+        eager_fallback=eager_fallback(args.design,blocks,policy,fallback),
         mixed_launch_mode_rows=sorted(f"{r['process_id']}:{r['arm_id']}" for r in diagnostics
                                       if r["arm_id"]=="NATIVE" and r["launch_mode"]!="graph"),
         static_overhead_scope="presealed choices; excludes any online selection",
         p0_equals_always_slt=len(c)==len(grid_cells) and all(arm=="SLT" for arm in c.values()),
         bridge_enabled=lock.get("bridge_enabled",False),
         retried_processes=sorted(retried),missing=run.get("missing",{}),
-        # D/BNEW consumers replay as CUDA graphs; any that fell back to eager launches are listed.
+        # D/BNEW consumers replay as CUDA graphs; any that fell back to eager launches are listed
+        # and excluded from the main analysis (split_by_launch).
         launch_bound_rows=sorted(f"{r['process_id']}:{r['arm_id']}" for r in diagnostics if r["launch_bound"]),
         eager_consumer_rows=sorted(f"{r['process_id']}:{r['arm_id']}" for r in diagnostics
                                    if r["arm_id"].startswith(("D_","BNEW_")) and r["launch_mode"]!="graph"),

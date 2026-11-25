@@ -146,6 +146,14 @@ def tokenize_corpus(corpus, tokenizer):
     return packet
 
 
+def model_vocab_size(model_dir):
+    """Token-id bound from config.json. Multimodal configs (Qwen3.5) keep it under text_config."""
+    config=json.loads((Path(model_dir)/"config.json").read_text())
+    for scope in (config,config.get("text_config") or {}):
+        if type(scope.get("vocab_size")) is int and scope["vocab_size"]>0: return scope["vocab_size"]
+    raise ValueError("config.json has no vocab_size")
+
+
 def validate_token_packet(packet, corpus, vocab_size):
     validate_corpus(corpus)
     if (packet.get("schema") != "edmir.real-moe-tokenized.v1" or

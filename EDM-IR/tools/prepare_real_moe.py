@@ -12,8 +12,8 @@ import subprocess
 import sys
 import traceback
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
-from edmir.benchmark.real_moe import (ENGINE, MODEL, PROFILE, PROFILE_ID, REVISION, file_sha, save, tokenize_corpus,
-    validate_corpus, validate_token_packet)
+from edmir.benchmark.real_moe import (ENGINE, MODEL, PROFILE, PROFILE_ID, REVISION, file_sha, model_vocab_size,
+    save, tokenize_corpus, validate_corpus, validate_token_packet)
 from edmir.benchmark.real_moe_config import engine_arguments, collection_files
 from edmir.benchmark.vllm0201_capture import verify_sources
 
@@ -74,7 +74,7 @@ def main():
             if not ids==raw.encode(text,add_special_tokens=False).ids==vt.encode(text,add_special_tokens=False):
                 raise ValueError("full frozen request tokenization differs across tokenizer implementations")
         packet=tokenize_corpus(corpus,hf)
-        vocab=json.loads((a.model_dir/"config.json").read_text())["vocab_size"]
+        vocab=model_vocab_size(a.model_dir)
         validate_token_packet(packet,corpus,vocab)
         functional=[]
         for r in corpus["requests"][:8]:

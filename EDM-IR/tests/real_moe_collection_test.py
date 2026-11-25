@@ -16,7 +16,7 @@ ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT));sys.path.insert(0,str(ROOT/'tools'))
 from edmir.benchmark.real_moe import (StepSampler, input_rows, slice_routes, summarize_routes,
     collect_block, timeline_overlap, validate_corpus, tokenize_corpus, validate_token_packet,
-    schedule, JsonlWriter, read_journal, digest, summarize_blocks)
+    schedule, JsonlWriter, read_journal, digest, summarize_blocks, model_vocab_size)
 from edmir.benchmark.vllm0201_capture import padded_assignment, route_block, verify_sources
 from edmir.benchmark.real_moe_config import engine_arguments, validate_topology
 from build_real_moe_corpus import build
@@ -75,6 +75,15 @@ class CorpusTests(unittest.TestCase):
         self.assertEqual(len(packet['requests']),256)
         packet['requests'][0]['prompt_token_ids'][-1]+=1
         with self.assertRaises(ValueError):validate_token_packet(packet,self.corpus,0x110000)
+    def test_vocab_size_of_every_locked_model_config(self):
+        # Qwen3.5 is multimodal and keeps vocab_size under text_config; the others have it at the top.
+        models=ROOT.parent/'experiments/2026-11-20-final-round/models'
+        with tempfile.TemporaryDirectory() as d:
+            for name,expected in (('GLM',154880),('QWEN35',248320),('DSV2L',102400)):
+                (Path(d)/'config.json').write_text((models/f'{name}.config.json').read_text())
+                self.assertEqual(model_vocab_size(d),expected)
+            (Path(d)/'config.json').write_text(json.dumps(dict(text_config=dict(hidden_size=8))))
+            with self.assertRaises(ValueError):model_vocab_size(d)
     def test_config_preserves_baseline_and_diagnostic_separation(self):
         baseline=engine_arguments('/offline/model','baseline');routes=engine_arguments('/offline/model','routes')
         self.assertFalse(baseline['enforce_eager']);self.assertNotIn('worker_cls',baseline)

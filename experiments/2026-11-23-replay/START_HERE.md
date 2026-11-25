@@ -80,7 +80,7 @@ gate.json PASS 还要求全 NV12、所有卡对双向 P2P、功率和八卡 BF16
 | `libedmir_replay.so` | CUDA 13 工具链编译，链接 `libcublasLt.so.13` |
 | 宿主机 gate 回执 | `host.json` |
 
-两段 gate 通过后，先跑一次只读的自检，再碰 GPU：
+两段 gate 通过后，先跑一次只读的自检，再碰 GPU（`$RUN` 的定义见"容器内运行"，其中已挂载 `/cpu-records`）：
 
     $RUN preflight.py --library /work/libedmir_replay.so \
       --cpu-receipt /cpu-records/GLM/cpu-receipt.json --cpu-receipt /cpu-records/QWEN35/cpu-receipt.json \
@@ -171,8 +171,8 @@ vLLM 0.20.1 环境和固定 CUTLASS 工作树。各设备作业回执写入新�
            --source-lock /code/experiments/2026-11-17-real-moe-local/vllm-source-lock.json --out /work/$1
        }
        capture GLM    /path/to/glm    /code/experiments/2026-11-16-next-window/model-manifest.json "E=8,N=1536,device_name=NVIDIA_A100-SXM4-80GB.json"
-       capture QWEN35 /path/to/qwen35 /cpu-records/QWEN35/model-manifest.json "E=32,N=512,device_name=NVIDIA_A100-SXM4-80GB.json"
-       capture DSV2L  /path/to/dsv2l  /cpu-records/DSV2L/model-manifest.json  "E=8,N=1408,device_name=NVIDIA_A100-SXM4-80GB.json"
+       capture QWEN35 /path/to/qwen35 /cpu-records/manifests/QWEN35.json "E=32,N=512,device_name=NVIDIA_A100-SXM4-80GB.json"
+       capture DSV2L  /path/to/dsv2l  /cpu-records/manifests/DSV2L.json  "E=8,N=1408,device_name=NVIDIA_A100-SXM4-80GB.json"
 
    - 只跑 S32（32 个请求，每卡 4 个）：首个纯 prefill 是第 1 步，每卡 2048 个 token；纯 decode 第 8 步每卡 4 个。
    - 每卡保存采集层的 BF16 输入、本卡专家权重、top-k、原生 launch 的对齐张量和实际命中的配置。
@@ -189,24 +189,44 @@ vLLM 0.20.1 环境和固定 CUTLASS 工作树。各设备作业回执写入新�
 
 ### 开机前在 CPU 上为每个模型准备的东西
 
-在锁定镜像里、不暴露 GPU：
+在锁定镜像里、不暴露 GPU。仓库只读挂在 `/code`，模型只读挂在 `/model`，输出写进 `/cpu-records`：
+
+    cpu() {  # cpu <模型> <模型目录> <脚本和参数...>
+      local m=$1 dir=$2; shift 2
+      docker run --rm --pull never --network none \
+        -v /path/to/llm-serving:/code:ro -v "$dir":/model:ro -v /path/to/cpu-records:/cpu-records \
+        -e EDMIR_MOE_MODEL=$m -e HF_HUB_OFFLINE=1 -e TRANSFORMERS_OFFLINE=1 \
+        -e HF_HOME=/cpu-records/cache/hf -e XDG_CACHE_HOME=/cpu-records/cache -e TOKENIZERS_PARALLELISM=false \
+        -e PYTHONPATH=/code/EDM-IR -w /code --entrypoint python3 edmir/vllm:0.20.1-locked "$@"
+    }
+    mkdir -p /path/to/cpu-records/manifests
 
     # 清单：GLM 用仓库里现成的；另外两个模型由本地文件生成，并与仓库里钉住的 config 哈希
-    #（Qwen3.5 另加上游的 14 个分片 LFS 摘要）核对。
-    EDMIR_MOE_MODEL=QWEN35 python3 EDM-IR/tools/make_model_manifest.py --model-dir /path/to/qwen35 \
+    #（Qwen3.5 另加上游的 14 个分片 LFS 摘要）核对。清单放在 manifests/ 下，不能放进
+    # /cpu-records/<模型>：下一步要求那个目录事先不存在。
+    cpu QWEN35 /path/to/qwen35 EDM-IR/tools/make_model_manifest.py --model-dir /model \
       --sources experiments/2026-11-20-final-round/models/SOURCES.json \
-      --weights experiments/2026-11-20-final-round/models/QWEN35.weights.json --out /cpu-records/QWEN35/model-manifest.json
-    EDMIR_MOE_MODEL=DSV2L python3 EDM-IR/tools/make_model_manifest.py --model-dir /path/to/dsv2l \
-      --sources experiments/2026-11-20-final-round/models/SOURCES.json --out /cpu-records/DSV2L/model-manifest.json
+      --weights experiments/2026-11-20-final-round/models/QWEN35.weights.json --out /cpu-records/manifests/QWEN35.json
+    cpu DSV2L /path/to/dsv2l EDM-IR/tools/make_model_manifest.py --model-dir /model \
+      --sources experiments/2026-11-20-final-round/models/SOURCES.json --out /cpu-records/manifests/DSV2L.json
 
-    # 每个模型一份 CPU 回执和 token 文件（输出目录不能已存在）
-    EDMIR_MOE_MODEL=<模型> python3 EDM-IR/tools/prepare_real_moe.py --model-dir <模型目录> --manifest <清单> \
+    # 每个模型一份 CPU 回执和 token 文件（输出目录 /cpu-records/<模型> 不能已存在）
+    cpu GLM /path/to/glm EDM-IR/tools/prepare_real_moe.py --model-dir /model \
+      --manifest experiments/2026-11-16-next-window/model-manifest.json \
       --source-lock experiments/2026-11-17-real-moe-local/vllm-source-lock.json \
-      --corpus experiments/2026-11-17-real-moe-local/corpus/requests-source.json --out /cpu-records/<模型>
+      --corpus experiments/2026-11-17-real-moe-local/corpus/requests-source.json --out /cpu-records/GLM
+    for m in QWEN35 DSV2L; do   # 模型目录按实际路径替换
+      cpu $m /path/to/$m EDM-IR/tools/prepare_real_moe.py --model-dir /model --manifest /cpu-records/manifests/$m.json \
+        --source-lock experiments/2026-11-17-real-moe-local/vllm-source-lock.json \
+        --corpus experiments/2026-11-17-real-moe-local/corpus/requests-source.json --out /cpu-records/$m
+    done
 
 `prepare_real_moe.py` 会核对：架构已在 vLLM 里注册、引擎参数被接受、原始/HF/vLLM 三种 tokenizer 对固定
 请求的切分一致、每条请求能精确截到 512 token。GLM 还要 4096 token 的长输入，另外两个模型只做 512。
 这一步如果在某个模型上报错（最可能是 tokenizer 一致性或聊天模板），要在开机前解决，它不占 GPU 机时。
+Qwen3.5 是多模态配置，`vocab_size` 在 `config.json` 的 `text_config` 里；CPU 准备和采集都按这个位置读取
+（2026-11-25 修正，此前会报 `KeyError`）。这条路径只在 CPU 上用仓库里钉住的三份 config 测过，
+Qwen3.5 和 DSV2-Lite 的整个 CPU 准备还没有在锁定镜像里跑通过，请先跑它。
 
 ## 容器内运行
 
@@ -214,12 +234,13 @@ vLLM 0.20.1 环境和固定 CUTLASS 工作树。各设备作业回执写入新�
 
     RUN="docker run --rm --pull never --network none --gpus all --ipc=host \
       -v /path/to/llm-serving:/repo:ro -v /path/to/work:/work -v /path/to/capture-root:/capture:ro \
+      -v /path/to/cpu-records:/cpu-records:ro \
       -e TRITON_CACHE_DIR=/work/cache/triton -e PYTHONUNBUFFERED=1 \
       -w /repo/experiments/2026-11-23-replay --entrypoint python3 edmir/vllm:0.20.1-locked"
     T="-m torch.distributed.run --standalone --nproc-per-node=8 replay.py --library /work/libedmir_replay.so"
 
     $RUN $T smoke --gate /work/gate.json --out /work/smoke.json
-    $RUN native.py --out /work/moe_configs
+    for w in GLM QWEN35 DSV2L; do timeout 900 $RUN native.py --out /work/moe_configs --width $w; done
     $RUN $T microbench --gate /work/gate.json --out /work/microbench.json
     $RUN $T tune-slt --gate /work/gate.json --out /work/slt.json
 
@@ -277,6 +298,10 @@ vLLM 0.20.1 环境和固定 CUTLASS 工作树。各设备作业回执写入新�
   一个进程里要计时的消费者 arm 在计时前一起捕获，准入也用同一方式。任何一张卡捕获失败时，
   所有卡上这些 arm 都改为即时执行，同一进程的 D 与 BNEW 始终同一启动方式；
   这些行的 `launch_mode` 为 eager，在结果的 `eager_consumer_rows` 中单列。
+  **开机前定的判据：主分析只用预定的启动方式，即 graph 回放。** D/BNEW 或 NATIVE 退回即时执行的行不进入
+  效应、交叉、计分、阶段和 regret；它所在的配对因此不完整，该格记为 incomplete。这些行之间的比较
+  另列在 `eager_fallback`，不计分，也不与主结果合并。即时启动给同一消费者比较的两侧都加上启动开销，
+  把比值拉向 1；一条 M 序列里混用两种方式会移动交叉点。SLT 和 BOLD 本来就没有 graph，两边都保留。
   NATIVE 的 gate/up kernel 也录成 graph 回放（vLLM 在非 eager 模式下本来就这样运行它），all-gatherv 即时执行。
   NATIVE 单独成组：它捕获失败时只有它自己退回即时执行，记入 `mixed_launch_mode_rows`，不影响 D/BNEW。
   SLT（AllToAll + 一次 cuBLASLt，经 ctypes 调用）和 BOLD 仍即时执行。
@@ -288,6 +313,11 @@ vLLM 0.20.1 环境和固定 CUTLASS 工作树。各设备作业回执写入新�
   `release`（直读的释放 barrier；其余 arm 接近零）。每个 arm 记录相同数量的 event。BOLD 的搬运和计算交错，不分段。
   分析输出 `phases.csv`，并给出"去掉直读释放 barrier"的敏感性结果（`release_sensitivity`）。
   释放 barrier 保护缓冲区复用，用双缓冲的部署不需要它；主判读仍用含两次 barrier 的总时间。
+  **开机前定的算法：**在同一次迭代、同一张卡上，用这张卡的墙钟减去它自己的释放段，再取最慢卡，
+  然后按进程取中位数、按配对算比值。barrier 在各卡上同时结束，先算完的卡把差额等在释放段里，
+  所以"各卡最长释放段"是最快那张卡的等待时间，不能从最慢卡的墙钟里减。没有阶段数据的 direct 行
+  不参与敏感性分析。`phases.csv` 里 `release_ms` 是各卡最长释放段，`release_added_ms` 是 barrier
+  给墙钟实际增加的时间（墙钟减去上述去 barrier 的墙钟），图里画的是后者。
 - Direct 的读取前发布 barrier 与读取后的释放 barrier 都在计时区，保护下一轮复用。
   所有臂同步后记录 max-rank 墙钟和 CUDA event，CUDA event 视作设备时间线经过时间，
   包括开始和结束记录之间的空档。另记每次迭代 CPU 发出全部工作所用的时间（enqueue）。
@@ -313,6 +343,9 @@ vLLM 0.20.1 环境和固定 CUTLASS 工作树。各设备作业回执写入新�
   实测区间落在预测区间内记 `contained`，有重叠记 `overlap`，不相交记 `disjoint`；
   双方都无交叉且赢家相同记 `agree_none`；一方有交叉一方没有记 `miss_existence`；方向相反记 `miss_direction`；
   明确胜负交错出现或没有明确格时记 `unscorable`。
+  **有缺测格时不判"无交叉"：**已测的格全是同一侧赢、但这条序列里还有没测完的格时，实测区间记为
+  `incomplete`，这一项的结论也是 `incomplete`，因为交叉点可能就在缺测的格里。两侧都有明确胜的格时，
+  区间照常计算，缺测格可以落在区间内。
 主 R1 与次要指标都如实报告，不用次要指标替换主 R1 的结论。
 
 P0 在 33 格全部选 SLT，R2 仅报离线选择和测后 regret，同选择规则的相等结果按原值报告；

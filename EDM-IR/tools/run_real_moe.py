@@ -13,7 +13,7 @@ import time
 import traceback
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 from edmir.benchmark.real_moe import (ENGINE, MODEL, PROFILE_ID, REVISION, collect_block, file_sha,
-    save, schedule, validate_corpus, validate_token_packet, workload)
+    model_vocab_size, save, schedule, validate_corpus, validate_token_packet, workload)
 from edmir.benchmark.real_moe_config import engine_arguments, collection_files, validate_topology
 
 
@@ -224,7 +224,7 @@ def main():
         manifest=json.loads(a.manifest.read_text())
         if not inspect_assets(manifest,a.model_dir,verify_hashes=True,model_id=MODEL,revision=REVISION)["ASSETS_VERIFIED"]:raise ValueError("assets incomplete")
         packet=json.loads(a.tokens.read_text())
-        validate_token_packet(packet,corpus,json.loads((a.model_dir/"config.json").read_text())["vocab_size"])
+        validate_token_packet(packet,corpus,model_vocab_size(a.model_dir))
         os.environ["HF_HUB_OFFLINE"]="1";os.environ["TRANSFORMERS_OFFLINE"]="1"
         asyncio.run(execute(a,packet,receipt))
         save(a.out/"completion.json",dict(status="collection_finished",mode=a.mode,

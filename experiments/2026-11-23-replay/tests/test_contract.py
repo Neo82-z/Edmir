@@ -134,17 +134,78 @@ class TestAnalysis(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     self.results()
 
+    def with_phases(self, release):
+        """Give every direct row a phase file: `release` is one release time per rank, in ms."""
+        phases = self.path/"phases.json"
+        phases.write_text(json.dumps([[[.05,.5,x] for x in release]]*100))
+        extra = dict(phase_names=["transport","consumer","release"],phases_file=phases.name,
+                     phases_sha256=sha(phases),phase_ms=dict(transport=.05,consumer=.5,release=max(release)))
+        self.metrics = [dict(m,**extra) if m["arm_id"].startswith("D_") else m for m in self.metrics]
+
     def test_release_sensitivity_changes_only_direct_arms(self):
-        from analyze import release_sensitivity
+        from analyze import counted_rows, release_sensitivity
+        self.with_phases([.25]*8)
         blocks,policy,timings = check_rows(DESIGN,self.run,self.path,self.admission,self.metrics)
-        phase = {key:dict(transport=.05,consumer=.5,release=.25) for key in timings}
-        result = release_sensitivity(DESIGN,blocks,policy,timings,phase)
+        result = release_sensitivity(DESIGN,blocks,policy,timings,counted_rows(self.metrics,timings),self.path)
         ids = {r["comparison_id"] for r in result["effects"]}
         self.assertEqual(ids,{"Ba_q1","Ba_q4","R_Ba_q1","R_Ba_q4"})
         self.assertEqual(len(result["crossings"]),6)
         # Direct is 1.2 ms from M64 up and staged 1.0 ms: without the 0.25 ms release it wins everywhere.
         self.assertTrue(all(r["outcome"]=="candidate_wins" for r in result["effects"]))
         self.assertTrue(all(not c["intervals"] for c in result["crossings"]))
+
+    def test_release_is_removed_on_the_rank_that_paid_it(self):
+        from analyze import counted_rows, phase_rows, release_sensitivity
+        # Seven ranks finish early and wait 0.3 ms in the barrier; the slowest rank waits 0.05 ms.
+        self.with_phases([.3]*7+[.05])
+        blocks,policy,timings = check_rows(DESIGN,self.run,self.path,self.admission,self.metrics)
+        rows = counted_rows(self.metrics,timings)
+        result = release_sensitivity(DESIGN,blocks,policy,timings,rows,self.path)
+        # Direct at M64 and above: 1.2 ms on the slowest rank, so 1.15 ms without its own release.
+        # Taking the longest release (0.3 ms) off the slowest wall would give 0.9 ms and a false win.
+        late = [r for r in result["effects"] if r["unit_id"]=="GLM_M0064" and r["comparison_id"]=="Ba_q1"]
+        self.assertAlmostEqual(late[0]["ratio"],1/1.15)
+        self.assertEqual(late[0]["outcome"],"baseline_wins")
+        cross = next(c for c in result["crossings"] if (c["comparison_id"],c["group"])==("Ba_q1","GLM"))
+        self.assertEqual([(i["m_low"],i["m_high"]) for i in cross["intervals"]],[(32,64)])
+        phase = {key:rows[key]["phase_ms"] for key in rows if "phase_ms" in rows[key]}
+        shown = next(r for r in phase_rows(blocks,timings,phase,rows,self.path)
+                     if (r["unit_id"],r["arm_id"])==("GLM_M0064","D_Q1_G2"))
+        self.assertAlmostEqual(shown["release_ms"],.3)
+        self.assertAlmostEqual(shown["release_added_ms"],.05)
+        # A direct row without phase data cannot be adjusted and leaves the sensitivity analysis.
+        key = next(k for k in rows if k[1]=="D_Q1_G2" and rows[k]["unit_id"]=="GLM_M0064")
+        rows[key] = {k:v for k,v in rows[key].items() if k!="phases_file"}
+        partial = release_sensitivity(DESIGN,blocks,policy,timings,rows,self.path)
+        hit = next(r for r in partial["effects"] if r["unit_id"]=="GLM_M0064" and r["comparison_id"]=="Ba_q1")
+        self.assertEqual((hit["pairs_complete"],hit["outcome"]),(2,"incomplete"))
+
+    def test_eager_rows_leave_the_main_analysis(self):
+        from analyze import counted_rows, eager_fallback, split_by_launch
+        counts = lambda mode: [dict(launch_mode=mode)]*8
+        unit = "GLM_M0064"
+        pids = sorted({m["process_id"] for m in self.metrics if m["unit_id"]==unit})
+        for m in self.metrics:
+            if m["unit_id"]==unit:
+                # One pair of processes fell back to eager launches for the consumer group.
+                eager = m["process_id"] in pids[:2] and m["arm_id"].startswith(("D_","BNEW_"))
+                m["rank_counts"] = counts("eager" if eager else "graph")
+        blocks,policy,admitted = check_rows(DESIGN,self.run,self.path,self.admission,self.metrics)
+        main,fallback = split_by_launch(admitted,counted_rows(self.metrics,admitted))
+        by = {r["comparison_id"]:r for r in effect_rows(DESIGN,blocks,policy,main) if r["unit_id"]==unit}
+        pair = {b["pair_id"] for b in blocks if b["process_id"] in pids[:2]}
+        self.assertEqual(len(pair),1)
+        self.assertEqual({k:(r["pairs_complete"],r["outcome"]) for k,r in by.items()},
+                         {k:(2,"incomplete") for k in by})
+        listed = eager_fallback(DESIGN,blocks,policy,fallback)
+        self.assertEqual(len(listed["rows"]),sum(m.get("rank_counts")==counts("eager") for m in self.metrics))
+        self.assertGreaterEqual(len(listed["rows"]),8)
+        self.assertEqual({r["unit_id"] for r in listed["effects"]},{unit})
+        self.assertTrue(all(r["pairs_complete"]==1 for r in listed["effects"]))
+        # The tuned staged arm has no graph: it stays in both analyses.
+        self.assertTrue(any(key[1]=="SLT" and key in main for key in fallback))
+        self.assertEqual(eager_fallback(DESIGN,blocks,policy,{k:v for k,v in main.items() if k[1]=="SLT"}),
+                         dict(rows=[],effects=[]))
 
     def test_tie_separates_winners(self):
         effects = self.results()
@@ -408,7 +469,6 @@ class TestAnalysis(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,"row counts"):
             self.results()
         # Phase durations are validated and feed the release-barrier sensitivity.
-        from analyze import release_sensitivity
         phases = self.path/"phases.json"
         phases.write_text(json.dumps([[[.1,.5,.2]]*8]*100))
         good = dict(r,phase_names=["transport","consumer","release"],phases_file=phases.name,
@@ -530,13 +590,20 @@ class TestSecondaryR1(unittest.TestCase):
                  ([(1,L),(2,L),(4,L),(8,L),(16,L),(32,L)],"miss_existence"),
                  ([(1,L),(2,L),(4,L),(8,T),(16,W),(32,W)],"miss_direction"),
                  ([(1,W),(2,L),(4,W),(8,L),(16,L),(32,L)],"unscorable"),
-                 ([(1,T),(2,U),(4,T),(8,T),(16,"incomplete"),(32,T)],"unscorable"))
+                 ([(1,T),(2,U),(4,T),(8,T),(16,T),(32,T)],"unscorable"),
+                 ([(1,T),(2,U),(4,T),(8,T),(16,"incomplete"),(32,T)],"incomplete"),
+                 # One side wins every measured cell, but a cell is missing: not "no crossover".
+                 ([(1,L),(2,L),(4,L),(8,L),(16,"incomplete"),(32,L)],"incomplete"),
+                 ([(1,W),(2,W),(4,W),(8,W),(16,W),(32,"incomplete")],"incomplete"),
+                 # Both sides have a clear cell: the bracket stands with a cell missing inside it.
+                 ([(1,W),(2,W),(4,W),(8,"incomplete"),(16,L),(32,L)],"contained"))
         for seq,verdict in cases:
             with self.subTest(verdict=verdict,seq=seq):
                 self.assertEqual(score_bracket(bracket(seq),predicted),verdict)
         none = bracket([(1,L),(2,L)])
         self.assertEqual(score_bracket(bracket([(1,L),(2,T)]),none),"agree_none")
         self.assertEqual(score_bracket(bracket([(1,W),(2,W)]),none),"miss_winner")
+        self.assertEqual(score_bracket(bracket([(1,L),(2,"incomplete")]),none),"incomplete")
 
 
 class TestPreflight(unittest.TestCase):
