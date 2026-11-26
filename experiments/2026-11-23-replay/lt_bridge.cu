@@ -52,9 +52,11 @@ extern "C" int edmir_lt_create(int m,int n,int k,void** out) {
   *out = plan;
   return 0;
 }
-extern "C" void edmir_lt_destroy(Plan* plan) { delete plan; }
-extern "C" int edmir_lt_count(Plan* p) { return p->count; }
-extern "C" int edmir_lt_algo(Plan* p,int i,void* out,std::size_t size) {
+// Keep the private plan type out of the exported signatures.
+extern "C" void edmir_lt_destroy(void* plan) { delete static_cast<Plan*>(plan); }
+extern "C" int edmir_lt_count(void* plan) { return static_cast<Plan*>(plan)->count; }
+extern "C" int edmir_lt_algo(void* plan,int i,void* out,std::size_t size) {
+  const auto* p = static_cast<Plan*>(plan);
   if (i<0 || i>=p->count || size!=sizeof(p->algorithms[i].algo) ||
       p->algorithms[i].state!=CUBLAS_STATUS_SUCCESS || p->algorithms[i].workspaceSize>budget) return -1;
   const auto* source = reinterpret_cast<const unsigned char*>(&p->algorithms[i].algo);
@@ -63,8 +65,9 @@ extern "C" int edmir_lt_algo(Plan* p,int i,void* out,std::size_t size) {
   return 0;
 }
 extern "C" int edmir_lt_algo_size() { return sizeof(cublasLtMatmulAlgo_t); }
-extern "C" int edmir_lt_run(Plan* p,const void* a,const void* b,void* c,void* work,
+extern "C" int edmir_lt_run(void* plan,const void* a,const void* b,void* c,void* work,
                              const void* algorithm,cudaStream_t stream) {
+  const auto* p = static_cast<Plan*>(plan);
   const float alpha=1.f,beta=0.f;
   cublasLtMatmulAlgo_t selected{};
   std::memcpy(&selected,algorithm,sizeof(selected));
