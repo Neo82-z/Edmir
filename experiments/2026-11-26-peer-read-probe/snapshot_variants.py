@@ -15,6 +15,11 @@ their own. The variant here changes three things and keeps the arithmetic:
                          and g the N tile in units of 128 columns; q may be 1, 2, 4, 8 or
                          16, and a suffix _K64 or _K128 before _R changes the K block.
 
+  BNEW_GATHER<bm>_Qq_Gg_R the same kernel and per-expert tiles on rows that were staged first:
+                         the registered pack and All-to-All deliver the routed rows, then
+                         one launch consumes the local copy. Only the row source differs
+                         from D_GATHER.
+
 Which token each destination needs from each source is the static routing table of the
 snapshot. The registered protocol keeps that precomputation outside the timed region for
 every arm, and the native arm receives its alignment tensors the same way.
@@ -41,7 +46,7 @@ SCHEMA = "edmir.snapshot-variants.exploratory.v1"
 REGISTERED = ("D_Q1_G2_R","D_Q4_G2_R","BNEW_Q1_G2_R","BNEW_Q4_G2_R","NATIVE")
 ARMS = ("D_Q1_G2_R","D_GATHER16_Q1_G2_R","D_GATHER64_Q1_G2_R","D_Q4_G2_R","D_GATHER16_Q4_G2_R","D_GATHER64_Q4_G2_R",
         "BNEW_Q1_G2_R","BNEW_Q4_G2_R","NATIVE")
-VARIANT = re.compile(r"D_GATHER(16|32|64)_Q(1|2|4|8|16)_G([124])(?:_K(32|64|128))?_R")
+VARIANT = re.compile(r"(?:D|BNEW)_GATHER(16|32|64|128)_Q(1|2|4|8|16)_G([124])(?:_K(32|64|128))?_R")
 POLICY = dict(warmup=20,timed=100)
 
 
@@ -97,6 +102,8 @@ def main():
             rows = [row for expert in by_expert for row in expert]
             self.held = torch.tensor([h for h,_ in rows] or [0],dtype=torch.int64,device=self.device)
             self.out_rows = torch.tensor([o for _,o in rows] or [0],dtype=torch.int32,device=self.device)
+            # Staged rows arrive in the registered output order, so row p of the local copy is output row p.
+            self.staged_held = self.out_rows.to(torch.int64)*k
             self.expert_counts = [len(expert) for expert in by_expert]
             self.gather_work,self.gather_partial = {},{}
 
@@ -117,9 +124,11 @@ def main():
                 self.gather_work[bm] = torch.tensor(work,dtype=torch.int32,device=self.device).view(-1,3)
             work = self.gather_work[bm]
 
+            base,held = (self.staged,self.staged_held) if arm.startswith("BNEW_") else (self.resident_base,self.held)
+
             def issue():
                 if len(work):
-                    launch_rows(self.resident_base,self.held,self.out_rows,self.weight,self.output,
+                    launch_rows(base,held,self.out_rows,self.weight,self.output,
                                 partial,work,self.hidden.shape[1],q,bm,g,bk)
             return issue
 
@@ -127,6 +136,11 @@ def main():
             if VARIANT.fullmatch(arm) is None:
                 return super().run(arm,mark)
             self.gather_setup()
+            if arm.startswith("BNEW_"):
+                self.materialize(self.hidden,True,mark)   # the registered pack and All-to-All
+                self.graphs.run(arm,self.consumer(arm))
+                mark("consumer")
+                return self.output
             self.resident_handle.barrier(0,60_000)   # publish: every source's rows are in place
             mark("transport")
             self.graphs.run(arm,self.consumer(arm))
