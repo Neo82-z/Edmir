@@ -411,7 +411,12 @@ def gpu_session(expected_uuids):
     torch.set_float32_matmul_precision("highest")
     dist.init_process_group("nccl",timeout=timedelta(seconds=120))
     try:
-        symmetric.set_backend("CUDA")
+        # CUDA is the default backend of the locked build, and set_backend rejects the name of
+        # the backend already in place ("does not find allocation backend CUDA").
+        if symmetric.get_backend(device)!="CUDA":
+            symmetric.set_backend("CUDA")
+        if symmetric.get_backend(device)!="CUDA":
+            raise RuntimeError("symmetric memory is not on the CUDA backend")
         cpu_group = dist.new_group(backend="gloo",timeout=timedelta(seconds=120))
         dist.barrier()
         yield rank,device,cpu_group
