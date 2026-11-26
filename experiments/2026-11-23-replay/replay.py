@@ -376,6 +376,9 @@ class Paths:
                 self.dist.broadcast(buf,src=src)
             original.append(buf)
         ref = reference(original,self.weight,self.routes,self.rank)
+        # Graph capture already ran the kernels once, so the buffers hold a valid result. Poison
+        # them: a replay that issues no kernel then fails the check instead of passing on old data.
+        (self.native_out if arm=="NATIVE" else self.output).fill_(float("nan"))
         result = self.run(arm)
         if arm=="NATIVE":
             result = result.flatten(0,1).index_select(0,self.flat)

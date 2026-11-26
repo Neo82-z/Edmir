@@ -294,6 +294,9 @@ class BalancedPaths:
         self.prepare_graphs([arm])
         self.dist.all_to_all_single(self.recv,self.send)
         reference = self.recv.float() @ self.weight.float().T
+        # Graph capture already ran the kernels once, so the output holds a valid result. Poison
+        # it: a replay that issues no kernel then fails the check instead of passing on old data.
+        self.out.fill_(float("nan"))
         err,nans = correctness(self.run(arm),reference,dtype=self.torch.float16)
         original = self.send.clone()
         self.send[:,0] = self.rank
