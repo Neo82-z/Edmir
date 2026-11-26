@@ -58,6 +58,7 @@ def main():
     ap.add_argument("--slt",type=Path)
     ap.add_argument("--library",type=Path)
     ap.add_argument("--unit",required=True)
+    ap.add_argument("--rep",default=REP,help="input seed of the registered design (20261120, 20261121 or 20261122)")
     ap.add_argument("--arms",default=",".join(ARMS))
     ap.add_argument("--out",type=Path,required=True)
     a = ap.parse_args()
@@ -133,7 +134,7 @@ def main():
         tuned = json.loads(a.slt.read_text())["cells"][a.unit][rank]["selected"] if a.slt else None
         if not all(spread(tuned is not None and a.library is not None,group)):
             arms = [arm for arm in arms if arm not in ("SLT","PULL_SLT")]
-        paths = Variants(a.unit,REP,shape,rank,device,a.library,tuned,agree=lambda error:spread(error,group))
+        paths = Variants(a.unit,a.rep,shape,rank,device,a.library,tuned,agree=lambda error:spread(error,group))
         admission = {}
         for arm in arms:
             try:
@@ -169,7 +170,7 @@ def main():
                     phase_ms={n:statistics.median(max(r[j] for r in it) for it in phases) for j,n in enumerate(names)}))
         if rank==0:
             write_json(a.out,dict(schema=SCHEMA,origin="exploratory_device_probe",registered=False,unit=a.unit,
-                shape=shape,rep=REP,gpu_uuids=uuids,hardware_sha256=sha(a.gate),
+                shape=shape,rep=a.rep,gpu_uuids=uuids,hardware_sha256=sha(a.gate),
                 implementation_sha256=sha(Path(__file__)),policy=POLICY,admission=admission,rows=rows))
             mean = lambda arm,key: math.exp(statistics.fmean(math.log(r[key]) for r in rows if r["arm"]==arm))
             print(f"{a.unit:13s} wall ms: "+"  ".join(f"{arm.replace('_G2','')}={mean(arm,'wall_ms'):.3f}" for arm in usable))

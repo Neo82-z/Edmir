@@ -56,6 +56,8 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__,formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--gate",type=Path,required=True)
     ap.add_argument("--out",type=Path,required=True)
+    ap.add_argument("--mode",choices=("patterns","sizes"),default="patterns",
+                    help="sizes: one peer per rank, from 64 KiB to 64 MiB, eager and graph-replayed")
     a = ap.parse_args()
 
     import torch
@@ -104,7 +106,52 @@ def main():
         handle = symmetric.rendezvous(src,dist.group.WORLD)
         view = lambda o: handle.get_buffer(o,src.shape,src.dtype,0).narrow(0,slot(rank,o)*chunk,chunk)
         readings = []
-        for name,kernels in patterns(rank).items():
+
+        @triton.jit
+        def copy(A, B, n: tl.constexpr, ctas: tl.constexpr, block: tl.constexpr):
+            # The single-peer kernel of the registered microbenchmark.
+            base = tl.program_id(0)*block+tl.arange(0,block)
+            for offset in range(0,n,ctas*block):
+                ix = offset+base
+                value = tl.load(A+ix,ix<n,0,cache_modifier=".cg")
+                tl.store(B+ix,value,ix<n)
+
+        def replayed(issue):
+            issue()
+            torch.cuda.synchronize()
+            graph = torch.cuda.CUDAGraph()
+            with torch.cuda.graph(graph,capture_error_mode="thread_local"):
+                issue()
+            return measure(graph.replay)
+
+        def sizes():
+            """One peer per rank (rank r reads r+1), every rank at once, then rank 0 alone."""
+            owner = (rank+1)%8
+            whole = handle.get_buffer(owner,src.shape,src.dtype,0)
+            cases = [(f"{kib}KiB_slot",view(owner).narrow(0,0,kib*512),kib*512) for kib in (64,512,2048,8192)]
+            cases += [("8192KiB_offset0",whole.narrow(0,0,chunk),chunk),("65536KiB_whole",whole,count)]
+            for label,source,n in cases:
+                table = torch.tensor([source.data_ptr()],dtype=torch.int64,device=device)
+                kernels = dict(gather=lambda:gather[(CTAS,)](table,dest,1,n,CTAS,1024,num_warps=4),
+                               copy=lambda:copy[(CTAS,)](source,dest,n,CTAS,1024,num_warps=4))
+                for kernel,issue in kernels.items():
+                    for who in ("all_ranks","solo"):
+                        active = who=="all_ranks" or rank==0
+                        for launch in ("eager","graph"):
+                            record = dict(pattern=f"{label}:{kernel}:{who}:{launch}",kernels=1,pairs=int(active),bytes=2*n)
+                            try:
+                                f = issue if active else (lambda:None)
+                                times = measure(f) if launch=="eager" or not active else replayed(f)
+                                if active and not torch.equal(dest[:128],torch.full_like(dest[:128],owner+1)):
+                                    raise ValueError("the probe did not read the expected source")
+                                record.update(seconds=statistics.median(times),samples=times)
+                            except Exception as exc:
+                                record.update(error=repr(exc))
+                            readings.append(record)
+
+        if a.mode=="sizes":
+            sizes()
+        for name,kernels in (patterns(rank).items() if a.mode=="patterns" else ()):
             launches,position = [],0
             for owners in kernels:
                 table = torch.tensor([view(o).data_ptr() for o in owners],dtype=torch.int64,device=device)
