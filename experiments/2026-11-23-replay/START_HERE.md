@@ -162,7 +162,7 @@ vLLM 0.20.1 环境和固定 CUTLASS 工作树。各设备作业回执写入新�
    不使用 guard，租期由操作者管理。
 
        capture() {  # capture <模型> <模型目录> <清单> <调优配置文件名>
-         docker run --rm --pull never --network none --gpus all --ipc=host \
+         docker run --rm --pull never --network none --gpus all --ipc=host --hostname edmir --add-host edmir:127.0.0.1 \
            -v /path/to/llm-serving:/code:ro -v "$2":/model:ro \
            -v /path/to/cpu-records:/cpu-records:ro -v /path/to/moe_configs:/moe_configs:ro \
            -v /path/to/capture-root:/work \
@@ -239,8 +239,10 @@ Qwen3.5 和 DSV2-Lite 的整个 CPU 准备还没有在锁定镜像里跑通过�
 ## 容器内运行
 
 除采集外，GPU 作业都在锁定镜像里跑。回放和准入要用 NCCL 和对称内存，必须带 `--gpus all --ipc=host`：
+`--network none` 下容器的主机名解析不到自己，torchrun 的会合会等到 300 秒超时（2026-11-26 上机时遇到）；
+所以要给容器一个固定主机名并映射到回环地址：`--hostname edmir --add-host edmir:127.0.0.1`。采集用的 `capture()` 同样加上。
 
-    RUN="docker run --rm --pull never --network none --gpus all --ipc=host \
+    RUN="docker run --rm --pull never --network none --gpus all --ipc=host --hostname edmir --add-host edmir:127.0.0.1 \
       -v /path/to/llm-serving:/repo:ro -v /path/to/work:/work -v /path/to/capture-root:/capture:ro \
       -v /path/to/cpu-records:/cpu-records:ro \
       -e TRITON_CACHE_DIR=/work/cache/triton -e PYTHONUNBUFFERED=1 \
