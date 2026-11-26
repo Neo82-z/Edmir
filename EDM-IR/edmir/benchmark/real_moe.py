@@ -121,6 +121,13 @@ def tokenize_corpus(corpus, tokenizer):
                                             tokenize=False, **options)
     if rendered.count(sentinel) != 1: raise ValueError("ambiguous template boundary")
     prefix, suffix = rendered.split(sentinel)
+    if PROFILE_ID == "DSV2L":
+        if (prefix, suffix) != ("<｜begin▁of▁sentence｜>User: ", "\n\nAssistant:"):
+            raise ValueError("unexpected DeepSeek-V2-Lite chat template")
+        # The pinned tokenizer can merge this one separator with the first user
+        # word (e.g. ĠRead). Keep it in the full-prompt IDs below, while checking
+        # only the invariant prefix and the entire native assistant suffix.
+        prefix = prefix[:-1]
     prefix_ids = tokenizer.encode(prefix, add_special_tokens=False)
     suffix_ids = tokenizer.encode(suffix, add_special_tokens=False)
     if not prefix_ids or not suffix_ids or len(prefix_ids) + len(suffix_ids) >= 512:

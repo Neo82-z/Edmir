@@ -11,9 +11,11 @@ import sqlite3
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT));sys.path.insert(0,str(ROOT/'tools'))
+from edmir.benchmark import real_moe
 from edmir.benchmark.real_moe import (StepSampler, input_rows, slice_routes, summarize_routes,
     collect_block, timeline_overlap, validate_corpus, tokenize_corpus, validate_token_packet,
     schedule, JsonlWriter, read_journal, digest, summarize_blocks, model_vocab_size)
@@ -75,6 +77,38 @@ class CorpusTests(unittest.TestCase):
         self.assertEqual(len(packet['requests']),256)
         packet['requests'][0]['prompt_token_ids'][-1]+=1
         with self.assertRaises(ValueError):validate_token_packet(packet,self.corpus,0x110000)
+    def test_deepseek_separator_stays_in_full_ids_and_suffix_is_strict(self):
+        class JoiningTokenizer(FakeTokenizer):
+            prefix="<｜begin▁of▁sentence｜>User: "
+            suffix="\n\nAssistant:"
+            merge_id=0x10ffff
+
+            def apply_chat_template(self,messages,tokenize=True,**kwargs):
+                text=self.prefix+messages[0]['content']+self.suffix
+                return self.encode(text) if tokenize else text
+
+            def encode(self,text,add_special_tokens=False):
+                return super().encode(text.replace("User: R","User:"+chr(self.merge_id)))
+
+        tokenizer=JoiningTokenizer()
+        source=self.corpus['requests'][1]
+        messages=[dict(role='user',content=source['content'])]
+        full=tokenizer.apply_chat_template(messages)
+        prefix=tokenizer.encode(tokenizer.prefix[:-1]);suffix=tokenizer.encode(tokenizer.suffix)
+        self.assertEqual(full[len(prefix)],tokenizer.merge_id)
+        with patch.multiple(real_moe,PROFILE_ID="DSV2L",LENGTHS=(512,)):
+            packet=tokenize_corpus(self.corpus,tokenizer)
+            self.assertTrue(validate_token_packet(packet,self.corpus,0x110000))
+            self.assertEqual(packet['prefix_ids'],prefix)
+            self.assertEqual(packet['suffix_ids'],suffix)
+            self.assertEqual(packet['requests'][1]['prompt_token_ids'],full[:512-len(suffix)]+suffix)
+            tokenizer.suffix="\nAssistant:"
+            with self.assertRaisesRegex(ValueError,"unexpected DeepSeek-V2-Lite chat template"):
+                tokenize_corpus(self.corpus,tokenizer)
+        tokenizer.suffix="\n\nAssistant:"
+        with patch.multiple(real_moe,PROFILE_ID="QWEN35",LENGTHS=(512,)):
+            with self.assertRaisesRegex(ValueError,"template token boundary changed"):
+                tokenize_corpus(self.corpus,tokenizer)
     def test_vocab_size_of_every_locked_model_config(self):
         # Qwen3.5 is multimodal and keeps vocab_size under text_config; the others have it at the top.
         models=ROOT.parent/'experiments/2026-11-20-final-round/models'

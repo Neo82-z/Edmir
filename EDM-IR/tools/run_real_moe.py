@@ -14,7 +14,7 @@ import traceback
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 from edmir.benchmark.real_moe import (ENGINE, MODEL, PROFILE_ID, REVISION, collect_block, file_sha,
     model_vocab_size, save, schedule, validate_corpus, validate_token_packet, workload)
-from edmir.benchmark.real_moe_config import engine_arguments, collection_files, validate_topology
+from edmir.benchmark.real_moe_config import engine_arguments, collection_files, tokenizer_assets, validate_topology
 
 
 def check_guard(guard, now, instance):
@@ -65,7 +65,7 @@ async def telemetry(out, stop):
             except asyncio.TimeoutError:pass
 
 
-async def execute(a,packet,receipt):
+async def execute(a,packet,receipt,tokenizer_dir):
     from vllm import SamplingParams
     from vllm.engine.arg_utils import AsyncEngineArgs
     from vllm.v1.engine.async_llm import AsyncLLM
@@ -79,7 +79,7 @@ async def execute(a,packet,receipt):
     if any("A100" not in d["name"] or "SXM" not in d["name"] or d["capability"]!=[8,0] or d["memory"]<75*1024**3 for d in devices):
         raise ValueError("this plan requires A100 80GB SM80")
     os.environ.pop("EDMIR_REAL_MOE_CAPTURE_CONFIG",None)
-    args=engine_arguments(a.model_dir,a.mode)
+    args=engine_arguments(a.model_dir,a.mode,tokenizer_dir=tokenizer_dir)
     if a.mode!="baseline":
         config=dict(mode=a.mode,out=str((a.out/"workers").resolve()),
                     run_id=a.out.name,source_lock=str(a.source_lock.resolve()),
@@ -223,10 +223,13 @@ def main():
         from run_native_moe_smoke import inspect_assets
         manifest=json.loads(a.manifest.read_text())
         if not inspect_assets(manifest,a.model_dir,verify_hashes=True,model_id=MODEL,revision=REVISION)["ASSETS_VERIFIED"]:raise ValueError("assets incomplete")
+        tokenizer_dir, tokenizer_hashes = tokenizer_assets(a.model_dir, a.cpu_receipt.parent)
+        if tokenizer_hashes != receipt.get("tokenizer_asset_hashes", {}):
+            raise ValueError("tokenizer files differ from CPU verification")
         packet=json.loads(a.tokens.read_text())
         validate_token_packet(packet,corpus,model_vocab_size(a.model_dir))
         os.environ["HF_HUB_OFFLINE"]="1";os.environ["TRANSFORMERS_OFFLINE"]="1"
-        asyncio.run(execute(a,packet,receipt))
+        asyncio.run(execute(a,packet,receipt,tokenizer_dir))
         save(a.out/"completion.json",dict(status="collection_finished",mode=a.mode,
             acceptance_analysis_pending=True,predictor_modified=False,edmir_integrated=False))
     except BaseException as exc:

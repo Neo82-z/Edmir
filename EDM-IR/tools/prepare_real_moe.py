@@ -14,7 +14,7 @@ import traceback
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 from edmir.benchmark.real_moe import (ENGINE, MODEL, PROFILE, PROFILE_ID, REVISION, file_sha, model_vocab_size,
     save, tokenize_corpus, validate_corpus, validate_token_packet)
-from edmir.benchmark.real_moe_config import engine_arguments, collection_files
+from edmir.benchmark.real_moe_config import engine_arguments, collection_files, tokenizer_assets
 from edmir.benchmark.vllm0201_capture import verify_sources
 
 
@@ -54,14 +54,17 @@ def main():
         from transformers import AutoTokenizer
         from tokenizers import Tokenizer
         from vllm.tokenizers.registry import get_tokenizer
-        hf=AutoTokenizer.from_pretrained(a.model_dir,local_files_only=True,trust_remote_code=False)
-        vt=get_tokenizer(str(a.model_dir),local_files_only=True,trust_remote_code=False)
+        tokenizer_dir, tokenizer_hashes = tokenizer_assets(a.model_dir, a.out, create=True)
+        hf=AutoTokenizer.from_pretrained(tokenizer_dir,local_files_only=True,trust_remote_code=False)
+        vt=get_tokenizer(str(tokenizer_dir),local_files_only=True,trust_remote_code=False)
         raw=Tokenizer.from_file(str(a.model_dir/"tokenizer.json"))
         original=json.loads(raw.to_str())["pre_tokenizer"]
         for tokenizer in (hf,vt):
             if json.loads(tokenizer.backend_tokenizer.to_str())["pre_tokenizer"]!=original:
                 raise ValueError("pinned pre-tokenizer was modified")
         tests=["中文，English 1234.5", "  spaces\nline\tend", "é e\u0301 👩🏽‍💻", "def f(x):\n    return x + 1"]
+        if PROFILE_ID == "QWEN35":
+            tests.extend(["x\u0304y", "किरण", "سلامَ"])
         for text in tests:
             if not raw.encode(text,add_special_tokens=False).ids==hf.encode(text,add_special_tokens=False)==vt.encode(text,add_special_tokens=False):
                 raise ValueError("raw/HF/vLLM tokenizers disagree")
@@ -89,7 +92,7 @@ def main():
         if PROFILE["architecture"] not in ModelRegistry.get_supported_archs():raise ValueError("architecture not registered")
         fields={f.name for f in dataclasses.fields(AsyncEngineArgs)}
         for mode in (("baseline","routes","trace") if PROFILE_ID=="GLM" else ("routes",)):
-            args=engine_arguments(a.model_dir,mode)
+            args=engine_arguments(a.model_dir,mode,tokenizer_dir=tokenizer_dir)
             if not args.keys()<=fields:raise ValueError("unsupported engine fields: "+str(args.keys()-fields))
             AsyncEngineArgs(**args)
         if not all(hasattr(AsyncLLM,name) for name in ("generate","from_engine_args","start_profile","stop_profile","shutdown")):
@@ -99,7 +102,7 @@ def main():
             source_lock_sha256=file_sha(a.source_lock),corpus_file_sha256=file_sha(a.corpus),
             tokenized_file_sha256=file_sha(a.out/"requests-tokenized.json"),
             collection_source_hashes={str(f.relative_to(root)):file_sha(f) for f in collection_files(root)},
-            tokenizer_raw_hf_vllm_agree=True,manual_regex_patch=False,
+            tokenizer_raw_hf_vllm_agree=True,manual_regex_patch=False,tokenizer_asset_hashes=tokenizer_hashes,
             remaining=["actual A100 driver/topology", "GPU JIT and Graph capture", "runtime routing and backend hooks"])
     except BaseException as exc:
         report.update(error=repr(exc),traceback=traceback.format_exc());raise
