@@ -13,6 +13,8 @@ import argparse
 import importlib.metadata
 import json
 import os
+import re
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -100,6 +102,26 @@ def cache():
 
 
 def commit():
+    stamp = REPO / "EDMIR_COMMIT"
+    if not (REPO / ".git").exists() and stamp.is_file():
+        revision = stamp.read_text().strip()
+        if not re.fullmatch(r"[a-f0-9]{40}", revision):
+            raise ValueError("invalid commit stamp in the code archive")
+        checked = set()
+        manifest = REPO / "EDMIR_CODE.sha256"
+        for line in manifest.read_text().splitlines():
+            digest, separator, name = line.partition("  ")
+            path = Path(name)
+            if not separator or not name or path.is_absolute() or ".." in path.parts or path in checked:
+                raise ValueError(f"invalid code archive entry: {name}")
+            if sha(REPO / path) != digest:
+                raise ValueError(f"code archive checksum mismatch: {name}")
+            checked.add(path)
+        if Path(stamp.name) not in checked:
+            raise ValueError("code archive manifest does not cover the commit stamp")
+        return revision
+    if not shutil.which("git"):
+        raise LookupError("git unavailable here; record the checked-out commit by hand")
     out = subprocess.run(["git","-C",str(REPO),"rev-parse","HEAD"],capture_output=True,text=True,timeout=30)
     if out.returncode:
         raise LookupError("git unavailable here; record the checked-out commit by hand")
