@@ -8,6 +8,8 @@ Checks: 8 GPUs, name contains A100 and 80GB, MIG off, enforced power limit equal
 every GPU pair connected by NV12, peer read/write OK. With --load-test it runs BF16 matmuls on all GPUs
 (PyTorch) while sampling SM clock, power draw and clock-event reasons.
 Low instantaneous power draw is never a failure by itself; a lowered enforced limit is.
+A load clock below the threshold is not a failure either when the software power cap at the
+default and maximum power limit is its only cause (rule added on 2026-11-26, see power_capped).
 Exit 0 = PASS, 2 = FAIL (stop formal runs; the user contacts the provider), 3 = could not check.
 """
 
@@ -97,6 +99,31 @@ def load_test(seconds, count):
     return dict(exit_codes=codes, reason_field=reason_field, samples=samples)
 
 
+SW_POWER_CAP = 0x4                      # nvmlClocksEventReasonSwPowerCap
+SLOWDOWN = 0x8 | 0x20 | 0x40 | 0x80     # hardware, thermal (software and hardware) and power-brake slowdown
+
+
+def power_capped(rows, limit, default, maximum):
+    """True when a low load clock has one cause: the software power cap at the full power limit.
+
+    rows are the load samples of one GPU: [index, clocks.sm, power.draw, event-reason mask].
+    An A100 that runs dense half-precision GEMM draws its full 400 W, and the driver then lowers
+    the SM clock to hold that limit. That is the device at its rated power, not a derated one.
+    Required: the enforced limit equals the default and the maximum limit; no sample reports a
+    hardware, thermal or power-brake slowdown; at least half of the samples draw 90% of the limit;
+    and every such sample reports the software power cap and no other reason."""
+    if None in (limit, default, maximum) or limit < default - 1.0 or default < maximum - 1.0:
+        return False
+    try:
+        masks = [int(r[3], 16) for r in rows]
+    except (IndexError, ValueError):
+        return False
+    if any(m & SLOWDOWN for m in masks):
+        return False
+    loaded = [m for r, m in zip(rows, masks) if (number(r[2]) or 0.0) >= 0.9 * limit]
+    return 2 * len(loaded) >= len(rows) and all(m == SW_POWER_CAP for m in loaded)
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--out", type=Path, required=True)
@@ -158,11 +185,22 @@ def main():
             per_gpu = {}
             for sample in lt["samples"]:
                 for row in sample:
-                    per_gpu.setdefault(row[0], []).append(number(row[1]))
-            for gpu, clocks in sorted(per_gpu.items()):
-                clocks = sorted(c for c in clocks if c is not None)
+                    per_gpu.setdefault(row[0], []).append(row)
+            maximum = fields["power.max_limit"]
+            report["load_power_capped"] = []
+            for gpu, rows in sorted(per_gpu.items()):
+                clocks = sorted(c for c in (number(r[1]) for r in rows) if c is not None)
                 if clocks and clocks[len(clocks) // 2] < args.min_load_sm_mhz:
-                    failures.append(f"GPU{gpu} median SM clock under load {clocks[len(clocks) // 2]:.0f} MHz")
+                    text = f"GPU{gpu} median SM clock under load {clocks[len(clocks) // 2]:.0f} MHz"
+                    try:
+                        watts = [number(x[int(gpu)]) for x in (limit, default, maximum)]
+                    except (TypeError, ValueError, IndexError):
+                        watts = [None] * 3
+                    if lt["reason_field"] and power_capped(rows, *watts):
+                        report["load_power_capped"].append(
+                            text + f", software power cap at the default and maximum limit of {watts[0]:.0f} W")
+                    else:
+                        failures.append(text)
         except Exception as e:  # report, never hide
             unchecked.append(f"load test could not run: {e}")
     for name, path, extra in (("p2p_bandwidth", args.p2p_bin, []), ("nccl_alltoall", args.nccl_alltoall,

@@ -114,3 +114,33 @@ class HardwareGateTests(unittest.TestCase):
 
 if __name__=="__main__":
     unittest.main()
+
+
+class TestLoadClockRule(unittest.TestCase):
+    """Legacy A100 load check: a low clock is accepted only when the full-limit power cap explains it."""
+
+    def setUp(self):
+        import importlib.util
+        from hw_gate import LEGACY
+        spec = importlib.util.spec_from_file_location("legacy_hw_gate",LEGACY)
+        self.legacy = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(self.legacy)
+
+    def test_power_cap_at_the_full_limit_explains_a_low_clock(self):
+        capped = self.legacy.power_capped
+        ramp = ["0","1155","70.10","0x0000000000000000"]
+        load = ["0","1230","401.50","0x0000000000000004"]
+        tail = ["0","1395","103.46","0x0000000000000004"]
+        rows = [ramp]+[load]*10+[tail]   # the pattern recorded on the 2026-11-26 node
+        self.assertTrue(capped(rows,400.,400.,400.))
+        # A lowered limit, a limit below the device maximum, or any slowdown reason remains a failure.
+        self.assertFalse(capped(rows,300.,400.,400.))
+        self.assertFalse(capped(rows,350.,350.,400.))
+        for mask in ("0x0000000000000024","0x0000000000000044","0x000000000000000c","0x0000000000000084"):
+            self.assertFalse(capped([ramp]+[load]*9+[["0","1230","401.5",mask]],400.,400.,400.))
+        # A low clock without full power draw is not explained by the cap.
+        self.assertFalse(capped([["0","1230","250.0","0x0000000000000004"]]*10,400.,400.,400.))
+        self.assertFalse(capped([["0","1230","401.5","0x0000000000000000"]]*10,400.,400.,400.))
+        self.assertFalse(capped([["0","1230","401.5"]]*10,400.,400.,400.))
+        self.assertFalse(capped(rows,None,400.,400.))
+
