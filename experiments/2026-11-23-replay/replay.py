@@ -362,7 +362,10 @@ class Paths:
         for src,size in enumerate(self.sizes):
             mask = (offset<=source)&(source<offset+size)
             token = source[mask]-offset
-            expected[mask,0],expected[mask,1],expected[mask,2] = src,token//128,token%128
+            # Masked assignment on CUDA requires matching dtypes; these small integers are exact in BF16.
+            expected[mask,0] = src
+            expected[mask,1] = (token//128).to(expected.dtype)
+            expected[mask,2] = (token%128).to(expected.dtype)
             offset += size
         fingerprint = torch.equal(observed,expected)
         self.dist.barrier()
