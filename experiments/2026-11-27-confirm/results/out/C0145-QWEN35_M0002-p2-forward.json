@@ -1,0 +1,155 @@
+{
+  "schema": "edmir.consumer-variants.exploratory.v1",
+  "origin": "exploratory_device_probe",
+  "registered": false,
+  "unit": "QWEN35_M0002",
+  "shape": [
+    2,
+    2048,
+    1024
+  ],
+  "rep": "20261128",
+  "arms": [
+    "SLT",
+    "PULLW_SLT",
+    "PULLR_SLT",
+    "D_MRG16_Q8_G2_K64_W",
+    "D_Q4_G2",
+    "BNEW_Q4_G2"
+  ],
+  "orientation": "forward",
+  "gpu_uuids": [
+    "GPU-8d860509-ab28-7ba2-35e2-cac533cb45d0",
+    "GPU-4ef22e7a-61b3-edc8-5bfd-37c22e995a72",
+    "GPU-6c6365aa-1a6a-e7be-a465-50876f0ebf53",
+    "GPU-c6cd3d04-4707-c40c-0a26-343dfc2dd7e4",
+    "GPU-1399bc21-645e-448a-3729-9dde3f763ac1",
+    "GPU-c2f07134-52b8-7434-962b-e3e05f7abdae",
+    "GPU-5a9811e7-bf4b-5471-fe39-b5b10ce32cea",
+    "GPU-0414c9aa-25ac-3847-c04e-e23c9c0247c4"
+  ],
+  "hardware_sha256": "d8a1095c4eece01df2f2e055f9758314d94eac05d3b21ea00147992b49506781",
+  "implementation_sha256": "6d769a8ff404647e2aec109f8465a42146515a8865161acf26bb68b665c1b487",
+  "policy": {
+    "warmup": 20,
+    "timed": 100
+  },
+  "admission": {
+    "SLT": {
+      "status": "ok",
+      "scaled_max_err": 0.0004899447085335851,
+      "nonfinite": 0,
+      "fingerprint_ok": true
+    },
+    "PULLW_SLT": {
+      "status": "ok",
+      "scaled_max_err": 0.0004899447085335851,
+      "nonfinite": 0,
+      "fingerprint_ok": true
+    },
+    "PULLR_SLT": {
+      "status": "ok",
+      "scaled_max_err": 0.0004899447085335851,
+      "nonfinite": 0,
+      "fingerprint_ok": true
+    },
+    "D_MRG16_Q8_G2_K64_W": {
+      "status": "ok",
+      "scaled_max_err": 0.0004856634186580777,
+      "nonfinite": 0,
+      "fingerprint_ok": true
+    },
+    "D_Q4_G2": {
+      "status": "ok",
+      "scaled_max_err": 0.0004856634186580777,
+      "nonfinite": 0,
+      "fingerprint_ok": true
+    },
+    "BNEW_Q4_G2": {
+      "status": "ok",
+      "scaled_max_err": 0.0004856634186580777,
+      "nonfinite": 0,
+      "fingerprint_ok": true
+    }
+  },
+  "rows": [
+    {
+      "arm": "SLT",
+      "orientation": "forward",
+      "launch_mode": "eager",
+      "wall_ms": 0.21339000000000002,
+      "enqueue_ms": 0.19277,
+      "wall_without_release_ms": 0.20066349973869324,
+      "phase_ms": {
+        "transport": 0.11264000087976456,
+        "consumer": 0.05427199974656105,
+        "release": 0.01228800043463707
+      }
+    },
+    {
+      "arm": "PULLW_SLT",
+      "orientation": "forward",
+      "launch_mode": "graph",
+      "wall_ms": 0.14568,
+      "enqueue_ms": 0.1192945,
+      "wall_without_release_ms": 0.12112500051736831,
+      "phase_ms": {
+        "transport": 0.043007999658584595,
+        "consumer": 0.050175998359918594,
+        "release": 0.025599999353289604
+      }
+    },
+    {
+      "arm": "PULLR_SLT",
+      "orientation": "forward",
+      "launch_mode": "graph",
+      "wall_ms": 0.151695,
+      "enqueue_ms": 0.1214595,
+      "wall_without_release_ms": 0.1236160001707077,
+      "phase_ms": {
+        "transport": 0.05632000043988228,
+        "consumer": 0.043007999658584595,
+        "release": 0.02816000021994114
+      }
+    },
+    {
+      "arm": "D_MRG16_Q8_G2_K64_W",
+      "orientation": "forward",
+      "launch_mode": "graph",
+      "wall_ms": 0.1101555,
+      "enqueue_ms": 0.0821295,
+      "wall_without_release_ms": 0.0918775001603663,
+      "phase_ms": {
+        "transport": 0.030719999223947525,
+        "consumer": 0.03276799991726875,
+        "release": 0.027648000046610832
+      }
+    },
+    {
+      "arm": "D_Q4_G2",
+      "orientation": "forward",
+      "launch_mode": "graph",
+      "wall_ms": 0.2516395,
+      "enqueue_ms": 0.07549449999999999,
+      "wall_without_release_ms": 0.2344759995653629,
+      "phase_ms": {
+        "transport": 0.02969600073993206,
+        "consumer": 0.17919999361038208,
+        "release": 0.028672000393271446
+      }
+    },
+    {
+      "arm": "BNEW_Q4_G2",
+      "orientation": "forward",
+      "launch_mode": "graph",
+      "wall_ms": 0.2848195,
+      "enqueue_ms": 0.1478845,
+      "wall_without_release_ms": 0.2807235000103414,
+      "phase_ms": {
+        "transport": 0.10291199758648872,
+        "consumer": 0.1525759994983673,
+        "release": 0.004095999989658594
+      }
+    }
+  ]
+}

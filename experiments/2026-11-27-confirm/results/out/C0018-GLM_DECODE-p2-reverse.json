@@ -1,0 +1,257 @@
+{
+  "schema": "edmir.snapshot-variants.exploratory.v1",
+  "origin": "exploratory_device_probe",
+  "registered": false,
+  "unit": "GLM_DECODE",
+  "layer": 23,
+  "spec": {
+    "snapshot": "GLM_DECODE",
+    "width": "GLM",
+    "model": "zai-org/GLM-4.7-Flash",
+    "revision": "7dd20894a642a0aa287e9827cb1a1f7f91386b67",
+    "layer": 23,
+    "phase": "pure_decode",
+    "ordinal": 8,
+    "experts": 64,
+    "local": 8,
+    "top_k": 4,
+    "k": 2048,
+    "n": 3072
+  },
+  "arms": [
+    "NATIVE",
+    "D_Q1_G2_R",
+    "D_Q4_G2_R",
+    "D_GATHER16_Q8_G2_K64_W_R",
+    "D_GATHER64_Q1_G4_K64_W_R",
+    "PULL_BLAS_R",
+    "BNEW_BLAS_R"
+  ],
+  "orientation": "reverse",
+  "gpu_uuids": [
+    "GPU-8d860509-ab28-7ba2-35e2-cac533cb45d0",
+    "GPU-4ef22e7a-61b3-edc8-5bfd-37c22e995a72",
+    "GPU-6c6365aa-1a6a-e7be-a465-50876f0ebf53",
+    "GPU-c6cd3d04-4707-c40c-0a26-343dfc2dd7e4",
+    "GPU-1399bc21-645e-448a-3729-9dde3f763ac1",
+    "GPU-c2f07134-52b8-7434-962b-e3e05f7abdae",
+    "GPU-5a9811e7-bf4b-5471-fe39-b5b10ce32cea",
+    "GPU-0414c9aa-25ac-3847-c04e-e23c9c0247c4"
+  ],
+  "hardware_sha256": "d8a1095c4eece01df2f2e055f9758314d94eac05d3b21ea00147992b49506781",
+  "implementation_sha256": "f89035d740dd2e0ceda3bc748fe3f1f175b8953e905a7b58dcd206e4ca933f6e",
+  "policy": {
+    "warmup": 20,
+    "timed": 100
+  },
+  "admission": {
+    "NATIVE": {
+      "status": "ok",
+      "scaled_max_err": 0.003838412230834365,
+      "nonfinite": 0,
+      "identical_to_registered": true
+    },
+    "D_Q1_G2_R": {
+      "status": "ok",
+      "scaled_max_err": 0.003838412230834365,
+      "nonfinite": 0,
+      "identical_to_registered": true
+    },
+    "D_Q4_G2_R": {
+      "status": "ok",
+      "scaled_max_err": 0.003838412230834365,
+      "nonfinite": 0,
+      "identical_to_registered": true
+    },
+    "D_GATHER16_Q8_G2_K64_W_R": {
+      "status": "ok",
+      "scaled_max_err": 0.00390625,
+      "nonfinite": 0,
+      "identical_to_registered": false
+    },
+    "D_GATHER64_Q1_G4_K64_W_R": {
+      "status": "ok",
+      "scaled_max_err": 0.0,
+      "nonfinite": 0,
+      "identical_to_registered": true
+    },
+    "PULL_BLAS_R": {
+      "status": "ok",
+      "scaled_max_err": 0.00390625,
+      "nonfinite": 0,
+      "identical_to_registered": false
+    },
+    "BNEW_BLAS_R": {
+      "status": "ok",
+      "scaled_max_err": 0.00390625,
+      "nonfinite": 0,
+      "identical_to_registered": false
+    }
+  },
+  "rows": [
+    {
+      "arm": "BNEW_BLAS_R",
+      "orientation": "reverse",
+      "launch_mode": "graph",
+      "wall_ms": 0.25088350000000004,
+      "enqueue_ms": 0.19520300000000002,
+      "wall_without_release_ms": 0.24678750001034142,
+      "phase_ms": {
+        "pack": 0.04710400104522705,
+        "transport": 0.10547199845314026,
+        "consumer": 0.07782399654388428,
+        "release": 0.005119999870657921
+      },
+      "live_rows": [
+        9,
+        24,
+        19,
+        19,
+        19,
+        2,
+        14,
+        22
+      ]
+    },
+    {
+      "arm": "PULL_BLAS_R",
+      "orientation": "reverse",
+      "launch_mode": "graph",
+      "wall_ms": 0.143269,
+      "enqueue_ms": 0.0679545,
+      "wall_without_release_ms": 0.12747349980336425,
+      "phase_ms": {
+        "transport": 0.02457600086927414,
+        "consumer": 0.07782399654388428,
+        "release": 0.062463998794555664
+      },
+      "live_rows": [
+        9,
+        24,
+        19,
+        19,
+        19,
+        2,
+        14,
+        22
+      ]
+    },
+    {
+      "arm": "D_GATHER64_Q1_G4_K64_W_R",
+      "orientation": "reverse",
+      "launch_mode": "graph",
+      "wall_ms": 0.21523399999999998,
+      "enqueue_ms": 0.125198,
+      "wall_without_release_ms": 0.18741700015002488,
+      "phase_ms": {
+        "transport": 0.05427199974656105,
+        "consumer": 0.10700799897313118,
+        "release": 0.048128001391887665
+      },
+      "live_rows": [
+        9,
+        24,
+        19,
+        19,
+        19,
+        2,
+        14,
+        22
+      ]
+    },
+    {
+      "arm": "D_GATHER16_Q8_G2_K64_W_R",
+      "orientation": "reverse",
+      "launch_mode": "graph",
+      "wall_ms": 0.1322395,
+      "enqueue_ms": 0.07653,
+      "wall_without_release_ms": 0.1153965001500249,
+      "phase_ms": {
+        "transport": 0.028672000393271446,
+        "consumer": 0.06143999844789505,
+        "release": 0.050175998359918594
+      },
+      "live_rows": [
+        9,
+        24,
+        19,
+        19,
+        19,
+        2,
+        14,
+        22
+      ]
+    },
+    {
+      "arm": "D_Q4_G2_R",
+      "orientation": "reverse",
+      "launch_mode": "graph",
+      "wall_ms": 0.33561300000000005,
+      "enqueue_ms": 0.1139445,
+      "wall_without_release_ms": 0.3187129998576939,
+      "phase_ms": {
+        "pack": 0.04915200173854828,
+        "transport": 0.026623999699950218,
+        "consumer": 0.22118400037288666,
+        "release": 0.1802240014076233
+      },
+      "live_rows": [
+        9,
+        24,
+        19,
+        19,
+        19,
+        2,
+        14,
+        22
+      ]
+    },
+    {
+      "arm": "D_Q1_G2_R",
+      "orientation": "reverse",
+      "launch_mode": "graph",
+      "wall_ms": 0.5872470000000001,
+      "enqueue_ms": 0.1091945,
+      "wall_without_release_ms": 0.5702695001500249,
+      "phase_ms": {
+        "pack": 0.04710400104522705,
+        "transport": 0.02457600086927414,
+        "consumer": 0.4782080054283142,
+        "release": 0.3840000033378601
+      },
+      "live_rows": [
+        9,
+        24,
+        19,
+        19,
+        19,
+        2,
+        14,
+        22
+      ]
+    },
+    {
+      "arm": "NATIVE",
+      "orientation": "reverse",
+      "launch_mode": "graph",
+      "wall_ms": 0.180999,
+      "enqueue_ms": 0.142824,
+      "wall_without_release_ms": 0.17729499995084108,
+      "phase_ms": {
+        "transport": 0.11161600053310394,
+        "consumer": 0.04403200000524521,
+        "release": 0.004095999989658594
+      },
+      "live_rows": [
+        9,
+        24,
+        19,
+        19,
+        19,
+        2,
+        14,
+        22
+      ]
+    }
+  ]
+}

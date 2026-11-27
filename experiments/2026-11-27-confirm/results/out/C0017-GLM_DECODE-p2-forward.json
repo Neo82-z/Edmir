@@ -1,0 +1,257 @@
+{
+  "schema": "edmir.snapshot-variants.exploratory.v1",
+  "origin": "exploratory_device_probe",
+  "registered": false,
+  "unit": "GLM_DECODE",
+  "layer": 23,
+  "spec": {
+    "snapshot": "GLM_DECODE",
+    "width": "GLM",
+    "model": "zai-org/GLM-4.7-Flash",
+    "revision": "7dd20894a642a0aa287e9827cb1a1f7f91386b67",
+    "layer": 23,
+    "phase": "pure_decode",
+    "ordinal": 8,
+    "experts": 64,
+    "local": 8,
+    "top_k": 4,
+    "k": 2048,
+    "n": 3072
+  },
+  "arms": [
+    "NATIVE",
+    "D_Q1_G2_R",
+    "D_Q4_G2_R",
+    "D_GATHER16_Q8_G2_K64_W_R",
+    "D_GATHER64_Q1_G4_K64_W_R",
+    "PULL_BLAS_R",
+    "BNEW_BLAS_R"
+  ],
+  "orientation": "forward",
+  "gpu_uuids": [
+    "GPU-8d860509-ab28-7ba2-35e2-cac533cb45d0",
+    "GPU-4ef22e7a-61b3-edc8-5bfd-37c22e995a72",
+    "GPU-6c6365aa-1a6a-e7be-a465-50876f0ebf53",
+    "GPU-c6cd3d04-4707-c40c-0a26-343dfc2dd7e4",
+    "GPU-1399bc21-645e-448a-3729-9dde3f763ac1",
+    "GPU-c2f07134-52b8-7434-962b-e3e05f7abdae",
+    "GPU-5a9811e7-bf4b-5471-fe39-b5b10ce32cea",
+    "GPU-0414c9aa-25ac-3847-c04e-e23c9c0247c4"
+  ],
+  "hardware_sha256": "d8a1095c4eece01df2f2e055f9758314d94eac05d3b21ea00147992b49506781",
+  "implementation_sha256": "f89035d740dd2e0ceda3bc748fe3f1f175b8953e905a7b58dcd206e4ca933f6e",
+  "policy": {
+    "warmup": 20,
+    "timed": 100
+  },
+  "admission": {
+    "NATIVE": {
+      "status": "ok",
+      "scaled_max_err": 0.003838412230834365,
+      "nonfinite": 0,
+      "identical_to_registered": true
+    },
+    "D_Q1_G2_R": {
+      "status": "ok",
+      "scaled_max_err": 0.003838412230834365,
+      "nonfinite": 0,
+      "identical_to_registered": true
+    },
+    "D_Q4_G2_R": {
+      "status": "ok",
+      "scaled_max_err": 0.003838412230834365,
+      "nonfinite": 0,
+      "identical_to_registered": true
+    },
+    "D_GATHER16_Q8_G2_K64_W_R": {
+      "status": "ok",
+      "scaled_max_err": 0.00390625,
+      "nonfinite": 0,
+      "identical_to_registered": false
+    },
+    "D_GATHER64_Q1_G4_K64_W_R": {
+      "status": "ok",
+      "scaled_max_err": 0.0,
+      "nonfinite": 0,
+      "identical_to_registered": true
+    },
+    "PULL_BLAS_R": {
+      "status": "ok",
+      "scaled_max_err": 0.00390625,
+      "nonfinite": 0,
+      "identical_to_registered": false
+    },
+    "BNEW_BLAS_R": {
+      "status": "ok",
+      "scaled_max_err": 0.00390625,
+      "nonfinite": 0,
+      "identical_to_registered": false
+    }
+  },
+  "rows": [
+    {
+      "arm": "NATIVE",
+      "orientation": "forward",
+      "launch_mode": "graph",
+      "wall_ms": 0.20101950000000002,
+      "enqueue_ms": 0.15826400000000002,
+      "wall_without_release_ms": 0.1961080000103414,
+      "phase_ms": {
+        "transport": 0.12851200252771378,
+        "consumer": 0.04505600035190582,
+        "release": 0.005119999870657921
+      },
+      "live_rows": [
+        9,
+        24,
+        19,
+        19,
+        19,
+        2,
+        14,
+        22
+      ]
+    },
+    {
+      "arm": "D_Q1_G2_R",
+      "orientation": "forward",
+      "launch_mode": "graph",
+      "wall_ms": 0.6190115,
+      "enqueue_ms": 0.1180095,
+      "wall_without_release_ms": 0.6033274999766945,
+      "phase_ms": {
+        "pack": 0.050175998359918594,
+        "transport": 0.03276799991726875,
+        "consumer": 0.5017600059509277,
+        "release": 0.38604798913002014
+      },
+      "live_rows": [
+        9,
+        24,
+        19,
+        19,
+        19,
+        2,
+        14,
+        22
+      ]
+    },
+    {
+      "arm": "D_Q4_G2_R",
+      "orientation": "forward",
+      "launch_mode": "graph",
+      "wall_ms": 0.332138,
+      "enqueue_ms": 0.1129845,
+      "wall_without_release_ms": 0.31514899997669454,
+      "phase_ms": {
+        "pack": 0.04710400104522705,
+        "transport": 0.031231999397277832,
+        "consumer": 0.22118400037288666,
+        "release": 0.17612800002098083
+      },
+      "live_rows": [
+        9,
+        24,
+        19,
+        19,
+        19,
+        2,
+        14,
+        22
+      ]
+    },
+    {
+      "arm": "D_GATHER16_Q8_G2_K64_W_R",
+      "orientation": "forward",
+      "launch_mode": "graph",
+      "wall_ms": 0.1288395,
+      "enqueue_ms": 0.0824145,
+      "wall_without_release_ms": 0.11433099956536293,
+      "phase_ms": {
+        "transport": 0.03379200026392937,
+        "consumer": 0.058368001133203506,
+        "release": 0.04505600035190582
+      },
+      "live_rows": [
+        9,
+        24,
+        19,
+        19,
+        19,
+        2,
+        14,
+        22
+      ]
+    },
+    {
+      "arm": "D_GATHER64_Q1_G4_K64_W_R",
+      "orientation": "forward",
+      "launch_mode": "graph",
+      "wall_ms": 0.1638685,
+      "enqueue_ms": 0.0766545,
+      "wall_without_release_ms": 0.14893349973869324,
+      "phase_ms": {
+        "transport": 0.031231999397277832,
+        "consumer": 0.09113600105047226,
+        "release": 0.02969600073993206
+      },
+      "live_rows": [
+        9,
+        24,
+        19,
+        19,
+        19,
+        2,
+        14,
+        22
+      ]
+    },
+    {
+      "arm": "PULL_BLAS_R",
+      "orientation": "forward",
+      "launch_mode": "graph",
+      "wall_ms": 0.132959,
+      "enqueue_ms": 0.0680105,
+      "wall_without_release_ms": 0.11917949985769391,
+      "phase_ms": {
+        "transport": 0.026623999699950218,
+        "consumer": 0.06758400052785873,
+        "release": 0.050175998359918594
+      },
+      "live_rows": [
+        9,
+        24,
+        19,
+        19,
+        19,
+        2,
+        14,
+        22
+      ]
+    },
+    {
+      "arm": "BNEW_BLAS_R",
+      "orientation": "forward",
+      "launch_mode": "graph",
+      "wall_ms": 0.2290035,
+      "enqueue_ms": 0.18385400000000002,
+      "wall_without_release_ms": 0.2249984999508411,
+      "phase_ms": {
+        "pack": 0.04403200000524521,
+        "transport": 0.09830400347709656,
+        "consumer": 0.06860800087451935,
+        "release": 0.009216000325977802
+      },
+      "live_rows": [
+        9,
+        24,
+        19,
+        19,
+        19,
+        2,
+        14,
+        22
+      ]
+    }
+  ]
+}

@@ -1,0 +1,155 @@
+{
+  "schema": "edmir.consumer-variants.exploratory.v1",
+  "origin": "exploratory_device_probe",
+  "registered": false,
+  "unit": "GLM_M1024",
+  "shape": [
+    1024,
+    2048,
+    3072
+  ],
+  "rep": "20261129",
+  "arms": [
+    "SLT",
+    "PULLW_SLT",
+    "PULLR_SLT",
+    "D_MRG16_Q8_G2_K64_W",
+    "D_Q4_G2",
+    "BNEW_Q4_G2"
+  ],
+  "orientation": "forward",
+  "gpu_uuids": [
+    "GPU-8d860509-ab28-7ba2-35e2-cac533cb45d0",
+    "GPU-4ef22e7a-61b3-edc8-5bfd-37c22e995a72",
+    "GPU-6c6365aa-1a6a-e7be-a465-50876f0ebf53",
+    "GPU-c6cd3d04-4707-c40c-0a26-343dfc2dd7e4",
+    "GPU-1399bc21-645e-448a-3729-9dde3f763ac1",
+    "GPU-c2f07134-52b8-7434-962b-e3e05f7abdae",
+    "GPU-5a9811e7-bf4b-5471-fe39-b5b10ce32cea",
+    "GPU-0414c9aa-25ac-3847-c04e-e23c9c0247c4"
+  ],
+  "hardware_sha256": "d8a1095c4eece01df2f2e055f9758314d94eac05d3b21ea00147992b49506781",
+  "implementation_sha256": "6d769a8ff404647e2aec109f8465a42146515a8865161acf26bb68b665c1b487",
+  "policy": {
+    "warmup": 20,
+    "timed": 100
+  },
+  "admission": {
+    "SLT": {
+      "status": "ok",
+      "scaled_max_err": 0.0004949435242451727,
+      "nonfinite": 0,
+      "fingerprint_ok": true
+    },
+    "PULLW_SLT": {
+      "status": "ok",
+      "scaled_max_err": 0.0004949435242451727,
+      "nonfinite": 0,
+      "fingerprint_ok": true
+    },
+    "PULLR_SLT": {
+      "status": "ok",
+      "scaled_max_err": 0.0004949435242451727,
+      "nonfinite": 0,
+      "fingerprint_ok": true
+    },
+    "D_MRG16_Q8_G2_K64_W": {
+      "status": "ok",
+      "scaled_max_err": 0.0004898293409496546,
+      "nonfinite": 0,
+      "fingerprint_ok": true
+    },
+    "D_Q4_G2": {
+      "status": "ok",
+      "scaled_max_err": 0.000491489889100194,
+      "nonfinite": 0,
+      "fingerprint_ok": true
+    },
+    "BNEW_Q4_G2": {
+      "status": "ok",
+      "scaled_max_err": 0.000491489889100194,
+      "nonfinite": 0,
+      "fingerprint_ok": true
+    }
+  },
+  "rows": [
+    {
+      "arm": "SLT",
+      "orientation": "forward",
+      "launch_mode": "eager",
+      "wall_ms": 0.7871239999999999,
+      "enqueue_ms": 0.190052,
+      "wall_without_release_ms": 0.7832199999508411,
+      "phase_ms": {
+        "transport": 0.2836480140686035,
+        "consumer": 0.4833280146121979,
+        "release": 0.004095999989658594
+      }
+    },
+    {
+      "arm": "PULLW_SLT",
+      "orientation": "forward",
+      "launch_mode": "graph",
+      "wall_ms": 0.7415685,
+      "enqueue_ms": 0.1119875,
+      "wall_without_release_ms": 0.7245615000853538,
+      "phase_ms": {
+        "transport": 0.2836480140686035,
+        "consumer": 0.41676801443099976,
+        "release": 0.05939200147986412
+      }
+    },
+    {
+      "arm": "PULLR_SLT",
+      "orientation": "forward",
+      "launch_mode": "graph",
+      "wall_ms": 0.6738029999999999,
+      "enqueue_ms": 0.1103315,
+      "wall_without_release_ms": 0.6593944999120236,
+      "phase_ms": {
+        "transport": 0.22118400037288666,
+        "consumer": 0.41574400663375854,
+        "release": 0.041471999138593674
+      }
+    },
+    {
+      "arm": "D_MRG16_Q8_G2_K64_W",
+      "orientation": "forward",
+      "launch_mode": "graph",
+      "wall_ms": 2.501484,
+      "enqueue_ms": 0.087741,
+      "wall_without_release_ms": 2.485573499857694,
+      "phase_ms": {
+        "transport": 0.03276799991726875,
+        "consumer": 2.426367998123169,
+        "release": 0.03532800078392029
+      }
+    },
+    {
+      "arm": "D_Q4_G2",
+      "orientation": "forward",
+      "launch_mode": "graph",
+      "wall_ms": 7.518216,
+      "enqueue_ms": 0.0805265,
+      "wall_without_release_ms": 7.5039389996843635,
+      "phase_ms": {
+        "transport": 0.03174399957060814,
+        "consumer": 7.442944049835205,
+        "release": 5.155839920043945
+      }
+    },
+    {
+      "arm": "BNEW_Q4_G2",
+      "orientation": "forward",
+      "launch_mode": "graph",
+      "wall_ms": 1.386161,
+      "enqueue_ms": 0.157872,
+      "wall_without_release_ms": 1.382201999950841,
+      "phase_ms": {
+        "transport": 0.27904000878334045,
+        "consumer": 1.0813440084457397,
+        "release": 0.004095999989658594
+      }
+    }
+  ]
+}

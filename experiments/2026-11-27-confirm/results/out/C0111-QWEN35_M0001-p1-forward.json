@@ -1,0 +1,155 @@
+{
+  "schema": "edmir.consumer-variants.exploratory.v1",
+  "origin": "exploratory_device_probe",
+  "registered": false,
+  "unit": "QWEN35_M0001",
+  "shape": [
+    1,
+    2048,
+    1024
+  ],
+  "rep": "20261127",
+  "arms": [
+    "SLT",
+    "PULLW_SLT",
+    "PULLR_SLT",
+    "D_MRG16_Q8_G2_K64_W",
+    "D_Q4_G2",
+    "BNEW_Q4_G2"
+  ],
+  "orientation": "forward",
+  "gpu_uuids": [
+    "GPU-8d860509-ab28-7ba2-35e2-cac533cb45d0",
+    "GPU-4ef22e7a-61b3-edc8-5bfd-37c22e995a72",
+    "GPU-6c6365aa-1a6a-e7be-a465-50876f0ebf53",
+    "GPU-c6cd3d04-4707-c40c-0a26-343dfc2dd7e4",
+    "GPU-1399bc21-645e-448a-3729-9dde3f763ac1",
+    "GPU-c2f07134-52b8-7434-962b-e3e05f7abdae",
+    "GPU-5a9811e7-bf4b-5471-fe39-b5b10ce32cea",
+    "GPU-0414c9aa-25ac-3847-c04e-e23c9c0247c4"
+  ],
+  "hardware_sha256": "d8a1095c4eece01df2f2e055f9758314d94eac05d3b21ea00147992b49506781",
+  "implementation_sha256": "6d769a8ff404647e2aec109f8465a42146515a8865161acf26bb68b665c1b487",
+  "policy": {
+    "warmup": 20,
+    "timed": 100
+  },
+  "admission": {
+    "SLT": {
+      "status": "ok",
+      "scaled_max_err": 0.0004860222979914397,
+      "nonfinite": 0,
+      "fingerprint_ok": true
+    },
+    "PULLW_SLT": {
+      "status": "ok",
+      "scaled_max_err": 0.0004860222979914397,
+      "nonfinite": 0,
+      "fingerprint_ok": true
+    },
+    "PULLR_SLT": {
+      "status": "ok",
+      "scaled_max_err": 0.0004860222979914397,
+      "nonfinite": 0,
+      "fingerprint_ok": true
+    },
+    "D_MRG16_Q8_G2_K64_W": {
+      "status": "ok",
+      "scaled_max_err": 0.0004860222979914397,
+      "nonfinite": 0,
+      "fingerprint_ok": true
+    },
+    "D_Q4_G2": {
+      "status": "ok",
+      "scaled_max_err": 0.0004860222979914397,
+      "nonfinite": 0,
+      "fingerprint_ok": true
+    },
+    "BNEW_Q4_G2": {
+      "status": "ok",
+      "scaled_max_err": 0.0004860222979914397,
+      "nonfinite": 0,
+      "fingerprint_ok": true
+    }
+  },
+  "rows": [
+    {
+      "arm": "SLT",
+      "orientation": "forward",
+      "launch_mode": "eager",
+      "wall_ms": 0.237791,
+      "enqueue_ms": 0.20793050000000002,
+      "wall_without_release_ms": 0.21941799963003397,
+      "phase_ms": {
+        "transport": 0.12595199793577194,
+        "consumer": 0.05734400078654289,
+        "release": 0.013311999849975109
+      }
+    },
+    {
+      "arm": "PULLW_SLT",
+      "orientation": "forward",
+      "launch_mode": "graph",
+      "wall_ms": 0.13967,
+      "enqueue_ms": 0.11604,
+      "wall_without_release_ms": 0.11708949999737739,
+      "phase_ms": {
+        "transport": 0.03891199827194214,
+        "consumer": 0.051711998879909515,
+        "release": 0.02816000021994114
+      }
+    },
+    {
+      "arm": "PULLR_SLT",
+      "orientation": "forward",
+      "launch_mode": "graph",
+      "wall_ms": 0.14202599999999999,
+      "enqueue_ms": 0.11823,
+      "wall_without_release_ms": 0.1186634999973774,
+      "phase_ms": {
+        "transport": 0.05632000043988228,
+        "consumer": 0.043007999658584595,
+        "release": 0.03379200026392937
+      }
+    },
+    {
+      "arm": "D_MRG16_Q8_G2_K64_W",
+      "orientation": "forward",
+      "launch_mode": "graph",
+      "wall_ms": 0.1151555,
+      "enqueue_ms": 0.09043,
+      "wall_without_release_ms": 0.09580299975937605,
+      "phase_ms": {
+        "transport": 0.03379200026392937,
+        "consumer": 0.035840000957250595,
+        "release": 0.03174399957060814
+      }
+    },
+    {
+      "arm": "D_Q4_G2",
+      "orientation": "forward",
+      "launch_mode": "graph",
+      "wall_ms": 0.2436065,
+      "enqueue_ms": 0.076696,
+      "wall_without_release_ms": 0.22855749956536292,
+      "phase_ms": {
+        "transport": 0.02969600073993206,
+        "consumer": 0.1740799993276596,
+        "release": 0.027648000046610832
+      }
+    },
+    {
+      "arm": "BNEW_Q4_G2",
+      "orientation": "forward",
+      "launch_mode": "graph",
+      "wall_ms": 0.278241,
+      "enqueue_ms": 0.143281,
+      "wall_without_release_ms": 0.27442199995084104,
+      "phase_ms": {
+        "transport": 0.09830400347709656,
+        "consumer": 0.15052799880504608,
+        "release": 0.004095999989658594
+      }
+    }
+  ]
+}
