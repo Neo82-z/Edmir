@@ -20,14 +20,21 @@ output; the arithmetic (FP32 accumulation, K block 32, q partitions) is unchange
                     changes the K block from 32.
   D_ALLR<bm>_Qq_Gg  D_ALL with the tiles listed in an order rotated by rank, so that the
                     first tiles of every destination read different sources.
-                    A suffix _NR on D_ALL, D_ALLR or D_MRG leaves out the release barrier,
-                    as a deployment with double buffering would; the inputs are static here.
+                    A suffix _W on D_ALL, D_ALLR or D_MRG fetches the rows with 16-byte
+                    loads (variant_kernels: load width); without it the kernel is the one
+                    of 2026-11-26, which fetches them two bytes at a time.
+                    A suffix _NR after that leaves out the release barrier, as a
+                    deployment with double buffering would; the inputs are static here.
   PULL_SLT          staging without a collective: after the publish barrier one kernel
                     copies each remote row once to local memory, then the tuned cuBLASLt
                     GEMM of the SLT arm runs on the copy.
+  PULLW_SLT         PULL_SLT with 16-byte loads in the copy kernel.
   PULLR_SLT         PULL_SLT with one copy kernel per source, in an order rotated by rank;
                     each kernel walks through that source's rows with up to 432 CTAs, as
                     the single-peer probe of the registered microbenchmark does.
+                    The copy kernels of the three PULL arms are replayed from a CUDA graph;
+                    on 2026-11-26 PULL_SLT launched its kernel eagerly. A suffix _NR leaves
+                    out the release barrier here too.
 
 The frozen package is reused unchanged: inputs, graph replay, barriers, the admission check
 and the timing loop (20 warm-up and 100 timed iterations, slowest rank per iteration). The
@@ -50,12 +57,16 @@ REP = "20261120"
 ARMS = ("D_Q1_G2","D_Q1_G2_ROT","D_ALL_Q1_G2","D_MRG_Q1_G2","D_Q4_G2","D_Q4_G2_ROT","D_ALL_Q4_G2","D_MRG_Q4_G2",
         "BNEW_Q1_G2","BNEW_Q4_G2","SLT")
 REGISTERED = ("D_Q1_G2","D_Q4_G2","BNEW_Q1_G2","BNEW_Q4_G2","SLT")
-VARIANT = re.compile(r"D_(ALLR|ALL|MRG)(16|32|64)?_Q(1|2|4|8|16)_G([124])(?:_K(32|64|128))?(_NR)?")
-PULLS = ("PULL_SLT","PULLR_SLT")
+VARIANT = re.compile(r"D_(ALLR|ALL|MRG)(16|32|64)?_Q(1|2|4|8|16)_G([124])(?:_K(32|64|128))?(_W)?(_NR)?")
+PULLS = ("PULL_SLT","PULLW_SLT","PULLR_SLT")
+
+
+def pull(arm):
+    return arm.removesuffix("_NR") in PULLS
 
 
 def known(arm):
-    return (arm in REGISTERED or arm in ("D_Q1_G2_ROT","D_Q4_G2_ROT") or arm in PULLS
+    return (arm in REGISTERED or arm in ("D_Q1_G2_ROT","D_Q4_G2_ROT") or pull(arm)
             or VARIANT.fullmatch(arm) is not None)
 POLICY = dict(warmup=20,timed=100)
 
@@ -78,15 +89,28 @@ def main():
     from make_design import ROOT,sha
     from replay import WORLD,gpu_session,hardware,inventory,spread,timed,write_json
     from snapshots import TILE_M
-    from variant_kernels import element_offsets,launch_block_copy,launch_copy,launch_rows
+    from variant_kernels import WIDE,element_offsets,in_units,launch_block_copy,launch_copy,launch_rows
 
     class Variants(BalancedPaths):
+        admitting = False
+
+        def admit(self, arm):
+            # Admission rewrites the source rows right after its run to check where the rows come
+            # from. An _NR arm has no release barrier to hold that back while slower ranks still
+            # read, so during admission its run is closed by one. Timing never rewrites the rows.
+            self.admitting = True
+            try:
+                return super().admit(arm)
+            finally:
+                self.admitting = False
+
         def shared_buffers(self):
             if not hasattr(self,"held"):
                 delta = element_offsets(self.remote)
                 # Row r of the 8M rows is row r%M of source r//M; its output row is r.
                 self.held = torch.tensor([delta[s]+i*self.k for s in range(WORLD) for i in range(self.m)],
                                          dtype=torch.int64,device=self.device)
+                self.held_wide = in_units(self.held)
                 self.out_rows = torch.arange(WORLD*self.m,dtype=torch.int32,device=self.device)
                 self.variant_work,self.variant_partial = {},{}
 
@@ -95,8 +119,8 @@ def main():
             # that arm launches eagerly and the registered arms keep their graphs.
             super().prepare_graphs([arm for arm in arms if arm in REGISTERED])
             for arm in arms:
-                if arm not in REGISTERED and arm not in PULLS:
-                    self.graphs.prepare({arm:self.consumer(arm)},group=arm)
+                if arm not in REGISTERED:
+                    self.graphs.prepare({arm:self.puller(arm) if pull(arm) else self.consumer(arm)},group=arm)
 
         def run(self, arm, mark=no_mark):
             if arm.endswith("_NR") and VARIANT.fullmatch(arm) is not None:
@@ -104,25 +128,36 @@ def main():
                 mark("transport")
                 self.graphs.run(arm,self.consumer(arm))
                 mark("consumer")
+                if self.admitting:
+                    self.handle.barrier(0,60_000)
                 return self.out
-            if arm not in PULLS:
+            if not pull(arm):
                 return super().run(arm,mark)
             self.ensure_lt()
-            self.shared_buffers()
             self.handle.barrier(0,60_000)
-            if arm=="PULL_SLT":
-                launch_copy(self.remote[0],self.held,self.recv)
-            else:
-                # One source at a time; rank r starts with source r+1 and copies its own rows last.
-                for j in range(WORLD):
-                    s = (self.rank+1+j)%WORLD
-                    launch_block_copy(self.remote[s],self.local[s])
+            self.graphs.run(arm,self.puller(arm))
             mark("transport")
             self.lt.execute(self.recv,self.weight,self.out,self.choice)
             mark("consumer")
-            # Sources may rewrite their rows once every reader holds its copy.
-            self.handle.barrier(0,60_000)
+            if not arm.endswith("_NR") or self.admitting:
+                # Sources may rewrite their rows once every reader holds its copy.
+                self.handle.barrier(0,60_000)
             return self.out
+
+        def puller(self, arm):
+            """The copy kernels that bring every remote row to local memory once."""
+            self.shared_buffers()
+            arm = arm.removesuffix("_NR")
+            if arm=="PULLR_SLT":
+                # One source at a time; rank r starts with source r+1 and copies its own rows last.
+                order = [(self.rank+1+j)%WORLD for j in range(WORLD)]
+
+                def issue():
+                    for s in order:
+                        launch_block_copy(self.remote[s],self.local[s])
+                return issue
+            held,unit = (self.held_wide,WIDE) if arm=="PULLW_SLT" else (self.held,1)
+            return lambda: launch_copy(self.remote[0],held,self.recv,unit)
 
         def consumer(self, arm):
             if arm.endswith("_ROT"):
@@ -150,9 +185,11 @@ def main():
                 self.variant_work[kind,bm] = torch.tensor(work,dtype=torch.int32,device=self.device)
             work = self.variant_work[kind,bm]
 
+            held,unit = (self.held_wide,WIDE) if match[6] else (self.held,1)
+
             def issue():
-                launch_rows(self.remote[0],self.held,self.out_rows,self.weight,self.out,partial,
-                            work,self.k,q,bm,g,bk)
+                launch_rows(self.remote[0],held,self.out_rows,self.weight,self.out,partial,
+                            work,self.k,q,bm,g,bk,unit)
             return issue
 
     hardware(a.gate)
@@ -164,7 +201,7 @@ def main():
     with gpu_session(uuids) as (rank,device,group):
         tuned = json.loads(a.slt.read_text())["cells"][a.unit][rank]["selected"] if a.slt else None
         if not all(spread(tuned is not None and a.library is not None,group)):
-            arms = [arm for arm in arms if arm!="SLT" and arm not in PULLS]
+            arms = [arm for arm in arms if arm!="SLT" and not pull(arm)]
         paths = Variants(a.unit,a.rep,shape,rank,device,a.library,tuned,agree=lambda error:spread(error,group))
         admission = {}
         for arm in arms:

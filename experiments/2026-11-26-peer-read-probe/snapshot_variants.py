@@ -25,7 +25,10 @@ their own. The variant here changes three things and keeps the arithmetic:
                          direct arm does, and the one launch reads the packed rows. It
                          separates what the single launch gains from what dropping the pack
                          gains.
-                         A suffix _NR before _R (direct arms only) leaves out the release
+                         A suffix _W before _R fetches the rows with 16-byte loads
+                         (variant_kernels: load width); without it the kernel is the one of
+                         2026-11-26, which fetches them two bytes at a time.
+                         A suffix _NR after that (direct arms only) leaves out the release
                          barrier, as a deployment with double buffering would; the inputs
                          are static here, so the readers never race a writer.
   BNEW_BLAS_R            staged rows, regrouped by expert in local memory, then one library
@@ -33,6 +36,11 @@ their own. The variant here changes three things and keeps the arithmetic:
                          graph. The result stays in per-expert order, as the native arm's
                          result stays in its own order; BNEW_BLASC_R also restores the
                          registered row order inside the timed region.
+  PULL_BLAS_R            BNEW_BLAS_R without the pack, the All-to-All and the regrouping:
+                         after the publish barrier one copy kernel (16-byte loads) pulls
+                         every routed row from the source that holds it straight into
+                         per-expert order, then the same library GEMMs run. Copy and GEMMs
+                         are one CUDA graph; the release barrier follows.
 
 Which token each destination needs from each source is the static routing table of the
 snapshot. The registered protocol keeps that precomputation outside the timed region for
@@ -60,8 +68,9 @@ SCHEMA = "edmir.snapshot-variants.exploratory.v1"
 REGISTERED = ("D_Q1_G2_R","D_Q4_G2_R","BNEW_Q1_G2_R","BNEW_Q4_G2_R","NATIVE")
 ARMS = ("D_Q1_G2_R","D_GATHER16_Q1_G2_R","D_GATHER64_Q1_G2_R","D_Q4_G2_R","D_GATHER16_Q4_G2_R","D_GATHER64_Q4_G2_R",
         "BNEW_Q1_G2_R","BNEW_Q4_G2_R","NATIVE")
-VARIANT = re.compile(r"(D_GATHER|D_PACK|BNEW_GATHER)(16|32|64|128)_Q(1|2|4|8|16)_G([124])(?:_K(32|64|128))?(_NR)?_R")
-BLAS = ("BNEW_BLAS_R","BNEW_BLASC_R")
+VARIANT = re.compile(r"(D_GATHER|D_PACK|BNEW_GATHER)(16|32|64|128)_Q(1|2|4|8|16)_G([124])(?:_K(32|64|128))?(_W)?(_NR)?_R")
+BLAS = ("BNEW_BLAS_R","BNEW_BLASC_R","PULL_BLAS_R")
+EXPERT_ORDER = ("BNEW_BLAS_R","PULL_BLAS_R")  # results left in per-expert order
 
 
 def known(arm):
@@ -95,7 +104,7 @@ def main():
     from make_design import ROOT,sha
     from replay import WORLD,Paths,gpu_session,hardware,inventory,snapshot_receipts,spread,timed,write_json
     from snapshots import correctness,layout,load_rank,snapshot_spec
-    from variant_kernels import element_offsets,launch_rows
+    from variant_kernels import WIDE,element_offsets,in_units,launch_copy,launch_rows
 
     a.design = ROOT/"design"
     if a.layer is not None:
@@ -128,7 +137,7 @@ def main():
             self.k = self.hidden.shape[1]
             # Output rows keep the registered order: by source, then local expert, then assignment.
             self.out_rows = torch.tensor([p for _,_,p,_ in self.rows] or [0],dtype=torch.int32,device=self.device)
-            self.row_source,self.row_work,self.row_partial = {},{},{}
+            self.row_source,self.row_wide,self.row_work,self.row_partial = {},{},{},{}
 
         def source(self, kind):
             """(base, element offset of every row) for one way of holding the rows."""
@@ -155,6 +164,12 @@ def main():
                 self.row_source[kind] = (base,torch.tensor(held or [0],dtype=torch.int64,device=self.device))
             return self.row_source[kind]
 
+        def wide(self, kind):
+            """The row offsets of source(kind) in units of WIDE elements."""
+            if kind not in self.row_wide:
+                self.row_wide[kind] = in_units(self.source(kind)[1])
+            return self.row_wide[kind]
+
         def blas_setup(self):
             self.routing()
             if not hasattr(self,"blas_index"):
@@ -172,10 +187,16 @@ def main():
         def consumer(self, arm):
             if arm in BLAS:
                 self.blas_setup()
+                pull = arm=="PULL_BLAS_R"
+                if pull:
+                    base,held = self.source("D_GATHER")[0],self.wide("D_GATHER")
 
                 def gemms():
                     if len(self.blas_index):
-                        torch.index_select(self.staged,0,self.blas_index,out=self.blas_rows)
+                        if pull:
+                            launch_copy(base,held,self.blas_rows,WIDE)  # row i of self.rows, already in expert order
+                        else:
+                            torch.index_select(self.staged,0,self.blas_index,out=self.blas_rows)
                         for start,count,expert in self.blas_slices:
                             torch.mm(self.blas_rows[start:start+count],self.weight_t[expert],
                                      out=self.blas_out[start:start+count])
@@ -187,6 +208,9 @@ def main():
                 return super().consumer(arm)
             kind,bm,q,g,bk = match[1],int(match[2]),int(match[3]),int(match[4]),int(match[5] or 32)
             base,held = self.source(kind)
+            unit = WIDE if match[6] else 1
+            if match[6]:
+                held = self.wide(kind)
             if q>1 and q not in self.row_partial:
                 self.row_partial[q] = self.output.new_empty((q,*self.output.shape),dtype=torch.float32)
             partial = self.row_partial.get(q)
@@ -200,10 +224,18 @@ def main():
 
             def issue():
                 if len(work):
-                    launch_rows(base,held,self.out_rows,self.weight,self.output,partial,work,self.k,q,bm,g,bk)
+                    launch_rows(base,held,self.out_rows,self.weight,self.output,partial,work,self.k,q,bm,g,bk,unit)
             return issue
 
         def run(self, arm, mark=no_mark):
+            if arm=="PULL_BLAS_R":
+                self.source("D_GATHER")
+                self.resident_handle.barrier(0,60_000)    # publish: every source's rows are in place
+                mark("transport")
+                self.graphs.run(arm,self.consumer(arm))
+                mark("consumer")
+                self.resident_handle.barrier(0,60_000)    # release
+                return self.blas_out
             if arm in BLAS:
                 self.materialize(self.hidden,True,mark)   # the registered pack and All-to-All
                 self.graphs.run(arm,self.consumer(arm))
@@ -228,7 +260,7 @@ def main():
                 mark("transport")
             self.graphs.run(arm,self.consumer(arm))
             mark("consumer")
-            if not match[6]:
+            if not match[7]:
                 handle.barrier(0,60_000)                  # release
             return self.output
 
@@ -241,8 +273,8 @@ def main():
                     self.graphs.prepare({arm:self.consumer(arm)},group=arm)
 
         def canonical(self, arm, result):
-            """A result in the registered row order; only BNEW_BLAS_R leaves it in another order."""
-            if arm!="BNEW_BLAS_R":
+            """A result in the registered row order; the EXPERT_ORDER arms leave it in another order."""
+            if arm not in EXPERT_ORDER:
                 return result
             ordered = torch.empty_like(self.output)
             if len(self.blas_index):

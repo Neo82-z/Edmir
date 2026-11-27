@@ -1,31 +1,55 @@
 {
-  "note": "Frozen before the confirmatory run. The commit that contains this file, unchanged, is the seal.",
-  "decision": {"band": 1.03, "pairs": 3},
-  "policy": {"warmup": 20, "timed": 100},
+  "note": "DRAFT until sealed. Frozen before the confirmatory run: the commit that contains this file, unchanged, is the seal.",
+  "decision": {
+    "band": 1.03,
+    "pairs": 3
+  },
+  "policy": {
+    "warmup": 20,
+    "timed": 100
+  },
   "grid": {
     "seeds": ["20261127", "20261128", "20261129"],
-    "arms": ["SLT", "D_MRG16_Q4_G2", "D_ALL32_Q1_G4", "D_Q4_G2", "BNEW_Q4_G2"],
-    "baseline": "SLT",
-    "candidate": "D_MRG16_Q4_G2"
+    "arms": ["SLT", "D_MRG16_Q4_G2", "D_ALL32_Q1_G4", "D_Q4_G2", "BNEW_Q4_G2"]
   },
   "snapshot": {
-    "arms": ["NATIVE", "D_Q1_G2_R", "D_Q4_G2_R", "D_GATHER16_Q4_G2_R", "D_PACK16_Q4_G2_R", "BNEW_Q4_G2_R"],
-    "baseline": "NATIVE",
-    "candidate": "D_GATHER16_Q4_G2_R"
+    "arms": ["NATIVE", "D_Q1_G2_R", "D_Q4_G2_R", "D_GATHER16_Q4_G2_R", "D_PACK16_Q4_G2_R", "BNEW_Q4_G2_R"]
   },
-  "hypotheses": {
-    "H1 decode: the one-launch direct consumer is faster than the native path": {
-      "candidate": ["GLM_DECODE", "QWEN35_DECODE", "DSV2L_DECODE"]},
-    "H2 prefill: the native path is faster than the one-launch direct consumer": {
-      "baseline": ["GLM_PREFILL", "QWEN35_PREFILL", "DSV2L_PREFILL"]},
-    "H3 small M: the one-launch direct consumer is faster than the tuned staged path": {
-      "candidate": ["GLM_M0001", "GLM_M0002", "GLM_M0004", "GLM_M0008", "GLM_M0016",
-                    "QWEN35_M0001", "QWEN35_M0002", "QWEN35_M0004", "QWEN35_M0008", "QWEN35_M0016", "QWEN35_M0032", "QWEN35_M0064",
-                    "DSV2L_M0001", "DSV2L_M0002", "DSV2L_M0004", "DSV2L_M0008", "DSV2L_M0016"]},
-    "H4 large M: the tuned staged path is faster than the one-launch direct consumer": {
-      "baseline": ["GLM_M0064", "GLM_M0128", "GLM_M0256", "GLM_M0512", "GLM_M1024",
-                   "QWEN35_M0256", "QWEN35_M0512", "QWEN35_M1024",
-                   "DSV2L_M0064", "DSV2L_M0128", "DSV2L_M0256", "DSV2L_M0512", "DSV2L_M1024"]}
-  },
-  "no_prediction": ["GLM_M0032", "DSV2L_M0032", "QWEN35_M0128"]
+  "hypotheses": [
+    {
+      "name": "H1 decode: the one-launch direct consumer is faster than the native path",
+      "baseline": "NATIVE",
+      "candidate": "D_GATHER16_Q4_G2_R",
+      "winner": "candidate",
+      "units": ["GLM_DECODE", "QWEN35_DECODE", "DSV2L_DECODE"]
+    },
+    {
+      "name": "H2 prefill: the native path is faster than the one-launch direct consumer",
+      "baseline": "NATIVE",
+      "candidate": "D_GATHER16_Q4_G2_R",
+      "winner": "baseline",
+      "units": ["GLM_PREFILL", "QWEN35_PREFILL", "DSV2L_PREFILL"]
+    },
+    {
+      "name": "H3 small M: the one-launch direct consumer is faster than the tuned staged path",
+      "baseline": "SLT",
+      "candidate": "D_MRG16_Q4_G2",
+      "winner": "candidate",
+      "units": ["GLM_M0001", "GLM_M0002", "GLM_M0004", "GLM_M0008", "GLM_M0016", "QWEN35_M0001", "QWEN35_M0002", "QWEN35_M0004", "QWEN35_M0008", "QWEN35_M0016", "QWEN35_M0032", "QWEN35_M0064", "DSV2L_M0001", "DSV2L_M0002", "DSV2L_M0004", "DSV2L_M0008", "DSV2L_M0016"]
+    },
+    {
+      "name": "H4 large M: the tuned staged path is faster than the one-launch direct consumer",
+      "baseline": "SLT",
+      "candidate": "D_MRG16_Q4_G2",
+      "winner": "baseline",
+      "units": ["GLM_M0064", "GLM_M0128", "GLM_M0256", "GLM_M0512", "GLM_M1024", "QWEN35_M0256", "QWEN35_M0512", "QWEN35_M1024", "DSV2L_M0064", "DSV2L_M0128", "DSV2L_M0256", "DSV2L_M0512", "DSV2L_M1024"]
+    }
+  ],
+  "no_prediction": [
+    {
+      "baseline": "SLT",
+      "candidate": "D_MRG16_Q4_G2",
+      "units": ["GLM_M0032", "DSV2L_M0032", "QWEN35_M0128"]
+    }
+  ]
 }

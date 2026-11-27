@@ -5,23 +5,33 @@ arithmetic (FP32 accumulation, K block bk, q partitions of K, an expert's weight
 and adds one indirection per row: where the row is held, and where its output row goes.
 Symmetric memory maps every peer's buffer into the address space of the reading process, so
 a row is addressed by its distance from one base pointer in elements.
+
+Load width. The compiler fetches a row with 16-byte loads only when it can prove that the
+address is 16-byte aligned. A row offset read from a table is an unknown integer, so the
+kernels below fetch such rows two bytes at a time (PTX: ld.global.b16, synchronous), while
+gate_up.project gets cp.async of 16 bytes with software pipelining. The 2026-11-26 results
+of the one-launch arms were measured with these narrow loads. With unit=WIDE the table holds
+offsets in units of WIDE elements and the kernel multiplies them back, which gives the
+compiler the alignment; unit=1 keeps the kernels of 2026-11-26.
 """
 import triton
 import triton.language as tl
 
 from gate_up import merge4
 
+WIDE = 16  # elements; 32 bytes for FP16 and BF16
+
 
 @triton.jit
 def project_rows(A0, ROWOFF, OUTROW, W, C, WORK, rows, k: tl.constexpr, n: tl.constexpr,
-                 q: tl.constexpr, bm: tl.constexpr, bn: tl.constexpr, bk: tl.constexpr):
+                 q: tl.constexpr, bm: tl.constexpr, bn: tl.constexpr, bk: tl.constexpr, unit: tl.constexpr):
     tile = tl.program_id(0)
     begin = tl.load(WORK + tile*3)
     stop = tl.load(WORK + tile*3+1)
     expert = tl.load(WORK + tile*3+2)
     row = begin + tl.arange(0,bm)
     valid = row < stop
-    held = tl.load(ROWOFF + row,valid,0)
+    held = tl.load(ROWOFF + row,valid,0)*unit
     out = tl.load(OUTROW + row,valid,0)
     col = tl.program_id(1)*bn + tl.arange(0,bn)
     partition = tl.program_id(2)
@@ -47,32 +57,40 @@ def merge_parts(P, C, elements, parts: tl.constexpr, block: tl.constexpr):
 
 
 @triton.jit
-def copy_rows(A0, ROWOFF, B, k: tl.constexpr, block: tl.constexpr):
+def copy_rows(A0, ROWOFF, B, k: tl.constexpr, block: tl.constexpr, unit: tl.constexpr):
     """Pull rows to local memory: one read of each element, from wherever the row is held."""
     row = tl.program_id(0)
-    held = tl.load(ROWOFF + row)
+    held = tl.load(ROWOFF + row)*unit
     ix = tl.program_id(1)*block + tl.arange(0,block)
     value = tl.load(A0+held+ix,ix<k,0,cache_modifier=".cg")
     tl.store(B+row*k+ix,value,ix<k)
 
 
-def launch_rows(base, held, out_rows, weight, out, partial, work, k, q, bm, g, bk=32):
+def launch_rows(base, held, out_rows, weight, out, partial, work, k, q, bm, g, bk=32, unit=1):
     """One launch over every tile in work. With q>1 each K partition writes an FP32 partial
-    output and a second kernel sums them; q=4 uses the registered merge4."""
+    output and a second kernel sums them; q=4 uses the registered merge4. held is in units
+    of `unit` elements (see in_units)."""
     rows,n = out.shape
     bn = 128*g
     target = out if q==1 else partial
     project_rows[(work.shape[0],triton.cdiv(n,bn),q)](
-        base,held,out_rows,weight,target,work,rows,k,n,q,bm,bn,bk,num_warps=8 if bm*bn>=64*256 else 4)
+        base,held,out_rows,weight,target,work,rows,k,n,q,bm,bn,bk,unit,num_warps=8 if bm*bn>=64*256 else 4)
     if q==4:
         merge4[(triton.cdiv(rows*n,1024),)](partial,out,rows*n,1024)
     elif q>1:
         merge_parts[(triton.cdiv(rows*n,1024),)](partial,out,rows*n,q,1024)
 
 
-def launch_copy(base, held, out):
+def launch_copy(base, held, out, unit=1):
     rows,k = out.shape
-    copy_rows[(rows,triton.cdiv(k,1024))](base,held,out,k,1024,num_warps=4)
+    copy_rows[(rows,triton.cdiv(k,1024))](base,held,out,k,1024,unit,num_warps=4)
+
+
+def in_units(held, unit=WIDE):
+    """Element offsets as multiples of `unit`; every row must start on such a boundary."""
+    if bool((held%unit!=0).any()):
+        raise ValueError(f"row offsets are not multiples of {unit} elements")
+    return held//unit
 
 
 @triton.jit

@@ -1,0 +1,10 @@
+microbenchmark, one peer (copy)              {'ld.cg.v4.b32': 1, 'st.v4.b32': 1}
+microbenchmark, seven peers (gather7)        {'ld.b64': 1, 'ld.cg.b16': 8, 'st.v4.b32': 1}
+registered consumer, q=1, 64x256             {'cp.async 16 bytes': 15, 'ld.b32': 3, 'st.v4.b32': 8, 'pipeline depth': 2}
+one-launch consumer, q=4, 16x256, unit 1     {'cp.async 16 bytes': 24, 'ld.b16': 4, 'ld.b32': 11, 'ld.b64': 4, 'st.v4.b32': 8, 'pipeline depth': 1}
+one-launch consumer, q=1, 32x512, unit 1     {'cp.async 16 bytes': 24, 'ld.b16': 4, 'ld.b32': 11, 'ld.b64': 4, 'st.v4.b32': 8, 'pipeline depth': 1}
+row copy, unit 1                             {'ld.b64': 1, 'ld.cg.b16': 8, 'st.v4.b32': 1}
+one-launch consumer, q=4, 16x256, unit 16    {'cp.async 16 bytes': 24, 'ld.b32': 11, 'ld.b64': 1, 'st.v4.b32': 8, 'pipeline depth': 2}
+one-launch consumer, q=1, 32x512, unit 16    {'cp.async 16 bytes': 24, 'ld.b32': 11, 'ld.b64': 1, 'st.v4.b32': 8, 'pipeline depth': 2}
+row copy, unit 16                            {'ld.b64': 1, 'ld.cg.v4.b32': 1, 'st.v4.b32': 1}
+block copy                                   {'ld.cg.v4.b32': 5, 'st.v4.b32': 5}

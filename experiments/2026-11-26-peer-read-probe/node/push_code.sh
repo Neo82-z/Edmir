@@ -22,3 +22,5 @@ for line in open("/tmp/edmir-node.sha").read().splitlines():
 print("deployed",subprocess.run(["git","rev-parse","--short","HEAD"],capture_output=True,text=True).stdout.strip(),"|",n,"entries;",bad,"differ")
 raise SystemExit(1 if bad else 0)
 PY
+# The node-side scripts run from /srv/edmir-run.
+ssh -i $K $H "cd /srv/edmir-run && cp code/experiments/2026-11-26-peer-read-probe/node/*.sh . && cp code/experiments/2026-11-27-confirm/run_queue.sh . && chmod +x *.sh && ls *.sh | tr '\n' ' '"

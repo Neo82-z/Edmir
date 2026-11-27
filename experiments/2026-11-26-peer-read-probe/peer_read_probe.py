@@ -11,6 +11,14 @@ or all eight ranks reading at the same time?
 Every pattern moves 8 MiB per (reader, owner) pair from disjoint eighths of each owner's
 64 MiB buffer, with 448 CTAs in flight on the reading rank.
 
+Load width (added 2026-11-27). The multi-peer kernel of the registered microbenchmark, and
+`gather` here, take each peer's address from a table. The compiler cannot prove such an
+address aligned and fetches the data two bytes at a time (PTX: eight ld.global.cg.b16 per
+thread and step), while the single-peer kernel gets one 16-byte load. So the 200 against
+24 GB/s of the microbenchmark compares load widths as well as peer counts. `gather_wide`
+addresses a peer by its distance from one base pointer in units of 16 elements, which gives
+the compiler the alignment; every pattern is measured with both kernels.
+
   torchrun --standalone --nproc-per-node=8 peer_read_probe.py --gate gate.json --out probe.json
 
 Run it with the experiment package (experiments/2026-11-23-replay) on PYTHONPATH.
@@ -19,8 +27,9 @@ import argparse
 import statistics
 from pathlib import Path
 
-SCHEMA = "edmir.peer-read-probe.exploratory.v1"
+SCHEMA = "edmir.peer-read-probe.exploratory.v2"
 CTAS = 448
+WIDE = 16  # elements
 
 
 def slot(rank, owner):
@@ -80,6 +89,18 @@ def main():
             value = tl.load(src+ix,ix<chunk,0,cache_modifier=".cg")
             tl.store(B+peer*chunk+ix,value,ix<chunk)
 
+    @triton.jit
+    def gather_wide(A0, OFFS, B, peers: tl.constexpr, chunk: tl.constexpr, per_peer: tl.constexpr,
+                    block: tl.constexpr, unit: tl.constexpr):
+        cta = tl.program_id(0)
+        peer = cta%peers
+        base = (cta//peers)*block+tl.arange(0,block)
+        held = tl.load(OFFS+peer)*unit
+        for offset in range(0,chunk,per_peer*block):
+            ix = offset+base
+            value = tl.load(A0+held+ix,ix<chunk,0,cache_modifier=".cg")
+            tl.store(B+peer*chunk+ix,value,ix<chunk)
+
     def measure(f):
         for _ in range(3):
             f()
@@ -107,6 +128,13 @@ def main():
         view = lambda o: handle.get_buffer(o,src.shape,src.dtype,0).narrow(0,slot(rank,o)*chunk,chunk)
         readings = []
 
+        def distances(sources):
+            """Each source's distance from this rank's own buffer in units of WIDE elements."""
+            bytes_ = [x.data_ptr()-src.data_ptr() for x in sources]
+            if any(b%(2*WIDE) for b in bytes_):
+                raise ValueError("peer mappings are not aligned to the wide unit")
+            return torch.tensor([b//(2*WIDE) for b in bytes_],dtype=torch.int64,device=device)
+
         @triton.jit
         def copy(A, B, n: tl.constexpr, ctas: tl.constexpr, block: tl.constexpr):
             # The single-peer kernel of the registered microbenchmark.
@@ -132,7 +160,9 @@ def main():
             cases += [("8192KiB_offset0",whole.narrow(0,0,chunk),chunk),("65536KiB_whole",whole,count)]
             for label,source,n in cases:
                 table = torch.tensor([source.data_ptr()],dtype=torch.int64,device=device)
+                far = distances([source])
                 kernels = dict(gather=lambda:gather[(CTAS,)](table,dest,1,n,CTAS,1024,num_warps=4),
+                               gather_wide=lambda:gather_wide[(CTAS,)](src,far,dest,1,n,CTAS,1024,WIDE,num_warps=4),
                                copy=lambda:copy[(CTAS,)](source,dest,n,CTAS,1024,num_warps=4))
                 for kernel,issue in kernels.items():
                     for who in ("all_ranks","solo"):
@@ -151,19 +181,25 @@ def main():
 
         if a.mode=="sizes":
             sizes()
-        for name,kernels in (patterns(rank).items() if a.mode=="patterns" else ()):
+        cases = [(name,kernels,width) for name,kernels in patterns(rank).items() for width in ("table","wide")]
+        for name,kernels,width in (cases if a.mode=="patterns" else ()):
             launches,position = [],0
             for owners in kernels:
                 table = torch.tensor([view(o).data_ptr() for o in owners],dtype=torch.int64,device=device)
                 out = dest.narrow(0,position*chunk,len(owners)*chunk)
-                launches.append((table,out,len(owners),CTAS//len(owners)))
+                launches.append((table,distances([view(o) for o in owners]),out,len(owners),CTAS//len(owners)))
                 position += len(owners)
 
             def issue():
-                for table,out,peers,per_peer in launches:
-                    gather[(peers*per_peer,)](table,out,peers,chunk,per_peer,1024,num_warps=4)
+                for table,far,out,peers,per_peer in launches:
+                    if width=="wide":
+                        gather_wide[(peers*per_peer,)](src,far,out,peers,chunk,per_peer,1024,WIDE,num_warps=4)
+                    else:
+                        gather[(peers*per_peer,)](table,out,peers,chunk,per_peer,1024,num_warps=4)
 
-            record = dict(pattern=name,kernels=len(kernels),pairs=position,bytes=2*chunk*position)
+            # The pattern names of 2026-11-26 keep the table kernel; ":wide" marks the 16-byte loads.
+            record = dict(pattern=name if width=="table" else name+":wide",kernels=len(kernels),pairs=position,
+                          bytes=2*chunk*position)
             try:
                 dest.zero_()
                 times = measure(issue)
@@ -180,14 +216,14 @@ def main():
             write_json(a.out,dict(schema=SCHEMA,origin="exploratory_device_probe",registered=False,
                 gpu_uuids=uuids,hardware_sha256=sha(a.gate),implementation_sha256=sha(Path(__file__)),
                 ctas=CTAS,bytes_per_pair=2*chunk,rank_measurements=ranks))
-            print(f"{'pattern':28s} {'active':>6s} {'pairs':>5s} {'median ms':>10s} {'GB/s per rank':>14s} {'range GB/s':>16s}")
+            print(f"{'pattern':34s} {'active':>6s} {'pairs':>5s} {'median ms':>10s} {'GB/s per rank':>14s} {'range GB/s':>16s}")
             for i,first in enumerate(ranks[0]):
                 rows = [r[i] for r in ranks if r[i]["pairs"]]
                 if any("error" in r for r in rows):
-                    print(f"{first['pattern']:28s} error: {[r.get('error') for r in rows][:2]}")
+                    print(f"{first['pattern']:34s} error: {[r.get('error') for r in rows][:2]}")
                     continue
                 rates = [r["bytes"]/r["seconds"]/1e9 for r in rows]
-                print(f"{first['pattern']:28s} {len(rows):6d} {rows[0]['pairs']:5d} "
+                print(f"{first['pattern']:34s} {len(rows):6d} {rows[0]['pairs']:5d} "
                       f"{statistics.median(r['seconds'] for r in rows)*1e3:10.3f} {statistics.median(rates):14.1f} "
                       f"{min(rates):7.1f}-{max(rates):.1f}")
 
