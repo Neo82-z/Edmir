@@ -25,7 +25,7 @@ GPU 时间约 5.5 小时。先做便宜、能决定方向的，再封存，再�
 | 3 | decode：宽读、带打包、去掉释放 barrier | `snapshots` 三个 decode，臂：`NATIVE,D_Q1_G2_R,D_Q4_G2_R,D_GATHER16_Q4_G2_R,D_GATHER16_Q4_G2_W_R,D_GATHER16_Q8_G2_K64_W_R,D_GATHER16_Q4_G2_W_S5_R,D_PACK16_Q4_G2_W_R,D_GATHER16_Q4_G2_W_NR_R,BNEW_BLAS_R` | 4 分钟 |
 | 4 | prefill：库 GEMM 的三种取行方式，加上宽读的就地读和先搬 | `snapshots` 三个 prefill，臂：`NATIVE,D_Q1_G2_R,D_Q4_G2_R,BNEW_Q4_G2_R,BNEW_BLAS_R,BNEW_BLASC_R,PULL_BLAS_R,BNEW_GATHER64_Q1_G1_W_R,BNEW_GATHER128_Q1_G1_W_R,D_GATHER32_Q1_G4_W_R,D_GATHER64_Q1_G2_W_R` | 6 分钟 |
 | 5 | 按第 2 步定下的两三个臂铺满 33 格，每格一个进程 | `variants` 全部格子 | 20 分钟 |
-| 6 | 换层：每个模型再采两层，重复 decode 和 prefill 的比较 | `capture_layer.sh` 六次，再 `layers <模型> <层> <快照>` | 约 35 分钟 |
+| 6 | 换层：每个模型再采两层，重复 decode 和 prefill 的比较 | `ARMS=<第 3、4 步定下的臂> ./capture_layers.sh`（六次采集加比较，可断点续跑） | 约 35 分钟 |
 
 第 1 步决定方向：
 - 如果 16 字节读把多 peer 的带宽从约 24 GB/s 提到接近单 peer 的 200 GB/s，大行数上的候选就是"先拉后算"
