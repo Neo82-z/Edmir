@@ -1,5 +1,5 @@
 {
-  "note": "DRAFT until sealed. Frozen before the confirmatory run: the commit that contains this file, unchanged, is the seal.",
+  "note": "Sealed by the commit that contains this file. Written by seal.py from two screening processes per unit; the confirmatory run uses new processes and, on the grids, new input seeds.",
   "decision": {
     "band": 1.03,
     "pairs": 3
@@ -8,48 +8,929 @@
     "warmup": 20,
     "timed": 100
   },
+  "margin": 1.1,
   "grid": {
-    "seeds": ["20261127", "20261128", "20261129"],
-    "arms": ["SLT", "D_MRG16_Q4_G2", "D_ALL32_Q1_G4", "D_Q4_G2", "BNEW_Q4_G2"]
+    "seeds": [
+      "20261127",
+      "20261128",
+      "20261129"
+    ],
+    "arms": [
+      "SLT",
+      "PULLW_SLT",
+      "PULLR_SLT",
+      "D_MRG16_Q8_G2_K64_W",
+      "D_Q4_G2",
+      "BNEW_Q4_G2"
+    ]
   },
   "snapshot": {
-    "arms": ["NATIVE", "D_Q1_G2_R", "D_Q4_G2_R", "D_GATHER16_Q4_G2_R", "D_PACK16_Q4_G2_R", "BNEW_Q4_G2_R"]
+    "arms": [
+      "NATIVE",
+      "D_Q1_G2_R",
+      "D_Q4_G2_R",
+      "D_GATHER16_Q8_G2_K64_W_R",
+      "D_GATHER64_Q1_G4_K64_W_R",
+      "PULL_BLAS_R",
+      "BNEW_BLAS_R"
+    ]
   },
   "hypotheses": [
     {
-      "name": "H1 decode: the one-launch direct consumer is faster than the native path",
-      "baseline": "NATIVE",
-      "candidate": "D_GATHER16_Q4_G2_R",
-      "winner": "candidate",
-      "units": ["GLM_DECODE", "QWEN35_DECODE", "DSV2L_DECODE"]
-    },
-    {
-      "name": "H2 prefill: the native path is faster than the one-launch direct consumer",
-      "baseline": "NATIVE",
-      "candidate": "D_GATHER16_Q4_G2_R",
-      "winner": "baseline",
-      "units": ["GLM_PREFILL", "QWEN35_PREFILL", "DSV2L_PREFILL"]
-    },
-    {
-      "name": "H3 small M: the one-launch direct consumer is faster than the tuned staged path",
+      "name": "G-pull/candidate: rows pulled from peer memory against All-to-All, same tuned staged consumer; expected faster: PULLW_SLT",
       "baseline": "SLT",
-      "candidate": "D_MRG16_Q4_G2",
+      "candidate": "PULLW_SLT",
       "winner": "candidate",
-      "units": ["GLM_M0001", "GLM_M0002", "GLM_M0004", "GLM_M0008", "GLM_M0016", "QWEN35_M0001", "QWEN35_M0002", "QWEN35_M0004", "QWEN35_M0008", "QWEN35_M0016", "QWEN35_M0032", "QWEN35_M0064", "DSV2L_M0001", "DSV2L_M0002", "DSV2L_M0004", "DSV2L_M0008", "DSV2L_M0016"]
+      "units": [
+        "GLM_M0001",
+        "GLM_M0002",
+        "GLM_M0004",
+        "GLM_M0008",
+        "GLM_M0016",
+        "GLM_M0032",
+        "GLM_M0064",
+        "GLM_M0128",
+        "GLM_M0256",
+        "GLM_M0512",
+        "QWEN35_M0001",
+        "QWEN35_M0002",
+        "QWEN35_M0004",
+        "QWEN35_M0008",
+        "QWEN35_M0016",
+        "QWEN35_M0032",
+        "QWEN35_M0064",
+        "QWEN35_M0128",
+        "QWEN35_M0256",
+        "QWEN35_M0512",
+        "DSV2L_M0001",
+        "DSV2L_M0002",
+        "DSV2L_M0004",
+        "DSV2L_M0008",
+        "DSV2L_M0016",
+        "DSV2L_M0032",
+        "DSV2L_M0064",
+        "DSV2L_M0128",
+        "DSV2L_M0256",
+        "DSV2L_M0512"
+      ]
     },
     {
-      "name": "H4 large M: the tuned staged path is faster than the one-launch direct consumer",
+      "name": "G-pull-blocks/candidate: the same, pulled as one block per source in rank-rotated order; expected faster: PULLR_SLT",
       "baseline": "SLT",
-      "candidate": "D_MRG16_Q4_G2",
+      "candidate": "PULLR_SLT",
+      "winner": "candidate",
+      "units": [
+        "GLM_M0001",
+        "GLM_M0002",
+        "GLM_M0004",
+        "GLM_M0008",
+        "GLM_M0016",
+        "GLM_M0032",
+        "GLM_M0064",
+        "GLM_M0128",
+        "GLM_M0256",
+        "QWEN35_M0001",
+        "QWEN35_M0002",
+        "QWEN35_M0004",
+        "QWEN35_M0008",
+        "QWEN35_M0016",
+        "QWEN35_M0032",
+        "QWEN35_M0064",
+        "QWEN35_M0128",
+        "QWEN35_M0256",
+        "QWEN35_M0512",
+        "QWEN35_M1024",
+        "DSV2L_M0001",
+        "DSV2L_M0002",
+        "DSV2L_M0004",
+        "DSV2L_M0008",
+        "DSV2L_M0016",
+        "DSV2L_M0032",
+        "DSV2L_M0064",
+        "DSV2L_M0128",
+        "DSV2L_M0256",
+        "DSV2L_M0512"
+      ]
+    },
+    {
+      "name": "G-inplace/candidate: one-launch consumer reading peer memory in place against the tuned staged path; expected faster: D_MRG16_Q8_G2_K64_W",
+      "baseline": "SLT",
+      "candidate": "D_MRG16_Q8_G2_K64_W",
+      "winner": "candidate",
+      "units": [
+        "GLM_M0001",
+        "GLM_M0002",
+        "GLM_M0004",
+        "GLM_M0008",
+        "GLM_M0016",
+        "QWEN35_M0001",
+        "QWEN35_M0002",
+        "QWEN35_M0004",
+        "QWEN35_M0008",
+        "QWEN35_M0016",
+        "QWEN35_M0032",
+        "QWEN35_M0064",
+        "DSV2L_M0001",
+        "DSV2L_M0002",
+        "DSV2L_M0004",
+        "DSV2L_M0008",
+        "DSV2L_M0016"
+      ]
+    },
+    {
+      "name": "G-inplace/baseline: one-launch consumer reading peer memory in place against the tuned staged path; expected faster: SLT",
+      "baseline": "SLT",
+      "candidate": "D_MRG16_Q8_G2_K64_W",
       "winner": "baseline",
-      "units": ["GLM_M0064", "GLM_M0128", "GLM_M0256", "GLM_M0512", "GLM_M1024", "QWEN35_M0256", "QWEN35_M0512", "QWEN35_M1024", "DSV2L_M0064", "DSV2L_M0128", "DSV2L_M0256", "DSV2L_M0512", "DSV2L_M1024"]
+      "units": [
+        "GLM_M0128",
+        "GLM_M0256",
+        "GLM_M0512",
+        "GLM_M1024",
+        "QWEN35_M0256",
+        "QWEN35_M0512",
+        "QWEN35_M1024",
+        "DSV2L_M0064",
+        "DSV2L_M0128",
+        "DSV2L_M0256",
+        "DSV2L_M0512",
+        "DSV2L_M1024"
+      ]
+    },
+    {
+      "name": "G-inplace-or-pull/candidate: reading in place against pulling first, both from peer memory; expected faster: D_MRG16_Q8_G2_K64_W",
+      "baseline": "PULLW_SLT",
+      "candidate": "D_MRG16_Q8_G2_K64_W",
+      "winner": "candidate",
+      "units": [
+        "GLM_M0001",
+        "GLM_M0002",
+        "QWEN35_M0001",
+        "QWEN35_M0004",
+        "QWEN35_M0008",
+        "DSV2L_M0001",
+        "DSV2L_M0002",
+        "DSV2L_M0004"
+      ]
+    },
+    {
+      "name": "G-inplace-or-pull/baseline: reading in place against pulling first, both from peer memory; expected faster: PULLW_SLT",
+      "baseline": "PULLW_SLT",
+      "candidate": "D_MRG16_Q8_G2_K64_W",
+      "winner": "baseline",
+      "units": [
+        "GLM_M0016",
+        "GLM_M0032",
+        "GLM_M0064",
+        "GLM_M0128",
+        "GLM_M0256",
+        "GLM_M0512",
+        "GLM_M1024",
+        "QWEN35_M0064",
+        "QWEN35_M0128",
+        "QWEN35_M0256",
+        "QWEN35_M0512",
+        "QWEN35_M1024",
+        "DSV2L_M0016",
+        "DSV2L_M0032",
+        "DSV2L_M0064",
+        "DSV2L_M0128",
+        "DSV2L_M0256",
+        "DSV2L_M0512",
+        "DSV2L_M1024"
+      ]
+    },
+    {
+      "name": "S-pull/candidate: rows pulled from peer memory, then a library GEMM per expert, against the native path; expected faster: PULL_BLAS_R",
+      "baseline": "NATIVE",
+      "candidate": "PULL_BLAS_R",
+      "winner": "candidate",
+      "units": [
+        "GLM_DECODE",
+        "QWEN35_DECODE",
+        "DSV2L_DECODE",
+        "GLM_PREFILL",
+        "QWEN35_PREFILL",
+        "DSV2L_PREFILL"
+      ]
+    },
+    {
+      "name": "S-pull-or-stage/candidate: the same library GEMM on rows pulled from peer memory against rows staged by All-to-All; expected faster: PULL_BLAS_R",
+      "baseline": "BNEW_BLAS_R",
+      "candidate": "PULL_BLAS_R",
+      "winner": "candidate",
+      "units": [
+        "GLM_DECODE",
+        "QWEN35_DECODE",
+        "DSV2L_DECODE",
+        "GLM_PREFILL",
+        "QWEN35_PREFILL",
+        "DSV2L_PREFILL"
+      ]
+    },
+    {
+      "name": "S-inplace-small/candidate: one-launch consumer in place, small tiles, against the native path; expected faster: D_GATHER16_Q8_G2_K64_W_R",
+      "baseline": "NATIVE",
+      "candidate": "D_GATHER16_Q8_G2_K64_W_R",
+      "winner": "candidate",
+      "units": [
+        "GLM_DECODE",
+        "QWEN35_DECODE",
+        "DSV2L_DECODE"
+      ]
+    },
+    {
+      "name": "S-inplace-small/baseline: one-launch consumer in place, small tiles, against the native path; expected faster: NATIVE",
+      "baseline": "NATIVE",
+      "candidate": "D_GATHER16_Q8_G2_K64_W_R",
+      "winner": "baseline",
+      "units": [
+        "GLM_PREFILL",
+        "QWEN35_PREFILL",
+        "DSV2L_PREFILL"
+      ]
+    },
+    {
+      "name": "S-inplace-large/candidate: one-launch consumer in place, large tiles, against the native path; expected faster: D_GATHER64_Q1_G4_K64_W_R",
+      "baseline": "NATIVE",
+      "candidate": "D_GATHER64_Q1_G4_K64_W_R",
+      "winner": "candidate",
+      "units": [
+        "GLM_DECODE",
+        "QWEN35_DECODE",
+        "DSV2L_DECODE",
+        "GLM_PREFILL",
+        "QWEN35_PREFILL",
+        "DSV2L_PREFILL"
+      ]
     }
   ],
   "no_prediction": [
     {
       "baseline": "SLT",
-      "candidate": "D_MRG16_Q4_G2",
-      "units": ["GLM_M0032", "DSV2L_M0032", "QWEN35_M0128"]
+      "candidate": "PULLW_SLT",
+      "units": [
+        "GLM_M1024",
+        "QWEN35_M1024",
+        "DSV2L_M1024"
+      ]
+    },
+    {
+      "baseline": "SLT",
+      "candidate": "PULLR_SLT",
+      "units": [
+        "GLM_M0512",
+        "GLM_M1024",
+        "DSV2L_M1024"
+      ]
+    },
+    {
+      "baseline": "SLT",
+      "candidate": "D_MRG16_Q8_G2_K64_W",
+      "units": [
+        "GLM_M0032",
+        "GLM_M0064",
+        "QWEN35_M0128",
+        "DSV2L_M0032"
+      ]
+    },
+    {
+      "baseline": "PULLW_SLT",
+      "candidate": "D_MRG16_Q8_G2_K64_W",
+      "units": [
+        "GLM_M0004",
+        "GLM_M0008",
+        "QWEN35_M0002",
+        "QWEN35_M0016",
+        "QWEN35_M0032",
+        "DSV2L_M0008"
+      ]
     }
-  ]
+  ],
+  "screening_ratios": {
+    "G-pull:GLM_M0001": [
+      1.388,
+      1.431
+    ],
+    "G-pull:GLM_M0002": [
+      1.427,
+      1.385
+    ],
+    "G-pull:GLM_M0004": [
+      1.399,
+      1.517
+    ],
+    "G-pull:GLM_M0008": [
+      1.404,
+      1.511
+    ],
+    "G-pull:GLM_M0016": [
+      1.476,
+      1.411
+    ],
+    "G-pull:GLM_M0032": [
+      1.564,
+      1.494
+    ],
+    "G-pull:GLM_M0064": [
+      1.481,
+      1.732
+    ],
+    "G-pull:GLM_M0128": [
+      1.56,
+      1.372
+    ],
+    "G-pull:GLM_M0256": [
+      1.285,
+      1.304
+    ],
+    "G-pull:GLM_M0512": [
+      1.167,
+      1.137
+    ],
+    "G-pull:GLM_M1024": [
+      0.974,
+      0.99
+    ],
+    "G-pull:QWEN35_M0001": [
+      1.342,
+      1.398
+    ],
+    "G-pull:QWEN35_M0002": [
+      1.762,
+      1.464
+    ],
+    "G-pull:QWEN35_M0004": [
+      1.471,
+      1.47
+    ],
+    "G-pull:QWEN35_M0008": [
+      1.408,
+      1.52
+    ],
+    "G-pull:QWEN35_M0016": [
+      1.459,
+      1.432
+    ],
+    "G-pull:QWEN35_M0032": [
+      1.538,
+      1.47
+    ],
+    "G-pull:QWEN35_M0064": [
+      1.489,
+      1.431
+    ],
+    "G-pull:QWEN35_M0128": [
+      1.593,
+      1.388
+    ],
+    "G-pull:QWEN35_M0256": [
+      1.394,
+      1.335
+    ],
+    "G-pull:QWEN35_M0512": [
+      1.245,
+      1.184
+    ],
+    "G-pull:QWEN35_M1024": [
+      1.001,
+      0.961
+    ],
+    "G-pull:DSV2L_M0001": [
+      1.445,
+      1.411
+    ],
+    "G-pull:DSV2L_M0002": [
+      1.354,
+      1.25
+    ],
+    "G-pull:DSV2L_M0004": [
+      1.5,
+      1.437
+    ],
+    "G-pull:DSV2L_M0008": [
+      1.513,
+      1.421
+    ],
+    "G-pull:DSV2L_M0016": [
+      1.435,
+      1.406
+    ],
+    "G-pull:DSV2L_M0032": [
+      1.429,
+      1.41
+    ],
+    "G-pull:DSV2L_M0064": [
+      1.746,
+      1.431
+    ],
+    "G-pull:DSV2L_M0128": [
+      1.444,
+      1.385
+    ],
+    "G-pull:DSV2L_M0256": [
+      1.284,
+      1.229
+    ],
+    "G-pull:DSV2L_M0512": [
+      1.163,
+      1.172
+    ],
+    "G-pull:DSV2L_M1024": [
+      0.996,
+      1.004
+    ],
+    "G-pull-blocks:GLM_M0001": [
+      1.341,
+      1.416
+    ],
+    "G-pull-blocks:GLM_M0002": [
+      1.43,
+      1.386
+    ],
+    "G-pull-blocks:GLM_M0004": [
+      1.378,
+      1.473
+    ],
+    "G-pull-blocks:GLM_M0008": [
+      1.363,
+      1.483
+    ],
+    "G-pull-blocks:GLM_M0016": [
+      1.379,
+      1.384
+    ],
+    "G-pull-blocks:GLM_M0032": [
+      1.54,
+      1.442
+    ],
+    "G-pull-blocks:GLM_M0064": [
+      1.41,
+      1.664
+    ],
+    "G-pull-blocks:GLM_M0128": [
+      1.441,
+      1.28
+    ],
+    "G-pull-blocks:GLM_M0256": [
+      1.186,
+      1.173
+    ],
+    "G-pull-blocks:GLM_M0512": [
+      1.168,
+      1.073
+    ],
+    "G-pull-blocks:GLM_M1024": [
+      1.047,
+      1.057
+    ],
+    "G-pull-blocks:QWEN35_M0001": [
+      1.321,
+      1.392
+    ],
+    "G-pull-blocks:QWEN35_M0002": [
+      1.706,
+      1.433
+    ],
+    "G-pull-blocks:QWEN35_M0004": [
+      1.507,
+      1.441
+    ],
+    "G-pull-blocks:QWEN35_M0008": [
+      1.397,
+      1.487
+    ],
+    "G-pull-blocks:QWEN35_M0016": [
+      1.396,
+      1.203
+    ],
+    "G-pull-blocks:QWEN35_M0032": [
+      1.515,
+      1.47
+    ],
+    "G-pull-blocks:QWEN35_M0064": [
+      1.383,
+      1.369
+    ],
+    "G-pull-blocks:QWEN35_M0128": [
+      1.505,
+      1.317
+    ],
+    "G-pull-blocks:QWEN35_M0256": [
+      1.234,
+      1.216
+    ],
+    "G-pull-blocks:QWEN35_M0512": [
+      1.178,
+      1.149
+    ],
+    "G-pull-blocks:QWEN35_M1024": [
+      1.136,
+      1.161
+    ],
+    "G-pull-blocks:DSV2L_M0001": [
+      1.419,
+      1.43
+    ],
+    "G-pull-blocks:DSV2L_M0002": [
+      1.319,
+      1.401
+    ],
+    "G-pull-blocks:DSV2L_M0004": [
+      1.435,
+      1.429
+    ],
+    "G-pull-blocks:DSV2L_M0008": [
+      1.452,
+      1.414
+    ],
+    "G-pull-blocks:DSV2L_M0016": [
+      1.421,
+      1.358
+    ],
+    "G-pull-blocks:DSV2L_M0032": [
+      1.397,
+      1.369
+    ],
+    "G-pull-blocks:DSV2L_M0064": [
+      1.66,
+      1.371
+    ],
+    "G-pull-blocks:DSV2L_M0128": [
+      1.334,
+      1.286
+    ],
+    "G-pull-blocks:DSV2L_M0256": [
+      1.156,
+      1.161
+    ],
+    "G-pull-blocks:DSV2L_M0512": [
+      1.117,
+      1.125
+    ],
+    "G-pull-blocks:DSV2L_M1024": [
+      1.09,
+      1.091
+    ],
+    "G-inplace:GLM_M0001": [
+      1.798,
+      1.849
+    ],
+    "G-inplace:GLM_M0002": [
+      1.729,
+      1.744
+    ],
+    "G-inplace:GLM_M0004": [
+      1.531,
+      1.65
+    ],
+    "G-inplace:GLM_M0008": [
+      1.427,
+      1.458
+    ],
+    "G-inplace:GLM_M0016": [
+      1.255,
+      1.185
+    ],
+    "G-inplace:GLM_M0032": [
+      1.023,
+      0.993
+    ],
+    "G-inplace:GLM_M0064": [
+      0.773,
+      0.915
+    ],
+    "G-inplace:GLM_M0128": [
+      0.613,
+      0.563
+    ],
+    "G-inplace:GLM_M0256": [
+      0.425,
+      0.424
+    ],
+    "G-inplace:GLM_M0512": [
+      0.371,
+      0.364
+    ],
+    "G-inplace:GLM_M1024": [
+      0.291,
+      0.293
+    ],
+    "G-inplace:QWEN35_M0001": [
+      1.773,
+      1.83
+    ],
+    "G-inplace:QWEN35_M0002": [
+      1.876,
+      1.843
+    ],
+    "G-inplace:QWEN35_M0004": [
+      1.874,
+      1.745
+    ],
+    "G-inplace:QWEN35_M0008": [
+      1.598,
+      1.682
+    ],
+    "G-inplace:QWEN35_M0016": [
+      1.549,
+      1.499
+    ],
+    "G-inplace:QWEN35_M0032": [
+      1.448,
+      1.393
+    ],
+    "G-inplace:QWEN35_M0064": [
+      1.152,
+      1.165
+    ],
+    "G-inplace:QWEN35_M0128": [
+      0.989,
+      0.951
+    ],
+    "G-inplace:QWEN35_M0256": [
+      0.759,
+      0.761
+    ],
+    "G-inplace:QWEN35_M0512": [
+      0.602,
+      0.58
+    ],
+    "G-inplace:QWEN35_M1024": [
+      0.496,
+      0.492
+    ],
+    "G-inplace:DSV2L_M0001": [
+      1.834,
+      1.802
+    ],
+    "G-inplace:DSV2L_M0002": [
+      1.774,
+      1.758
+    ],
+    "G-inplace:DSV2L_M0004": [
+      1.652,
+      1.614
+    ],
+    "G-inplace:DSV2L_M0008": [
+      1.43,
+      1.413
+    ],
+    "G-inplace:DSV2L_M0016": [
+      1.26,
+      1.256
+    ],
+    "G-inplace:DSV2L_M0032": [
+      0.966,
+      0.959
+    ],
+    "G-inplace:DSV2L_M0064": [
+      0.84,
+      0.784
+    ],
+    "G-inplace:DSV2L_M0128": [
+      0.6,
+      0.6
+    ],
+    "G-inplace:DSV2L_M0256": [
+      0.468,
+      0.454
+    ],
+    "G-inplace:DSV2L_M0512": [
+      0.375,
+      0.381
+    ],
+    "G-inplace:DSV2L_M1024": [
+      0.307,
+      0.31
+    ],
+    "G-inplace-or-pull:GLM_M0001": [
+      1.295,
+      1.292
+    ],
+    "G-inplace-or-pull:GLM_M0002": [
+      1.212,
+      1.259
+    ],
+    "G-inplace-or-pull:GLM_M0004": [
+      1.094,
+      1.087
+    ],
+    "G-inplace-or-pull:GLM_M0008": [
+      1.016,
+      0.965
+    ],
+    "G-inplace-or-pull:GLM_M0016": [
+      0.85,
+      0.839
+    ],
+    "G-inplace-or-pull:GLM_M0032": [
+      0.654,
+      0.665
+    ],
+    "G-inplace-or-pull:GLM_M0064": [
+      0.522,
+      0.528
+    ],
+    "G-inplace-or-pull:GLM_M0128": [
+      0.393,
+      0.411
+    ],
+    "G-inplace-or-pull:GLM_M0256": [
+      0.331,
+      0.325
+    ],
+    "G-inplace-or-pull:GLM_M0512": [
+      0.318,
+      0.321
+    ],
+    "G-inplace-or-pull:GLM_M1024": [
+      0.298,
+      0.296
+    ],
+    "G-inplace-or-pull:QWEN35_M0001": [
+      1.321,
+      1.309
+    ],
+    "G-inplace-or-pull:QWEN35_M0002": [
+      1.065,
+      1.259
+    ],
+    "G-inplace-or-pull:QWEN35_M0004": [
+      1.274,
+      1.187
+    ],
+    "G-inplace-or-pull:QWEN35_M0008": [
+      1.135,
+      1.107
+    ],
+    "G-inplace-or-pull:QWEN35_M0016": [
+      1.062,
+      1.046
+    ],
+    "G-inplace-or-pull:QWEN35_M0032": [
+      0.942,
+      0.948
+    ],
+    "G-inplace-or-pull:QWEN35_M0064": [
+      0.774,
+      0.814
+    ],
+    "G-inplace-or-pull:QWEN35_M0128": [
+      0.621,
+      0.685
+    ],
+    "G-inplace-or-pull:QWEN35_M0256": [
+      0.545,
+      0.57
+    ],
+    "G-inplace-or-pull:QWEN35_M0512": [
+      0.483,
+      0.49
+    ],
+    "G-inplace-or-pull:QWEN35_M1024": [
+      0.495,
+      0.513
+    ],
+    "G-inplace-or-pull:DSV2L_M0001": [
+      1.269,
+      1.277
+    ],
+    "G-inplace-or-pull:DSV2L_M0002": [
+      1.31,
+      1.407
+    ],
+    "G-inplace-or-pull:DSV2L_M0004": [
+      1.101,
+      1.123
+    ],
+    "G-inplace-or-pull:DSV2L_M0008": [
+      0.945,
+      0.994
+    ],
+    "G-inplace-or-pull:DSV2L_M0016": [
+      0.878,
+      0.894
+    ],
+    "G-inplace-or-pull:DSV2L_M0032": [
+      0.676,
+      0.68
+    ],
+    "G-inplace-or-pull:DSV2L_M0064": [
+      0.481,
+      0.548
+    ],
+    "G-inplace-or-pull:DSV2L_M0128": [
+      0.416,
+      0.434
+    ],
+    "G-inplace-or-pull:DSV2L_M0256": [
+      0.364,
+      0.369
+    ],
+    "G-inplace-or-pull:DSV2L_M0512": [
+      0.323,
+      0.325
+    ],
+    "G-inplace-or-pull:DSV2L_M1024": [
+      0.308,
+      0.309
+    ],
+    "S-pull:GLM_DECODE": [
+      1.596,
+      1.441
+    ],
+    "S-pull:QWEN35_DECODE": [
+      1.72,
+      1.316
+    ],
+    "S-pull:DSV2L_DECODE": [
+      1.284,
+      1.389
+    ],
+    "S-pull:GLM_PREFILL": [
+      1.725,
+      1.781
+    ],
+    "S-pull:QWEN35_PREFILL": [
+      1.119,
+      1.12
+    ],
+    "S-pull:DSV2L_PREFILL": [
+      1.538,
+      1.505
+    ],
+    "S-pull-or-stage:GLM_DECODE": [
+      1.75,
+      1.838
+    ],
+    "S-pull-or-stage:QWEN35_DECODE": [
+      1.864,
+      1.777
+    ],
+    "S-pull-or-stage:DSV2L_DECODE": [
+      1.744,
+      1.711
+    ],
+    "S-pull-or-stage:GLM_PREFILL": [
+      1.2,
+      1.18
+    ],
+    "S-pull-or-stage:QWEN35_PREFILL": [
+      1.182,
+      1.182
+    ],
+    "S-pull-or-stage:DSV2L_PREFILL": [
+      1.158,
+      1.153
+    ],
+    "S-inplace-small:GLM_DECODE": [
+      1.682,
+      1.517
+    ],
+    "S-inplace-small:QWEN35_DECODE": [
+      2.136,
+      1.691
+    ],
+    "S-inplace-small:DSV2L_DECODE": [
+      1.488,
+      1.65
+    ],
+    "S-inplace-small:GLM_PREFILL": [
+      0.465,
+      0.48
+    ],
+    "S-inplace-small:QWEN35_PREFILL": [
+      0.491,
+      0.492
+    ],
+    "S-inplace-small:DSV2L_PREFILL": [
+      0.449,
+      0.442
+    ],
+    "S-inplace-large:GLM_DECODE": [
+      1.356,
+      1.176
+    ],
+    "S-inplace-large:QWEN35_DECODE": [
+      1.495,
+      1.147
+    ],
+    "S-inplace-large:DSV2L_DECODE": [
+      1.298,
+      1.442
+    ],
+    "S-inplace-large:GLM_PREFILL": [
+      1.425,
+      1.475
+    ],
+    "S-inplace-large:QWEN35_PREFILL": [
+      1.531,
+      1.548
+    ],
+    "S-inplace-large:DSV2L_PREFILL": [
+      1.265,
+      1.253
+    ]
+  }
 }

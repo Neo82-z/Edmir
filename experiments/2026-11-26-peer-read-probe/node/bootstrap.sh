@@ -57,7 +57,7 @@ core)
   log "CORE DONE" ;;
 models)
   rm -f /tmp/tf.*; grep -vE "$SMALL|^$IMG\$" $A/handoff/transfer-files.txt | split -n r/8 - /tmp/tf.
-  ls /tmp/tf.* | xargs -P 8 -I{} nice -n 19 ionice -c 3 rsync -a --partial --files-from={} $cpu:$A/ $A/ </dev/null
+  ls /tmp/tf.* | xargs -P 8 -I{} nice -n 19 ionice -c 3 rsync -a --partial --files-from={} $cpu:$A/ $A/
   log "models pass exit=$?"
   nice -n 19 rsync -a --partial --files-from=$A/handoff/transfer-files.txt $cpu:$A/ $A/ </dev/null; log "final pass exit=$?"
   verify "models/|tools/" || exit 7

@@ -40,7 +40,7 @@ def load(folder):
     walls = defaultdict(lambda:defaultdict(dict))
     failures = []
     for path in sorted(folder.glob("C*.json")):
-        match = re.fullmatch(r"C\d+-([A-Z0-9]+_[A-Z0-9]+)-p(\d)-(forward|reverse)",path.stem)
+        match = re.fullmatch(r"C\d+-([A-Z0-9]+_[A-Z0-9]+(?:-L\d+)?)-p(\d)-(forward|reverse)",path.stem)
         data = json.loads(path.read_text())
         failures += [f"{path.stem}:{arm}:{v['status']}" for arm,v in data["admission"].items() if v["status"]!="ok"]
         eager = {r["arm"] for r in data["rows"] if r["launch_mode"]!="graph" and r["arm"].startswith(GRAPH_ARMS)}
