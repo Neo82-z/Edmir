@@ -44,7 +44,7 @@ def main():
     if layers:
         block("layer",layers,("1","2","3"))
     with a.out.open("w",newline="") as f:
-        writer = csv.DictWriter(f,list(rows[0]))
+        writer = csv.DictWriter(f,list(rows[0]),lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
     print(len(rows),"processes")
