@@ -86,7 +86,7 @@ def install(world):
             rows = rows_at(x,[r*k for r in range(begin,stop)],k)
             out[begin:stop] = project(rows,weight.reshape(-1,n,k)[expert],q).to(out.dtype)
 
-    def launch_rows(base, held, out_rows, weight, out, partial, work, k, q, bm, g, bk=32, unit=1):
+    def launch_rows(base, held, out_rows, weight, out, partial, work, k, q, bm, g, bk=32, unit=1, stages=None):
         n = out.shape[1]
         if (q>1)!=(partial is not None) or (q>1 and partial.shape!=(q,*out.shape)):
             raise ValueError("partial buffer does not match q")

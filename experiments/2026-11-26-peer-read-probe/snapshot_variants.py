@@ -31,6 +31,8 @@ their own. The variant here changes three things and keeps the arithmetic:
                          A suffix _NR after that (direct arms only) leaves out the release
                          barrier, as a deployment with double buffering would; the inputs
                          are static here, so the readers never race a writer.
+                         A last suffix _S<n> before _R sets the depth of the K-loop
+                         pipeline (default 3).
   BNEW_BLAS_R            staged rows, regrouped by expert in local memory, then one library
                          GEMM (torch.mm, BF16) per local expert, all replayed as one CUDA
                          graph. The result stays in per-expert order, as the native arm's
@@ -68,7 +70,7 @@ SCHEMA = "edmir.snapshot-variants.exploratory.v1"
 REGISTERED = ("D_Q1_G2_R","D_Q4_G2_R","BNEW_Q1_G2_R","BNEW_Q4_G2_R","NATIVE")
 ARMS = ("D_Q1_G2_R","D_GATHER16_Q1_G2_R","D_GATHER64_Q1_G2_R","D_Q4_G2_R","D_GATHER16_Q4_G2_R","D_GATHER64_Q4_G2_R",
         "BNEW_Q1_G2_R","BNEW_Q4_G2_R","NATIVE")
-VARIANT = re.compile(r"(D_GATHER|D_PACK|BNEW_GATHER)(16|32|64|128)_Q(1|2|4|8|16)_G([124])(?:_K(32|64|128))?(_W)?(_NR)?_R")
+VARIANT = re.compile(r"(D_GATHER|D_PACK|BNEW_GATHER)(16|32|64|128)_Q(1|2|4|8|16)_G([124])(?:_K(32|64|128))?(_W)?(_NR)?(?:_S([2-6]))?_R")
 BLAS = ("BNEW_BLAS_R","BNEW_BLASC_R","PULL_BLAS_R")
 EXPERT_ORDER = ("BNEW_BLAS_R","PULL_BLAS_R")  # results left in per-expert order
 
@@ -208,7 +210,7 @@ def main():
                 return super().consumer(arm)
             kind,bm,q,g,bk = match[1],int(match[2]),int(match[3]),int(match[4]),int(match[5] or 32)
             base,held = self.source(kind)
-            unit = WIDE if match[6] else 1
+            unit,stages = WIDE if match[6] else 1,int(match[8]) if match[8] else None
             if match[6]:
                 held = self.wide(kind)
             if q>1 and q not in self.row_partial:
@@ -224,7 +226,7 @@ def main():
 
             def issue():
                 if len(work):
-                    launch_rows(base,held,self.out_rows,self.weight,self.output,partial,work,self.k,q,bm,g,bk,unit)
+                    launch_rows(base,held,self.out_rows,self.weight,self.output,partial,work,self.k,q,bm,g,bk,unit,stages)
             return issue
 
         def run(self, arm, mark=no_mark):

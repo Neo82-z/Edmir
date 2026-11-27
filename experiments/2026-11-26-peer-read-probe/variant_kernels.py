@@ -66,15 +66,17 @@ def copy_rows(A0, ROWOFF, B, k: tl.constexpr, block: tl.constexpr, unit: tl.cons
     tl.store(B+row*k+ix,value,ix<k)
 
 
-def launch_rows(base, held, out_rows, weight, out, partial, work, k, q, bm, g, bk=32, unit=1):
+def launch_rows(base, held, out_rows, weight, out, partial, work, k, q, bm, g, bk=32, unit=1, stages=None):
     """One launch over every tile in work. With q>1 each K partition writes an FP32 partial
     output and a second kernel sums them; q=4 uses the registered merge4. held is in units
-    of `unit` elements (see in_units)."""
+    of `unit` elements (see in_units). stages is the depth of the K-loop pipeline (the
+    compiler's default is 3: two blocks are fetched ahead of the one being multiplied)."""
     rows,n = out.shape
     bn = 128*g
     target = out if q==1 else partial
     project_rows[(work.shape[0],triton.cdiv(n,bn),q)](
-        base,held,out_rows,weight,target,work,rows,k,n,q,bm,bn,bk,unit,num_warps=8 if bm*bn>=64*256 else 4)
+        base,held,out_rows,weight,target,work,rows,k,n,q,bm,bn,bk,unit,num_warps=8 if bm*bn>=64*256 else 4,
+        **({} if stages is None else dict(num_stages=stages)))
     if q==4:
         merge4[(triton.cdiv(rows*n,1024),)](partial,out,rows*n,1024)
     elif q>1:

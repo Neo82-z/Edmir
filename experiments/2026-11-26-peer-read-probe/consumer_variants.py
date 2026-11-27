@@ -25,6 +25,7 @@ output; the arithmetic (FP32 accumulation, K block 32, q partitions) is unchange
                     of 2026-11-26, which fetches them two bytes at a time.
                     A suffix _NR after that leaves out the release barrier, as a
                     deployment with double buffering would; the inputs are static here.
+                    A last suffix _S<n> sets the depth of the K-loop pipeline (default 3).
   PULL_SLT          staging without a collective: after the publish barrier one kernel
                     copies each remote row once to local memory, then the tuned cuBLASLt
                     GEMM of the SLT arm runs on the copy.
@@ -57,7 +58,7 @@ REP = "20261120"
 ARMS = ("D_Q1_G2","D_Q1_G2_ROT","D_ALL_Q1_G2","D_MRG_Q1_G2","D_Q4_G2","D_Q4_G2_ROT","D_ALL_Q4_G2","D_MRG_Q4_G2",
         "BNEW_Q1_G2","BNEW_Q4_G2","SLT")
 REGISTERED = ("D_Q1_G2","D_Q4_G2","BNEW_Q1_G2","BNEW_Q4_G2","SLT")
-VARIANT = re.compile(r"D_(ALLR|ALL|MRG)(16|32|64)?_Q(1|2|4|8|16)_G([124])(?:_K(32|64|128))?(_W)?(_NR)?")
+VARIANT = re.compile(r"D_(ALLR|ALL|MRG)(16|32|64)?_Q(1|2|4|8|16)_G([124])(?:_K(32|64|128))?(_W)?(_NR)?(?:_S([2-6]))?")
 PULLS = ("PULL_SLT","PULLW_SLT","PULLR_SLT")
 
 
@@ -123,7 +124,8 @@ def main():
                     self.graphs.prepare({arm:self.puller(arm) if pull(arm) else self.consumer(arm)},group=arm)
 
         def run(self, arm, mark=no_mark):
-            if arm.endswith("_NR") and VARIANT.fullmatch(arm) is not None:
+            match = VARIANT.fullmatch(arm)
+            if match is not None and match[7]:
                 self.handle.barrier(0,60_000)
                 mark("transport")
                 self.graphs.run(arm,self.consumer(arm))
@@ -186,10 +188,11 @@ def main():
             work = self.variant_work[kind,bm]
 
             held,unit = (self.held_wide,WIDE) if match[6] else (self.held,1)
+            stages = int(match[8]) if match[8] else None
 
             def issue():
                 launch_rows(self.remote[0],held,self.out_rows,self.weight,self.out,partial,
-                            work,self.k,q,bm,g,bk,unit)
+                            work,self.k,q,bm,g,bk,unit,stages)
             return issue
 
     hardware(a.gate)
