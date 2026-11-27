@@ -196,7 +196,7 @@ footer { margin-top: 3.5rem; padding-top: 1rem; border-top: 1px solid var(--rule
       <div><dt>硬件</dt><dd>两台 8×A100 SXM4 80GB 节点（节点 A：11-26，节点 B：11-27）</dd></div>
       <div><dt>判定规则</dt><dd>三对正逆序进程，20 次预热加 100 次计时，3% 判定带</dd></div>
       <div><dt>规模</dt><dd>每次研究 234 个进程，全部通过准入</dd></div>
-      <div><dt>对应版本</dt><dd>Edmir <code>9b7555a</code>，论文 <code>c4e81c2</code></dd></div>
+      <div><dt>更新</dt><dd>2026-11-28，按一次外部审阅核对并补充（第 13 节）</dd></div>
     </dl>
   </header>
 
@@ -216,6 +216,7 @@ footer { margin-top: 3.5rem; padding-top: 1rem; border-top: 1px solid var(--rule
         <li><a href="#s10"><span class="n">10</span>没做的事</a></li>
         <li><a href="#s11"><span class="n">11</span>数据和代码</a></li>
         <li><a href="#s12"><span class="n">12</span>论文怎么用</a></li>
+        <li><a href="#s13"><span class="n">13</span>审阅后补充</a></li>
       </ol>
     </nav>
 
@@ -232,12 +233,12 @@ footer { margin-top: 3.5rem; padding-top: 1rem; border-top: 1px solid var(--rule
           <table class="claims">
             <thead><tr><th>说法</th><th>结论</th><th>证据等级</th></tr></thead>
             <tbody>
-              <tr><td>已登记的逐源直读消费者输给调优基线</td><td><span class="verdict v-yes">成立</span>网格 33 格全输给 All-to-All 加调优 GEMM，六个快照全输给原生路径。</td><td><span class="g g-a">A</span>已登记设计，三对规则，两台机器一致</td></tr>
+              <tr><td>已登记的逐源直读消费者输给调优基线</td><td><span class="verdict v-yes">成立</span>网格 66 格（q=1、q=4 各 33 格）里 65 格判输给 All-to-All 加调优 GEMM，1 格未判定；六个快照全输给原生路径。</td><td><span class="g g-a">A</span>已登记设计，三对规则，两台机器一致</td></tr>
               <tr><td>同一个消费者，读对端行对读 staged 行，存在交叉</td><td><span class="verdict v-yes">成立</span>q=4 时直读赢到每对 8–32 行，之后 staged 赢。</td><td><span class="g g-a">A</span>已登记，节点 B 复现</td></tr>
               <tr><td>开机前封存的预测</td><td><span class="verdict v-part">部分成立</span>方向和存在性对，q=4 区间包含或重叠实测，q=1 区间偏低。</td><td><span class="g g-a">A</span></td></tr>
               <tr><td>节点标定的预测</td><td><span class="verdict v-no">失误</span>预测没有交叉。</td><td><span class="g g-a">A</span></td></tr>
               <tr><td>把 All-to-All 换成对端拉取，同一个 GEMM，M≤512 更快</td><td><span class="verdict v-yes">成立</span>30 格里 28 格判赢，1.11–1.55 倍，另 2 格未判定。</td><td><span class="g g-b">B</span>筛选后封存，再三对确认，单节点</td></tr>
-              <tr><td>M=1024 拉取与 All-to-All 持平</td><td><span class="verdict v-yes">成立</span>整行拉取 0.97–1.00。整块拉取 1.10 倍，其中两个模型没有事先预期。</td><td><span class="g g-b">B</span><span class="g g-c">C</span></td></tr>
+              <tr><td>M=1024 整行拉取与 All-to-All 分不出胜负</td><td><span class="verdict v-yes">成立</span>中位数 0.97–1.00；只有 DSV2-Lite 达到“判平”标准，GLM、Qwen3.5 是未判定。整块拉取赢 1.10 倍，其中两个模型没有事先预期。</td><td><span class="g g-b">B</span><span class="g g-c">C</span></td></tr>
               <tr><td>一次启动的就地读在小 M 上最快</td><td><span class="verdict v-yes">成立</span>17/17，M=1 时到 1.88 倍。</td><td><span class="g g-b">B</span>窄读版本在节点 A 上也按三对规则赢过（C）</td></tr>
               <tr><td>六个快照上拉取加库 GEMM 赢原生路径</td><td><span class="verdict v-yes">成立</span>decode 1.20–1.38，prefill 1.12–1.68。</td><td><span class="g g-b">B</span></td></tr>
               <tr><td>decode 上就地读（小 tile）赢原生路径</td><td><span class="verdict v-yes">成立</span>1.46–1.57。</td><td><span class="g g-b">B</span>节点 A 窄读版本 1.32–1.60（C）</td></tr>
@@ -426,7 +427,7 @@ footer { margin-top: 3.5rem; padding-top: 1rem; border-top: 1px solid var(--rule
         <ul>
           <li><strong>第一次研究的臂在节点 B 上复现。</strong>逐源直读对调优 staged：33 格全输（慢 1.2–10 倍）。匹配消费者 q=4：直读赢到 8、32、8 行，staged 从 32、128、32 行起赢，与节点 A 的区间相差不超过一档。</li>
           <li><strong>阶段时间（GLM）。</strong>M=1：All-to-All 0.112 ms，发布 barrier 加拷贝 0.040 ms。M=1024：两种传输都是 0.28 ms（29 MB），都到了链路带宽；拉取多一次释放 barrier（0.06 ms），所以没有优势。就地读在 M=1024 的 GEMM 阶段 2.4 ms，合并 GEMM 0.42 ms。</li>
-          <li><strong>就地读与拉取的切换点。</strong>拉取从 16（GLM）、64（Qwen3.5）、32（DSV2-Lite）行起判赢。重读次数最小的 Qwen3.5（ρ=4）切换得最晚。</li>
+          <li><strong>就地读与拉取的切换点。</strong>就地读赢到 2（GLM）、16（Qwen3.5）、4（DSV2-Lite）行，拉取从 16、64、32 行起判赢，中间的格没有胜者。所以切换点落在 2–16、16–64、4–32 这三个区间里。重读次数最小的 Qwen3.5（ρ=4）切换得最晚。</li>
         </ul>
 
         <h3>快照</h3>
@@ -498,7 +499,9 @@ footer { margin-top: 3.5rem; padding-top: 1rem; border-top: 1px solid var(--rule
         <h2><span class="n">9</span>不能写、或要带限定写的</h2>
         <ul>
           <li><strong>“直读比 staged 快 1.69–3.16 倍”。</strong>只在 CUTLASS 研究的口径下成立（对手是逐对 NCCL 传输加合并 GEMM，K=8192）。论文里已降为背景，并说明不能读作对端读的优势。</li>
-          <li><strong>“对端路径在所有行数上都赢”。</strong>M=1024 是持平；整块拉取赢 1.10 倍，但 GLM、DSV2-Lite 上没有事先预期。</li>
+          <li><strong>“对端路径在所有行数上都赢”、“M=1024 持平”。</strong>M=1024 整行拉取没有胜者，其中只有 DSV2-Lite 判平，GLM、Qwen3.5 未判定；整块拉取赢 1.10 倍，但 GLM、DSV2-Lite 上没有事先预期。</li>
+          <li><strong>“第一次研究里逐源直读每格都输”。</strong>66 格里 65 格判输，DSV2-Lite q=4 的 M=1 未判定。</li>
+          <li><strong>“按 prefill/decode 就能选路”。</strong>不成立。Qwen3.5 的 prefill 上大 tile 就地读比拉取快 1.37 倍。选路要看每对行数、重读次数和 tile。</li>
           <li><strong>“原因是读宽度”。</strong>对微基准的七 peer 数字和拉取成立；对已登记消费者的失败不成立。三对规则的消融没做。</li>
           <li><strong>“换层、换机型、端到端也成立”。</strong>没有数据。只测了每个模型的一层、一步，第一个投影，一种 GPU。</li>
           <li><strong>“预期是盲预测”。</strong>不是。臂和配置是探索挑出来的，预期来自同一节点上的筛选。它保证的是结果没有事后挑选、跨进程和 seed 稳定。</li>
@@ -551,6 +554,20 @@ footer { margin-top: 3.5rem; padding-top: 1rem; border-top: 1px solid var(--rule
             </tbody>
           </table>
         </div>
+      </section>
+
+      <section id="s13">
+        <h2><span class="n">13</span>11-28 审阅后补充的事实</h2>
+        <p>这一节来自对论文和数据的一次外部审阅，每一条都对照代码或数据核过。</p>
+        <ol class="steps">
+          <li><strong>准入检查的边界。</strong>准入前只把输出缓冲填成 NaN，中间缓冲不填。在网格上，拉取臂的行缓冲在准入时已经被算参考值的那次 All-to-All 写成了正确的行，所以网格上的准入只证明 GEMM 输出对，不单独证明拷贝 kernel 搬了行；拉取臂的源顺序检查也是在 All-to-All 上做的（<code>balanced.py</code> 的 <code>admit</code>）。在快照上，整行拷贝 kernel 是第一个写它那块缓冲的（准入按臂的列表顺序，<code>PULL_BLAS_R</code> 在 <code>BNEW_BLAS_R</code> 之前），所以快照上的准入覆盖了拷贝。整块拷贝（<code>PULLR_SLT</code>）只在网格上跑，没有这样的检查。旁证：拉取的传输时间随字节数增长，M=1024 时到链路带宽。</li>
+          <li><strong>原生路径的配置。</strong>快照回放用的是采集时记录的 kernel 配置，也就是节点 A 调优选出的。节点 B 重新调优后，在快照用到的两个批大小（32 和 16384）上选出的配置与它完全相同（本机 45 份回执逐一比对）。两台机器的调优文件在别的批大小上有差别。</li>
+          <li><strong>计时边界。</strong>迭代开始时激活已经在对端可见的内存里，把激活写进去的开销不在计时内；计到 gate/up 输出完成为止。</li>
+          <li><strong>没有事先预期、但按三对规则判定的快照比较。</strong>小 tile 就地读对拉取：三个 decode 都判赢（1.08、1.30、1.23）。大 tile 就地读对拉取：Qwen3.5 prefill 判赢（1.37），GLM、DSV2-Lite prefill 判输（0.89、0.84）。</li>
+          <li><strong>严格核对脚本。</strong><code>experiments/2026-11-27-confirm/verify.py</code> 把 234 个输出逐个绑定到 <code>queue.csv</code> 和 <code>arms.json</code>：单元、顺序、seed、臂列表、计时策略、准入、graph 启动、测试程序哈希。当前结果 0 个问题。<code>judge.py</code> 仍按文件名配对。</li>
+          <li><strong>最接近的相关工作</strong>（已核实出处）：NVLinkOneSided（arXiv 2611.13188，dispatch 是推，combine 是拉）、GC-MoE（arXiv 2611.04222，独立的 dispatch kernel 把远端 token 拉进本地环形缓冲）、DeepGEMM 的 Mega MoE、NCCL EP（arXiv 2603.13606）。它们的评测都在 Hopper 或 Blackwell 上，比较的是整层。拉取这个想法不是我们的新东西；我们加的是 Ampere 上 GEMM 对齐的测量。</li>
+          <li><strong>数据在哪。</strong>第二次研究每个进程的输出在仓库里（进程级：每个臂的中位数、阶段时间、准入记录）。第一次研究在仓库里的是分析输出 <code>paper_results.json</code>；它的 234 个进程输出和两次研究每次迭代的样本只在本机归档。</li>
+        </ol>
       </section>
     </main>
   </div>
