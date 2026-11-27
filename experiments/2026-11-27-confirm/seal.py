@@ -10,10 +10,9 @@ when it is below 1/margin in both, and into no_prediction otherwise.
   seal.py <exploratory folder> [--margin 1.10] [--out arms.json]
   seal.py <exploratory folder> --layers GLM:3,44 QWEN35:3,37 DSV2L:3,24 --out arms-layers.json
 
-The second form seals the snapshot comparisons on exploratory captures of other layers, as a
-separate file for a separate queue; its screening files are layers/<unit>-L<layer><tag>.json.
-
-The comparisons and the arm sets are listed below; nothing else is chosen by hand.
+The second form writes the hypotheses for exploratory captures of other layers. Nothing is
+screened there: every snapshot hypothesis of the sealed arms.json is carried over unchanged to
+the same model's units on the other layers, so the run on those captures is an out-of-sample test.
 """
 import argparse
 import json
@@ -69,11 +68,18 @@ def main():
     ap.add_argument("--out",type=Path,default=ROOT/"arms.json")
     ap.add_argument("--layers",nargs="+",metavar="MODEL:LAYER,LAYER")
     a = ap.parse_args()
-    comparisons,layers = COMPARISONS,{}
     if a.layers:
         layers = {model:[int(x) for x in listed.split(",")] for model,listed in (item.split(":") for item in a.layers)}
-        units = [f"{w}_{p}-L{layer}" for p in ("DECODE","PREFILL") for w,listed in layers.items() for layer in listed]
-        comparisons = [(n,what,b,c,"layers",tags,units) for n,what,b,c,folder,tags,_ in COMPARISONS if folder=="snapshots"]
+        sealed = json.loads((ROOT/"arms.json").read_text())
+        moved = lambda units: [f"{u}-L{layer}" for u in units for layer in layers[u.split("_")[0]]]
+        carried = lambda items: [dict(item,units=moved(item["units"])) for item in items if item["units"][0] in SNAPSHOTS]
+        a.out.write_text(json.dumps(dict(
+            note="Sealed by the commit that contains this file, before any timing on these captures. The snapshot "
+                 "hypotheses of arms.json, carried over unchanged to exploratory captures of other layers.",
+            decision=sealed["decision"],policy=sealed["policy"],layers=layers,snapshot=sealed["snapshot"],
+            hypotheses=carried(sealed["hypotheses"]),no_prediction=carried(sealed.get("no_prediction",[]))),indent=2)+"\n")
+        return
+    comparisons = COMPARISONS
     hypotheses,open_units,screening = [],[],{}
     for name,what,base,cand,folder,tags,units in comparisons:
         sides = dict(candidate=[],baseline=[],none=[])
@@ -93,7 +99,7 @@ def main():
         note="Sealed by the commit that contains this file. Written by seal.py from two screening processes per unit; "
              "the confirmatory run uses new processes and, on the grids, new input seeds.",
         decision=dict(band=1.03,pairs=3),policy=dict(warmup=20,timed=100),margin=a.margin,
-        **(dict(layers=layers) if layers else dict(grid=dict(seeds=["20261127","20261128","20261129"],arms=GRID_ARMS))),
+        grid=dict(seeds=["20261127","20261128","20261129"],arms=GRID_ARMS),
         snapshot=dict(arms=SNAPSHOT_ARMS),
         hypotheses=hypotheses,no_prediction=open_units,screening_ratios=screening)
     a.out.write_text(json.dumps(sealed,indent=2)+"\n")

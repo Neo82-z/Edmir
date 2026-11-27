@@ -1,0 +1,127 @@
+{
+  "note": "Sealed by the commit that contains this file, before any timing on these captures. The snapshot hypotheses of arms.json, carried over unchanged to exploratory captures of other layers.",
+  "decision": {
+    "band": 1.03,
+    "pairs": 3
+  },
+  "policy": {
+    "warmup": 20,
+    "timed": 100
+  },
+  "layers": {
+    "GLM": [
+      3,
+      44
+    ],
+    "QWEN35": [
+      3,
+      37
+    ],
+    "DSV2L": [
+      3,
+      24
+    ]
+  },
+  "snapshot": {
+    "arms": [
+      "NATIVE",
+      "D_Q1_G2_R",
+      "D_Q4_G2_R",
+      "D_GATHER16_Q8_G2_K64_W_R",
+      "D_GATHER64_Q1_G4_K64_W_R",
+      "PULL_BLAS_R",
+      "BNEW_BLAS_R"
+    ]
+  },
+  "hypotheses": [
+    {
+      "name": "S-pull/candidate: rows pulled from peer memory, then a library GEMM per expert, against the native path; expected faster: PULL_BLAS_R",
+      "baseline": "NATIVE",
+      "candidate": "PULL_BLAS_R",
+      "winner": "candidate",
+      "units": [
+        "GLM_DECODE-L3",
+        "GLM_DECODE-L44",
+        "QWEN35_DECODE-L3",
+        "QWEN35_DECODE-L37",
+        "DSV2L_DECODE-L3",
+        "DSV2L_DECODE-L24",
+        "GLM_PREFILL-L3",
+        "GLM_PREFILL-L44",
+        "QWEN35_PREFILL-L3",
+        "QWEN35_PREFILL-L37",
+        "DSV2L_PREFILL-L3",
+        "DSV2L_PREFILL-L24"
+      ]
+    },
+    {
+      "name": "S-pull-or-stage/candidate: the same library GEMM on rows pulled from peer memory against rows staged by All-to-All; expected faster: PULL_BLAS_R",
+      "baseline": "BNEW_BLAS_R",
+      "candidate": "PULL_BLAS_R",
+      "winner": "candidate",
+      "units": [
+        "GLM_DECODE-L3",
+        "GLM_DECODE-L44",
+        "QWEN35_DECODE-L3",
+        "QWEN35_DECODE-L37",
+        "DSV2L_DECODE-L3",
+        "DSV2L_DECODE-L24",
+        "GLM_PREFILL-L3",
+        "GLM_PREFILL-L44",
+        "QWEN35_PREFILL-L3",
+        "QWEN35_PREFILL-L37",
+        "DSV2L_PREFILL-L3",
+        "DSV2L_PREFILL-L24"
+      ]
+    },
+    {
+      "name": "S-inplace-small/candidate: one-launch consumer in place, small tiles, against the native path; expected faster: D_GATHER16_Q8_G2_K64_W_R",
+      "baseline": "NATIVE",
+      "candidate": "D_GATHER16_Q8_G2_K64_W_R",
+      "winner": "candidate",
+      "units": [
+        "GLM_DECODE-L3",
+        "GLM_DECODE-L44",
+        "QWEN35_DECODE-L3",
+        "QWEN35_DECODE-L37",
+        "DSV2L_DECODE-L3",
+        "DSV2L_DECODE-L24"
+      ]
+    },
+    {
+      "name": "S-inplace-small/baseline: one-launch consumer in place, small tiles, against the native path; expected faster: NATIVE",
+      "baseline": "NATIVE",
+      "candidate": "D_GATHER16_Q8_G2_K64_W_R",
+      "winner": "baseline",
+      "units": [
+        "GLM_PREFILL-L3",
+        "GLM_PREFILL-L44",
+        "QWEN35_PREFILL-L3",
+        "QWEN35_PREFILL-L37",
+        "DSV2L_PREFILL-L3",
+        "DSV2L_PREFILL-L24"
+      ]
+    },
+    {
+      "name": "S-inplace-large/candidate: one-launch consumer in place, large tiles, against the native path; expected faster: D_GATHER64_Q1_G4_K64_W_R",
+      "baseline": "NATIVE",
+      "candidate": "D_GATHER64_Q1_G4_K64_W_R",
+      "winner": "candidate",
+      "units": [
+        "GLM_DECODE-L3",
+        "GLM_DECODE-L44",
+        "QWEN35_DECODE-L3",
+        "QWEN35_DECODE-L37",
+        "DSV2L_DECODE-L3",
+        "DSV2L_DECODE-L24",
+        "GLM_PREFILL-L3",
+        "GLM_PREFILL-L44",
+        "QWEN35_PREFILL-L3",
+        "QWEN35_PREFILL-L37",
+        "DSV2L_PREFILL-L3",
+        "DSV2L_PREFILL-L24"
+      ]
+    }
+  ],
+  "no_prediction": []
+}

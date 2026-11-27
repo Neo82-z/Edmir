@@ -1,0 +1,196 @@
+{
+  "note": "Sealed by the commit that contains this file. An ablation batch under the three-pair rule: load width and release barrier. Only two hypotheses are stated, from the pre-boot PTX analysis and one screening process on GLM; the rest is measured without prediction.",
+  "decision": {
+    "band": 1.03,
+    "pairs": 3
+  },
+  "policy": {
+    "warmup": 20,
+    "timed": 100
+  },
+  "grid": {
+    "seeds": [
+      "20261127",
+      "20261128",
+      "20261129"
+    ],
+    "m": [
+      1,
+      16,
+      64,
+      256,
+      1024
+    ],
+    "arms": [
+      "SLT",
+      "PULL_SLT",
+      "PULLW_SLT",
+      "PULLW_SLT_NR",
+      "D_MRG16_Q8_G2_K64",
+      "D_MRG16_Q8_G2_K64_W",
+      "D_MRG16_Q8_G2_K64_W_NR"
+    ]
+  },
+  "snapshot": {
+    "arms": [
+      "NATIVE",
+      "D_Q1_G2_R",
+      "D_GATHER16_Q8_G2_K64_R",
+      "D_GATHER16_Q8_G2_K64_W_R",
+      "D_GATHER16_Q8_G2_K64_W_NR_R",
+      "D_GATHER64_Q1_G4_K64_R",
+      "D_GATHER64_Q1_G4_K64_W_R",
+      "D_GATHER64_Q1_G4_K64_W_NR_R",
+      "PULL_BLAS_R"
+    ]
+  },
+  "hypotheses": [
+    {
+      "name": "A-width/candidate: pulling rows with 16-byte loads against 2-byte loads, from 2 MiB per rank up; expected faster: PULLW_SLT",
+      "baseline": "PULL_SLT",
+      "candidate": "PULLW_SLT",
+      "winner": "candidate",
+      "units": [
+        "GLM_M0064",
+        "GLM_M0256",
+        "GLM_M1024",
+        "QWEN35_M0064",
+        "QWEN35_M0256",
+        "QWEN35_M1024",
+        "DSV2L_M0064",
+        "DSV2L_M0256",
+        "DSV2L_M1024"
+      ]
+    },
+    {
+      "name": "A-width/tie: the same at 32 KiB per rank, where the launch dominates; expected: no difference",
+      "baseline": "PULL_SLT",
+      "candidate": "PULLW_SLT",
+      "winner": "tie",
+      "units": [
+        "GLM_M0001",
+        "QWEN35_M0001",
+        "DSV2L_M0001"
+      ]
+    }
+  ],
+  "no_prediction": [
+    {
+      "baseline": "PULL_SLT",
+      "candidate": "PULLW_SLT",
+      "units": [
+        "GLM_M0016",
+        "QWEN35_M0016",
+        "DSV2L_M0016"
+      ]
+    },
+    {
+      "baseline": "D_MRG16_Q8_G2_K64",
+      "candidate": "D_MRG16_Q8_G2_K64_W",
+      "units": [
+        "GLM_M0001",
+        "GLM_M0016",
+        "GLM_M0064",
+        "GLM_M0256",
+        "GLM_M1024",
+        "QWEN35_M0001",
+        "QWEN35_M0016",
+        "QWEN35_M0064",
+        "QWEN35_M0256",
+        "QWEN35_M1024",
+        "DSV2L_M0001",
+        "DSV2L_M0016",
+        "DSV2L_M0064",
+        "DSV2L_M0256",
+        "DSV2L_M1024"
+      ]
+    },
+    {
+      "baseline": "PULLW_SLT",
+      "candidate": "PULLW_SLT_NR",
+      "units": [
+        "GLM_M0001",
+        "GLM_M0016",
+        "GLM_M0064",
+        "GLM_M0256",
+        "GLM_M1024",
+        "QWEN35_M0001",
+        "QWEN35_M0016",
+        "QWEN35_M0064",
+        "QWEN35_M0256",
+        "QWEN35_M1024",
+        "DSV2L_M0001",
+        "DSV2L_M0016",
+        "DSV2L_M0064",
+        "DSV2L_M0256",
+        "DSV2L_M1024"
+      ]
+    },
+    {
+      "baseline": "D_MRG16_Q8_G2_K64_W",
+      "candidate": "D_MRG16_Q8_G2_K64_W_NR",
+      "units": [
+        "GLM_M0001",
+        "GLM_M0016",
+        "GLM_M0064",
+        "GLM_M0256",
+        "GLM_M1024",
+        "QWEN35_M0001",
+        "QWEN35_M0016",
+        "QWEN35_M0064",
+        "QWEN35_M0256",
+        "QWEN35_M1024",
+        "DSV2L_M0001",
+        "DSV2L_M0016",
+        "DSV2L_M0064",
+        "DSV2L_M0256",
+        "DSV2L_M1024"
+      ]
+    },
+    {
+      "baseline": "D_GATHER16_Q8_G2_K64_R",
+      "candidate": "D_GATHER16_Q8_G2_K64_W_R",
+      "units": [
+        "GLM_DECODE",
+        "QWEN35_DECODE",
+        "DSV2L_DECODE",
+        "GLM_PREFILL",
+        "QWEN35_PREFILL",
+        "DSV2L_PREFILL"
+      ]
+    },
+    {
+      "baseline": "D_GATHER64_Q1_G4_K64_R",
+      "candidate": "D_GATHER64_Q1_G4_K64_W_R",
+      "units": [
+        "GLM_DECODE",
+        "QWEN35_DECODE",
+        "DSV2L_DECODE",
+        "GLM_PREFILL",
+        "QWEN35_PREFILL",
+        "DSV2L_PREFILL"
+      ]
+    },
+    {
+      "baseline": "D_GATHER16_Q8_G2_K64_W_R",
+      "candidate": "D_GATHER16_Q8_G2_K64_W_NR_R",
+      "units": [
+        "GLM_DECODE",
+        "QWEN35_DECODE",
+        "DSV2L_DECODE"
+      ]
+    },
+    {
+      "baseline": "D_GATHER64_Q1_G4_K64_W_R",
+      "candidate": "D_GATHER64_Q1_G4_K64_W_NR_R",
+      "units": [
+        "GLM_DECODE",
+        "QWEN35_DECODE",
+        "DSV2L_DECODE",
+        "GLM_PREFILL",
+        "QWEN35_PREFILL",
+        "DSV2L_PREFILL"
+      ]
+    }
+  ]
+}

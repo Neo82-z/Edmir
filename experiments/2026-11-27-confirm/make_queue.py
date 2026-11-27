@@ -38,7 +38,7 @@ def main():
     if "grid" in arms:
         block("snapshot",[f"{w}_{p}" for w in MODELS for p in ("DECODE","PREFILL")],("1","2","3"))
         for width in MODELS:
-            block("grid",[f"{width}_M{m:04d}" for m in M],arms["grid"]["seeds"])
+            block("grid",[f"{width}_M{m:04d}" for m in arms["grid"].get("m",M)],arms["grid"]["seeds"])
     layers = [f"{w}_{p}-L{layer}" for w,listed in arms.get("layers",{}).items() for layer in listed
               for p in ("DECODE","PREFILL")]
     if layers:
