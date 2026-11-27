@@ -232,6 +232,14 @@ def main():
                 handle.barrier(0,60_000)                  # release
             return self.output
 
+        def prepare_graphs(self, arms):
+            # Each exploratory arm is captured as its own group: if one cannot be captured, only
+            # that arm launches eagerly and the registered arms keep their graphs.
+            super().prepare_graphs([arm for arm in arms if arm in REGISTERED])
+            for arm in arms:
+                if arm not in REGISTERED:
+                    self.graphs.prepare({arm:self.consumer(arm)},group=arm)
+
         def canonical(self, arm, result):
             """A result in the registered row order; only BNEW_BLAS_R leaves it in another order."""
             if arm!="BNEW_BLAS_R":

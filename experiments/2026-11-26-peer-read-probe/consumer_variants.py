@@ -90,6 +90,14 @@ def main():
                 self.out_rows = torch.arange(WORLD*self.m,dtype=torch.int32,device=self.device)
                 self.variant_work,self.variant_partial = {},{}
 
+        def prepare_graphs(self, arms):
+            # Each exploratory arm is captured as its own group: if one cannot be captured, only
+            # that arm launches eagerly and the registered arms keep their graphs.
+            super().prepare_graphs([arm for arm in arms if arm in REGISTERED])
+            for arm in arms:
+                if arm not in REGISTERED and arm not in PULLS:
+                    self.graphs.prepare({arm:self.consumer(arm)},group=arm)
+
         def run(self, arm, mark=no_mark):
             if arm.endswith("_NR") and VARIANT.fullmatch(arm) is not None:
                 self.handle.barrier(0,60_000)
