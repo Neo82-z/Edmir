@@ -18,9 +18,16 @@ output; the arithmetic (FP32 accumulation, K block 32, q partitions) is unchange
                     several sources, so a small M shares one weight read across sources.
                     q may be 1, 2, 4, 8 or 16 here and in D_ALL; a suffix _K64 or _K128
                     changes the K block from 32.
+  D_ALLR<bm>_Qq_Gg  D_ALL with the tiles listed in an order rotated by rank, so that the
+                    first tiles of every destination read different sources.
+                    A suffix _NR on D_ALL, D_ALLR or D_MRG leaves out the release barrier,
+                    as a deployment with double buffering would; the inputs are static here.
   PULL_SLT          staging without a collective: after the publish barrier one kernel
                     copies each remote row once to local memory, then the tuned cuBLASLt
                     GEMM of the SLT arm runs on the copy.
+  PULLR_SLT         PULL_SLT with one copy kernel per source, in an order rotated by rank;
+                    each kernel walks through that source's rows with up to 432 CTAs, as
+                    the single-peer probe of the registered microbenchmark does.
 
 The frozen package is reused unchanged: inputs, graph replay, barriers, the admission check
 and the timing loop (20 warm-up and 100 timed iterations, slowest rank per iteration). The
@@ -43,11 +50,12 @@ REP = "20261120"
 ARMS = ("D_Q1_G2","D_Q1_G2_ROT","D_ALL_Q1_G2","D_MRG_Q1_G2","D_Q4_G2","D_Q4_G2_ROT","D_ALL_Q4_G2","D_MRG_Q4_G2",
         "BNEW_Q1_G2","BNEW_Q4_G2","SLT")
 REGISTERED = ("D_Q1_G2","D_Q4_G2","BNEW_Q1_G2","BNEW_Q4_G2","SLT")
-VARIANT = re.compile(r"D_(ALL|MRG)(16|32|64)?_Q(1|2|4|8|16)_G([124])(?:_K(32|64|128))?")
+VARIANT = re.compile(r"D_(ALLR|ALL|MRG)(16|32|64)?_Q(1|2|4|8|16)_G([124])(?:_K(32|64|128))?(_NR)?")
+PULLS = ("PULL_SLT","PULLR_SLT")
 
 
 def known(arm):
-    return (arm in REGISTERED or arm in ("D_Q1_G2_ROT","D_Q4_G2_ROT","PULL_SLT")
+    return (arm in REGISTERED or arm in ("D_Q1_G2_ROT","D_Q4_G2_ROT") or arm in PULLS
             or VARIANT.fullmatch(arm) is not None)
 POLICY = dict(warmup=20,timed=100)
 
@@ -60,6 +68,8 @@ def main():
     ap.add_argument("--unit",required=True)
     ap.add_argument("--rep",default=REP,help="input seed of the registered design (20261120, 20261121 or 20261122)")
     ap.add_argument("--arms",default=",".join(ARMS))
+    ap.add_argument("--orientation",choices=("both","forward","reverse"),default="both",
+                    help="time the arms in the listed order, reversed, or both in this process")
     ap.add_argument("--out",type=Path,required=True)
     a = ap.parse_args()
 
@@ -68,7 +78,7 @@ def main():
     from make_design import ROOT,sha
     from replay import WORLD,gpu_session,hardware,inventory,spread,timed,write_json
     from snapshots import TILE_M
-    from variant_kernels import element_offsets,launch_copy,launch_rows
+    from variant_kernels import element_offsets,launch_block_copy,launch_copy,launch_rows
 
     class Variants(BalancedPaths):
         def shared_buffers(self):
@@ -81,12 +91,24 @@ def main():
                 self.variant_work,self.variant_partial = {},{}
 
         def run(self, arm, mark=no_mark):
-            if arm!="PULL_SLT":
+            if arm.endswith("_NR") and VARIANT.fullmatch(arm) is not None:
+                self.handle.barrier(0,60_000)
+                mark("transport")
+                self.graphs.run(arm,self.consumer(arm))
+                mark("consumer")
+                return self.out
+            if arm not in PULLS:
                 return super().run(arm,mark)
             self.ensure_lt()
             self.shared_buffers()
             self.handle.barrier(0,60_000)
-            launch_copy(self.remote[0],self.held,self.recv)
+            if arm=="PULL_SLT":
+                launch_copy(self.remote[0],self.held,self.recv)
+            else:
+                # One source at a time; rank r starts with source r+1 and copies its own rows last.
+                for j in range(WORLD):
+                    s = (self.rank+1+j)%WORLD
+                    launch_block_copy(self.remote[s],self.local[s])
             mark("transport")
             self.lt.execute(self.recv,self.weight,self.out,self.choice)
             mark("consumer")
@@ -114,7 +136,8 @@ def main():
             partial = self.variant_partial.get(q)
             if (kind,bm) not in self.variant_work:
                 m,total = self.m,WORLD*self.m
-                work = ([(s*m+i,(s+1)*m,0) for s in range(WORLD) for i in range(0,m,bm)] if kind=="ALL"
+                order = [(self.rank+1+j)%WORLD for j in range(WORLD)] if kind=="ALLR" else range(WORLD)
+                work = ([(s*m+i,(s+1)*m,0) for s in order for i in range(0,m,bm)] if kind!="MRG"
                         else [(i,total,0) for i in range(0,total,bm)])
                 self.variant_work[kind,bm] = torch.tensor(work,dtype=torch.int32,device=self.device)
             work = self.variant_work[kind,bm]
@@ -133,7 +156,7 @@ def main():
     with gpu_session(uuids) as (rank,device,group):
         tuned = json.loads(a.slt.read_text())["cells"][a.unit][rank]["selected"] if a.slt else None
         if not all(spread(tuned is not None and a.library is not None,group)):
-            arms = [arm for arm in arms if arm not in ("SLT","PULL_SLT")]
+            arms = [arm for arm in arms if arm!="SLT" and arm not in PULLS]
         paths = Variants(a.unit,a.rep,shape,rank,device,a.library,tuned,agree=lambda error:spread(error,group))
         admission = {}
         for arm in arms:
@@ -156,6 +179,8 @@ def main():
         paths.prepare_graphs(usable)
         rows = []
         for orientation,order in (("forward",usable),("reverse",usable[::-1])):
+            if a.orientation not in ("both",orientation):
+                continue
             for arm in order:
                 ranks = timed(paths,POLICY,arm,group)
                 host = list(zip(*(x["host"] for x in ranks),strict=True))
@@ -170,7 +195,7 @@ def main():
                     phase_ms={n:statistics.median(max(r[j] for r in it) for it in phases) for j,n in enumerate(names)}))
         if rank==0:
             write_json(a.out,dict(schema=SCHEMA,origin="exploratory_device_probe",registered=False,unit=a.unit,
-                shape=shape,rep=a.rep,gpu_uuids=uuids,hardware_sha256=sha(a.gate),
+                shape=shape,rep=a.rep,arms=arms,orientation=a.orientation,gpu_uuids=uuids,hardware_sha256=sha(a.gate),
                 implementation_sha256=sha(Path(__file__)),policy=POLICY,admission=admission,rows=rows))
             mean = lambda arm,key: math.exp(statistics.fmean(math.log(r[key]) for r in rows if r["arm"]==arm))
             print(f"{a.unit:13s} wall ms: "+"  ".join(f"{arm.replace('_G2','')}={mean(arm,'wall_ms'):.3f}" for arm in usable))

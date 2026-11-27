@@ -75,6 +75,24 @@ def launch_copy(base, held, out):
     copy_rows[(rows,triton.cdiv(k,1024))](base,held,out,k,1024,num_warps=4)
 
 
+@triton.jit
+def copy_block(A, B, n: tl.constexpr, ctas: tl.constexpr, block: tl.constexpr):
+    """Copy one contiguous region with a fixed number of CTAs that each walk through it,
+    the single-peer kernel of the registered microbenchmark."""
+    base = tl.program_id(0)*block + tl.arange(0,block)
+    for offset in range(0,n,ctas*block):
+        ix = offset + base
+        value = tl.load(A+ix,ix<n,0,cache_modifier=".cg")
+        tl.store(B+ix,value,ix<n)
+
+
+def launch_block_copy(source, out, ctas=432):
+    """source and out are contiguous views of the same shape."""
+    n = source.numel()
+    ctas = max(1,min(ctas,triton.cdiv(n,1024)))
+    copy_block[(ctas,)](source,out,n,ctas,1024,num_warps=4)
+
+
 def element_offsets(views):
     """Distance of each mapped view from the first one, in elements of the views' dtype."""
     size = views[0].element_size()
