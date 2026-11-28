@@ -527,7 +527,7 @@ footer { margin-top: 3.5rem; padding-top: 1rem; border-top: 1px solid var(--rule
             <thead><tr><th>内容</th><th>位置</th></tr></thead>
             <tbody>
               <tr><td>第一次研究的包和设计</td><td>Edmir <code>experiments/2026-11-23-replay/</code></td></tr>
-              <tr><td>第一次研究的结果</td><td>本机 <code>edmir-handoffs/2026-11-26-run/node/work/results/paper_results.json</code>；论文仓库 <code>latex/data/2026-11-boundary/</code></td></tr>
+              <tr><td>第一次研究的结果和原始输出</td><td>Edmir <code>experiments/2026-11-26-run/</code>（运行目录归档、清单、分析输出、<code>reproduce.sh</code>）；论文仓库 <code>latex/data/2026-11-boundary/</code></td></tr>
               <tr><td>探索、探针、候选清单</td><td>Edmir <code>experiments/2026-11-26-peer-read-probe/</code>，<code>CANDIDATES.md</code></td></tr>
               <tr><td>第二次研究的预期、队列、判定、记录</td><td>Edmir <code>experiments/2026-11-27-confirm/</code>：<code>arms.json</code>、<code>RESULTS.md</code>、<code>RUNLOG.md</code>、<code>results/</code></td></tr>
               <tr><td>第二次研究的全部节点文件</td><td>本机 <code>edmir-handoffs/2026-11-27-run/node/</code></td></tr>
@@ -566,7 +566,7 @@ footer { margin-top: 3.5rem; padding-top: 1rem; border-top: 1px solid var(--rule
           <li><strong>没有事先预期、但按三对规则判定的快照比较。</strong>小 tile 就地读对拉取：三个 decode 都判赢（1.08、1.30、1.23）。大 tile 就地读对拉取：Qwen3.5 prefill 判赢（1.37），GLM、DSV2-Lite prefill 判输（0.89、0.84）。</li>
           <li><strong>严格核对脚本。</strong><code>experiments/2026-11-27-confirm/verify.py</code> 把 234 个输出逐个绑定到 <code>queue.csv</code> 和 <code>arms.json</code>：单元、顺序、seed、臂列表、计时策略、准入、graph 启动、测试程序哈希。当前结果 0 个问题。<code>judge.py</code> 仍按文件名配对。</li>
           <li><strong>最接近的相关工作</strong>（已核实出处）：NVLinkOneSided（arXiv 2611.13188，dispatch 是推，combine 是拉）、GC-MoE（arXiv 2611.04222，独立的 dispatch kernel 把远端 token 拉进本地环形缓冲）、DeepGEMM 的 Mega MoE、NCCL EP（arXiv 2603.13606）。它们的评测都在 Hopper 或 Blackwell 上，比较的是整层。拉取这个想法不是我们的新东西；我们加的是 Ampere 上 GEMM 对齐的测量。</li>
-          <li><strong>数据在哪。</strong>第二次研究每个进程的输出在仓库里（进程级：每个臂的中位数、阶段时间、准入记录）。第一次研究在仓库里的是分析输出 <code>paper_results.json</code>；它的 234 个进程输出和两次研究每次迭代的样本只在本机归档。</li>
+          <li><strong>数据在哪。</strong>第二次研究每个进程的输出在仓库里（进程级：每个臂的中位数、阶段时间、准入记录）；它的测试程序没有保存每次迭代的样本，所以这一级数据不存在。第一次研究的整个运行目录（234 个进程、每次迭代的样本、准入和日志）已于 11-28 放进仓库 <code>experiments/2026-11-26-run/</code>，<code>reproduce.sh</code> 从它重算出的 <code>paper_results.json</code> 与论文用的逐字节相同。</li>
         </ol>
       </section>
     </main>

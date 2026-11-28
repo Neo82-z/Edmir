@@ -10,6 +10,7 @@ Qwen3.5-35B-A3B、DeepSeek-V2-Lite。下面“已有证据”一节是 11-18 之
 
 - [实验报告：事实、证据等级、不能写的说法](experiments/REPORT_2026-11-27.md)（[HTML 版](experiments/REPORT_2026-11-27.html)）
 - [第一次研究的设计包](experiments/2026-11-23-replay/)：已登记的设计、队列、判定规则和开机前预测。
+- [第一次研究的原始输出](experiments/2026-11-26-run/)：整个运行目录的归档、文件清单、分析输出，`reproduce.sh` 可重算。
 - [第二次研究](experiments/2026-11-27-confirm/)：封存的预期 `arms.json`、234 个进程输出、`verify.py`（核对输出与封存文件）、
   `judge.py`（三对规则判定）、`RESULTS.md`、`RUNLOG.md`。
 - [探针、一次启动消费者和拉取的代码](experiments/2026-11-26-peer-read-probe/)，以及候选清单 `CANDIDATES.md`。
